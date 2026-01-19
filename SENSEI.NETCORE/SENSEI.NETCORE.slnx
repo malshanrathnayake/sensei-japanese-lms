@@ -1,1 +1,8 @@
-<Solution />
+<Solution>
+  <Project Path="SENSEI.DB/SENSEI.DB.sqlproj" Id="f71da47a-5814-4806-9d6a-43ecdfc7820e">
+    <Build />
+    <Deploy />
+  </Project>
+  <Project Path="SENSEI.DOMAIN/SENSEI.DOMAIN.csproj" />
+  <Project Path="SENSEI.WEB/SENSEI.WEB.csproj" />
+</Solution>
