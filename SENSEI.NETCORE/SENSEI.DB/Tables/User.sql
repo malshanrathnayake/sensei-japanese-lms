@@ -1,0 +1,12 @@
+﻿CREATE TABLE [dbo].[User]
+(
+	[UserId] BIGINT NOT NULL IDENTITY,
+	[UserName] NVARCHAR(MAX) NOT NULL,
+	[UserGlobalidentity] UNIQUEIDENTIFIER NOT NULL,
+	[CreatedDateTiime] DATETIME NOT NULL,
+	[UserTypeEnum] INT NOT NULL,
+	[IsActive] BIT NOT NULL,
+	[IsSuspend] BIT NOT NULL
+
+	CONSTRAINT [PK_User_UserId] PRIMARY KEY CLUSTERED ([UserId])
+)
