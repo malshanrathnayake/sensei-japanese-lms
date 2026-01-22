@@ -1,4 +1,6 @@
 <Solution>
+  <Project Path="SENSEI.BLL/SENSEI.BLL.csproj" Id="21b80dfb-3210-49b0-bc47-e7c57fd60642" />
+  <Project Path="SENSEI.DAL/SENSEI.DAL.csproj" Id="51dd0053-7d10-433b-a4e3-8e641607924e" />
   <Project Path="SENSEI.DB/SENSEI.DB.sqlproj" Id="f71da47a-5814-4806-9d6a-43ecdfc7820e">
     <Build />
     <Deploy />

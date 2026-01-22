@@ -1,0 +1,22 @@
+[
+  {
+    "Title": "Home",
+    "Icon": "home",
+    "Url": "/AdminPortal/Home/Index"
+  },
+  {
+    "Title": "Course",
+    "Icon": "book-open",
+    "Url": "/AdminPortal/Course/Index"
+  },
+  {
+    "Title": "Lesson",
+    "Icon": "file-text",
+    "Url": "/AdminPortal/Lesson/Index"
+  },
+  {
+    "Title": "Student",
+    "Icon": "users",
+    "Url": "/AdminPortal/Student/Index"
+  }
+]

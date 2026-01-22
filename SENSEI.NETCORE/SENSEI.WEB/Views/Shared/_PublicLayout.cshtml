@@ -1,0 +1,64 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Sensei Japanese Center | @ViewData["Title"]</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <link rel="stylesheet" href="~/css/public-web.css" />
+
+</head>
+<body>
+    <!-- HEADER / NAV -->
+    <header>
+        <div class="nav">
+            <div class="brand">
+                <div class="brand-icon">花</div>
+                <div class="brand-text">
+                    <span>Sensei</span>
+                    <span>Japanese Center</span>
+                </div>
+            </div>
+            <nav class="nav-links">
+                <a href="#courses">Courses</a>
+                <a href="#about">About</a>
+                <a href="#contact">Contact</a>
+                <button id="loginbtn" class="btn-login" href="~/SenseiJapaneseSchool/Login">Login</button>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+
+        @RenderBody()
+
+        <!-- TEMPLE STRIP + FOOTER -->
+        <div class="temple-strip">
+            <div class="temple-graphic" aria-hidden="true">
+                <div class="ground"></div>
+                <div class="temple-row">
+                    <div class="temple"></div>
+                    <div class="temple temple--center"></div>
+                    <div class="temple"></div>
+                </div>
+            </div>
+            <footer>
+                © <span id="year">2025</span> Sensei Japanese Center. All rights reserved.
+            </footer>
+        </div>
+    </main>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+    <script>
+        // update year without needing external scripts
+        document.getElementById("year").textContent = new Date().getFullYear().toString();
+        
+        $("#loginbtn").click(function() {
+            window.location.href = "/SenseiJapaneseSchool/Login";
+        });
+
+    </script>
+
+</body>
+</html>
