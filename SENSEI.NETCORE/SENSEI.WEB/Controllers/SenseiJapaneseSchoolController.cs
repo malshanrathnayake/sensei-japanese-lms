@@ -18,7 +18,14 @@ namespace SENSEI.WEB.Controllers
             return View();
         }
 
+        [HttpGet]
         public async Task<IActionResult> OTPLogin()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> OTPLogin(string phone)
         {
             return View();
         }
