@@ -5,13 +5,10 @@ using System.Text;
 
 namespace SENSEI.DOMAIN
 {
-    public enum UserTypeEnum : int
+    public enum UserTypeEnum
     {
-        [Display(Name = "Admin")]
-        Admin = 0,
-        [Display(Name = "Student")]
         Student = 1,
-        [Display(Name = "Manager")]
-        Manager = 2,
+        Admin = 2,
+        Manager = 3
     }
 }
