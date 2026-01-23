@@ -61,5 +61,16 @@
   </ItemGroup>
   <ItemGroup>
     <Build Include="Tables\User.sql" />
+    <Build Include="Tables\Batch.sql" />
+    <Build Include="Tables\BatchLesson.sql" />
+    <Build Include="Tables\BatchStudentLessonAccess.sql" />
+    <Build Include="Tables\BatchStudentLessonAccessRequest.sql" />
+    <Build Include="Tables\Course.sql" />
+    <Build Include="Tables\EmployeeAddress.sql" />
+    <Build Include="Tables\Lesson.sql" />
+    <Build Include="Tables\Staff.sql" />
+    <Build Include="Tables\Student.sql" />
+    <Build Include="Tables\StudentAddress.sql" />
+    <Build Include="Tables\StudentBatchPayment.sql" />
   </ItemGroup>
 </Project>

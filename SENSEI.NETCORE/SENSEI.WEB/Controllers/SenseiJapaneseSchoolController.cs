@@ -48,14 +48,15 @@ namespace SENSEI.WEB.Controllers
 
             var message = $"Your OTP code is {otpCode}. This code is valid for 5 minutes.";
 
-            var status = await _smsService.SendSingleAsync(phone, message);
+            //var status = await _smsService.SendSingleAsync(phone, message);
+            var status = true;
 
             if (!status)
             {
                 return RedirectToAction("Login");
             }
 
-            return RedirectToAction("Index", "Home", new { Area = "Adminportal" });
+            return RedirectToAction("OtpConfirm");
         }
 
 

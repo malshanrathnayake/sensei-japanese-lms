@@ -11,7 +11,7 @@ namespace SENSEI.DOMAIN
 
         public string Message { get; set; }
 
-        public int Duration { get; set; } = 300000;
+        public int Duration { get; set; } = 3000;
 
         public bool Dismissible { get; set; } = true;
 
