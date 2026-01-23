@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SENSEI.BLL\SENSEI.BLL.csproj" />
+    <ProjectReference Include="..\SENSEI.DOMAIN\SENSEI.DOMAIN.csproj" />
   </ItemGroup>
 
 </Project>
