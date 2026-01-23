@@ -1,0 +1,27 @@
+﻿@using core_web.Helpers
+
+@{
+	Layout = null;
+}
+
+<nav class="navbar navbar-expand navbar-light navbar-bg">
+	<a class="sidebar-toggle js-sidebar-toggle">
+		<i class="hamburger align-self-center"></i>
+	</a>
+
+	<div class="navbar-collapse collapse">
+		<ul class="navbar-nav navbar-align">
+
+			<!-- notification -->
+			@Html.RenderAction("AdminPortalNotification", "Layout", new { area = "" })
+
+			<!-- message -->
+			@Html.RenderAction("AdminPortalMessages", "Layout", new { area = "" })
+
+
+			<!-- profile -->
+			@Html.RenderAction("AdminPortalProfile", "Layout", new { area = "" })
+
+		</ul>
+	</div>
+</nav>
