@@ -44,6 +44,7 @@ builder.Services.AddSingleton<IDatabaseService>(provider =>
 });
 
 builder.Services.AddSingleton<IMailService, MailServiceImpl>();
+builder.Services.AddSingleton<ISmsService, SmsServiceImpl>();
 builder.Services.AddDataProtection();
 builder.Services.AddSession();
 

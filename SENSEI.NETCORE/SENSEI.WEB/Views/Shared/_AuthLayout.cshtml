@@ -14,7 +14,7 @@
 
 	<link rel="canonical" href="https://demo-basic.adminkit.io/pages-sign-in.html" />
 
-	<title>Sign In | AdminKit Demo</title>
+	<title>SENSEI | @ViewData["Title"]</title>
 
 	<link href="~/theme/v1/css/app.css" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
@@ -26,6 +26,8 @@
 	</main>
 
 	<script src="~/theme/v1/js/app.js"></script>
+	<script src="~/lib/jquery/dist/jquery.min.js"></script>
+	@await RenderSectionAsync("Scripts", required: false)
 
 </body>
 

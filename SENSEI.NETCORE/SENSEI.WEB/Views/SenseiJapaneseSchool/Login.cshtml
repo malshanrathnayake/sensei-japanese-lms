@@ -19,27 +19,19 @@
 				<div class="card">
 					<div class="card-body">
 						<div class="m-sm-3">
-							<form>
-								<div class="mb-3">
-									<label class="form-label">Email</label>
-									<input class="form-control form-control-lg" type="email" name="email" placeholder="Enter your email" />
-								</div>
-								<div class="mb-3">
-									<label class="form-label">Password</label>
-									<input class="form-control form-control-lg" type="password" name="password" placeholder="Enter your password" />
-								</div>
-								<div>
-									<div class="form-check align-items-center">
-										<input id="customControlInline" type="checkbox" class="form-check-input" value="remember-me" name="remember-me" checked>
-										<label class="form-check-label text-small" for="customControlInline">Remember me</label>
-									</div>
-								</div>
-								<div class="d-grid gap-2 mt-3">
-									<a asp-controller="SenseiJapaneseSchool" asp-action="SigninGoogle" class="btn btn-lg btn-danger">
-										<i class="fab fa-google me-2"></i> Sign in with Google
-									</a>
-								</div>
-							</form>
+
+							<div class="d-grid gap-2 mt-3">
+								<a asp-controller="SenseiJapaneseSchool" asp-action="OTPLogin" class="btn btn-lg btn-danger">
+									<i class="fab fa-google me-2"></i> Sign in with Mobile Number
+								</a>
+							</div>
+
+							<div class="d-grid gap-2 mt-3">
+								<a asp-controller="SenseiJapaneseSchool" asp-action="SigninGoogle" class="btn btn-lg btn-danger">
+									<i class="fab fa-google me-2"></i> Sign in with Google
+								</a>
+							</div>
+
 						</div>
 					</div>
 				</div>

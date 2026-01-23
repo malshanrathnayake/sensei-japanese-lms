@@ -1,4 +1,9 @@
 ﻿@using core_web.Helpers
+@using System.Text.Json
+
+@{
+    var notificationsJson = TempData["Notifications"] as string;
+}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -20,6 +25,7 @@
 
 	<link href="~/theme/v1/css/app.css" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css">
 </head>
 
 <body>
@@ -48,15 +54,53 @@
 
 	<script src="~/theme/v1/js/app.js"></script>
 	<script src="~/lib/feather/feather.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
+	<script src="~/lib/jquery/dist/jquery.min.js"></script>
 
 	<script>
+
+		window.notyf = new Notyf({
+			types: [
+				{
+					type: 'info',
+					background: '#0dcaf0'
+				},
+				{
+					type: 'warning',
+					background: '#ffc107'
+				}
+			]
+		});
+
 		document.addEventListener("DOMContentLoaded", function () {
 			if (window.feather) {
 				feather.replace();
 			}
 		});
+
+		document.addEventListener("DOMContentLoaded", function () {
+
+			const notificationsJson = @Html.Raw(notificationsJson != null ? notificationsJson : "null");
+
+			if (!notificationsJson || notificationsJson.length === 0) return;
+
+			notificationsJson.forEach(n => {
+				window.notyf.open({
+					type: n.Type.toLowerCase(), // Notyf expects lowercase
+					message: n.Message,
+					duration: n.Duration,
+					dismissible: n.Dismissible,
+					position: {
+						x: n.PositionX,
+						y: n.PositionY
+					}
+				});
+			});
+		});
+
 	</script>
 
+	@await RenderSectionAsync("Scripts", required: false)
 
 </body>
 
