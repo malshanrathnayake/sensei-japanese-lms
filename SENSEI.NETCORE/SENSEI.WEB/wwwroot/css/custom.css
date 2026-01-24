@@ -1,0 +1,174 @@
+﻿/* ================================
+   THEME VARIABLES
+   ================================ */
+:root {
+    --bg-main: #fff7f3;
+    --bg-card: #ffffff;
+    --primary: #ff5a5f;
+    --primary-dark: #e6454a;
+    --text-main: #222222;
+    --text-muted: #666666;
+    --border-soft: #ffe1d9;
+}
+
+/* ================================
+   GLOBAL BACKGROUND OVERRIDE
+   ================================ */
+.wrapper,
+.main,
+.content {
+    background-color: var(--bg-main) !important;
+}
+
+body {
+    color: var(--text-main) !important;
+}
+
+/* ================================
+   SIDEBAR (LIGHT THEME)
+   ================================ */
+[data-bs-theme="dark"] .sidebar,
+[data-bs-theme="dark"] .sidebar-content,
+.sidebar,
+.sidebar-content {
+    background: linear-gradient(180deg, #fff7f3, #ffeae2) !important;
+    border-right: 1px solid var(--border-soft) !important;
+}
+
+/* Sidebar text & icons */
+.sidebar-brand,
+.sidebar-nav .sidebar-link,
+.sidebar-nav .sidebar-link span,
+.sidebar-nav .sidebar-link svg {
+    color: var(--text-main) !important;
+}
+
+/* Remove AdminKit dark pills */
+.sidebar-nav .sidebar-link {
+    background: transparent !important;
+}
+
+    .sidebar-nav .sidebar-link::before {
+        display: none !important;
+    }
+
+    /* Hover */
+    .sidebar-nav .sidebar-link:hover {
+        background: #ffe3db !important;
+        color: var(--primary) !important;
+    }
+
+        .sidebar-nav .sidebar-link:hover svg {
+            color: var(--primary) !important;
+        }
+
+/* Active */
+.sidebar-item.active > .sidebar-link {
+    background: var(--primary) !important;
+    color: #ffffff !important;
+}
+
+    .sidebar-item.active > .sidebar-link svg {
+        color: #ffffff !important;
+    }
+
+/* ================================
+   NAVBAR
+   ================================ */
+.navbar,
+.navbar-bg {
+    background: rgba(255, 247, 243, 0.95) !important;
+    border-bottom: 1px solid var(--border-soft) !important;
+}
+
+    .navbar .nav-link,
+    .navbar .nav-icon {
+        color: var(--text-main) !important;
+    }
+
+    .navbar .indicator {
+        background: var(--primary) !important;
+    }
+
+/* ================================
+   CARDS
+   ================================ */
+.card {
+    background: var(--bg-card) !important;
+    border: 1px solid var(--border-soft) !important;
+    border-radius: 1.2rem !important;
+    box-shadow: 0 14px 30px rgba(227, 166, 149, 0.25) !important;
+}
+
+.card-header {
+    background: transparent !important;
+    border-bottom: 1px solid var(--border-soft) !important;
+}
+
+.card-title {
+    color: var(--text-main) !important;
+}
+
+/* ================================
+   BUTTONS
+   ================================ */
+.btn-primary {
+    background: var(--primary) !important;
+    border-color: var(--primary) !important;
+    box-shadow: 0 10px 22px rgba(255, 90, 95, 0.35) !important;
+}
+
+    .btn-primary:hover {
+        background: var(--primary-dark) !important;
+        border-color: var(--primary-dark) !important;
+    }
+
+/* ================================
+   TABLES
+   ================================ */
+.table {
+    color: var(--text-main) !important;
+}
+
+    .table thead th {
+        background: #fff0ea !important;
+        color: var(--text-main) !important;
+        border-bottom: 1px solid var(--border-soft) !important;
+    }
+
+    .table tbody tr:hover {
+        background: #fff3ee !important;
+    }
+
+/* ================================
+   FORMS
+   ================================ */
+.form-control,
+.form-select {
+    background: #fffaf7 !important;
+    border: 1px solid #ffd8c5 !important;
+    color: var(--text-main) !important;
+}
+
+    .form-control:focus {
+        border-color: var(--primary) !important;
+        box-shadow: 0 0 0 0.15rem rgba(255, 90, 95, 0.25) !important;
+    }
+
+/* ================================
+   DROPDOWNS
+   ================================ */
+.dropdown-menu {
+    border-radius: 1rem !important;
+    border: 1px solid var(--border-soft) !important;
+    box-shadow: 0 12px 26px rgba(222, 159, 150, 0.3) !important;
+}
+
+/* ================================
+   FOOTER
+   ================================ */
+.footer {
+    background: transparent !important;
+    border-top: 1px solid var(--border-soft) !important;
+    color: var(--text-muted) !important;
+}

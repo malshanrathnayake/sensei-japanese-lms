@@ -1,0 +1,201 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="container-fluid p-0">
+
+    <h1 class="h3 mb-3">Home</h1>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Home</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Course</th>
+                                    <th>Status</th>
+                                    <th class="text-end">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>Malshan Rathnayake</td>
+                                    <td>malshan@example.com</td>
+                                    <td>JLPT N5</td>
+                                    <td>
+                                        <span class="badge bg-success">Active</span>
+                                    </td>
+                                    <td class="text-end">
+                                        <button class="btn btn-sm btn-primary">View</button>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>2</td>
+                                    <td>Aya Tanaka</td>
+                                    <td>aya.t@example.com</td>
+                                    <td>JLPT N4</td>
+                                    <td>
+                                        <span class="badge bg-warning text-dark">Pending</span>
+                                    </td>
+                                    <td class="text-end">
+                                        <button class="btn btn-sm btn-primary">View</button>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>3</td>
+                                    <td>Kenji Sato</td>
+                                    <td>kenji.s@example.com</td>
+                                    <td>Conversation</td>
+                                    <td>
+                                        <span class="badge bg-danger">Inactive</span>
+                                    </td>
+                                    <td class="text-end">
+                                        <button class="btn btn-sm btn-primary">View</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Student Registration</h5>
+                </div>
+
+                <div class="card-body">
+                    <form>
+
+                        <!-- TEXT INPUT -->
+                        <div class="mb-3">
+                            <label class="form-label">Full Name</label>
+                            <input type="text" class="form-control" placeholder="Enter full name">
+                        </div>
+
+                        <!-- EMAIL -->
+                        <div class="mb-3">
+                            <label class="form-label">Email Address</label>
+                            <input type="email" class="form-control" placeholder="example@email.com">
+                        </div>
+
+                        <!-- PASSWORD -->
+                        <div class="mb-3">
+                            <label class="form-label">Password</label>
+                            <input type="password" class="form-control" placeholder="********">
+                        </div>
+
+                        <!-- NUMBER -->
+                        <div class="mb-3">
+                            <label class="form-label">Age</label>
+                            <input type="number" class="form-control" min="1" max="100">
+                        </div>
+
+                        <!-- DATE -->
+                        <div class="mb-3">
+                            <label class="form-label">Date of Birth</label>
+                            <input type="date" class="form-control">
+                        </div>
+
+                        <!-- SELECT -->
+                        <div class="mb-3">
+                            <label class="form-label">Course</label>
+                            <select class="form-select">
+                                <option selected disabled>Choose course</option>
+                                <option>JLPT N5</option>
+                                <option>JLPT N4</option>
+                                <option>JLPT N3</option>
+                                <option>Conversation</option>
+                            </select>
+                        </div>
+
+                        <!-- MULTI SELECT -->
+                        <div class="mb-3">
+                            <label class="form-label">Available Days</label>
+                            <select class="form-select" multiple>
+                                <option>Monday</option>
+                                <option>Wednesday</option>
+                                <option>Friday</option>
+                                <option>Weekend</option>
+                            </select>
+                        </div>
+
+                        <!-- TEXTAREA -->
+                        <div class="mb-3">
+                            <label class="form-label">Notes</label>
+                            <textarea class="form-control" rows="3" placeholder="Additional notes..."></textarea>
+                        </div>
+
+                        <!-- CHECKBOX -->
+                        <div class="mb-3 form-check">
+                            <input class="form-check-input" type="checkbox" id="terms">
+                            <label class="form-check-label" for="terms">
+                                I agree to the terms & conditions
+                            </label>
+                        </div>
+
+                        <!-- RADIO BUTTONS -->
+                        <div class="mb-3">
+                            <label class="form-label d-block">Gender</label>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="gender" id="male">
+                                <label class="form-check-label" for="male">Male</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="gender" id="female">
+                                <label class="form-check-label" for="female">Female</label>
+                            </div>
+                        </div>
+
+                        <!-- FILE UPLOAD -->
+                        <div class="mb-3">
+                            <label class="form-label">Profile Picture</label>
+                            <input class="form-control" type="file">
+                        </div>
+
+                        <!-- RANGE -->
+                        <div class="mb-3">
+                            <label class="form-label">Japanese Level Confidence</label>
+                            <input type="range" class="form-range" min="0" max="10">
+                        </div>
+
+                        <!-- SWITCH -->
+                        <div class="mb-4 form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="active">
+                            <label class="form-check-label" for="active">
+                                Active Student
+                            </label>
+                        </div>
+
+                        <!-- BUTTONS -->
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                Save Student
+                            </button>
+                            <button type="reset" class="btn btn-outline-secondary">
+                                Reset
+                            </button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

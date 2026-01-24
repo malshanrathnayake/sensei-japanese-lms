@@ -9,5 +9,10 @@ namespace SENSEI.WEB.Areas.AdminPortal.Controllers
         {
             return View();
         }
+
+        public async Task<IActionResult> Sample()
+        {
+            return View();
+        }
     }
 }
