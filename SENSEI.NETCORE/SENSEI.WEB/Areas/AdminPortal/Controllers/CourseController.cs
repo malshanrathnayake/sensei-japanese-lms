@@ -29,7 +29,7 @@ namespace SENSEI.WEB.Areas.AdminPortal.Controllers
             return Json(new { success = true, message = "Course created successfully" });
         }
 
-        public async Task<IActionResult> CourseModal()
+        public async Task<IActionResult> CourseOffCanvas()
         {
             return View();
         }
