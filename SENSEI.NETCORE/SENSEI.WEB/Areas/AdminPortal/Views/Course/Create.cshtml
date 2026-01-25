@@ -1,0 +1,49 @@
+﻿@using SENSEI.DOMAIN
+@model Course
+
+@{
+    Layout = null;
+}
+
+
+
+<div class="offcanvas-header">
+    <h5 class="offcanvas-title">New Course</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+</div>
+
+<div class="offcanvas-body">
+
+    <form id="course-create-form" asp-area="AdminPortal" asp-controller="Course" asp-action="Create"
+        data-ajax="true" data-ajax-method="POST"
+        data-ajax-begin="onCourseCreateBegin" data-ajax-success="onCourseCreateSuccess" data-ajax-failure="onCourseCreateFailure" data-ajax-complete="onCourseCreateComplete">
+
+        <div class="mb-3">
+            <label class="form-label">@Html.DisplayNameFor(m => m.CourseName)</label>
+            <input class="form-control" asp-for="CourseName" />
+            <span asp-validation-for="CourseName" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">@Html.DisplayNameFor(m => m.CourseCode)</label>
+            <input class="form-control" asp-for="CourseCode" />
+            <span asp-validation-for="CourseCode" class="text-danger"></span>
+        </div>
+
+        <div class="d-flex justify-content-end gap-2">
+
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="offcanvas">
+                Cancel
+            </button>
+
+            <button type="submit" id="btnSaveCourse" class="btn btn-success ladda-button" data-style="zoom-in">
+                <span class="ladda-label">Save</span>
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+

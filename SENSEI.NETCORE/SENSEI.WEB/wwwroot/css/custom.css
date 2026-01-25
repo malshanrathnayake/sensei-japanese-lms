@@ -172,3 +172,7 @@ body {
     border-top: 1px solid var(--border-soft) !important;
     color: var(--text-muted) !important;
 }
+
+.offcanvas {
+    background-color: var(--bg-main) !important;
+}

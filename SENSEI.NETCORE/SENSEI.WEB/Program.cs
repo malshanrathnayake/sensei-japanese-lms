@@ -34,7 +34,7 @@ builder.Services.AddAuthentication(options =>
 
 #region System Services
 
-var connectionString = configuration.GetConnectionString("malshan");
+var connectionString = configuration.GetConnectionString("dev");
 
 builder.Services.AddSingleton<IDatabaseService>(provider =>
 {

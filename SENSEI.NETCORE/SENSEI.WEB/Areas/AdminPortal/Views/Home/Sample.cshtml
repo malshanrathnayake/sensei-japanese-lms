@@ -198,4 +198,59 @@
         </div>
     </div>
 
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Modal</h5>
+                </div>
+                <div class="card-body">
+                    <button class="btn btn-primary mb-3" id="btnOpenSampleModal">
+                        Open Sample Modal 
+                    </button>
+
+
+                    <div class="modal fade" id="sampleModal" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Sample Modal</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body">
+                                    This is a sample AdminKit modal.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
+
+@section Scripts {
+
+    <script>
+        document.getElementById("btnOpenSampleModal").addEventListener("click", function () {
+
+            const modalEl = document.getElementById("sampleModal");
+
+            const modal = new bootstrap.Modal(modalEl, {
+                backdrop: true,
+                keyboard: true,
+                focus: true,
+                container: document.body   // 🔥 THIS FIXES ADMINKIT
+            });
+
+            modal.show();
+        });
+
+    </script>
+
+
+}

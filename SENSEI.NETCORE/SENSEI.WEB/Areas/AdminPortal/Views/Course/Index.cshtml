@@ -1,0 +1,66 @@
+﻿@using core_web.Helpers
+@{
+	ViewData["Title"] = "Course";
+}
+
+<div class="container-fluid p-0">
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="h3 mb-0">Course</h1>
+
+        <button type="button" class="btn btn-primary" id="btnNewCourse" data-action-url="/AdminPortal/Course/Create">
+            <i class="fas fa-plus"></i> New
+        </button>
+
+    </div>
+
+	<div class="row">
+		<div class="col-12">
+			<div class="card">
+				<div class="card-header">
+					<h5 class="card-title mb-0">List of Courses</h5>
+				</div>
+				<div class="card-body">
+
+					<div id="CourseTableContent" class="table-responsive"></div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+</div>
+
+@Html.RenderAction("CourseModal", "Course", new { area = "AdminPortal" })
+
+@section Scripts {
+
+    <script src="~/js/admin-portal/course-function.js"></script>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            loadCourses();
+
+        });
+
+        function loadCourses() {
+            $.ajax({
+                url: '/AdminPortal/Course/ListOfCourses',
+                type: 'GET',
+                success: function (html) {
+                    $('#CourseTableContent').html(html);
+                },
+                error: function (xhr, status, error) {
+                    console.error(error);
+                    $('#CourseTableContent').html(
+                        '<div class="alert alert-danger">Failed to load courses.</div>'
+                    );
+                }
+            });
+        }
+
+    </script>
+
+}
