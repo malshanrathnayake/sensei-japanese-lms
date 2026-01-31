@@ -1,14 +1,21 @@
-using SENSEI.BLL.SystemService;
-using SENSEI.BLL.SystemService.Interfaces;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
+using SENSEI.BLL.AdminPortalService;
+using SENSEI.BLL.AdminPortalService.Interface;
+using SENSEI.BLL.SystemService;
+using SENSEI.BLL.SystemService.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddDataProtection();
 
 var configuration = builder.Configuration;
+
+#region AdminPortalServices
+builder.Services.AddSingleton<ICourseService, CourseServiceImpl>();
+#endregion
 
 #region Login with Google
 

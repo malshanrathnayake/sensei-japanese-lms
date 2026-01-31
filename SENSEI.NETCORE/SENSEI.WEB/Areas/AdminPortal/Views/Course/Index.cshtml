@@ -22,7 +22,22 @@
 				</div>
 				<div class="card-body">
 
-					<div id="CourseTableContent" class="table-responsive"></div>
+					<div id="CourseTableContent" class="table-responsive">
+
+                        <table id="CourseDataTable" class="table table-hover align-middle mb-0 w-100">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>Course Name</th>
+                                    <th>Course Code</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                
+                            </tbody>
+                        </table>
+
+                    </div>
 
 				</div>
 			</div>
@@ -46,19 +61,72 @@
         });
 
         function loadCourses() {
-            $.ajax({
-                url: '/AdminPortal/Course/ListOfCourses',
-                type: 'GET',
-                success: function (html) {
-                    $('#CourseTableContent').html(html);
+
+            if ($.fn.DataTable.isDataTable('#CourseDataTable')) {
+                $('#CourseDataTable').DataTable().clear().destroy();
+                $('#CourseDataTable tbody').empty();
+            }
+
+            $('#CourseDataTable').DataTable({
+                processing: true,
+                serverSide: true,
+                autoWidth: false,
+                lengthMenu: [10, 20, 50, 100],
+                columnDefs: [
+                    { targets: 0, className: 'noVis' },
+                    { width: 25, targets: 0, orderable: false },
+                ],
+                dom:
+                    "<'row mb-3'<'col-sm-6'l><'col-sm-6 text-end'f>>" +
+                    "<'row'<'col-sm-12'tr>>" +
+                    "<'row mt-3'<'col-sm-5'i><'col-sm-7'p>>",
+                ajax: {
+                    url: '/AdminPortal/Course/ListOfCourses',
+                    type: 'POST'
                 },
-                error: function (xhr, status, error) {
-                    console.error(error);
-                    $('#CourseTableContent').html(
-                        '<div class="alert alert-danger">Failed to load courses.</div>'
-                    );
+                columns: [
+                    {
+                        data: null,
+                        orderable: false,
+                        searchable: false,
+                        width: "25px",
+                        className: "text-end",
+                        render: function (data, type, row) {
+
+                            var editUrl = `/AdminPortal/Course/Edit/?q=${row.encryptedKey}`;
+                            var deleteUrl = `/AdminPortal/Course/Delete/?q=${row.encryptedKey}`;
+
+                            var editBtn = `<li><a class="dropdown-item d-flex align-items-center gap-2 edit-course" href="javascript:void(0)" data-action-url="${editUrl}"> <i data-feather="edit"></i><span>Edit</span></a></li>`;
+                            var deleteBtn = `<li><a class="dropdown-item d-flex align-items-center gap-2 text-danger delete-course" href="javascript:void(0)" data-action-url="${deleteUrl}" data-action-parameter="${row.courseName}"><i data-feather="trash-2"></i><span>Delete</span></a></li>`;
+
+                            return `
+                                <div class="dropdown">
+                                    <button class="btn btn-sm btn-light p-1" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i data-feather="more-vertical"></i>
+                                    </button>
+
+                                    <ul class="dropdown-menu dropdown-menu-end">
+                                        ${editBtn}
+                                        ${deleteBtn}
+                                    </ul>
+                                </div>
+
+                            `;
+                        }
+                    },
+                    { data: 'courseName', name:'courseName' },
+                    { data: 'courseCode', name:'courseCode' }
+                ],
+                drawCallback: function () {
+                    if (window.feather) {
+                        feather.replace();
+                    }
+
+                    editCourseButton();
+                    deleteCourseButton();
                 }
             });
+
         }
 
     </script>

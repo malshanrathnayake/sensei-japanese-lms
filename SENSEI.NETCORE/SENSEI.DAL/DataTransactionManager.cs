@@ -1,3 +1,4 @@
+using SENSEI.DOMAIN;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,19 +18,19 @@ namespace devspark_core_data_access_layer
 
         #region User Manager
 
-        //private DataManager<EntraIdUser> _entraIdUserDatamanager;
-        //public DataManager<EntraIdUser> EntraIdUserDataManager
-        //{
-        //    get
-        //    {
-        //        if(this._entraIdUserDatamanager == null)
-        //        {
-        //            this._entraIdUserDatamanager = new DataManager<EntraIdUser>(_connectionString);
-        //        }
+        private DataManager<Course> _courseDatamanager;
+        public DataManager<Course> CourseDataManager
+        {
+            get
+            {
+                if (this._courseDatamanager == null)
+                {
+                    this._courseDatamanager = new DataManager<Course>(_connectionString);
+                }
 
-        //        return this._entraIdUserDatamanager;
-        //    }
-        //}
+                return this._courseDatamanager;
+            }
+        }
 
         #endregion
 

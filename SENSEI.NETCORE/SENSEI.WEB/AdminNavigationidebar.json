@@ -18,5 +18,16 @@
     "Title": "Student",
     "Icon": "users",
     "Url": "/AdminPortal/Student/Index"
+  },
+  {
+    "Title": "Batch",
+    "Icon": "layers",
+    "Url": "/AdminPortal/Student/Index"
+  },
+  {
+    "Title": "Student Record Request",
+    "Icon": "file-text",
+    "Url": "/AdminPortal/Student/Index"
   }
+
 ]

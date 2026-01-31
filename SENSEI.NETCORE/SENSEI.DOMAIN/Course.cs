@@ -12,6 +12,7 @@ namespace SENSEI.DOMAIN
         [Required]
         public string CourseCode { get; set; }
         public bool IsDeleted { get; set; }
+        public string EncryptedKey { get; set; }
 
         // Navigation
         public ICollection<Lesson> Lessons { get; set; } = new List<Lesson>();
