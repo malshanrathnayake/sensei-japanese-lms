@@ -37,7 +37,7 @@ namespace SENSEI.WEB.Areas.AdminPortal.Controllers
 
             IQueryable<Course> courses = new List<Course>().AsQueryable();
 
-            var (courseslist, count) = await _courseService.GetCourses(start, length, searchValue, sortColumn, sortDirection);
+            var (courseslist, count) = await _courseService.SearchCourses(start, length, searchValue, sortColumn, sortDirection);
             courses = courseslist.AsQueryable();
 
             courses.ToList().ForEach(e =>
@@ -46,7 +46,7 @@ namespace SENSEI.WEB.Areas.AdminPortal.Controllers
             });
 
 
-            return Json(new { draw, recordsTotal = count, recordsFiltered = count, data = courses} );
+            return Json(new { draw, recordsTotal = count, recordsFiltered = count, data = courses });
         }
 
         [HttpGet]
@@ -84,7 +84,6 @@ namespace SENSEI.WEB.Areas.AdminPortal.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(Course course)
         {
-            course.CourseId = Convert.ToInt64(_protector.Unprotect(course.EncryptedKey));
 
             var (status, courseId) = await _courseService.UpdateCourse(course);
 

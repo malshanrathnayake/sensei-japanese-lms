@@ -15,6 +15,7 @@ var configuration = builder.Configuration;
 
 #region AdminPortalServices
 builder.Services.AddSingleton<ICourseService, CourseServiceImpl>();
+builder.Services.AddSingleton<ILessonService, LessonServiceImpl>();
 #endregion
 
 #region Login with Google

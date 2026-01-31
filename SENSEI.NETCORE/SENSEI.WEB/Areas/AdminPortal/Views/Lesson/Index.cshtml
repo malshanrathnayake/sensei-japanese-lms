@@ -1,0 +1,193 @@
+﻿@using SENSEI.DOMAIN
+@using core_web.Helpers
+@model Course
+
+@{
+    ViewData["Title"] = "Lesson";
+}
+
+<div class="container-fluid p-0">
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="h3 mb-0">Lesson</h1>
+
+        <button type="button" class="btn btn-primary" id="btnNewLesson" data-action-url="/AdminPortal/Lesson/Create">
+            <i class="fas fa-plus"></i> New
+        </button>
+
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Search By</h5>
+                </div>
+                <div class="card-body">
+
+                    <div class="row">
+                        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xm-12">
+                            <div class="mb-3" id="search-course-wrapper">
+                                <label class="form-label">@Html.DisplayNameFor(m => m.CourseId)</label>
+                                <select id="SearchCourseId" class="form-control search-course-select" name="SearchCourseId"></select>
+                                @* <span asp-validation-for="CourseId" class="text-danger"></span> *@
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">List of Lessons</h5>
+                </div>
+                <div class="card-body">
+
+                    <div id="LessonTableContent" class="table-responsive">
+
+                        <table id="LessonDataTable" class="table table-hover align-middle mb-0 w-100">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>Course Name</th>
+                                    <th>Lesson Name</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@Html.RenderAction("LessonOffCanvas", "Lesson", new { area = "AdminPortal" })
+
+@section Scripts {
+
+    <script src="~/js/admin-portal/lesson-function.js"></script>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            $('#SearchCourseId').change(function () {
+                var courseId = $(this).val();
+
+                console.log(courseId);
+
+                loadLessons();
+            });
+
+
+            $.getJSON('/AdminPortal/Lesson/GetCourseListJsonResult', function (data) {
+
+                $('#SearchCourseId').empty();
+                $('#SearchCourseId').append('<option value="0">All Courses</option>')
+
+                loadSelectBox({
+                    data: data,
+                    className: 'search-course-select',
+                    title: 'Select Course',
+                    dropdownParentId: 'search-course-wrapper'
+                });
+
+                var courseId = $('#SearchCourseId').val();
+
+                if (courseId) {
+                    $('#SearchCourseId').val(courseId).trigger('change');
+                }
+            });
+
+            loadLessons();
+
+        });
+
+        function loadLessons() {
+
+            if ($.fn.DataTable.isDataTable('#LessonDataTable')) {
+                $('#LessonDataTable').DataTable().clear().destroy();
+                $('#LessonDataTable tbody').empty();
+            }
+
+            $('#LessonDataTable').DataTable({
+                processing: true,
+                serverSide: true,
+                autoWidth: false,
+                lengthMenu: [10, 20, 50, 100],
+                columnDefs: [
+                    { targets: 0, className: 'noVis' },
+                    { width: 25, targets: 0, orderable: false },
+                ],
+                dom:
+                    "<'row mb-3'<'col-sm-6'l><'col-sm-6 text-end'f>>" +
+                    "<'row'<'col-sm-12'tr>>" +
+                    "<'row mt-3'<'col-sm-5'i><'col-sm-7'p>>",
+                ajax: {
+                    url: '/AdminPortal/Lesson/ListOfLessons',
+                    type: 'POST',
+                    data: function (d) {
+                        d.courseId = $('#SearchCourseId').val() || 0;
+                    }
+                },
+                columns: [
+                    {
+                        data: null,
+                        orderable: false,
+                        searchable: false,
+                        width: "25px",
+                        className: "text-end",
+                        render: function (data, type, row) {
+
+                            var editUrl = `/AdminPortal/Lesson/Edit/?q=${row.encryptedKey}`;
+                            var deleteUrl = `/AdminPortal/Lesson/Delete/?q=${row.encryptedKey}`;
+
+                            var editBtn = `<li><a class="dropdown-item d-flex align-items-center gap-2 edit-lesson" href="javascript:void(0)" data-action-url="${editUrl}"> <i data-feather="edit"></i><span>Edit</span></a></li>`;
+                            var deleteBtn = `<li><a class="dropdown-item d-flex align-items-center gap-2 text-danger delete-lesson" href="javascript:void(0)" data-action-url="${deleteUrl}" data-action-parameter="${row.lessonName}"><i data-feather="trash-2"></i><span>Delete</span></a></li>`;
+
+                            return `
+                                <div class="dropdown">
+                                    <button class="btn btn-sm btn-light p-1" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i data-feather="more-vertical"></i>
+                                    </button>
+
+                                    <ul class="dropdown-menu dropdown-menu-end">
+                                        ${editBtn}
+                                        ${deleteBtn}
+                                    </ul>
+                                </div>
+
+                            `;
+                        }
+                    },
+                    { data: 'course.courseName', name:'course.courseName' },
+                    { data: 'lessonName', name:'lessonName' },
+                    { data: 'description', name:'description' }
+                ],
+                drawCallback: function () {
+                    if (window.feather) {
+                        feather.replace();
+                    }
+
+                    editLessonButton();
+                    deleteLessonButton();
+                }
+            });
+
+        }
+
+    </script>
+
+}

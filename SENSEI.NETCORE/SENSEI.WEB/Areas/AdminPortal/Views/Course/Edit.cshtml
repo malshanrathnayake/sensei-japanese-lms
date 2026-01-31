@@ -18,7 +18,7 @@
           data-ajax="true" data-ajax-method="POST"
           data-ajax-begin="onCourseEditBegin" data-ajax-success="onCourseEditSuccess" data-ajax-failure="onCourseEditFailure" data-ajax-complete="onCourseEditComplete">
 
-        <input type="hidden" id="EncryptedKey" name="EncryptedKey" value="@Model.EncryptedKey" />
+        <input type="hidden" id="CourseId" name="CourseId" value="@Model.CourseId" />
 
         <div class="mb-3">
             <label class="form-label">@Html.DisplayNameFor(m => m.CourseName)</label>

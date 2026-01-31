@@ -291,3 +291,137 @@ body {
         animation: pulseDots 1.2s infinite ease-in-out;
     }
 
+
+/* =====================================================
+   SELECT2 – CUSTOM THEME
+   ===================================================== */
+
+/* -------------------------------
+   Base Select2 input
+   ------------------------------- */
+
+.select2-container--bootstrap5 .select2-selection {
+    min-height: calc(1.5em + .75rem + 2px);
+    padding: .375rem .75rem;
+    background: #fffaf7;
+    border: 1px solid #ffd8c5;
+    border-radius: .375rem;
+    color: var(--text-main);
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+}
+
+/* Text rendering */
+.select2-container--bootstrap5 .select2-selection__rendered {
+    padding-left: 0;
+    padding-right: 0;
+    color: var(--text-main);
+    line-height: 1.5;
+}
+
+/* Arrow alignment */
+.select2-container--bootstrap5 .select2-selection__arrow {
+    height: 100%;
+    top: 0;
+}
+
+/* -------------------------------
+   Focus state (MATCHES .form-control)
+   ------------------------------- */
+
+.select2-container--bootstrap5.select2-container--focus
+.select2-selection {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 0.15rem rgba(255, 90, 95, 0.25);
+}
+
+/* -------------------------------
+   Dropdown menu
+   ------------------------------- */
+
+.select2-container--bootstrap5 .select2-dropdown {
+    background: #fffaf7;
+    border: 1px solid #ffd8c5;
+    border-radius: .375rem;
+    overflow: hidden;
+}
+
+/* Option padding */
+.select2-results__option {
+    padding: .375rem .75rem;
+    color: var(--text-main);
+}
+
+/* Hover option (soft primary) */
+.select2-container--bootstrap5
+.select2-results__option--highlighted {
+    background-color: rgba(255, 90, 95, 0.08);
+    color: var(--text-main);
+}
+
+/* Selected option */
+.select2-container--bootstrap5
+.select2-results__option--selected {
+    background-color: rgba(255, 90, 95, 0.12);
+    color: var(--primary);
+    font-weight: 500;
+}
+
+/* -------------------------------
+   Clear (×) button
+   ------------------------------- */
+
+.select2-container--bootstrap5 .select2-selection__clear {
+    color: #ff8a8f;
+    margin-right: .25rem;
+}
+
+    .select2-container--bootstrap5 .select2-selection__clear:hover {
+        color: var(--primary);
+    }
+
+/* -------------------------------
+   Search box
+   ------------------------------- */
+
+.select2-search__field {
+    background: #fffaf7;
+    border: 1px solid #ffd8c5;
+    border-radius: .375rem;
+    color: var(--text-main);
+}
+
+    .select2-search__field:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 0.15rem rgba(255, 90, 95, 0.25);
+    }
+
+/* -------------------------------
+   Validation — INVALID
+   ------------------------------- */
+
+.form-control.is-invalid {
+    background: #fff0eb;
+}
+
+.is-invalid + .select2-container--bootstrap5 .select2-selection {
+    background: #fff0eb;
+    border-color: #ffb4a2;
+}
+
+.is-invalid + .select2-container--bootstrap5.select2-container--focus
+.select2-selection {
+    box-shadow: 0 0 0 0.15rem rgba(255, 90, 95, 0.25);
+}
+
+/* -------------------------------
+   Validation — VALID
+   ------------------------------- */
+
+.form-control.is-valid {
+    background: #fffaf7;
+}
+
+.is-valid + .select2-container--bootstrap5 .select2-selection {
+    background: #fffaf7;
+    border-color: #ffd8c5;
+}

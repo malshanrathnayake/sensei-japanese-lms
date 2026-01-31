@@ -32,6 +32,20 @@ namespace devspark_core_data_access_layer
             }
         }
 
+        private DataManager<Lesson> _lessonDatamanager;
+        public DataManager<Lesson> LessonDataManager
+        {
+            get
+            {
+                if (this._lessonDatamanager == null)
+                {
+                    this._lessonDatamanager = new DataManager<Lesson>(_connectionString);
+                }
+
+                return this._lessonDatamanager;
+            }
+        }
+
         #endregion
 
 

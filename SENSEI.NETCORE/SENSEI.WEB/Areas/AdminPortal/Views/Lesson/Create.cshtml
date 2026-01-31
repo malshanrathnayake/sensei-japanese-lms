@@ -1,0 +1,56 @@
+﻿@using SENSEI.DOMAIN
+@model Lesson
+
+@{
+    Layout = null;
+}
+
+
+
+<div class="offcanvas-header">
+    <h5 class="offcanvas-title">New Lesson</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+</div>
+
+<div class="offcanvas-body">
+
+    <form id="lesson-create-form" asp-area="AdminPortal" asp-controller="Lesson" asp-action="Create"
+          data-ajax="true" data-ajax-method="POST"
+          data-ajax-begin="onLessonCreateBegin" data-ajax-success="onLessonCreateSuccess" data-ajax-failure="onLessonCreateFailure" data-ajax-complete="onLessonCreateComplete">
+
+
+        <div class="mb-3">
+            <label class="form-label">@Html.DisplayNameFor(m => m.CourseId)</label>
+            <select id="CourseId" class="form-control course-select" asp-for="CourseId"></select>
+            <span asp-validation-for="CourseId" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">@Html.DisplayNameFor(m => m.LessonName)</label>
+            <input class="form-control" asp-for="LessonName" />
+            <span asp-validation-for="LessonName" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">@Html.DisplayNameFor(m => m.Description)</label>
+            <input class="form-control" asp-for="Description" />
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+
+        <div class="d-flex justify-content-end gap-2">
+
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="offcanvas">
+                Cancel
+            </button>
+
+            <button type="submit" id="btnSaveLesson" class="btn btn-success ladda-button" data-style="zoom-in">
+                <span class="ladda-label">Save</span>
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+

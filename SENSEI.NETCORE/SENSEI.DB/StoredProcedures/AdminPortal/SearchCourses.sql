@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [dbo].[GetCourses]
+﻿CREATE PROCEDURE [dbo].[SearchCourses]
 	@start INT = 0,
 	@length INT = 10,
 	@searchValue NVARCHAR(MAX),
@@ -15,8 +15,8 @@ BEGIN
 	WHERE IsDeleted = 0
 		AND (@searchValue = '' OR CourseName LIKE '%' + @searchValue + '%' OR CourseCode LIKE '%' + @searchValue + '%')
 	ORDER BY 
-	CASE WHEN @sortColumn = 'courseName' AND @sortDirection = 'ASC' THEN CourseName END ASC,CASE WHEN @sortColumn = 'courseName' AND @sortDirection = 'DESC' THEN CourseName END DESC,
-	CASE WHEN @sortColumn = 'courseCode' AND @sortDirection = 'ASC' THEN CourseCode END ASC,CASE WHEN @sortColumn = 'courseCode' AND @sortDirection = 'DESC' THEN CourseCode END DESC
+		CASE WHEN @sortColumn = 'courseName' AND @sortDirection = 'ASC' THEN CourseName END ASC,CASE WHEN @sortColumn = 'courseName' AND @sortDirection = 'DESC' THEN CourseName END DESC,
+		CASE WHEN @sortColumn = 'courseCode' AND @sortDirection = 'ASC' THEN CourseCode END ASC,CASE WHEN @sortColumn = 'courseCode' AND @sortDirection = 'DESC' THEN CourseCode END DESC
 	OFFSET @start ROWS
 	FETCH NEXT @length ROWS ONLY
 	FOR JSON PATH;

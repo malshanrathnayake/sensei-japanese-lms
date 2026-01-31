@@ -129,50 +129,52 @@ function deleteCourseButton() {
         var actionUrl = $(this).data("action-url");
         var actionParameter = $(this).data("action-parameter");
 
-        Swal.fire({
-            title: "Are you sure?",
-            text: `Do you really want to delete "${actionParameter}"?`,
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#dc3545",
-            cancelButtonColor: "#6c757d",
-            confirmButtonText: "Yes, delete it",
-            cancelButtonText: "Cancel"
-        }).then((result) => {
+        swalDelete(actionUrl, actionParameter, loadCourses);
 
-            if (result.value) {
+        //Swal.fire({
+        //    title: "Are you sure?",
+        //    text: `Do you really want to delete "${actionParameter}"?`,
+        //    icon: "warning",
+        //    showCancelButton: true,
+        //    confirmButtonColor: "#dc3545",
+        //    cancelButtonColor: "#6c757d",
+        //    confirmButtonText: "Yes, delete it",
+        //    cancelButtonText: "Cancel"
+        //}).then((result) => {
 
-                $.ajax({
-                    url: actionUrl,
-                    type: "POST",
-                    success: function (res) {
+        //    if (result.value) {
 
-                        if (res.success) {
-                            window.notyf.open({
-                                type: "success",
-                                message: res.message
-                            });
+        //        $.ajax({
+        //            url: actionUrl,
+        //            type: "POST",
+        //            success: function (res) {
 
-                            loadCourses();
+        //                if (res.success) {
+        //                    window.notyf.open({
+        //                        type: "success",
+        //                        message: res.message
+        //                    });
 
-                        } else {
-                            window.notyf.open({
-                                type: "warning",
-                                message: res.message
-                            });
-                        }
-                    },
-                    error: function () {
-                        window.notyf.open({
-                            type: "danger",
-                            message: "Server error occurred"
-                        });
-                    }
-                });
+        //                    loadCourses();
+
+        //                } else {
+        //                    window.notyf.open({
+        //                        type: "warning",
+        //                        message: res.message
+        //                    });
+        //                }
+        //            },
+        //            error: function () {
+        //                window.notyf.open({
+        //                    type: "danger",
+        //                    message: "Server error occurred"
+        //                });
+        //            }
+        //        });
 
 
-            }
-        });
+        //    }
+        //});
 
     });
 }

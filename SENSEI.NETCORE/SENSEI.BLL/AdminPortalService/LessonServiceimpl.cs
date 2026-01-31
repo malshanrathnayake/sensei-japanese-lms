@@ -5,63 +5,65 @@ using SENSEI.BLL.AdminPortalService.Interface;
 using SENSEI.BLL.SystemService.Interfaces;
 using SENSEI.DOMAIN;
 using System;
-using System.Buffers;
 using System.Collections.Generic;
 using System.Text;
 
 namespace SENSEI.BLL.AdminPortalService
 {
-    public class CourseServiceImpl : ICourseService
+    public class LessonServiceImpl: ILessonService
     {
         private readonly IDatabaseService _databaseService;
 
-        public CourseServiceImpl(IDatabaseService databaseService)
+        public LessonServiceImpl(IDatabaseService databaseService)
         {
             _databaseService = databaseService;
         }
 
-        public async Task<(bool, long)> UpdateCourse(Course course)
+        public async Task<(bool, long)> UpdateLesson(Lesson lesson)
         {
-            string userJsonString = JsonConvert.SerializeObject(course);
+            string userJsonString = JsonConvert.SerializeObject(lesson);
             DataTransactionManager dataTransactionManager = new DataTransactionManager(_databaseService.GetConnectionString());
-            var (status, primaryKey) = dataTransactionManager.CourseDataManager.UpdateDataReturnPrimaryKey("UpdateCourse", userJsonString);
+            var (status, primaryKey) = dataTransactionManager.LessonDataManager.UpdateDataReturnPrimaryKey("UpdateLesson", userJsonString);
             return (status, primaryKey);
         }
 
-        public async Task<Course> GetCourse(long courseId)
+        public async Task<Lesson> GetLesson(long lessonId)
         {
             DataTransactionManager dataTransactionManager = new DataTransactionManager(_databaseService.GetConnectionString());
-            var course = dataTransactionManager.CourseDataManager.RetrieveData("GetCourse", [
-                new SqlParameter("@CourseId", courseId)
+            var lesson = dataTransactionManager.LessonDataManager.RetrieveData("GetLesson", [
+                new SqlParameter("@lessonId", lessonId)
                 ]).FirstOrDefault();
-            return course;
+            return lesson;
         }
 
-        public async Task<(IEnumerable<Course>, long)> SearchCourses(int start = 0, int length = 10, string searchValue = "", string sortColumn = "", string sortDirection = "")
+        public async Task<(IEnumerable<Lesson>, long)> SearchLessons(long courseId = 0, int start = 0, int length = 10, string searchValue = "", string sortColumn = "", string sortDirection = "")
         {
             DataTransactionManager dataTransactionManager = new DataTransactionManager(_databaseService.GetConnectionString());
-            var (courses, count) = dataTransactionManager.CourseDataManager.RetrieveDataWithCount("SearchCourses", [
+            var (lessons, count) = dataTransactionManager.LessonDataManager.RetrieveDataWithCount("SearchLessons", [
+                new SqlParameter("@courseId", courseId),
                 new SqlParameter("@start", start),
                 new SqlParameter("@length", length),
                 new SqlParameter("@searchValue", searchValue),
                 new SqlParameter("@sortColumn", sortColumn),
                 new SqlParameter("@sortDirection", sortDirection)
             ]);
-            return (courses, count);
+            return (lessons, count);
         }
 
-        public async Task<IEnumerable<Course>> GetCourses()
+        public async Task<IEnumerable<Lesson>> GetLessons(int courseId = 0)
         {
             DataTransactionManager dataTransactionManager = new DataTransactionManager(_databaseService.GetConnectionString());
-            var courses = dataTransactionManager.CourseDataManager.RetrieveData("GetCourse");
-            return courses;
-        }
-
-        public async Task<bool> DeleteCourse(long courseId)
-        {
-            DataTransactionManager dataTransactionManager = new DataTransactionManager(_databaseService.GetConnectionString());
-            var status = dataTransactionManager.CourseDataManager.DeleteData("DeleteCourse", [
+            var lessons = dataTransactionManager.LessonDataManager.RetrieveData("GetLesson", [
                 new SqlParameter("@courseId", courseId),
+            ]);
+            return lessons;
+        }
+
+        public async Task<bool> DeleteLesson(long lessonId)
+        {
+            DataTransactionManager dataTransactionManager = new DataTransactionManager(_databaseService.GetConnectionString());
+            var status = dataTransactionManager.LessonDataManager.DeleteData("DeleteLesson", [
+                new SqlParameter("@lessonId", lessonId),
             ]);
             return status;
         }

@@ -3,6 +3,15 @@
 AS
 BEGIN
 
-	SELECT * FROM Course WHERE CourseId = @courseId AND IsDeleted = 0 FOR JSON PATH;
+	SET NOCOUNT ON;
+
+	IF(@courseId = 0)
+	BEGIN
+		SELECT * FROM Course WHERE IsDeleted = 0 FOR JSON PATH;
+	END
+	ELSE
+	BEGIN
+		SELECT * FROM Course WHERE CourseId = @courseId AND IsDeleted = 0 FOR JSON PATH;
+	END
 
 END

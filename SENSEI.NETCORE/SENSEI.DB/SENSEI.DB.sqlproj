@@ -74,8 +74,12 @@
     <Build Include="Tables\StudentAddress.sql" />
     <Build Include="Tables\StudentBatchPayment.sql" />
     <Build Include="StoredProcedures\AdminPortal\UpdateCourse.sql" />
-    <Build Include="StoredProcedures\AdminPortal\GetCourses.sql" />
+    <Build Include="StoredProcedures\AdminPortal\SearchCourses.sql" />
     <Build Include="StoredProcedures\AdminPortal\GetCourse.sql" />
     <Build Include="StoredProcedures\AdminPortal\DeleteCourse.sql" />
+    <Build Include="StoredProcedures\AdminPortal\UpdateLesson.sql" />
+    <Build Include="StoredProcedures\AdminPortal\GetLesson.sql" />
+    <Build Include="StoredProcedures\AdminPortal\SearchLessons.sql" />
+    <Build Include="StoredProcedures\AdminPortal\DeleteLesson.sql" />
   </ItemGroup>
 </Project>
