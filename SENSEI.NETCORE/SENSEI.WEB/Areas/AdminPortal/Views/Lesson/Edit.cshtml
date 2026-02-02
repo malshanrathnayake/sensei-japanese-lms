@@ -19,7 +19,7 @@
           data-ajax-begin="onLessonEditBegin" data-ajax-success="onLessonEditSuccess" data-ajax-failure="onLessonEditFailure" data-ajax-complete="onLessonEditComplete">
 
         <input type="hidden" id="LessonId" name="LessonId" value="@Model.LessonId" />
-        <input type="hidden" id="CourseId" name="CourseId" value="@Model.CourseId" />
+        <input type="hidden" id="hdnCourseId" name="hdnCourseId" value="@Model.CourseId" />
 
         <div class="mb-3">
             <label class="form-label">@Html.DisplayNameFor(m => m.CourseId)</label>

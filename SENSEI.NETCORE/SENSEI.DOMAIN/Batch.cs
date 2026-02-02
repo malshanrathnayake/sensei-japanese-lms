@@ -11,6 +11,7 @@ namespace SENSEI.DOMAIN
         public DateTime BatchStartDate { get; set; }
         public DateTime BatchEndDate { get; set; }
         public bool IsDeleted { get; set; }
+        public string EncryptedKey { get; set; }
 
         // Navigation
         public Course Course { get; set; }

@@ -46,6 +46,20 @@ namespace devspark_core_data_access_layer
             }
         }
 
+        private DataManager<Batch> _batchDatamanager;
+        public DataManager<Batch> BatchDataManager
+        {
+            get
+            {
+                if (this._batchDatamanager == null)
+                {
+                    this._batchDatamanager = new DataManager<Batch>(_connectionString);
+                }
+
+                return this._batchDatamanager;
+            }
+        }
+
         #endregion
 
 

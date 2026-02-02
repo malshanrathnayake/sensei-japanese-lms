@@ -22,7 +22,7 @@
   {
     "Title": "Batch",
     "Icon": "layers",
-    "Url": "/AdminPortal/Student/Index"
+    "Url": "/AdminPortal/Batch/Index"
   },
   {
     "Title": "Student Record Request",

@@ -1,7 +1,7 @@
-﻿var lessonSaveLadda;
+﻿var batchSaveLadda;
 
 function loadCourseDropdown() {
-    $.getJSON('/AdminPortal/Lesson/GetCourseListJsonResult', function (data) {
+    $.getJSON('/AdminPortal/Batch/GetCourseListJsonResult', function (data) {
 
         $('#CourseId').empty();
         $('#CourseId').append('<option value="0">Select Course</option>')
@@ -10,7 +10,7 @@ function loadCourseDropdown() {
             data: data,
             className: 'course-select',
             title: 'Select Course',
-            dropdownParentId: 'lessonOffcanvas'
+            dropdownParentId: 'batchOffcanvas'
         });
 
         var courseId = $('#hdnCourseId').val();
@@ -22,15 +22,15 @@ function loadCourseDropdown() {
 }
 
 
-//Create Lesson
-$("#btnNewLesson").on("click", function () {
+//Create Batch
+$("#btnNewBatch").on("click", function () {
 
     var actionUrl = $(this).data("action-url");
 
-    $("#lesson-offcanvas-content").load(actionUrl, function () {
+    $("#batch-offcanvas-content").load(actionUrl, function () {
 
         // Reset unobtrusive validation (important)
-        var form = $("#lesson-create-form");
+        var form = $("#batch-create-form");
         if (form.length) {
             form.removeData("validator");
             form.removeData("unobtrusiveValidation");
@@ -38,7 +38,7 @@ $("#btnNewLesson").on("click", function () {
         }
 
         // Show offcanvas
-        var offcanvasEl = document.getElementById('lessonOffcanvas');
+        var offcanvasEl = document.getElementById('batchOffcanvas');
         var offcanvas = new bootstrap.Offcanvas(offcanvasEl);
         offcanvas.show();
 
@@ -48,21 +48,21 @@ $("#btnNewLesson").on("click", function () {
 
 });
 
-function onLessonCreateBegin() {
-    lessonSaveLadda = Ladda.create($('#btnSaveLesson')[0]);
-    lessonSaveLadda.start();
+function onBatchCreateBegin() {
+    batchSaveLadda = Ladda.create($('#btnSaveBatch')[0]);
+    batchSaveLadda.start();
 }
 
-function onLessonCreateSuccess(response) {
+function onBatchCreateSuccess(response) {
 
     if (response.success) {
 
         // Close offcanvas
-        var offcanvasEl = document.getElementById('lessonOffcanvas');
+        var offcanvasEl = document.getElementById('batchOffcanvas');
         var offcanvas = bootstrap.Offcanvas.getInstance(offcanvasEl);
         offcanvas.hide();
 
-        loadLessons();
+        loadBatches();
 
         popUpNotification('success', response.message);
 
@@ -73,27 +73,27 @@ function onLessonCreateSuccess(response) {
     }
 }
 
-function onLessonCreateFailure() {
-    popUpNotification('error', 'Failed to save lesson');
+function onBatchCreateFailure() {
+    popUpNotification('error', 'Failed to save batch');
 }
 
-function onLessonCreateComplete() {
-    if (lessonSaveLadda) {
-        lessonSaveLadda.stop();
+function onBatchCreateComplete() {
+    if (batchSaveLadda) {
+        batchSaveLadda.stop();
     }
 }
 
 
-function editLessonButton() {
-    //Edit Lesson
-    $(".edit-lesson").on("click", function () {
+function editBatchButton() {
+    //Edit Batch
+    $(".edit-batch").on("click", function () {
 
         var actionUrl = $(this).data("action-url");
 
-        $("#lesson-offcanvas-content").load(actionUrl, function () {
+        $("#batch-offcanvas-content").load(actionUrl, function () {
 
             // Reset unobtrusive validation (important)
-            var form = $("#lesson-edit-form");
+            var form = $("#batch-edit-form");
             if (form.length) {
                 form.removeData("validator");
                 form.removeData("unobtrusiveValidation");
@@ -101,7 +101,7 @@ function editLessonButton() {
             }
 
             // Show offcanvas
-            var offcanvasEl = document.getElementById('lessonOffcanvas');
+            var offcanvasEl = document.getElementById('batchOffcanvas');
             var offcanvas = new bootstrap.Offcanvas(offcanvasEl);
             offcanvas.show();
 
@@ -113,21 +113,21 @@ function editLessonButton() {
 
 }
 
-function onLessonEditBegin() {
-    lessonSaveLadda = Ladda.create($('#btnUpdateLesson')[0]);
-    lessonSaveLadda.start();
+function onBatchEditBegin() {
+    batchSaveLadda = Ladda.create($('#btnUpdateBatch')[0]);
+    batchSaveLadda.start();
 }
 
-function onLessonEditSuccess(response) {
+function onBatchEditSuccess(response) {
 
     if (response.success) {
 
         // Close offcanvas
-        var offcanvasEl = document.getElementById('lessonOffcanvas');
+        var offcanvasEl = document.getElementById('batchOffcanvas');
         var offcanvas = bootstrap.Offcanvas.getInstance(offcanvasEl);
         offcanvas.hide();
 
-        loadLessons();
+        loadBatches();
 
         popUpNotification('success', response.message);
 
@@ -138,24 +138,24 @@ function onLessonEditSuccess(response) {
     }
 }
 
-function onLessonEditFailure() {
-    popUpNotification('error', 'Failed to save lesson');
+function onBatchEditFailure() {
+    popUpNotification('error', 'Failed to save batch');
 }
 
-function onLessonEditComplete() {
-    if (lessonSaveLadda) {
-        lessonSaveLadda.stop();
+function onBatchEditComplete() {
+    if (batchSaveLadda) {
+        batchSaveLadda.stop();
     }
 }
 
-function deleteLessonButton() {
+function deleteBatchButton() {
 
-    $(".delete-lesson").on("click", function () {
+    $(".delete-batch").on("click", function () {
 
         var actionUrl = $(this).data("action-url");
         var actionParameter = $(this).data("action-parameter");
 
-        swalDelete(actionUrl, actionParameter, loadLessons);
+        swalDelete(actionUrl, actionParameter, loadBatches);
 
     });
 }
