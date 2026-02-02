@@ -1,9 +1,13 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.SignalR;
 using SENSEI.BLL.AdminPortalService;
 using SENSEI.BLL.AdminPortalService.Interface;
 using SENSEI.BLL.SystemService;
 using SENSEI.BLL.SystemService.Interfaces;
+using SENSEI.SignalR;
+using SENSEI.SignalR.Interface;
+using SENSEI.WEB.SignalR;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,11 +15,14 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddDataProtection();
 
+builder.Services.AddSignalR();
+
 var configuration = builder.Configuration;
 
 #region AdminPortalServices
 builder.Services.AddSingleton<ICourseService, CourseServiceImpl>();
 builder.Services.AddSingleton<ILessonService, LessonServiceImpl>();
+builder.Services.AddSingleton<IUserNotificationService, UserNotificationServiceImpl>();
 #endregion
 
 #region Login with Google
@@ -58,6 +65,11 @@ builder.Services.AddSession();
 
 #endregion
 
+#region SignalR Services
+builder.Services.AddSingleton<IUserIdProvider, CustomUserIdProvider>();
+builder.Services.AddSingleton<IRealtimeNotifier, RealtimeNotifierImpl>();
+#endregion
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -76,6 +88,9 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseSession();
+
+app.MapHub<NotificationHub>("/hubs/notifications");
+
 
 // AREA ROUTES FIRST
 app.MapAreaControllerRoute(

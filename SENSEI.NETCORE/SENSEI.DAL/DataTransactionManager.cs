@@ -60,6 +60,34 @@ namespace devspark_core_data_access_layer
             }
         }
 
+        private DataManager<UserNotification> _userNotificationDataManager;
+        public DataManager<UserNotification> UserNotificationDataManager
+        {
+            get
+            {
+                if (this._userNotificationDataManager == null)
+                {
+                    this._userNotificationDataManager = new DataManager<UserNotification>(_connectionString);
+                }
+
+                return this._userNotificationDataManager;
+            }
+        }
+
+        private DataManager<UserNotificationRead> _userNotificationReadDataManager;
+        public DataManager<UserNotificationRead> UserNotificationReadDataManager
+        {
+            get
+            {
+                if (this._userNotificationReadDataManager == null)
+                {
+                    this._userNotificationReadDataManager = new DataManager<UserNotificationRead>(_connectionString);
+                }
+
+                return this._userNotificationReadDataManager;
+            }
+        }
+
         #endregion
 
 

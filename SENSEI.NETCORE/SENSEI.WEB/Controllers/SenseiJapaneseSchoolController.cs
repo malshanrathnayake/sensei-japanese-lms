@@ -91,6 +91,18 @@ namespace SENSEI.WEB.Controllers
             var email = claims?.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
             var name = claims?.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
 
+            var appClaims = new List<Claim>
+            {
+                new Claim("UserId", "123"),
+                new Claim(ClaimTypes.Email, email),
+                new Claim(ClaimTypes.Name, name)
+            };
+
+            var identity = new ClaimsIdentity(appClaims, CookieAuthenticationDefaults.AuthenticationScheme);
+            var principal = new ClaimsPrincipal(identity);
+
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+
             TempData.AddNotification(new NotificationMessage
             {
                 Type = "success",

@@ -81,5 +81,7 @@
     <Build Include="StoredProcedures\AdminPortal\GetLesson.sql" />
     <Build Include="StoredProcedures\AdminPortal\SearchLessons.sql" />
     <Build Include="StoredProcedures\AdminPortal\DeleteLesson.sql" />
+    <Build Include="Tables\UserNotification.sql" />
+    <Build Include="Tables\UserNotificationRead.sql" />
   </ItemGroup>
 </Project>

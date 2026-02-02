@@ -6,5 +6,6 @@
     <Deploy />
   </Project>
   <Project Path="SENSEI.DOMAIN/SENSEI.DOMAIN.csproj" />
+  <Project Path="SENSEI.SignalR/SENSEI.SignalR.csproj" Id="b3006af3-0575-4d98-806c-1041e98bf185" />
   <Project Path="SENSEI.WEB/SENSEI.WEB.csproj" />
 </Solution>

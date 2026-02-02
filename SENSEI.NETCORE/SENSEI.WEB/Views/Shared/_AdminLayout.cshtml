@@ -97,6 +97,7 @@
 	<script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
 	<script src="https://cdn.datatables.net/1.13.8/js/dataTables.bootstrap5.min.js"></script>
 
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
 
 	<script>
 
@@ -141,6 +142,54 @@
 			});
 
 		});
+	</script>
+
+	<!--SignalR Connections-->
+	<script>
+
+		$(document).ready(function () {
+
+			const notificationConnection = new signalR.HubConnectionBuilder()
+				.withUrl("/hubs/notifications")
+				.build();
+
+			notificationConnection.on("ReceiveNotification", function (data) {
+
+				popUpNotification('success', data.message);
+
+				const html = `
+					<a href="#" class="list-group-item">
+						<div class="row g-0 align-items-center">
+							<div class="col-2">
+								<i class="text-warning" data-feather="${data.icon}"></i>
+							</div>
+							<div class="col-10">
+								<div class="text-dark">${data.title}</div>
+								<div class="text-muted small mt-1">${data.message}</div>
+								<div class="text-muted small mt-1">
+									${formatDate(data.createdAt)}
+								</div>
+							</div>
+						</div>
+					</a>
+				`;
+
+				$("#userNotificationlist").prepend(html);
+
+				if (window.feather) {
+					feather.replace();
+				}
+
+			});
+
+			notificationConnection.start();
+		});
+
+		function formatDate(dateStr) {
+			const d = new Date(dateStr);
+			return d.toLocaleDateString("en-GB") + " " + d.toLocaleTimeString("en-GB", { hour: '2-digit', minute: '2-digit' });
+		}
+
 	</script>
 
 	@await RenderSectionAsync("Scripts", required: false)
