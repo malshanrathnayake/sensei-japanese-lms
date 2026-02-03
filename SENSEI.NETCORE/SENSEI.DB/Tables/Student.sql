@@ -12,5 +12,8 @@ CREATE TABLE [dbo].[Student]
     [CallingName] NVARCHAR(200) NOT NULL,
     [NIC] NVARCHAR(200) NOT NULL,
     [IsDeleted] BIT NOT NULL,
-    CONSTRAINT [PK_Student] PRIMARY KEY CLUSTERED ([StudentId])
+    [DateOfBirth] DATETIME NOT NULL,
+
+    CONSTRAINT [PK_Student_StudentId] PRIMARY KEY CLUSTERED ([StudentId]),
+    CONSTRAINT [FK_Student_UserId] FOREIGN KEY ([UserId]) REFERENCES [User]([UserId])
 );

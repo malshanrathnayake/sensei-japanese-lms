@@ -87,5 +87,6 @@
     <Build Include="StoredProcedures\AdminPortal\GetBatch.sql" />
     <Build Include="StoredProcedures\AdminPortal\SearchBatches.sql" />
     <Build Include="StoredProcedures\AdminPortal\DeleteBatch.sql" />
+    <Build Include="Tables\StudentRegistration.sql" />
   </ItemGroup>
 </Project>

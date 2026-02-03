@@ -17,11 +17,17 @@ namespace SENSEI.DOMAIN
         public string CallingName { get; set; }
         public string NIC { get; set; }
         public bool IsDeleted { get; set; }
+        public long? StudentRegistrationId { get; set; }
+        public DateTime DateOfBirth { get; set; }
 
-        // Navigation
+        #region NAVIGATIONAL PROPERTIES
+
         public User User { get; set; }
         public ICollection<StudentAddress> Addresses { get; set; } = new List<StudentAddress>();
         public ICollection<StudentBatch> StudentBatches { get; set; } = new List<StudentBatch>();
         public ICollection<BatchStudentLessonAccess> LessonAccesses { get; set; } = new List<BatchStudentLessonAccess>();
+        public StudentRegistration StudentRegistration { get; set; }
+
+        #endregion
     }
 }
