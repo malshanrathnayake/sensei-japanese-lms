@@ -8,15 +8,21 @@ BEGIN
 
 	IF(@lessonId != 0)
 	BEGIN
-		SELECT * FROM Lesson WHERE LessonId = @lessonId AND IsDeleted = 0 FOR JSON PATH;
+		SELECT Lesson.*,
+			JSON_QUERY(ISNULL((SELECT * FROM Course WHERE Course.CourseId = Lesson.CourseId FOR JSON PATH, WITHOUT_ARRAY_WRAPPER), null)) AS 'Course'
+		FROM Lesson WHERE Lesson.IsDeleted = 0 AND Lesson.LessonId = @lessonId FOR JSON PATH;
 	END
 	ELSE IF(@courseId != 0)
 	BEGIN
-		SELECT * FROM Lesson WHERE CourseId = @courseId AND IsDeleted = 0 FOR JSON PATH;
+		SELECT Lesson.*,
+			JSON_QUERY(ISNULL((SELECT * FROM Course WHERE Course.CourseId = Lesson.CourseId FOR JSON PATH, WITHOUT_ARRAY_WRAPPER), null)) AS 'Course'
+		FROM Lesson WHERE Lesson.IsDeleted = 0 AND Lesson.CourseId = @courseId FOR JSON PATH;
 	END
 	ELSE
 	BEGIN
-		SELECT * FROM Lesson WHERE IsDeleted = 0 FOR JSON PATH;
+		SELECT Lesson.*,
+			JSON_QUERY(ISNULL((SELECT * FROM Course WHERE Course.CourseId = Lesson.CourseId FOR JSON PATH, WITHOUT_ARRAY_WRAPPER), null)) AS 'Course'
+		FROM Lesson WHERE Lesson.IsDeleted = 0 FOR JSON PATH;
 	END
 
 END

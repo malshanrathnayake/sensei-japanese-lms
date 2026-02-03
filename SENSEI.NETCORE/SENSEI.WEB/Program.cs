@@ -23,6 +23,7 @@ var configuration = builder.Configuration;
 builder.Services.AddSingleton<ICourseService, CourseServiceImpl>();
 builder.Services.AddSingleton<ILessonService, LessonServiceImpl>();
 builder.Services.AddSingleton<IUserNotificationService, UserNotificationServiceImpl>();
+builder.Services.AddSingleton<IBatchService, BatchServiceImpl>();
 #endregion
 
 #region Login with Google

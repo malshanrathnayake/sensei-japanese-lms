@@ -83,5 +83,9 @@
     <Build Include="StoredProcedures\AdminPortal\DeleteLesson.sql" />
     <Build Include="Tables\UserNotification.sql" />
     <Build Include="Tables\UserNotificationRead.sql" />
+    <Build Include="StoredProcedures\AdminPortal\UpdateBatch.sql" />
+    <Build Include="StoredProcedures\AdminPortal\GetBatch.sql" />
+    <Build Include="StoredProcedures\AdminPortal\SearchBatches.sql" />
+    <Build Include="StoredProcedures\AdminPortal\DeleteBatch.sql" />
   </ItemGroup>
 </Project>

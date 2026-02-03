@@ -74,7 +74,7 @@
 
 </div>
 
-@Html.RenderAction("BatchLessonOffCanvas", "Batch", new { area = "AdminPortal" })
+@Html.RenderAction("BatchOffCanvas", "Batch", new { area = "AdminPortal" })
 
 @section Scripts {
 
@@ -175,8 +175,8 @@
                     },
                     { data: 'course.courseName', name:'course.courseName' },
                     { data: 'batchName', name:'batchName' },
-                    { data: 'batchStartDate', name:'batchStartDate' }
-                    { data: 'batchEndDate', name:'batchEndDate' }
+                    { data: 'batchStartDate', name:'batchStartDate', render: function (data) { return renderDateOnly(data); } },
+                    { data: 'batchEndDate', name:'batchEndDate', render: function (data) { return renderDateOnly(data); } },
                 ],
                 drawCallback: function () {
 
@@ -190,6 +190,13 @@
             });
 
         }
+
+        function renderDateOnly(data) {
+            if (!data) return '';
+
+            return data.split('T')[0];
+        }
+
 
     </script>
 

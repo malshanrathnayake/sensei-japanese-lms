@@ -33,13 +33,13 @@
 
         <div class="mb-3">
             <label class="form-label">@Html.DisplayNameFor(m => m.BatchStartDate)</label>
-            <input class="form-control" asp-for="BatchStartDate" />
+            <input type="text" class="form-control datepicker" asp-for="BatchStartDate" autocomplete="off" />
             <span asp-validation-for="BatchStartDate" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
             <label class="form-label">@Html.DisplayNameFor(m => m.BatchEndDate)</label>
-            <input class="form-control" asp-for="BatchEndDate" />
+            <input type="text" class="form-control datepicker" asp-for="BatchEndDate" autocomplete="off" />
             <span asp-validation-for="BatchEndDate" class="text-danger"></span>
         </div>
 

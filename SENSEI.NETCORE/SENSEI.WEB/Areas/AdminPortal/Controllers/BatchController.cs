@@ -29,7 +29,7 @@ namespace SENSEI.WEB.Areas.AdminPortal.Controllers
             return View();
         }
 
-        public async Task<IActionResult> ListOfLessons(long courseId = 0)
+        public async Task<IActionResult> ListOfBatches(long courseId = 0)
         {
             int draw = int.Parse(Request.Form["draw"]);
             int start = int.Parse(Request.Form["start"]);

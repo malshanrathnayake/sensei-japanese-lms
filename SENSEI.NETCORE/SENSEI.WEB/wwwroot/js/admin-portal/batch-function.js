@@ -42,6 +42,22 @@ $("#btnNewBatch").on("click", function () {
         var offcanvas = new bootstrap.Offcanvas(offcanvasEl);
         offcanvas.show();
 
+        $('#BatchStartDate').datepicker({
+            format: 'yyyy-mm-dd',
+            autoclose: true,
+            todayHighlight: true,
+        }).on('changeDate', function (e) {
+            $('#BatchEndDate').datepicker('setStartDate', e.date);
+        });
+
+        $('#BatchEndDate').datepicker({
+            format: 'yyyy-mm-dd',
+            autoclose: true,
+            todayHighlight: true,
+        }).on('changeDate', function (e) {
+            $('#BatchStartDate').datepicker('setEndDate', e.date);
+        });
+
         loadCourseDropdown();
 
     });
@@ -104,6 +120,22 @@ function editBatchButton() {
             var offcanvasEl = document.getElementById('batchOffcanvas');
             var offcanvas = new bootstrap.Offcanvas(offcanvasEl);
             offcanvas.show();
+
+            $('#BatchStartDate').datepicker({
+                format: 'yyyy-mm-dd',
+                autoclose: true,
+                todayHighlight: true,
+            }).on('changeDate', function (e) {
+                $('#BatchEndDate').datepicker('setStartDate', e.date);
+            });
+
+            $('#BatchEndDate').datepicker({
+                format: 'yyyy-mm-dd',
+                autoclose: true,
+                todayHighlight: true,
+            }).on('changeDate', function (e) {
+                $('#BatchStartDate').datepicker('setEndDate', e.date);
+            });
 
             loadCourseDropdown();
 
