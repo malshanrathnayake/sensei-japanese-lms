@@ -91,9 +91,15 @@ namespace SENSEI.WEB.Controllers
             var email = claims?.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
             var name = claims?.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
 
+            Random rnd = new Random();
+
+            var randuserId = rnd.Next(1, 1000);
+
+            HttpContext.Session.SetString("UserId", randuserId.ToString());
+
             var appClaims = new List<Claim>
             {
-                new Claim("UserId", "123"),
+                new Claim("UserId", randuserId.ToString()),
                 new Claim(ClaimTypes.Email, email),
                 new Claim(ClaimTypes.Name, name)
             };

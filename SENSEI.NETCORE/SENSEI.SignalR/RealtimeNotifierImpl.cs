@@ -19,5 +19,19 @@ namespace SENSEI.SignalR
         {
             return _notificationHub.Clients.User(userId.ToString()).SendAsync("ReceiveNotification", payload);
         }
+
+        public Task NotifyAll(object payload)
+        {
+            return _notificationHub.Clients.All.SendAsync("ReceiveNotification", payload);
+        }
+
+        public Task NotifyUsers(IEnumerable<long> userIds, object payload)
+        {
+            var ids = userIds.Select(x => x.ToString()).ToList();
+
+            return _notificationHub.Clients.Users(ids).SendAsync("ReceiveNotification", payload);
+        }
+
+
     }
 }

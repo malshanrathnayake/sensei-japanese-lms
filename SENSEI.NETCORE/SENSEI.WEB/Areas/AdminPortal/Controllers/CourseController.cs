@@ -37,7 +37,10 @@ namespace SENSEI.WEB.Areas.AdminPortal.Controllers
 
             IQueryable<Course> courses = new List<Course>().AsQueryable();
 
-            var (courseslist, count) = await _courseService.SearchCourses(start, length, searchValue, sortColumn, sortDirection);
+            var userId = Convert.ToInt64(HttpContext.Session.GetString("UserId"));
+
+
+            var (courseslist, count) = await _courseService.SearchCourses(start, length, searchValue, sortColumn, sortDirection, userId);
             courses = courseslist.AsQueryable();
 
             courses.ToList().ForEach(e =>

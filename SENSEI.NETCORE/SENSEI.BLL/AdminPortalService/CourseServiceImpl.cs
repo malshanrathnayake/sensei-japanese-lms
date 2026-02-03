@@ -40,7 +40,7 @@ namespace SENSEI.BLL.AdminPortalService
             return course;
         }
 
-        public async Task<(IEnumerable<Course>, long)> SearchCourses(int start = 0, int length = 10, string searchValue = "", string sortColumn = "", string sortDirection = "")
+        public async Task<(IEnumerable<Course>, long)> SearchCourses(int start = 0, int length = 10, string searchValue = "", string sortColumn = "", string sortDirection = "", long userId = 0)
         {
             DataTransactionManager dataTransactionManager = new DataTransactionManager(_databaseService.GetConnectionString());
             var (courses, count) = dataTransactionManager.CourseDataManager.RetrieveDataWithCount("SearchCourses", [
@@ -51,7 +51,7 @@ namespace SENSEI.BLL.AdminPortalService
                 new SqlParameter("@sortDirection", sortDirection)
             ]);
 
-            await _realtimeNotifier.NotifyUser(123, new
+            await _realtimeNotifier.NotifyAll(new
             {
                 message = "Hello from server"
             });
