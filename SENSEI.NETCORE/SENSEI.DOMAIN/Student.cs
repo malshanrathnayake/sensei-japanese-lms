@@ -19,6 +19,9 @@ namespace SENSEI.DOMAIN
         public bool IsDeleted { get; set; }
         public long? StudentRegistrationId { get; set; }
         public DateTime DateOfBirth { get; set; }
+        public int CityId { get; set; }
+        public int BranchId { get; set; }
+        public int StudentLearningModeId { get; set; }
 
         #region NAVIGATIONAL PROPERTIES
 
@@ -27,6 +30,9 @@ namespace SENSEI.DOMAIN
         public ICollection<StudentBatch> StudentBatches { get; set; } = new List<StudentBatch>();
         public ICollection<BatchStudentLessonAccess> LessonAccesses { get; set; } = new List<BatchStudentLessonAccess>();
         public StudentRegistration StudentRegistration { get; set; }
+        public City City { get; set; }
+        public Branch Branch { get; set; }
+        public StudentLearningMode StudentLearningMode { get; set; }
 
         #endregion
     }

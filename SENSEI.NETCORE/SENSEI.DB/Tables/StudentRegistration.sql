@@ -10,6 +10,14 @@
 	[CallingName] NVARCHAR(100) NULL,
 	[NIC] NVARCHAR(20) NOT NULL,
 	[DateOfBirth] DATETIME NOT NULL,
+	[IsApproved] BIT NOT NULL DEFAULT 0,
+	[ApprovedById] BIGINT NULL,
+	[AddressLineOne] NVARCHAR(200) NOT NULL,
+	[AddressLineTwo] NVARCHAR(200) NULL,
+	[CityId] BIGINT NOT NULL,
+	[PostalCode] NVARCHAR(20) NOT NULL,
+	[BranchId] BIGINT NULL,
+	[StudentLearningModeId] INT NOT NULL,
 
 	CONSTRAINT [PK_StudentRegistration_StudentRegistrationId] PRIMARY KEY CLUSTERED ([StudentRegistrationId])
 )

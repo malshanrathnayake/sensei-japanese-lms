@@ -16,5 +16,20 @@ namespace SENSEI.DOMAIN
         public string CallingName { get; set; }
         public string NIC { get; set; }
         public DateTime DateOfBirth { get; set; }
+        public bool IsApproved { get; set; }
+        public long ApprovedById { get; set; }
+        public string AddressLineOne { get; set; }
+        public string AddressLineTwo { get; set; }
+        public string PostalCode { get; set; }
+        public int CityId { get; set; }
+        public int BranchId { get; set; }
+        public int StudentLearningModeId { get; set; }
+
+        #region NAVIGATIONAL PROPERTIES
+        public Staff ApprovedBy { get; set; }
+        public City City { get; set; }
+        public Branch Branch { get; set; }
+        public StudentLearningMode StudentLearningMode { get; set; }
+        #endregion
     }
 }

@@ -1,0 +1,12 @@
+﻿CREATE TABLE [dbo].[Branch]
+(
+	[BranchId] INT NOT NULL IDENTITY,
+	[BranchName] NVARCHAR(100) NOT NULL,
+	[CityId] INT NOT NULL,
+	[ContactNumber] NVARCHAR(15) NOT NULL,
+	[Email] NVARCHAR(100) NOT NULL,
+	[Address] NVARCHAR(255) NOT NULL,
+
+	CONSTRAINT [PK_Branch_BranchId] PRIMARY KEY CLUSTERED ([BranchId]),
+	CONSTRAINT [FK_Branch_City_CityId] FOREIGN KEY ([CityId]) REFERENCES [City]([CityId])
+)

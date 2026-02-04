@@ -8,10 +8,12 @@ namespace SENSEI.DOMAIN
         public long EmployeeId { get; set; }
         public string AddressLineOne { get; set; }
         public string AddressLineTwo { get; set; }
-        public string City { get; set; }
+        public int CityId { get; set; }
         public bool IsDeleted { get; set; }
 
-        // Navigation
+        #region NAVIGATIONAL PROPERTIES
         public Staff Employee { get; set; }
+        public City City { get; set; }
+        #endregion
     }
 }

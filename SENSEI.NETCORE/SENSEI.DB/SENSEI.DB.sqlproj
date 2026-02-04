@@ -59,6 +59,7 @@
     <Folder Include="Tables" />
     <Folder Include="StoredProcedures" />
     <Folder Include="StoredProcedures\AdminPortal" />
+    <Folder Include="StoredProcedures\DatabseConfigurations" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="Tables\User.sql" />
@@ -88,5 +89,11 @@
     <Build Include="StoredProcedures\AdminPortal\SearchBatches.sql" />
     <Build Include="StoredProcedures\AdminPortal\DeleteBatch.sql" />
     <Build Include="Tables\StudentRegistration.sql" />
+    <Build Include="Tables\Branch.sql" />
+    <Build Include="Tables\City.sql" />
+    <Build Include="Tables\State.sql" />
+    <Build Include="Tables\Country.sql" />
+    <Build Include="StoredProcedures\DatabseConfigurations\UpdateTableDataSriLanka.sql" />
+    <Build Include="Tables\StudentLearningMode.sql" />
   </ItemGroup>
 </Project>
