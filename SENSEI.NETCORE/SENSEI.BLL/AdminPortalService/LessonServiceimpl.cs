@@ -23,23 +23,23 @@ namespace SENSEI.BLL.AdminPortalService
         {
             string userJsonString = JsonConvert.SerializeObject(lesson);
             DataTransactionManager dataTransactionManager = new DataTransactionManager(_databaseService.GetConnectionString());
-            var (status, primaryKey) = dataTransactionManager.LessonDataManager.UpdateDataReturnPrimaryKey("UpdateLesson", userJsonString);
+            var (status, primaryKey) = await dataTransactionManager.LessonDataManager.UpdateDataReturnPrimaryKey("UpdateLesson", userJsonString);
             return (status, primaryKey);
         }
 
         public async Task<Lesson> GetLesson(long lessonId)
         {
             DataTransactionManager dataTransactionManager = new DataTransactionManager(_databaseService.GetConnectionString());
-            var lesson = dataTransactionManager.LessonDataManager.RetrieveData("GetLesson", [
+            var lesson = await dataTransactionManager.LessonDataManager.RetrieveData("GetLesson", [
                 new SqlParameter("@lessonId", lessonId)
-                ]).FirstOrDefault();
-            return lesson;
+                ]);
+            return lesson.FirstOrDefault();
         }
 
         public async Task<(IEnumerable<Lesson>, long)> SearchLessons(long courseId = 0, int start = 0, int length = 10, string searchValue = "", string sortColumn = "", string sortDirection = "")
         {
             DataTransactionManager dataTransactionManager = new DataTransactionManager(_databaseService.GetConnectionString());
-            var (lessons, count) = dataTransactionManager.LessonDataManager.RetrieveDataWithCount("SearchLessons", [
+            var (lessons, count) = await dataTransactionManager.LessonDataManager.RetrieveDataWithCount("SearchLessons", [
                 new SqlParameter("@courseId", courseId),
                 new SqlParameter("@start", start),
                 new SqlParameter("@length", length),
@@ -53,7 +53,7 @@ namespace SENSEI.BLL.AdminPortalService
         public async Task<IEnumerable<Lesson>> GetLessons(int courseId = 0)
         {
             DataTransactionManager dataTransactionManager = new DataTransactionManager(_databaseService.GetConnectionString());
-            var lessons = dataTransactionManager.LessonDataManager.RetrieveData("GetLesson", [
+            var lessons = await dataTransactionManager.LessonDataManager.RetrieveData("GetLesson", [
                 new SqlParameter("@courseId", courseId),
             ]);
             return lessons;
@@ -62,7 +62,7 @@ namespace SENSEI.BLL.AdminPortalService
         public async Task<bool> DeleteLesson(long lessonId)
         {
             DataTransactionManager dataTransactionManager = new DataTransactionManager(_databaseService.GetConnectionString());
-            var status = dataTransactionManager.LessonDataManager.DeleteData("DeleteLesson", [
+            var status = await dataTransactionManager.LessonDataManager.DeleteData("DeleteLesson", [
                 new SqlParameter("@lessonId", lessonId),
             ]);
             return status;

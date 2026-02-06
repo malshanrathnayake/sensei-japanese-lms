@@ -18,7 +18,7 @@ namespace devspark_core_data_access_layer
             _connectionString = connectionString;
         }
 
-        public bool InsertData(string procedureName, string jsonString)
+        public async Task<bool> InsertData(string procedureName, string jsonString)
         {
             bool status = false;
 
@@ -70,7 +70,7 @@ namespace devspark_core_data_access_layer
             }
         }
 
-        public bool UpdateData(string procedureName, string jsonString)
+        public async Task<bool> UpdateData(string procedureName, string jsonString)
         {
             bool status = false;
 
@@ -124,7 +124,7 @@ namespace devspark_core_data_access_layer
 
         }
 
-        public (bool, long) UpdateDataReturnPrimaryKey(string procedureName, string jsonString)
+        public async Task<(bool, long)> UpdateDataReturnPrimaryKey(string procedureName, string jsonString)
         {
             bool status = false;
             long primarykey = 0;
@@ -188,7 +188,7 @@ namespace devspark_core_data_access_layer
 
         }
 
-        public ICollection<TEntity> RetrieveData(string procedureName, SqlParameter[] parameters = null)
+        public async Task<ICollection<TEntity>> RetrieveData(string procedureName, SqlParameter[] parameters = null)
         {
             ICollection<TEntity> data = new List<TEntity>();
 
@@ -241,7 +241,7 @@ namespace devspark_core_data_access_layer
         }
 
 
-        public (ICollection<TEntity>, long) RetrieveDataWithCount(string procedureName, SqlParameter[] parameters = null)
+        public async Task<(ICollection<TEntity>, long)> RetrieveDataWithCount(string procedureName, SqlParameter[] parameters = null)
         {
             ICollection<TEntity> data = new List<TEntity>();
             long count = 0;
@@ -306,7 +306,7 @@ namespace devspark_core_data_access_layer
         }
 
 
-        public bool DeleteData(string procedureName, SqlParameter[] parameters = null)
+        public async Task<bool> DeleteData(string procedureName, SqlParameter[] parameters = null)
         {
             bool status = false;
 

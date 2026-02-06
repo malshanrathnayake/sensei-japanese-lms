@@ -23,23 +23,23 @@ namespace SENSEI.BLL.AdminPortalService
         {
             string userJsonString = JsonConvert.SerializeObject(batch);
             DataTransactionManager dataTransactionManager = new DataTransactionManager(_databaseService.GetConnectionString());
-            var (status, primaryKey) = dataTransactionManager.BatchDataManager.UpdateDataReturnPrimaryKey("UpdateBatch", userJsonString);
+            var (status, primaryKey) = await dataTransactionManager.BatchDataManager.UpdateDataReturnPrimaryKey("UpdateBatch", userJsonString);
             return (status, primaryKey);
         }
 
         public async Task<Batch> GetBatch(long batchId)
         {
             DataTransactionManager dataTransactionManager = new DataTransactionManager(_databaseService.GetConnectionString());
-            var batch = dataTransactionManager.BatchDataManager.RetrieveData("GetBatch", [
+            var batch = await dataTransactionManager.BatchDataManager.RetrieveData("GetBatch", [
                 new SqlParameter("@batchId", batchId)
-            ]).FirstOrDefault();
-            return batch;
+            ]);
+            return batch.FirstOrDefault();
         }
 
         public async Task<(IEnumerable<Batch>, long)> SearchBatches(long courseId = 0, int start = 0, int length = 10, string searchValue = "", string sortColumn = "", string sortDirection = "")
         {
             DataTransactionManager dataTransactionManager = new DataTransactionManager(_databaseService.GetConnectionString());
-            var (batches, count) = dataTransactionManager.BatchDataManager.RetrieveDataWithCount("SearchBatches", [
+            var (batches, count) = await dataTransactionManager.BatchDataManager.RetrieveDataWithCount("SearchBatches", [
                 new SqlParameter("@courseId", courseId),
                 new SqlParameter("@start", start),
                 new SqlParameter("@length", length),
@@ -53,7 +53,7 @@ namespace SENSEI.BLL.AdminPortalService
         public async Task<IEnumerable<Batch>> GetBatches(int courseId = 0)
         {
             DataTransactionManager dataTransactionManager = new DataTransactionManager(_databaseService.GetConnectionString());
-            var batches = dataTransactionManager.BatchDataManager.RetrieveData("GetBatch", [
+            var batches = await dataTransactionManager.BatchDataManager.RetrieveData("GetBatch", [
                 new SqlParameter("@courseId", courseId),
             ]);
             return batches;
@@ -62,7 +62,7 @@ namespace SENSEI.BLL.AdminPortalService
         public async Task<bool> DeleteBatch(long batchId)
         {
             DataTransactionManager dataTransactionManager = new DataTransactionManager(_databaseService.GetConnectionString());
-            var status = dataTransactionManager.BatchDataManager.DeleteData("DeleteBatch", [
+            var status = await dataTransactionManager.BatchDataManager.DeleteData("DeleteBatch", [
                 new SqlParameter("@batchId", batchId),
             ]);
             return status;

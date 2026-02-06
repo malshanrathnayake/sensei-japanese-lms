@@ -1,4 +1,358 @@
-﻿@{
+﻿@using SENSEI.DOMAIN
+
+@model StudentRegistration
+
+@{
     Layout = "~/Views/Shared/_AuthLayout.cshtml";
     ViewData["Title"] = "Register";
+}
+
+<div class="container d-flex flex-column">
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1></h1>
+        <h1 class="h1 mb-4 mt-4">Student Online Registration</h1>
+        <h1></h1>
+    </div>
+
+    <form asp-action="Register" asp-controller="SenseiJapaneseSchool" asp-area="" method="post" id="student-register">
+
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Personal Information</h5>
+                    </div>
+                    <div class="card-body">
+
+                        <div class="row">
+
+                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xm-12 mb-3">
+                                <label class="form-label">@Html.DisplayNameFor(m => m.Initials)</label>
+                                @Html.TextBoxFor(m => m.Initials, new { @class = "form-control" })
+                                <span asp-validation-for="Initials" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xm-12 mb-3">
+                                <label class="form-label">@Html.DisplayNameFor(m => m.FirstName)</label>
+                                @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control" })
+                                <span asp-validation-for="FirstName" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xm-12 mb-3">
+                                <label class="form-label">@Html.DisplayNameFor(m => m.MiddleName)</label>
+                                @Html.TextBoxFor(m => m.MiddleName, new { @class = "form-control" })
+                                <span asp-validation-for="MiddleName" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xm-12 mb-3">
+                                <label class="form-label">@Html.DisplayNameFor(m => m.LastName)</label>
+                                @Html.TextBoxFor(m => m.LastName, new { @class = "form-control" })
+                                <span asp-validation-for="LastName" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xm-12 mb-3">
+                                <label class="form-label">@Html.DisplayNameFor(m => m.CallingName)</label>
+                                @Html.TextBoxFor(m => m.CallingName, new { @class = "form-control" })
+                                <span asp-validation-for="CallingName" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xm-12 mb-3">
+                                <label class="form-label">@Html.DisplayNameFor(m => m.NIC)</label>
+                                @Html.TextBoxFor(m => m.NIC, new { @class = "form-control" })
+                                <span asp-validation-for="NIC" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xm-12 mb-3">
+                                <label class="form-label">@Html.DisplayNameFor(m => m.DateOfBirth)</label>
+                                @Html.TextBoxFor(m => m.DateOfBirth, new { @class = "form-control datepicker" })
+                                <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Contact Information</h5>
+                    </div>
+                    <div class="card-body">
+
+                        <div class="row">
+
+                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xm-12 mb-3">
+                                <label class="form-label">@Html.DisplayNameFor(m => m.AddressLineOne)</label>
+                                @Html.TextBoxFor(m => m.AddressLineOne, new { @class = "form-control" })
+                                <span asp-validation-for="AddressLineOne" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xm-12 mb-3">
+                                <label class="form-label">@Html.DisplayNameFor(m => m.AddressLineTwo)</label>
+                                @Html.TextBoxFor(m => m.AddressLineTwo, new { @class = "form-control" })
+                                <span asp-validation-for="AddressLineTwo" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xm-12 mb-3">
+                                <label class="form-label">@Html.DisplayNameFor(m => m.PostalCode)</label>
+                                @Html.TextBoxFor(m => m.PostalCode, new { @class = "form-control" })
+                                <span asp-validation-for="PostalCode" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xm-12">
+                                <div class="mb-3" id="country-wrapper">
+                                    <label class="form-label">@Html.DisplayNameFor(m => m.City.State.CountryId)</label>
+                                    <select id="CountryId" class="form-control country-select" name="CountryId" asp-for="City.State.CountryId"></select>
+                                    <span asp-validation-for="City.State.CountryId" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xm-12">
+                                <div class="mb-3" id="state-wrapper">
+                                    <label class="form-label">@Html.DisplayNameFor(m => m.City.StateId)</label>
+                                    <select id="StateId" class="form-control state-select" name="StateId" asp-for="City.StateId"></select>
+                                    <span asp-validation-for="City.StateId" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xm-12">
+                                <div class="mb-3" id="city-wrapper">
+                                    <label class="form-label">@Html.DisplayNameFor(m => m.CityId)</label>
+                                    <select id="CityId" class="form-control city-select" name="CityId" asp-for="CityId"></select>
+                                    <span asp-validation-for="CityId" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xm-12 mb-3">
+                                <label class="form-label">@Html.DisplayNameFor(m => m.PhoneNo)</label>
+                                @Html.TextBoxFor(m => m.PhoneNo, new { @class = "form-control" })
+                                <span asp-validation-for="PhoneNo" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xm-12 mb-3">
+                                <label class="form-label">@Html.DisplayNameFor(m => m.Email)</label>
+                                @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                                <span asp-validation-for="Email" class="text-danger"></span>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Course Information</h5>
+                    </div>
+                    <div class="card-body">
+
+                        <div class="row">
+
+                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xm-12">
+                                <div class="mb-3" id="learningmode-wrapper">
+                                    <label class="form-label">@Html.DisplayNameFor(m => m.StudentLearningModeId)</label>
+                                    <select id="StudentLearningModeId" class="form-control learningmode-select" name="CourseId" asp-for="StudentLearningModeId"></select>
+                                    <span asp-validation-for="StudentLearningModeId" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xm-12" id="branch-field">
+                                <div class="mb-3" id="branch-wrapper">
+                                    <label class="form-label">@Html.DisplayNameFor(m => m.BranchId)</label>
+                                    <select id="BranchId" class="form-control branch-select" name="BranchId" asp-for="BranchId"></select>
+                                    <span asp-validation-for="BranchId" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xm-12">
+                                <div class="mb-3" id="course-wrapper">
+                                    <label class="form-label">@Html.DisplayNameFor(m => m.CourseId)</label>
+                                    <select id="CourseId" class="form-control course-select" name="CourseId" asp-for="CourseId"></select>
+                                    <span asp-validation-for="CourseId" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+
+            <h1 class="h3 mb-0"></h1>
+
+            <button type="submit" class="btn btn-primary" id="btnRegister">
+                <i class="fas fa-plus"></i> Register
+            </button>
+
+        </div>
+
+    </form>
+</div>
+
+@section Scripts {
+
+    <script type="text/javascript">
+    
+        $(document).ready(function () {
+
+            $("select#CountryId").change(function () {
+                loadOnCountryChange();
+            });
+
+            $("select#StateId").change(function () {
+                loadOnStateChange();
+            });
+
+            $.getJSON('/SenseiJapaneseSchool/GetCourseListJsonResult', function (data) {
+
+                $('#CourseId').empty();
+                $('#CourseId').append('<option value="0">Select Course</option>')
+
+                loadSelectBox({
+                    data: data,
+                    className: 'course-select',
+                    title: 'Select Course',
+                    dropdownParentId: 'course-wrapper'
+                });
+
+                var courseId = $('#CourseId').val();
+
+                if (courseId) {
+                    $('#CourseId').val(courseId).trigger('change');
+                }
+            });
+
+            $.getJSON('/SenseiJapaneseSchool/GetCountryListJsonResult', function (data) {
+
+                // $('#CountryId').empty();
+                // $('#CountryId').append('<option value="0">Select Country</option>')
+
+                loadSelectBox({
+                    data: data,
+                    className: 'country-select',
+                    title: 'Select Country',
+                    dropdownParentId: 'country-wrapper'
+                });
+
+                var countryId = $('#CountryId').val();
+
+                if (countryId) {
+                    $('#CountryId').val(countryId).trigger('change');
+                }
+
+                loadOnCountryChange();
+
+            });
+
+            $.getJSON('/SenseiJapaneseSchool/GetBranchListJsonResult', function (data) {
+
+                $('#BranchId').empty();
+                $('#BranchId').append('<option value="0">Select Branch</option>')
+
+                loadSelectBox({
+                    data: data,
+                    className: 'branch-select',
+                    title: 'Select Branch',
+                    dropdownParentId: 'branch-wrapper'
+                });
+
+                var branchId = $('#BranchId').val();
+
+                if (branchId) {
+                    $('#BranchId').val(branchId).trigger('change');
+                }
+            });
+
+            
+            $.getJSON('/SenseiJapaneseSchool/GetLearningModeListJsonResult', function (data) {
+
+                $('#StudentLearningModeId').empty();
+                $('#StudentLearningModeId').append('<option value="0">Select learning Mode</option>')
+
+                loadSelectBox({
+                    data: data,
+                    className: 'learningmode-select',
+                    title: 'Select learning Mode',
+                    dropdownParentId: 'learningmode-wrapper'
+                });
+
+                var modeId = $('#StudentLearningModeId').val();
+
+                if (modeId) {
+                    $('#StudentLearningModeId').val(modeId).trigger('change');
+                }
+            });
+            
+            $('#DateOfBirth').datepicker({
+                format: 'yyyy-mm-dd',
+                autoclose: true,
+                todayHighlight: true,
+                startView: 2
+            });
+
+        });
+
+        function loadOnCountryChange(){
+
+            $.getJSON('/SenseiJapaneseSchool/GetStateListJsonResult', { countryId: $('#CountryId').val() }, function (data) {
+
+                $('#StateId').empty();
+                $('#StateId').append('<option value="0">Select State</option>')
+
+                loadSelectBox({
+                    data: data,
+                    className: 'state-select',
+                    title: 'Select State',
+                    dropdownParentId: 'state-wrapper'
+                });
+
+                var stateId = $('#StateId').val();
+
+                if (stateId) {
+                    $('#StateId').val(stateId).trigger('change');
+                }
+
+                loadOnStateChange();
+
+            });
+
+        }
+
+        function loadOnStateChange(){
+
+
+            $.getJSON('/SenseiJapaneseSchool/GetCityListJsonResult', { stateId: $('#StateId').val() }, function (data) {
+
+                $('#CityId').empty();
+                $('#CityId').append('<option value="0">Select City</option>')
+
+                loadSelectBox({
+                    data: data,
+                    className: 'city-select',
+                    title: 'Select City',
+                    dropdownParentId: 'city-wrapper'
+                });
+
+                var cityId = $('#CityId').val();
+
+                if (cityId) {
+                    $('#CityId').val(cityId).trigger('change');
+                }
+            });
+
+        }    
+    </script>
+
 }

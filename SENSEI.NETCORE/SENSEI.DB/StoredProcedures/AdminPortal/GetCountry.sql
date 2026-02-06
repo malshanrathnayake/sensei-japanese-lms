@@ -1,0 +1,9 @@
+﻿CREATE PROCEDURE [dbo].[GetCountry]
+AS
+BEGIN
+
+	SET NOCOUNT ON;
+
+	SELECT * FROM Country FOR JSON PATH;
+
+END

@@ -95,5 +95,10 @@
     <Build Include="Tables\Country.sql" />
     <Build Include="StoredProcedures\DatabseConfigurations\UpdateTableDataSriLanka.sql" />
     <Build Include="Tables\StudentLearningMode.sql" />
+    <Build Include="StoredProcedures\AdminPortal\GetCountry.sql" />
+    <Build Include="StoredProcedures\AdminPortal\GetState.sql" />
+    <Build Include="StoredProcedures\AdminPortal\GetCity.sql" />
+    <Build Include="StoredProcedures\AdminPortal\GetBranch.sql" />
+    <Build Include="StoredProcedures\AdminPortal\GetStudentLearningMode.sql" />
   </ItemGroup>
 </Project>

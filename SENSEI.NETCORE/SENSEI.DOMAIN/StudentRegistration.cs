@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace SENSEI.DOMAIN
@@ -21,15 +22,25 @@ namespace SENSEI.DOMAIN
         public string AddressLineOne { get; set; }
         public string AddressLineTwo { get; set; }
         public string PostalCode { get; set; }
+
+        [Range(1, long.MaxValue, ErrorMessage = "The City field is required.")]
         public int CityId { get; set; }
+
+        [Range(1, long.MaxValue, ErrorMessage = "The Branch field is required.")]
         public int BranchId { get; set; }
+
+        [Range(1, long.MaxValue, ErrorMessage = "The Learning Mode field is required.")]
         public int StudentLearningModeId { get; set; }
+
+        [Range(1, long.MaxValue, ErrorMessage = "The Course field is required.")]
+        public long CourseId { get; set; }
 
         #region NAVIGATIONAL PROPERTIES
         public Staff ApprovedBy { get; set; }
         public City City { get; set; }
         public Branch Branch { get; set; }
         public StudentLearningMode StudentLearningMode { get; set; }
+        public Course Course { get; set; }
         #endregion
     }
 }

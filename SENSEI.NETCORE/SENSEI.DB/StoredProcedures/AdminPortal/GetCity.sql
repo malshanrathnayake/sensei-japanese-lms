@@ -1,0 +1,17 @@
+﻿CREATE PROCEDURE [dbo].[GetCity]
+	@stateId INT = 0
+AS
+BEGIN
+
+	SET NOCOUNT ON;
+
+	IF(@stateId = 0)
+	BEGIN
+		SELECT * FROM City FOR JSON PATH;
+	END
+	ELSE
+	BEGIN
+		SELECT * FROM City WHERE StateId = @stateId FOR JSON PATH;
+	END
+
+END

@@ -1,0 +1,9 @@
+﻿CREATE PROCEDURE [dbo].[GetBranch]
+AS 
+BEGIN
+
+	SET NOCOUNT ON;
+
+	SELECT * FROM Branch FOR JSON PATH;
+
+END

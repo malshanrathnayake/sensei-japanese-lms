@@ -18,6 +18,7 @@
 	[PostalCode] NVARCHAR(20) NOT NULL,
 	[BranchId] BIGINT NULL,
 	[StudentLearningModeId] INT NOT NULL,
+	[CourseId] BIGINT NOT NULL,
 
 	CONSTRAINT [PK_StudentRegistration_StudentRegistrationId] PRIMARY KEY CLUSTERED ([StudentRegistrationId])
 )

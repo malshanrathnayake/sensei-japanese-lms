@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using SENSEI.BLL.AdminPortalService.Interface;
 using SENSEI.BLL.SystemService.Interfaces;
 using SENSEI.DOMAIN;
 using SENSEI.WEB.Helpers;
@@ -16,16 +17,24 @@ namespace SENSEI.WEB.Controllers
     public class SenseiJapaneseSchoolController : Controller
     {
         private readonly ISmsService _smsService;
+        private readonly ICourseService _courseService;
+        private readonly ILocationService _locationService;
+        private readonly IStudentRegistrationService _studentRegistrationService;
 
-        public SenseiJapaneseSchoolController(ISmsService smsService)
+        public SenseiJapaneseSchoolController(ISmsService smsService, ICourseService courseService, ILocationService locationService, IStudentRegistrationService studentRegistrationService)
         {
             _smsService = smsService;
+            _courseService = courseService;
+            _locationService = locationService;
+            _studentRegistrationService = studentRegistrationService;
         }
 
         public async Task<IActionResult> Index()
         {
             return View();
         }
+
+        #region Login
 
         public async Task<IActionResult> Login()
         {
@@ -59,11 +68,25 @@ namespace SENSEI.WEB.Controllers
             return RedirectToAction("OtpConfirm");
         }
 
+        #endregion
 
+        #region Registration
+
+        [HttpGet]
         public async Task<IActionResult> Register()
         {
             return View();
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Register(StudentRegistration studentRegistration)
+        {
+
+            var (status, primaryKey) = await _studentRegistrationService.UpdateStudentRegistraion(studentRegistration);
+
+            return View();
+        }
+        #endregion
 
         #region Google Authentication
 
@@ -129,6 +152,70 @@ namespace SENSEI.WEB.Controllers
         {
             return SignOut(
                 CookieAuthenticationDefaults.AuthenticationScheme);
+        }
+
+        #endregion
+
+        #region Dropdown
+
+        [HttpGet]
+        public async Task<JsonResult> GetCourseListJsonResult()
+        {
+            var courses = await _courseService.GetCourses();
+
+            var result = courses.Where(e => !e.IsDeleted).OrderBy(e => e.CourseName).Select(e => new { id = e.CourseId, text = e.CourseName }).ToList();
+
+            return Json(result);
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetCountryListJsonResult()
+        {
+            var countries = await _locationService.GetContries();
+
+            var result = countries.OrderBy(e => e.CountryName).Select(e => new { id = e.CountryId, text = e.CountryName }).ToList();
+
+            return Json(result);
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetStateListJsonResult(int countryId)
+        {
+            var states = await _locationService.GetStates(countryId);
+
+            var result = states.OrderBy(e => e.StateName).Select(e => new { id = e.StateId, text = e.StateName }).ToList();
+
+            return Json(result);
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetCityListJsonResult(int stateId)
+        {
+            var cities = await _locationService.GetCities(stateId);
+
+            var result = cities.OrderBy(e => e.CityName).Select(e => new { id = e.CityId, text = e.CityName }).ToList();
+
+            return Json(result);
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetBranchListJsonResult()
+        {
+            var branches = await _locationService.GetBranches();
+
+            var result = branches.OrderBy(e => e.BranchName).Select(e => new { id = e.BranchId, text = e.BranchName }).ToList();
+
+            return Json(result);
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetLearningModeListJsonResult()
+        {
+            var modes = await _locationService.GetStudentLearningModes();
+
+            var result = modes.OrderBy(e => e.LearningModeName).Select(e => new { id = e.StudentLearningModeId, text = e.LearningModeName }).ToList();
+
+            return Json(result);
         }
 
         #endregion
