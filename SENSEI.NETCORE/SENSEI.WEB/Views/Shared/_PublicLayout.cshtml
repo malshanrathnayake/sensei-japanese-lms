@@ -7,13 +7,57 @@
     
     <link rel="stylesheet" href="~/css/public-web.css" />
 
+    <style>
+        /* Header / brand adjustments: make logo smaller and brand text more visible */
+        .brand-logo {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* clickable link wrapper (keeps image inline) */
+        .brand-link {
+            display: inline-block;
+            line-height: 0;
+        }
+
+        /* adjust brand layout to align nicely with logo */
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .brand-text {
+            display: flex;
+            flex-direction: column;
+            line-height: 1;
+        }
+
+        .brand-text span:first-child {
+            font-weight: 800;
+            font-size: 1.12rem;
+            color: var(--text-main);
+            letter-spacing: 0.01em;
+        }
+
+        .brand-text span:last-child {
+            font-size: 0.9rem;
+            color: #333333;
+            font-weight: 600;
+        }
+    </style>
 </head>
 <body>
     <!-- HEADER / NAV -->
     <header>
         <div class="nav">
             <div class="brand">
-                <div class="brand-icon">花</div>
+                <a href="~/" class="brand-link">
+                    <img src="~/theme/v1/img/photos/logo.PNG" alt="Sensei Japanese Center" class="brand-logo" />
+                </a>
                 <div class="brand-text">
                     <span>Sensei</span>
                     <span>Japanese Center</span>
