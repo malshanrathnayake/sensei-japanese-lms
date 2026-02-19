@@ -7,48 +7,7 @@
     
     <link rel="stylesheet" href="~/css/public-web.css" />
 
-    <style>
-        /* Header / brand adjustments: make logo smaller and brand text more visible */
-        .brand-logo {
-            width: 32px;
-            height: 32px;
-            border-radius: 6px;
-            object-fit: cover;
-            display: block;
-        }
 
-        /* clickable link wrapper (keeps image inline) */
-        .brand-link {
-            display: inline-block;
-            line-height: 0;
-        }
-
-        /* adjust brand layout to align nicely with logo */
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 0.6rem;
-        }
-
-        .brand-text {
-            display: flex;
-            flex-direction: column;
-            line-height: 1;
-        }
-
-        .brand-text span:first-child {
-            font-weight: 800;
-            font-size: 1.12rem;
-            color: var(--text-main);
-            letter-spacing: 0.01em;
-        }
-
-        .brand-text span:last-child {
-            font-size: 0.9rem;
-            color: #333333;
-            font-weight: 600;
-        }
-    </style>
 </head>
 <body>
     <!-- HEADER / NAV -->
@@ -59,8 +18,7 @@
                     <img src="~/theme/v1/img/photos/logo.PNG" alt="Sensei Japanese Center" class="brand-logo" />
                 </a>
                 <div class="brand-text">
-                    <span>Sensei</span>
-                    <span>Japanese Center</span>
+                    <span>Sensei Japanese Center</span>
                 </div>
             </div>
             <nav class="nav-links">
@@ -77,20 +35,74 @@
         @RenderBody()
 
         <!-- TEMPLE STRIP + FOOTER -->
-        <div class="temple-strip">
-            <div class="temple-graphic" aria-hidden="true">
-                <div class="ground"></div>
-                <div class="temple-row">
-                    <div class="temple"></div>
-                    <div class="temple temple--center"></div>
-                    <div class="temple"></div>
+    </main>
+
+    <!-- PROFESSIONAL FOOTER -->
+    <footer class="site-footer">
+        <div class="footer-content">
+            <!-- Brand Hidden as requested -->
+            <div class="footer-brand" style="display:none;"></div>
+            
+            <div class="footer-links">
+                <div class="link-group">
+                    <h4>Learn</h4>
+                    <a href="#courses">All Courses</a>
+                    <a href="#about">Our Method</a>
+                    <a href="#">Pricing</a>
+                    <a href="#">Success Stories</a>
+                </div>
+                
+                <div class="link-group">
+                    <h4>Company</h4>
+                    <a href="#about">About Us</a>
+                    <a href="#">Careers</a>
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                    <div class="social-icons">
+                        <a href="#" class="social-link fb" aria-label="Facebook">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+                        </a>
+                        <a href="#" class="social-link tk" aria-label="TikTok">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"></path></svg>
+                        </a>
+                        <a href="#" class="social-link ig" aria-label="Instagram">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                        </a>
+                        <a href="#" class="social-link yt" aria-label="YouTube">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.33 29 29 0 0 0-.46-5.33z"></path><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon></svg>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="link-group" style="flex: 2; min-width: 300px;"> <!-- Expand column for address details -->
+                    <h4>Our Centers</h4>
+                    <div style="display: flex; gap: 3rem; flex-wrap: wrap;">
+                        <div class="footer-address">
+                            <strong>Matara</strong><br>
+                            Sensei Japanese Center,<br>
+                            No: 13/1, Richard Building,<br>
+                            Medagoda, Matara.<br>
+                            <span style="display:block; margin-top:0.3rem;">📞 076 765 6635 / 077 383 3011</span>
+                        </div>
+                        <div class="footer-address">
+                            <strong>Galle</strong><br>
+                            Sensei Japanese Center,<br>
+                            No: 12/2, Colombo Road,<br>
+                            Kaluwella, Galle.<br>
+                            <span style="display:block; margin-top:0.3rem;">📞 072 723 3188</span>
+                        </div>
+                    </div>
+                    <div style="margin-top: 1.5rem;">
+                        <a href="mailto:hello@senseijapanese.com" style="color:var(--primary); font-weight:700;">✉ hello@senseijapanese.com</a>
+                    </div>
                 </div>
             </div>
-            <footer>
-                © <span id="year">2025</span> Sensei Japanese Center. All rights reserved.
-            </footer>
         </div>
-    </main>
+        
+        <div class="footer-bottom">
+            <p>&copy; <span id="year">2026</span> Sensei Japanese Center. All rights reserved.</p>
+        </div>
+    </footer>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
 
