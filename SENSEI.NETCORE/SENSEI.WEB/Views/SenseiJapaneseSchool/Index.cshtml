@@ -247,4 +247,25 @@
     /* Slight elevation for the hero CTA on hover */
     .btn-primary { transition: transform .08s ease, box-shadow .12s ease; }
     .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 18px 34px rgba(255,90,95,0.18); }
+
+    /* DECORATIVE JAPANESE SENTENCE */
+    .jp-brand-sentence {
+        position: absolute;
+        top: 6.5rem;
+        left: 0;
+        width: 100%;
+        text-align: center;
+        font-family: "Noto Serif JP", serif;
+        font-weight: 800;
+        font-size: clamp(1rem, 4vw, 2.5rem); /* Smaller as requested */
+        color: var(--primary);
+        opacity: 0.9; /* Highly visible */
+        z-index: 0;
+        pointer-events: none;
+        letter-spacing: 0.3em;
+        white-space: nowrap;
+    }
 </style>
+
+<!-- DECORATIVE ELEMENTS -->
+<div class="jp-brand-sentence">先生 日本語 センター</div> <!-- Sensei Japanese Center -->

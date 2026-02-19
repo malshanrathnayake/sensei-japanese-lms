@@ -62,8 +62,8 @@ body::before {
     /* Position one on the left top and one on the right bottom/center */
     background-position: -5% -5%, 105% 60%;
     background-size: 500px auto, 600px auto;
-    opacity: 0.08;
-    /* Very subtle */
+    opacity: 0.15;
+    /* More visible as requested */
     mix-blend-mode: multiply;
 }
 
@@ -772,6 +772,10 @@ section p {
     color: #000000 !important;
 }
 
+.social-link.wa {
+    color: #25D366 !important;
+}
+
 .social-link:hover {
     background: var(--primary);
     color: #fff !important;
@@ -861,4 +865,78 @@ section p {
     .temple-row {
         gap: 1.6rem;
     }
+}
+
+/* --- ANIMATIONS START --- */
+
+/* 1. Hero Image Float */
+@keyframes float {
+    0% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-15px);
+    }
+
+    100% {
+        transform: translateY(0px);
+    }
+}
+
+.animate-float {
+    animation: float 6s ease-in-out infinite;
+}
+
+/* 2. Scroll Reveal Base Styles */
+.reveal-fade-up {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s cubic-bezier(0.5, 0, 0, 1), transform 0.8s cubic-bezier(0.5, 0, 0, 1);
+}
+
+.reveal-fade-in {
+    opacity: 0;
+    transition: opacity 1s ease;
+}
+
+.reveal-active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* 3. Stagger Delays for Grids */
+.stagger-1 {
+    transition-delay: 0.1s;
+}
+
+.stagger-2 {
+    transition-delay: 0.2s;
+}
+
+.stagger-3 {
+    transition-delay: 0.3s;
+}
+
+.stagger-4 {
+    transition-delay: 0.4s;
+}
+
+/* 4. Pulse for CTA Buttons */
+@keyframes pulse-soft {
+    0% {
+        box-shadow: 0 0 0 0 rgba(255, 90, 95, 0.4);
+    }
+
+    70% {
+        box-shadow: 0 0 0 10px rgba(255, 90, 95, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(255, 90, 95, 0);
+    }
+}
+
+.btn-pulse {
+    animation: pulse-soft 2s infinite;
 }
