@@ -2,9 +2,57 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <title>Sensei Japanese Center | @ViewData["Title"]</title>
+    <title>@ViewData["Title"] | Sensei Japanese Center</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     
+    <!-- Basic SEO -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Sensei Japanese Center offers professional Japanese language courses, JLPT preparation, and cultural training programs in Sri Lanka. Start your journey to Japan with us." />
+    <meta name="keywords" content="Japanese language course Sri Lanka, JLPT classes, Japanese classes Colombo, Learn Japanese, Sensei Japanese Center" />
+    <meta name="author" content="Sensei Japanese Center" />
+    <meta name="robots" content="index, follow" />
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="@Context.Request.Scheme://@Context.Request.Host@Context.Request.Path" />
+
+    <!-- Open Graph (Facebook, LinkedIn) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="@ViewData["Title"] | Sensei Japanese Center" />
+    <meta property="og:description" content="Join Sensei Japanese Center for structured Japanese language courses and JLPT preparation in Sri Lanka." />
+    <meta property="og:url" content="@Context.Request.Scheme://@Context.Request.Host@Context.Request.Path" />
+    <meta property="og:image" content="https://www.senseijapanesecenter.com/theme/v1/img/photos/logo.PNG" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="@ViewData["Title"] | Sensei Japanese Center" />
+    <meta name="twitter:description" content="Professional Japanese language courses and JLPT training in Sri Lanka." />
+    <meta name="twitter:image" content="https://www.senseijapanesecenter.com/theme/v1/img/photos/logo.PNG" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="~/theme/v1/img/photos/logo.PNG" />
+
+    <!-- Theme Color (Mobile Browser UI) -->
+    <meta name="theme-color" content="#ff5a5f" />
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="~/css/public-web.css" asp-append-version="true" />
+
+    <!-- Structured Data (Organization Schema) -->
+    <script type="application/ld+json">
+        {
+            "@@context": "https://schema.org",
+            "@@type": "EducationalOrganization",
+            "name": "Sensei Japanese Center",
+            "url": "https://www.senseijapanesecenter.com",
+            "logo": "https://www.senseijapanesecenter.com/theme/v1/img/photos/logo.PNG",
+            "description": "Japanese language institute offering JLPT preparation and structured courses in Sri Lanka.",
+            "address": {
+                "@@type": "PostalAddress",
+                "addressCountry": "Sri Lanka"
+            }
+        }
+    </script>
+
     <link rel="stylesheet" href="~/css/public-web.css" />
 
 
