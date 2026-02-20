@@ -27,45 +27,45 @@
 
                         <div class="row">
 
-                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xm-12 mb-3">
-                                <label class="form-label">@Html.DisplayNameFor(m => m.Initials)</label>
-                                @Html.TextBoxFor(m => m.Initials, new { @class = "form-control" })
+                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 mb-3">
+                                <label class="form-label" asp-for="Initials"></label>
+                                @Html.TextBoxFor(m => m.Initials, new { @class = "form-control", placeholder = "e.g. A.B.C." })
                                 <span asp-validation-for="Initials" class="text-danger"></span>
                             </div>
 
-                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xm-12 mb-3">
-                                <label class="form-label">@Html.DisplayNameFor(m => m.FirstName)</label>
-                                @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control" })
+                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 mb-3">
+                                <label class="form-label" asp-for="FirstName">First Name *</label>
+                                @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control", placeholder = "Enter first name" })
                                 <span asp-validation-for="FirstName" class="text-danger"></span>
                             </div>
 
-                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xm-12 mb-3">
-                                <label class="form-label">@Html.DisplayNameFor(m => m.MiddleName)</label>
-                                @Html.TextBoxFor(m => m.MiddleName, new { @class = "form-control" })
+                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 mb-3">
+                                <label class="form-label" asp-for="MiddleName"></label>
+                                @Html.TextBoxFor(m => m.MiddleName, new { @class = "form-control", placeholder = "Enter middle name (Optional)" })
                                 <span asp-validation-for="MiddleName" class="text-danger"></span>
                             </div>
 
-                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xm-12 mb-3">
-                                <label class="form-label">@Html.DisplayNameFor(m => m.LastName)</label>
-                                @Html.TextBoxFor(m => m.LastName, new { @class = "form-control" })
+                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 mb-3">
+                                <label class="form-label" asp-for="LastName">Last Name *</label>
+                                @Html.TextBoxFor(m => m.LastName, new { @class = "form-control", placeholder = "Enter last name" })
                                 <span asp-validation-for="LastName" class="text-danger"></span>
                             </div>
 
-                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xm-12 mb-3">
-                                <label class="form-label">@Html.DisplayNameFor(m => m.CallingName)</label>
-                                @Html.TextBoxFor(m => m.CallingName, new { @class = "form-control" })
+                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 mb-3">
+                                <label class="form-label" asp-for="CallingName"></label>
+                                @Html.TextBoxFor(m => m.CallingName, new { @class = "form-control", placeholder = "Name you want to be called" })
                                 <span asp-validation-for="CallingName" class="text-danger"></span>
                             </div>
 
-                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xm-12 mb-3">
-                                <label class="form-label">@Html.DisplayNameFor(m => m.NIC)</label>
-                                @Html.TextBoxFor(m => m.NIC, new { @class = "form-control" })
+                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 mb-3">
+                                <label class="form-label" asp-for="NIC"></label>
+                                @Html.TextBoxFor(m => m.NIC, new { @class = "form-control", placeholder = "National Identity Card No" })
                                 <span asp-validation-for="NIC" class="text-danger"></span>
                             </div>
 
-                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xm-12 mb-3">
-                                <label class="form-label">@Html.DisplayNameFor(m => m.DateOfBirth)</label>
-                                @Html.TextBoxFor(m => m.DateOfBirth, new { @class = "form-control datepicker" })
+                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 mb-3">
+                                <label class="form-label" asp-for="DateOfBirth">Date Of Birth *</label>
+                                @Html.TextBoxFor(m => m.DateOfBirth, new { @class = "form-control datepicker", placeholder = "YYYY-MM-DD" })
                                 <span asp-validation-for="DateOfBirth" class="text-danger"></span>
                             </div>
 
@@ -78,33 +78,33 @@
 
         <div class="row">
             <div class="col-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="card-title mb-0">Contact Information</h5>
+                <div class="card shadow-sm border-0">
+                    <div class="card-header bg-white border-bottom py-3">
+                        <h5 class="card-title mb-0 fw-bold">Contact Information</h5>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body py-4">
 
-                        <div class="row">
+                        <div class="row g-3">
 
-                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xm-12 mb-3">
-                                <label class="form-label">@Html.DisplayNameFor(m => m.AddressLineOne)</label>
-                                @Html.TextBoxFor(m => m.AddressLineOne, new { @class = "form-control" })
+                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 mb-3">
+                                <label class="form-label" asp-for="AddressLineOne"></label>
+                                @Html.TextBoxFor(m => m.AddressLineOne, new { @class = "form-control", placeholder = "Street address, P.O. box, etc." })
                                 <span asp-validation-for="AddressLineOne" class="text-danger"></span>
                             </div>
 
-                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xm-12 mb-3">
-                                <label class="form-label">@Html.DisplayNameFor(m => m.AddressLineTwo)</label>
-                                @Html.TextBoxFor(m => m.AddressLineTwo, new { @class = "form-control" })
+                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 mb-3">
+                                <label class="form-label" asp-for="AddressLineTwo"></label>
+                                @Html.TextBoxFor(m => m.AddressLineTwo, new { @class = "form-control", placeholder = "Apartment, suite, unit, building, floor, etc. (Optional)" })
                                 <span asp-validation-for="AddressLineTwo" class="text-danger"></span>
                             </div>
 
-                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xm-12 mb-3">
-                                <label class="form-label">@Html.DisplayNameFor(m => m.PostalCode)</label>
-                                @Html.TextBoxFor(m => m.PostalCode, new { @class = "form-control" })
+                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 mb-3">
+                                <label class="form-label" asp-for="PostalCode"></label>
+                                @Html.TextBoxFor(m => m.PostalCode, new { @class = "form-control", placeholder = "Postal / Zip Code (Optional)" })
                                 <span asp-validation-for="PostalCode" class="text-danger"></span>
                             </div>
 
-                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xm-12">
+                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
                                 <div class="mb-3" id="country-wrapper">
                                     <label class="form-label">@Html.DisplayNameFor(m => m.City.State.CountryId)</label>
                                     <select id="CountryId" class="form-control country-select" name="CountryId" asp-for="CountryId"></select>
@@ -112,31 +112,32 @@
                                 </div>
                             </div>
 
-                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xm-12">
-                                <div class="mb-3" id="state-wrapper">
-                                    <label class="form-label">@Html.DisplayNameFor(m => m.City.StateId)</label>
-                                    <select id="StateId" class="form-control state-select" name="StateId" asp-for="City.StateId"></select>
-                                    <span asp-validation-for="City.StateId" class="text-danger"></span>
+                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+                                <div class="mb-3">
+                                    <label class="form-label" asp-for="State"></label>
+                                    @Html.TextBoxFor(m => m.State, new { @class = "form-control", placeholder = "State / Province / Region (Optional)" })
+                                    <span asp-validation-for="State" class="text-danger"></span>
                                 </div>
                             </div>
 
-                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xm-12">
-                                <div class="mb-3" id="city-wrapper">
-                                    <label class="form-label">@Html.DisplayNameFor(m => m.CityId)</label>
-                                    <select id="CityId" class="form-control city-select" name="CityId" asp-for="CityId"></select>
-                                    <span asp-validation-for="CityId" class="text-danger"></span>
+                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+                                <div class="mb-3">
+                                    <label class="form-label" asp-for="City">City *</label>
+                                    @Html.TextBoxFor(m => m.City, new { @class = "form-control", placeholder = "City" })
+                                    <span asp-validation-for="City" class="text-danger"></span>
                                 </div>
                             </div>
 
-                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xm-12 mb-3">
-                                <label class="form-label">@Html.DisplayNameFor(m => m.PhoneNo)</label>
-                                @Html.TextBoxFor(m => m.PhoneNo, new { @class = "form-control" })
+                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 mb-3">
+                                <label class="form-label d-block" asp-for="PhoneNo">Phone Number *</label>
+                                @Html.TextBoxFor(m => m.PhoneNo, new { @class = "form-control w-100", id = "PhoneNo", type = "tel" })
+                                <span id="phone-error" class="text-danger d-none mt-1">Please enter a valid international phone number.</span>
                                 <span asp-validation-for="PhoneNo" class="text-danger"></span>
                             </div>
 
-                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xm-12 mb-3">
-                                <label class="form-label">@Html.DisplayNameFor(m => m.Email)</label>
-                                @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 mb-3">
+                                <label class="form-label" asp-for="Email">Email *</label>
+                                @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "Email Address", type = "email" })
                                 <span asp-validation-for="Email" class="text-danger"></span>
                             </div>
 
@@ -149,15 +150,15 @@
 
         <div class="row">
             <div class="col-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="card-title mb-0">Course Information</h5>
+                <div class="card shadow-sm border-0">
+                    <div class="card-header bg-white border-bottom py-3">
+                        <h5 class="card-title mb-0 fw-bold">Course Information</h5>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body py-4">
 
-                        <div class="row">
+                        <div class="row g-3">
 
-                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xm-12">
+                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
                                 <div class="mb-3" id="learningmode-wrapper">
                                     <label class="form-label">@Html.DisplayNameFor(m => m.StudentLearningModeId)</label>
                                     <select id="StudentLearningModeId" class="form-control learningmode-select" name="StudentLearningModeId" asp-for="StudentLearningModeId"></select>
@@ -165,17 +166,17 @@
                                 </div>
                             </div>
 
-                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xm-12" id="branch-field">
+                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12" id="branch-field">
                                 <div class="mb-3" id="branch-wrapper">
-                                    <label class="form-label">@Html.DisplayNameFor(m => m.BranchId)</label>
+                                    <label class="form-label" asp-for="BranchId">Branch *</label>
                                     <select id="BranchId" class="form-control branch-select" name="BranchId" asp-for="BranchId"></select>
                                     <span asp-validation-for="BranchId" class="text-danger"></span>
                                 </div>
                             </div>
 
-                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xm-12">
+                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
                                 <div class="mb-3" id="course-wrapper">
-                                    <label class="form-label">@Html.DisplayNameFor(m => m.CourseId)</label>
+                                    <label class="form-label" asp-for="CourseId">Course *</label>
                                     <select id="CourseId" class="form-control course-select" name="CourseId" asp-for="CourseId"></select>
                                     <span asp-validation-for="CourseId" class="text-danger"></span>
                                 </div>
@@ -188,14 +189,10 @@
             </div>
         </div>
 
-        <div class="d-flex justify-content-between align-items-center mb-3">
-
-            <h1 class="h3 mb-0"></h1>
-
-            <button type="submit" class="btn btn-primary" id="btnRegister">
-                <i class="fas fa-plus"></i> Register
+        <div class="d-flex justify-content-end align-items-center mb-5">
+            <button type="submit" class="btn btn-primary btn-lg px-5 shadow-sm" id="btnRegister">
+                <i class="fas fa-paper-plane me-2"></i> Register Now
             </button>
-
         </div>
 
     </form>
@@ -203,42 +200,69 @@
 
 @section Scripts {
 
+    <!-- intl-tel-input -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@24.5.0/build/css/intlTelInput.css">
+    <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@24.5.0/build/js/intlTelInput.min.js"></script>
+
+    <style>
+        .iti { width: 100%; }
+        .is-invalid + .iti { border: 1px solid #dc3545; border-radius: 0.25rem; }
+        .form-control.is-invalid {
+            border-color: #dc3545 !important;
+            background-image: none !important;
+        }
+    </style>
+
     <script type="text/javascript">
     
         $(document).ready(function () {
 
-            $("select#CountryId").change(function () {
-                loadOnCountryChange();
+            // Initialize Phone Input
+            const phoneInputField = document.querySelector("#PhoneNo");
+            const phoneError = document.querySelector("#phone-error");
+            
+            const iti = window.intlTelInput(phoneInputField, {
+                initialCountry: "auto",
+                geoIpLookup: callback => {
+                    fetch("https://ipapi.co/json")
+                        .then(res => res.json())
+                        .then(data => callback(data.country_code.toLowerCase()))
+                        .catch(() => callback("lk"));
+                },
+                utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@24.5.0/build/js/utils.js",
+                separateDialCode: true,
+                autoPlaceholder: "aggressive",
+                formatOnDisplay: true
             });
 
-            $("select#StateId").change(function () {
-                loadOnStateChange();
-            });
+            const validatePhone = () => {
+                if (phoneInputField.value.trim()) {
+                    if (iti.isValidNumber()) {
+                        phoneError.classList.add("d-none");
+                        phoneInputField.classList.remove("is-invalid");
+                        return true;
+                    } else {
+                        phoneError.classList.remove("d-none");
+                        phoneInputField.classList.add("is-invalid");
+                        return false;
+                    }
+                }
+                return false;
+            };
 
-            $.getJSON('/SenseiJapaneseSchool/GetCourseListJsonResult', function (data) {
+            phoneInputField.addEventListener('blur', validatePhone);
+            phoneInputField.addEventListener('change', validatePhone);
 
-                $('#CourseId').empty();
-                $('#CourseId').append('<option value="0">Select Course</option>')
-
-                loadSelectBox({
-                    data: data,
-                    className: 'course-select',
-                    title: 'Select Course',
-                    dropdownParentId: 'course-wrapper'
-                });
-
-                var courseId = $('#CourseId').val();
-
-                if (courseId) {
-                    $('#CourseId').val(courseId).trigger('change');
+            // Sync Country Dropdown with Phone
+            phoneInputField.addEventListener("countrychange", function() {
+                const countryData = iti.getSelectedCountryData();
+                if (countryData && countryData.iso2) {
+                    $('#CountryId').val(countryData.iso2.toUpperCase()).trigger('change');
                 }
             });
 
+            // Load Countries
             $.getJSON('/SenseiJapaneseSchool/GetCountryListJsonResult', function (data) {
-
-                // $('#CountryId').empty();
-                // $('#CountryId').append('<option value="0">Select Country</option>')
-
                 loadSelectBox({
                     data: data,
                     className: 'country-select',
@@ -246,113 +270,81 @@
                     dropdownParentId: 'country-wrapper'
                 });
 
-                var countryId = $('#CountryId').val();
-
-                if (countryId) {
-                    $('#CountryId').val(countryId).trigger('change');
+                // Set initial country from ITI if available
+                const initialCountry = iti.getSelectedCountryData().iso2;
+                if (initialCountry) {
+                    $('#CountryId').val(initialCountry.toUpperCase()).trigger('change');
                 }
-
-                loadOnCountryChange();
-
             });
 
+            // Load Courses
+            $.getJSON('/SenseiJapaneseSchool/GetCourseListJsonResult', function (data) {
+                loadSelectBox({
+                    data: data,
+                    className: 'course-select',
+                    title: 'Select Course',
+                    dropdownParentId: 'course-wrapper'
+                });
+            });
+
+            // Load Branches
             $.getJSON('/SenseiJapaneseSchool/GetBranchListJsonResult', function (data) {
-
-                $('#BranchId').empty();
-                $('#BranchId').append('<option value="0">Select Branch</option>')
-
                 loadSelectBox({
                     data: data,
                     className: 'branch-select',
                     title: 'Select Branch',
                     dropdownParentId: 'branch-wrapper'
                 });
-
-                var branchId = $('#BranchId').val();
-
-                if (branchId) {
-                    $('#BranchId').val(branchId).trigger('change');
-                }
             });
 
-            
+            // Load Learning Modes
             $.getJSON('/SenseiJapaneseSchool/GetLearningModeListJsonResult', function (data) {
-
-                $('#StudentLearningModeId').empty();
-                $('#StudentLearningModeId').append('<option value="0">Select learning Mode</option>')
-
                 loadSelectBox({
                     data: data,
                     className: 'learningmode-select',
-                    title: 'Select learning Mode',
+                    title: 'Select Learning Mode',
                     dropdownParentId: 'learningmode-wrapper'
                 });
-
-                var modeId = $('#StudentLearningModeId').val();
-
-                if (modeId) {
-                    $('#StudentLearningModeId').val(modeId).trigger('change');
-                }
             });
-            
+
+            // Datepicker
             $('#DateOfBirth').datepicker({
                 format: 'yyyy-mm-dd',
                 autoclose: true,
                 todayHighlight: true,
-                startView: 2
+                startView: 2,
+                endDate: new Date()
+            });
+
+            // Form Validation Configuration
+            $("#student-register").validate({
+                errorClass: "text-danger",
+                highlight: function(element) {
+                    $(element).addClass("is-invalid");
+                },
+                unhighlight: function(element) {
+                    $(element).removeClass("is-invalid");
+                },
+                submitHandler: function(form) {
+                    if (validatePhone()) {
+                        // Set full E.164 number before submit
+                        phoneInputField.value = iti.getNumber();
+                        form.submit();
+                    } else {
+                        window.notyf.error("Please correct the errors in the form.");
+                        return false;
+                    }
+                }
+            });
+
+            // Sync phone with country dropdown change
+            $('#CountryId').on('change', function() {
+                const countryCode = $(this).val();
+                if (countryCode) {
+                    iti.setCountry(countryCode.toLowerCase());
+                }
             });
 
         });
-
-        function loadOnCountryChange(){
-
-            $.getJSON('/SenseiJapaneseSchool/GetStateListJsonResult', { countryId: $('#CountryId').val() }, function (data) {
-
-                $('#StateId').empty();
-                $('#StateId').append('<option value="0">Select State</option>')
-
-                loadSelectBox({
-                    data: data,
-                    className: 'state-select',
-                    title: 'Select State',
-                    dropdownParentId: 'state-wrapper'
-                });
-
-                var stateId = $('#StateId').val();
-
-                if (stateId) {
-                    $('#StateId').val(stateId).trigger('change');
-                }
-
-                loadOnStateChange();
-
-            });
-
-        }
-
-        function loadOnStateChange(){
-
-
-            $.getJSON('/SenseiJapaneseSchool/GetCityListJsonResult', { stateId: $('#StateId').val() }, function (data) {
-
-                $('#CityId').empty();
-                $('#CityId').append('<option value="0">Select City</option>')
-
-                loadSelectBox({
-                    data: data,
-                    className: 'city-select',
-                    title: 'Select City',
-                    dropdownParentId: 'city-wrapper'
-                });
-
-                var cityId = $('#CityId').val();
-
-                if (cityId) {
-                    $('#CityId').val(cityId).trigger('change');
-                }
-            });
-
-        }    
     </script>
-
 }
