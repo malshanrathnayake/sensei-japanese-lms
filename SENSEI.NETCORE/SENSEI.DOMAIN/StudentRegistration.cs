@@ -35,6 +35,24 @@ namespace SENSEI.DOMAIN
         [Range(1, long.MaxValue, ErrorMessage = "The Course field is required.")]
         public long CourseId { get; set; }
 
+        public string StudentRegistrationPopulatedName
+        {
+            get
+            {
+                string populatedName = $"{FirstName} ";
+                if (!string.IsNullOrEmpty(MiddleName))
+                {
+                    populatedName += $"{MiddleName} ";
+                }
+                populatedName += $"{LastName}";
+                return populatedName;
+            }
+        }
+
+        public string EncryptedKey { get; set; }
+        public DateTime CreatedDateTime { get; set; }
+        public int CountryId { get; set; }
+
         #region NAVIGATIONAL PROPERTIES
         public Staff ApprovedBy { get; set; }
         public City City { get; set; }
