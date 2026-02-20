@@ -1,0 +1,79 @@
+@using SENSEI.DOMAIN
+@model BatchLesson
+
+@{
+    Layout = null;
+}
+
+<div class="offcanvas-header">
+    <h5 class="offcanvas-title">Edit Batch Lesson</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+</div>
+
+<div class="offcanvas-body">
+
+    <form id="batch-lesson-edit-form" asp-area="AdminPortal" asp-controller="BatchLesson" asp-action="Edit"
+          data-ajax="true" data-ajax-method="POST"
+          data-ajax-begin="onBatchLessonEditBegin" data-ajax-success="onBatchLessonEditSuccess" data-ajax-failure="onBatchLessonEditFailure" data-ajax-complete="onBatchLessonEditComplete">
+
+        <input type="hidden" id="BatchLessonId" name="BatchLessonId" value="@Model.BatchLessonId" />
+        <input type="hidden" id="hdnBatchId" name="BatchId" value="@Model.BatchId" />
+        <input type="hidden" id="hdnLessonId" name="LessonId" value="@Model.LessonId" />
+
+        <div class="mb-3" id="edit-batch-wrapper">
+            <label class="form-label">@Html.DisplayNameFor(m => m.BatchId)</label>
+            <select id="EditBatchId" class="form-control edit-batch-select" asp-for="BatchId"></select>
+            <span asp-validation-for="BatchId" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3" id="edit-lesson-wrapper">
+            <label class="form-label">@Html.DisplayNameFor(m => m.LessonId)</label>
+            <select id="EditLessonId" class="form-control edit-lesson-select" asp-for="LessonId"></select>
+            <span asp-validation-for="LessonId" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">@Html.DisplayNameFor(m => m.LessonStartDateTime)</label>
+            <input type="datetime-local" class="form-control" asp-for="LessonStartDateTime"
+                   value="@(Model.LessonStartDateTime != DateTime.MinValue ? Model.LessonStartDateTime.ToString("yyyy-MM-ddTHH:mm") : "")"
+                   autocomplete="off" />
+            <span asp-validation-for="LessonStartDateTime" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">@Html.DisplayNameFor(m => m.LessonEndDateTime)</label>
+            <input type="datetime-local" class="form-control" asp-for="LessonEndDateTime"
+                   value="@(Model.LessonEndDateTime != DateTime.MinValue ? Model.LessonEndDateTime.ToString("yyyy-MM-ddTHH:mm") : "")"
+                   autocomplete="off" />
+            <span asp-validation-for="LessonEndDateTime" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">@Html.DisplayNameFor(m => m.RecordingUrl)</label>
+            <input class="form-control" asp-for="RecordingUrl" />
+            <span asp-validation-for="RecordingUrl" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">@Html.DisplayNameFor(m => m.RecordingExpireDate)</label>
+            <input type="text" class="form-control datepicker" asp-for="RecordingExpireDate"
+                   value="@(Model.RecordingExpireDate != DateTime.MinValue ? Model.RecordingExpireDate.ToString("yyyy-MM-dd") : "")"
+                   autocomplete="off" />
+            <span asp-validation-for="RecordingExpireDate" class="text-danger"></span>
+        </div>
+
+        <div class="d-flex justify-content-end gap-2">
+
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="offcanvas">
+                Cancel
+            </button>
+
+            <button type="submit" id="btnUpdateBatchLesson" class="btn btn-success ladda-button" data-style="zoom-in">
+                <span class="ladda-label">Save</span>
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
