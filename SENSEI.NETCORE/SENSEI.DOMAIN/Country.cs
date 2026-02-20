@@ -15,6 +15,10 @@ namespace SENSEI.DOMAIN
         [DisplayName("Country Name")]
         public string CountryName { get; set; }
 
+        [Required]
+        [DisplayName("Country Code")]
+        public string CountryCode { get; set; }
+
         #region Navigation Properties
         public ICollection<State> States { get; set; }
         #endregion

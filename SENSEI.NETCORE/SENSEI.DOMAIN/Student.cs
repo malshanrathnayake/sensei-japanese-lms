@@ -16,22 +16,24 @@ namespace SENSEI.DOMAIN
         [DisplayName("Index Number")]
         public int IndexNumber { get; set; }
 
-        [Required]
-        [DisplayName("Email")]
+        [Required(ErrorMessage = "Email is required.")]
+        [EmailAddress(ErrorMessage = "Invalid email format.")]
+        [DisplayName("Email *")]
         public string Email { get; set; }
 
-        [DisplayName("Phone No")]
-        public int PhoneNo { get; set; }
+        [Required(ErrorMessage = "Phone number is required.")]
+        [DisplayName("Phone Number *")]
+        public string PhoneNo { get; set; }
 
-        [Required]
-        [DisplayName("First Name")]
+        [Required(ErrorMessage = "First Name is required.")]
+        [DisplayName("First Name *")]
         public string FirstName { get; set; }
 
         [DisplayName("Middle Name")]
         public string MiddleName { get; set; }
 
-        [Required]
-        [DisplayName("Last Name")]
+        [Required(ErrorMessage = "Last Name is required.")]
+        [DisplayName("Last Name *")]
         public string LastName { get; set; }
 
         [DisplayName("Initials")]
@@ -49,20 +51,30 @@ namespace SENSEI.DOMAIN
         [DisplayName("Student Registration")]
         public long? StudentRegistrationId { get; set; }
 
-        [Required]
-        [DisplayName("Date Of Birth")]
+        [Required(ErrorMessage = "Date of Birth is required.")]
+        [DisplayName("Date Of Birth *")]
         public DateTime DateOfBirth { get; set; }
 
-        [Required]
-        [DisplayName("City")]
-        public int CityId { get; set; }
+        [Required(ErrorMessage = "Country is required.")]
+        [DisplayName("Country *")]
+        public string CountryCode { get; set; }
+
+        [DisplayName("State / Province / Region")]
+        public string State { get; set; }
+
+        [Required(ErrorMessage = "City is required.")]
+        [DisplayName("City *")]
+        public string City { get; set; }
+
+        [DisplayName("City ID")]
+        public int? CityId { get; set; }
 
         [Required]
-        [DisplayName("Branch")]
+        [DisplayName("Branch *")]
         public int BranchId { get; set; }
 
         [Required]
-        [DisplayName("Learning Mode")]
+        [DisplayName("Learning Mode *")]
         public int StudentLearningModeId { get; set; }
 
         #region NAVIGATIONAL PROPERTIES
@@ -72,7 +84,7 @@ namespace SENSEI.DOMAIN
         public ICollection<StudentBatch> StudentBatches { get; set; } = new List<StudentBatch>();
         public ICollection<BatchStudentLessonAccess> LessonAccesses { get; set; } = new List<BatchStudentLessonAccess>();
         public StudentRegistration StudentRegistration { get; set; }
-        public City City { get; set; }
+        public City CityNav { get; set; }
         public Branch Branch { get; set; }
         public StudentLearningMode StudentLearningMode { get; set; }
 

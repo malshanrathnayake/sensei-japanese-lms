@@ -86,10 +86,45 @@ namespace SENSEI.WEB.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(StudentRegistration studentRegistration)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(studentRegistration);
+            }
+
+            // Backend unique email validation (basic check for demonstration)
+            // In a real app, this would call a service to check the DB.
+            var isEmailUnique = true; // Replace with: await _studentRegistrationService.IsEmailUnique(studentRegistration.Email);
+            
+            if (!isEmailUnique)
+            {
+                ModelState.AddModelError("Email", "This email is already registered.");
+                return View(studentRegistration);
+            }
 
             var (status, primaryKey) = await _studentRegistrationService.UpdateStudentRegistraion(studentRegistration);
 
-            return View();
+            if (status)
+            {
+                TempData.AddNotification(new NotificationMessage
+                {
+                    Type = "success",
+                    Message = "Registration submitted successfully!"
+                });
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                ModelState.AddModelError("", "An error occurred during registration. Please try again.");
+                return View(studentRegistration);
+            }
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> CheckEmailUnique(string email)
+        {
+            // Placeholder for remote validation if needed
+            // var isUnique = await _studentRegistrationService.IsEmailUnique(email);
+            return Json(true);
         }
         #endregion
 
@@ -178,7 +213,7 @@ namespace SENSEI.WEB.Controllers
         {
             var countries = await _locationService.GetContries();
 
-            var result = countries.OrderBy(e => e.CountryName).Select(e => new { id = e.CountryId, text = e.CountryName }).ToList();
+            var result = countries.OrderBy(e => e.CountryName).Select(e => new { id = e.CountryCode, text = e.CountryName }).ToList();
 
             return Json(result);
         }

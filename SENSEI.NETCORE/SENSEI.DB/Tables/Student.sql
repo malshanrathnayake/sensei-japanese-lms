@@ -4,7 +4,7 @@ CREATE TABLE [dbo].[Student]
     [UserId] BIGINT NOT NULL,
     [IndexNumber] INT NOT NULL,
     [Email] NVARCHAR(200) NOT NULL,
-    [PhoneNo] INT NOT NULL,
+    [PhoneNo] NVARCHAR(20) NOT NULL,
     [FirstName] NVARCHAR(200) NOT NULL,
     [MiddleName] NVARCHAR(200) NOT NULL,
     [LastName] NVARCHAR(200) NOT NULL,
@@ -13,7 +13,10 @@ CREATE TABLE [dbo].[Student]
     [NIC] NVARCHAR(200) NOT NULL,
     [IsDeleted] BIT NOT NULL,
     [DateOfBirth] DATETIME NOT NULL,
-    [CityId] INT NOT NULL,
+    [CountryId] INT NOT NULL IDENTITY,
+   
+   
+    [CityId] INT NULL,
     [BranchId] INT NOT NULL,
     [StudentLearningModeId] INT NOT NULL,
 
