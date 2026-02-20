@@ -1,0 +1,205 @@
+@using SENSEI.DOMAIN
+@using core_web.Helpers
+@model BatchLesson
+
+@{
+    ViewData["Title"] = "Batch Lesson";
+}
+
+<div class="container-fluid p-0">
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="h3 mb-0">Batch Lesson</h1>
+
+        <button type="button" class="btn btn-primary" id="btnNewBatchLesson" data-action-url="/AdminPortal/BatchLesson/Create">
+            <i class="fas fa-plus"></i> New
+        </button>
+
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Search By</h5>
+                </div>
+                <div class="card-body">
+
+                    <div class="row">
+                        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xm-12">
+                            <div class="mb-3" id="search-batch-wrapper">
+                                <label class="form-label">@Html.DisplayNameFor(m => m.BatchId)</label>
+                                <select id="SearchBatchId" class="form-control search-batch-select" name="SearchBatchId"></select>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">List of Batch Lessons</h5>
+                </div>
+                <div class="card-body">
+
+                    <div id="BatchLessonTableContent" class="table-responsive">
+
+                        <table id="BatchLessonDataTable" class="table table-hover align-middle mb-0 w-100">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>@Html.DisplayNameFor(m => m.BatchId)</th>
+                                    <th>@Html.DisplayNameFor(m => m.LessonId)</th>
+                                    <th>@Html.DisplayNameFor(m => m.LessonStartDateTime)</th>
+                                    <th>@Html.DisplayNameFor(m => m.LessonEndDateTime)</th>
+                                    <th>@Html.DisplayNameFor(m => m.RecordingUrl)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@Html.RenderAction("BatchLessonOffCanvas", "BatchLesson", new { area = "AdminPortal" })
+
+@section Scripts {
+
+    <script src="~/js/admin-portal/batch-lesson-function.js"></script>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            $('#SearchBatchId').change(function () {
+                var batchId = $(this).val();
+
+                console.log(batchId);
+
+                loadBatchLessons();
+            });
+
+
+            $.getJSON('/AdminPortal/BatchLesson/GetBatchListJsonResult', function (data) {
+
+                $('#SearchBatchId').empty();
+                $('#SearchBatchId').append('<option value="0">All Batches</option>')
+
+                loadSelectBox({
+                    data: data,
+                    className: 'search-batch-select',
+                    title: 'Select Batch',
+                    dropdownParentId: 'search-batch-wrapper'
+                });
+
+                var batchId = $('#SearchBatchId').val();
+
+                if (batchId) {
+                    $('#SearchBatchId').val(batchId).trigger('change');
+                }
+            });
+
+            loadBatchLessons();
+
+        });
+
+        function loadBatchLessons() {
+
+            if ($.fn.DataTable.isDataTable('#BatchLessonDataTable')) {
+                $('#BatchLessonDataTable').DataTable().clear().destroy();
+                $('#BatchLessonDataTable tbody').empty();
+            }
+
+            $('#BatchLessonDataTable').DataTable({
+                processing: true,
+                serverSide: true,
+                autoWidth: false,
+                lengthMenu: [10, 20, 50, 100],
+                columnDefs: [
+                    { targets: 0, className: 'noVis' },
+                    { width: 25, targets: 0, orderable: false },
+                ],
+                dom:
+                    "<'row mb-3'<'col-sm-6'l><'col-sm-6 text-end'f>>" +
+                    "<'row'<'col-sm-12'tr>>" +
+                    "<'row mt-3'<'col-sm-5'i><'col-sm-7'p>>",
+                ajax: {
+                    url: '/AdminPortal/BatchLesson/ListOfBatchLessons',
+                    type: 'POST',
+                    data: function (d) {
+                        d.batchId = $('#SearchBatchId').val() || 0;
+                    }
+                },
+                columns: [
+                    {
+                        data: null,
+                        orderable: false,
+                        searchable: false,
+                        width: "25px",
+                        className: "text-end",
+                        render: function (data, type, row) {
+
+                            var editUrl = `/AdminPortal/BatchLesson/Edit/?q=${row.encryptedKey}`;
+                            var deleteUrl = `/AdminPortal/BatchLesson/Delete/?q=${row.encryptedKey}`;
+
+                            var editBtn = `<li><a class="dropdown-item d-flex align-items-center gap-2 edit-batch-lesson" href="javascript:void(0)" data-action-url="${editUrl}"> <i data-feather="edit"></i><span>Edit</span></a></li>`;
+                            var deleteBtn = `<li><a class="dropdown-item d-flex align-items-center gap-2 text-danger delete-batch-lesson" href="javascript:void(0)" data-action-url="${deleteUrl}" data-action-parameter="${row.batch ? row.batch.batchName + ' - ' + (row.lesson ? row.lesson.lessonName : '') : ''}"><i data-feather="trash-2"></i><span>Delete</span></a></li>`;
+
+                            return `
+                                <div class="dropdown">
+                                    <button class="btn btn-sm btn-light p-1" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i data-feather="more-vertical"></i>
+                                    </button>
+
+                                    <ul class="dropdown-menu dropdown-menu-end">
+                                        ${editBtn}
+                                        ${deleteBtn}
+                                    </ul>
+                                </div>
+
+                            `;
+                        }
+                    },
+                    { data: 'batch.batchName', name: 'batch.batchName', defaultContent: '' },
+                    { data: 'lesson.lessonName', name: 'lesson.lessonName', defaultContent: '' },
+                    { data: 'lessonStartDateTime', name: 'lessonStartDateTime', render: function (data) { return renderDateTime(data); } },
+                    { data: 'lessonEndDateTime', name: 'lessonEndDateTime', render: function (data) { return renderDateTime(data); } },
+                    { data: 'recordingUrl', name: 'recordingUrl', defaultContent: '', render: function (data) { return data ? `<a href="${data}" target="_blank">View</a>` : ''; } },
+                ],
+                drawCallback: function () {
+
+                    if (window.feather) {
+                        feather.replace();
+                    }
+
+                    editBatchLessonButton();
+                    deleteBatchLessonButton();
+                }
+            });
+
+        }
+
+        function renderDateTime(data) {
+            if (!data) return '';
+
+            var dt = new Date(data);
+            return dt.toLocaleString();
+        }
+
+
+    </script>
+
+}

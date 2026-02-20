@@ -35,6 +35,9 @@ namespace SENSEI.DOMAIN
         [DisplayName("Is Deleted")]
         public bool IsDeleted { get; set; }
 
+        [DisplayName("Encrypted Key")]
+        public string EncryptedKey { get; set; }
+
         // Navigation
         public Lesson Lesson { get; set; }
         public Batch Batch { get; set; }
