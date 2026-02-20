@@ -21,6 +21,7 @@
 	[CourseId] BIGINT NOT NULL,
 	[CreatedDateTime] DATETIME NULL,
 	[CountryId] INT NULL,
+	[UpdatedDateTime] DATETIME NULL
 
 	CONSTRAINT [PK_StudentRegistration_StudentRegistrationId] PRIMARY KEY CLUSTERED ([StudentRegistrationId])
 )

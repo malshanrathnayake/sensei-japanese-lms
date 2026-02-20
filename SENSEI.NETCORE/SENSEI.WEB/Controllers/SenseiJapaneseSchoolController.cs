@@ -89,6 +89,29 @@ namespace SENSEI.WEB.Controllers
 
             var (status, primaryKey) = await _studentRegistrationService.UpdateStudentRegistraion(studentRegistration);
 
+            if (status)
+            {
+                var phone = "94" + studentRegistration.PhoneNo;
+
+                var message = $"Your registration with sensei japanese center was successfull. You will get notified when an admin approve your registration request.";
+
+                //var messageStatus = await _smsService.SendSingleAsync(phone, message);
+
+                TempData.AddNotification(new NotificationMessage
+                {
+                    Type = "success",
+                    Message = "Registration success!"
+                });
+
+                return RedirectToAction("Login");
+            }
+
+            TempData.AddNotification(new NotificationMessage
+            {
+                Type = "error",
+                Message = "registration Failed!"
+            });
+
             return View();
         }
         #endregion

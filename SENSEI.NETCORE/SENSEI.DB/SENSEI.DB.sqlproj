@@ -100,5 +100,9 @@
     <Build Include="StoredProcedures\AdminPortal\GetCity.sql" />
     <Build Include="StoredProcedures\AdminPortal\GetBranch.sql" />
     <Build Include="StoredProcedures\AdminPortal\GetStudentLearningMode.sql" />
+    <Build Include="StoredProcedures\AdminPortal\UpdateStudentRegistraion.sql" />
+    <Build Include="StoredProcedures\AdminPortal\GetStudentRegistration.sql" />
+    <Build Include="StoredProcedures\AdminPortal\ApproveStudentRegistraion.sql" />
+    <Build Include="StoredProcedures\AdminPortal\SearchStudentRegistrations.sql" />
   </ItemGroup>
 </Project>

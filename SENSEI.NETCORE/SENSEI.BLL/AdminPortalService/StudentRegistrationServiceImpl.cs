@@ -1,4 +1,5 @@
 ﻿using devspark_core_data_access_layer;
+using Microsoft.Data.SqlClient;
 using Newtonsoft.Json;
 using SENSEI.BLL.AdminPortalService.Interface;
 using SENSEI.BLL.SystemService.Interfaces;
@@ -48,19 +49,43 @@ namespace SENSEI.BLL.AdminPortalService
             return (status, primaryKey);
         }
 
-        public async Task<(IEnumerable<StudentRegistration>, long)> SearchStudentRegistraion(int start = 0, int length = 10, string searchValue = "", string sortColumn = "", string sortDirection = "")
+        public async Task<(IEnumerable<StudentRegistration>, long)> SearchStudentRegistraion(long courseId = 0, int start = 0, int length = 10, string searchValue = "", string sortColumn = "", string sortDirection = "")
         {
-            throw new NotImplementedException();
+            DataTransactionManager dataTransactionManager = new DataTransactionManager(_databaseService.GetConnectionString());
+            var (registrations, count) = await dataTransactionManager.StudentRegistrationDataManager.RetrieveDataWithCount("SearchStudentRegistrations", [
+                new SqlParameter("@courseId", courseId),
+                new SqlParameter("@start", start),
+                new SqlParameter("@length", length),
+                new SqlParameter("@searchValue", searchValue),
+                new SqlParameter("@sortColumn", sortColumn),
+                new SqlParameter("@sortDirection", sortDirection)
+            ]);
+            return (registrations, count);
         }
 
         public async Task<StudentRegistration> GetStudentRegistraion(long studentRegistrationId)
         {
-            throw new NotImplementedException();
+            DataTransactionManager dataTransactionManager = new DataTransactionManager(_databaseService.GetConnectionString());
+            var studentRegistration = await dataTransactionManager.StudentRegistrationDataManager.RetrieveData("GetStudentRegistration", [
+                new SqlParameter("@studentRegistrationId", studentRegistrationId)
+            ]);
+            return studentRegistration.FirstOrDefault();
         }
 
         public async Task<bool> ApproveStudentRegistraion(long studentRegistrationId, string indexNumber, long batchId, long approvedById)
         {
-            throw new NotImplementedException();
+            var approveData = new
+            {
+                StudentRegistrationId = studentRegistrationId,
+                IndexNumber = indexNumber,
+                BatchId = batchId,
+                ApprovedById = approvedById
+            };
+
+            string jsonString = JsonConvert.SerializeObject(approveData);
+            DataTransactionManager dataTransactionManager = new DataTransactionManager(_databaseService.GetConnectionString());
+            var (status, primaryKey) = await dataTransactionManager.StudentRegistrationDataManager.UpdateDataReturnPrimaryKey("ApproveStudentRegistraion", jsonString);
+            return status;
         }
         
     }
