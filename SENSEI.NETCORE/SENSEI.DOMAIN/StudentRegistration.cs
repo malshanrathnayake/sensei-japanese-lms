@@ -86,6 +86,24 @@ namespace SENSEI.DOMAIN
         [DisplayName("Course *")]
         public long CourseId { get; set; }
 
+        public string StudentRegistrationPopulatedName
+        {
+            get
+            {
+                string populatedName = $"{FirstName} ";
+                if (!string.IsNullOrEmpty(MiddleName))
+                {
+                    populatedName += $"{MiddleName} ";
+                }
+                populatedName += $"{LastName}";
+                return populatedName;
+            }
+        }
+
+        public string EncryptedKey { get; set; }
+        public DateTime CreatedDateTime { get; set; }
+        public int CountryId { get; set; }
+
         #region NAVIGATIONAL PROPERTIES
         public Staff ApprovedBy { get; set; }
         public City CityNav { get; set; }

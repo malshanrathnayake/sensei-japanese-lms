@@ -19,6 +19,8 @@
 	[BranchId] BIGINT NULL,
 	[StudentLearningModeId] INT NOT NULL,
 	[CourseId] BIGINT NOT NULL,
+	[CreatedDateTime] DATETIME NULL,
+	[CountryId] INT NULL,
 
 	CONSTRAINT [PK_StudentRegistration_StudentRegistrationId] PRIMARY KEY CLUSTERED ([StudentRegistrationId])
 )
