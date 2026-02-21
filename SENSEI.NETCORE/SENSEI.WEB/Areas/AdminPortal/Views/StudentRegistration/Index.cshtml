@@ -114,6 +114,11 @@
                 }
             });
 
+            $('#btnNewStudentRegister').on('click', function () {
+                var url = $(this).data('action-url');
+                window.location.href = url;
+            });
+
             loadStudentRegistrations();
 
         });

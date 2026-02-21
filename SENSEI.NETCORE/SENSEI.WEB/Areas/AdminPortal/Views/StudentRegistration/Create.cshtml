@@ -1,0 +1,350 @@
+@using SENSEI.DOMAIN
+@model StudentRegistration
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "New Student Registration";
+}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@23.0.1/build/css/intlTelInput.css">
+
+<style>
+    .iti { width: 100%; display: block; }
+    .iti__country-list { z-index: 9999 !important; }
+    .iti input#PhoneNo { padding-left: 95px !important; }
+    .iti--separate-dial-code .iti__selected-dial-code { margin-left: 8px; font-weight: 700; color: #ff5a5f; }
+    .form-control.is-invalid { border-color: #dc3545 !important; }
+    .card { border-radius: 12px; border: none; box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075); }
+    .card-header { background-color: transparent; border-bottom: 1px solid rgba(0,0,0,.05); padding: 1.25rem; }
+    .card-title { color: #334155; font-weight: 700; margin-bottom: 0; }
+</style>
+
+<div class="container-fluid p-0">
+
+    <div class="mb-3">
+        <h1 class="h3 d-inline align-middle">New Student Registration</h1>
+        <a href="@Url.Action("Index", "StudentRegistration", new { area = "AdminPortal" })" class="btn btn-outline-secondary btn-sm float-end">
+            <i class="fas fa-arrow-left me-1"></i> Back to List
+        </a>
+    </div>
+
+    <form asp-action="Create" asp-controller="StudentRegistration" asp-area="AdminPortal" method="post" id="student-create-form">
+
+        <div class="row">
+            <!-- Personal Information -->
+            <div class="col-12 col-xl-6">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="card-title"><i class="fas fa-user me-2"></i> Personal Information</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label" asp-for="FirstName"></label>
+                                @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control", placeholder = "First Name" })
+                                <span asp-validation-for="FirstName" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label" asp-for="LastName"></label>
+                                @Html.TextBoxFor(m => m.LastName, new { @class = "form-control", placeholder = "Last Name" })
+                                <span asp-validation-for="LastName" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label" asp-for="MiddleName"></label>
+                                @Html.TextBoxFor(m => m.MiddleName, new { @class = "form-control", placeholder = "Middle Name" })
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label" asp-for="Initials"></label>
+                                @Html.TextBoxFor(m => m.Initials, new { @class = "form-control", placeholder = "Initials (e.g. A.B.C.)" })
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label" asp-for="CallingName"></label>
+                                @Html.TextBoxFor(m => m.CallingName, new { @class = "form-control", placeholder = "Calling Name" })
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label" asp-for="NIC"></label>
+                                @Html.TextBoxFor(m => m.NIC, new { @class = "form-control", placeholder = "NIC Number" })
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label" asp-for="DateOfBirth"></label>
+                                @Html.TextBoxFor(m => m.DateOfBirth, "{0:yyyy-MM-dd}", new { @class = "form-control datepicker", placeholder = "YYYY-MM-DD" })
+                                <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact Information -->
+            <div class="col-12 col-xl-6">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="card-title"><i class="fas fa-address-book me-2"></i> Contact Information</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label" asp-for="Email"></label>
+                                @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "Email Address", type = "email" })
+                                <span asp-validation-for="Email" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label" asp-for="PhoneNo"></label>
+                                @Html.TextBoxFor(m => m.PhoneNo, new { @class = "form-control", id = "PhoneNo", type = "tel" })
+                                <span asp-validation-for="PhoneNo" class="text-danger"></span>
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label class="form-label" asp-for="AddressLineOne"></label>
+                                @Html.TextBoxFor(m => m.AddressLineOne, new { @class = "form-control", placeholder = "Address Line 1" })
+                                <span asp-validation-for="AddressLineOne" class="text-danger"></span>
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label class="form-label" asp-for="AddressLineTwo"></label>
+                                @Html.TextBoxFor(m => m.AddressLineTwo, new { @class = "form-control", placeholder = "Address Line 2 (Optional)" })
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div id="country-wrapper">
+                                    <label class="form-label">Country *</label>
+                                    <select id="CountryCode" class="form-control country-select" name="CountryCode" asp-for="CountryCode"></select>
+                                    <span asp-validation-for="CountryCode" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label" asp-for="City"></label>
+                                @Html.TextBoxFor(m => m.City, new { @class = "form-control", placeholder = "City" })
+                                <span asp-validation-for="City" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label" asp-for="State"></label>
+                                @Html.TextBoxFor(m => m.State, new { @class = "form-control", placeholder = "State / Province" })
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label" asp-for="PostalCode"></label>
+                                @Html.TextBoxFor(m => m.PostalCode, new { @class = "form-control", placeholder = "Postal Code" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Enrollment & Assignment Details -->
+            <div class="col-12 col-xl-12">
+                <div class="card mb-4 border-primary">
+                    <div class="card-header bg-primary text-white" style="border-radius: 12px 12px 0 0;">
+                        <h5 class="card-title text-white mb-0"><i class="fas fa-graduation-cap me-2"></i> Academic Enrollment & Assignment</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <!-- Learning Mode Selection -->
+                            <div class="col-md-4 mb-4">
+                                <label class="form-label fw-bold d-block mb-3">Enrollment Type (Learning Mode) *</label>
+                                <div id="learning-mode-buttons" class="d-flex flex-column gap-2">
+                                    <!-- Dynamic radio buttons will be injected here for 'choose one type' feel -->
+                                    <div class="text-muted small italic">Loading modes...</div>
+                                </div>
+                                <input type="hidden" id="StudentLearningModeId" name="StudentLearningModeId" asp-for="StudentLearningModeId" />
+                                <span asp-validation-for="StudentLearningModeId" class="text-danger"></span>
+                            </div>
+
+                            <!-- Course and Batch Column -->
+                            <div class="col-md-8">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <div id="branch-wrapper">
+                                            <label class="form-label fw-bold">Select Branch *</label>
+                                            <select id="BranchId" class="form-control branch-select" name="BranchId" asp-for="BranchId"></select>
+                                            <span asp-validation-for="BranchId" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <div id="course-wrapper">
+                                            <label class="form-label fw-bold">Select Course *</label>
+                                            <select id="CourseId" class="form-control course-select" name="CourseId" asp-for="CourseId"></select>
+                                            <span asp-validation-for="CourseId" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <div id="batch-wrapper">
+                                            <label class="form-label fw-bold text-primary">Assign to Batch *</label>
+                                            <select id="BatchId" class="form-control batch-select @(ViewData.ModelState["batchId"]?.Errors.Count > 0 ? "is-invalid" : "")" name="batchId" required>
+                                                <option value="">Choose Course First</option>
+                                            </select>
+                                            <span class="text-danger">@Html.ValidationMessage("batchId")</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label fw-bold text-primary">Student Index Number *</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light"><i class="fas fa-id-badge"></i></span>
+                                            <input id="indexNumber" class="form-control @(ViewData.ModelState["indexNumber"]?.Errors.Count > 0 ? "is-invalid" : "")" name="indexNumber" placeholder="Enter registration index" required value="@ViewBag.IndexNumber" />
+                                        </div>
+                                        <span class="text-danger">@Html.ValidationMessage("indexNumber")</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="alert alert-soft-primary d-flex align-items-center mt-2 mb-0" style="background-color: #f0f7ff; border: 1px dashed #007bff; border-radius: 8px;">
+                            <i class="fas fa-magic me-3 text-primary fs-4"></i>
+                            <div>
+                                <h6 class="mb-0 fw-bold text-primary">Instant Fulfillment</h6>
+                                <p class="mb-0 small text-muted">This student will be automatically approved and enrolled in the selected batch upon saving.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-5">
+            <div class="col-12 text-center">
+                <hr />
+                <button type="submit" class="btn btn-primary btn-lg ladda-button" id="btnSubmitRegistration" data-style="zoom-in" style="min-width: 200px;">
+                    <span class="ladda-label"><i class="fas fa-save me-2"></i> Register & Approve Student</span>
+                </button>
+            </div>
+        </div>
+
+    </form>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@23.0.1/build/js/intlTelInput.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            // Initialize Phone Input
+            const phoneInputField = document.querySelector("#PhoneNo");
+            const iti = window.intlTelInput(phoneInputField, {
+                initialCountry: "lk",
+                utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@23.0.1/build/js/utils.js",
+                separateDialCode: true,
+                autoPlaceholder: "aggressive",
+                formatOnDisplay: true
+            });
+
+            // Datepicker
+            $('.datepicker').datepicker({
+                format: 'yyyy-mm-dd',
+                autoclose: true,
+                todayHighlight: true
+            });
+
+            // Load Courses
+            $.getJSON('/AdminPortal/StudentRegistration/GetCourseListJsonResult', function (data) {
+                loadSelectBox({
+                    data: data,
+                    className: 'course-select',
+                    title: 'Select Course',
+                    dropdownParentId: 'course-wrapper'
+                });
+            });
+
+            // Load Branches
+            $.getJSON('/SenseiJapaneseSchool/GetBranchListJsonResult', function (data) {
+                loadSelectBox({
+                    data: data,
+                    className: 'branch-select',
+                    title: 'Select Branch',
+                    dropdownParentId: 'branch-wrapper'
+                });
+            });
+
+            // Load Learning Modes as visual 'cards'
+            $.getJSON('/SenseiJapaneseSchool/GetLearningModeListJsonResult', function (data) {
+                const container = $('#learning-mode-buttons');
+                container.empty();
+                data.forEach(mode => {
+                    const btn = $(`
+                        <div class="mode-card p-3 border rounded cursor-pointer d-flex align-items-center mb-2" data-id="${mode.id}">
+                            <div class="circle-check me-3"></div>
+                            <div class="fw-bold">${mode.text}</div>
+                        </div>
+                    `);
+                    btn.on('click', function() {
+                        $('.mode-card').removeClass('border-primary shadow-sm bg-light');
+                        $('.mode-card .circle-check').removeClass('bg-primary border-primary');
+                        $(this).addClass('border-primary shadow-sm bg-light');
+                        $(this).find('.circle-check').addClass('bg-primary border-primary');
+                        $('#StudentLearningModeId').val(mode.id);
+                    });
+                    container.append(btn);
+                    
+                    // Pre-select if value exists (e.g. from Model)
+                    if ($('#StudentLearningModeId').val() == mode.id) {
+                        btn.trigger('click');
+                    }
+                });
+                
+                // Style for custom radio cards
+                $('<style>')
+                    .prop('type', 'text/css')
+                    .html(`
+                        .mode-card { transition: all 0.2s; cursor: pointer; border: 2px solid #eee !important; }
+                        .mode-card:hover { border-color: #007bff !important; }
+                        .circle-check { width: 18px; height: 18px; border-radius: 50%; border: 2px solid #ddd; }
+                    `)
+                    .appendTo('head');
+            });
+
+            // Load Countries
+            $.getJSON('/SenseiJapaneseSchool/GetCountryListJsonResult', function (data) {
+                loadSelectBox({
+                    data: data,
+                    className: 'country-select',
+                    title: 'Select Country',
+                    dropdownParentId: 'country-wrapper'
+                });
+            });
+
+            // Sync Country Dropdown with Phone
+            phoneInputField.addEventListener("countrychange", function() {
+                const countryData = iti.getSelectedCountryData();
+                if (countryData && countryData.iso2) {
+                    $('#CountryCode').val(countryData.iso2.toUpperCase()).trigger('change');
+                }
+            });
+
+            // Dependent Batch Dropdown
+            $('#CourseId').on('change', function() {
+                const courseId = $(this).val();
+                if (courseId && courseId != "0") {
+                    $.getJSON('/AdminPortal/StudentRegistration/GetBatchListJsonResult', { courseId: courseId }, function (data) {
+                         $('#BatchId').empty().append('<option value="">Select Batch</option>');
+                         loadSelectBox({
+                            data: data,
+                            className: 'batch-select',
+                            title: 'Select Batch',
+                            dropdownParentId: 'batch-wrapper'
+                        });
+                    });
+                } else {
+                    $('#BatchId').empty().append('<option value="">Choose Course First</option>');
+                }
+            });
+
+            // Form Validation and Phone Formatting
+            $("#student-create-form").on("submit", function() {
+                // Ensure Learning Mode is selected
+                if (!$('#StudentLearningModeId').val()) {
+                    popUpNotification('warning', 'Please select a Learning Mode Type');
+                    return false;
+                }
+
+                if (iti.isValidNumber()) {
+                    phoneInputField.value = iti.getNumber();
+                    
+                    // Start Loading
+                    var l = Ladda.create(document.querySelector('#btnSubmitRegistration'));
+                    l.start();
+                    
+                    return true;
+                } else {
+                    $(phoneInputField).addClass("is-invalid");
+                    popUpNotification('warning', 'Please enter a valid phone number');
+                    return false;
+                }
+            });
+        });
+    </script>
+}

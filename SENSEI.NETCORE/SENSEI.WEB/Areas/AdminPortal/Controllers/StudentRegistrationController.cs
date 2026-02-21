@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SENSEI.BLL.AdminPortalService.Interface;
 using SENSEI.DOMAIN;
+using SENSEI.WEB.Helpers;
 
 namespace SENSEI.WEB.Areas.AdminPortal.Controllers
 {
@@ -92,6 +93,61 @@ namespace SENSEI.WEB.Areas.AdminPortal.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create(StudentRegistration studentRegistration, long batchId, string indexNumber)
+        {
+            ViewBag.BatchId = batchId;
+            ViewBag.IndexNumber = indexNumber;
+
+            if (!ModelState.IsValid)
+            {
+                return View(studentRegistration);
+            }
+
+            var userId = Convert.ToInt64(HttpContext.Session.GetString("UserId") ?? "0");
+
+            var (status, studentRegistrationId) = await _studentRegistrationService.UpdateStudentRegistraion(studentRegistration);
+
+            if (status)
+            {
+                var approveResult = await _studentRegistrationService.ApproveStudentRegistraion(studentRegistrationId, indexNumber, batchId, userId);
+
+                if (approveResult)
+                {
+                    TempData.AddNotification(new NotificationMessage
+                    {
+                        Type = "success",
+                        Message = "Student registered and approved successfully!"
+                    });
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    TempData.AddNotification(new NotificationMessage
+                    {
+                        Type = "warning",
+                        Message = "Student registration saved, but auto-approval failed. Please approve manually."
+                    });
+                }
+            }
+            else
+            {
+                TempData.AddNotification(new NotificationMessage
+                {
+                    Type = "error",
+                    Message = "Failed to save student registration."
+                });
+            }
+
+            return View(studentRegistration);
+        }
+
+        [HttpGet]
         public async Task<JsonResult> GetCourseListJsonResult()
         {
             var courses = await _courseService.GetCourses();
@@ -106,7 +162,7 @@ namespace SENSEI.WEB.Areas.AdminPortal.Controllers
         {
             var batches = await _batchService.GetBatches(courseId);
 
-            var result = batches.Where(e => !e.IsDeleted).OrderBy(e => e.BatchName).Select(e => new { id = e.CourseId, text = e.BatchName }).ToList();
+            var result = batches.Where(e => !e.IsDeleted).OrderBy(e => e.BatchName).Select(e => new { id = e.BatchId, text = e.BatchName }).ToList();
 
             return Json(result);
         }
