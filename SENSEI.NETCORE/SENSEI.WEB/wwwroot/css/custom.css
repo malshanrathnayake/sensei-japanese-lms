@@ -2,13 +2,25 @@
    THEME VARIABLES
    ================================ */
 :root {
-    --bg-main: #fff7f3;
+    --bg-main: #fffbfb;
     --bg-card: #ffffff;
     --primary: #ff5a5f;
-    --primary-dark: #e6454a;
-    --text-main: #222222;
-    --text-muted: #666666;
-    --border-soft: #ffe1d9;
+    --primary-dark: #d93d42;
+    --accent-sakura: #ffeff0;
+    --text-main: #1a1a1a;
+    --text-muted: #555555;
+    --border-soft: #ffe5e5;
+    --glass-bg: rgba(255, 255, 255, 0.85);
+    --glass-border: rgba(255, 90, 95, 0.15);
+}
+
+.brand-text {
+    font-family: 'Noto Serif JP', serif !important;
+    font-weight: 900;
+    font-size: 1.25rem;
+    letter-spacing: -0.04em;
+    color: #ff0000;
+    line-height: 1;
 }
 
 /* ================================
@@ -17,11 +29,98 @@
 .wrapper,
 .main,
 .content {
-    background-color: var(--bg-main) !important;
+    background-color: transparent !important;
 }
 
 body {
     color: var(--text-main) !important;
+    background-color: var(--bg-main) !important;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* =====================================================
+   SAKURA ANIMATIONS & WATERMARKS
+   ===================================================== */
+.sakura-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.petal {
+    position: absolute;
+    background-color: #ffb7c5;
+    border-radius: 150% 0 150% 0;
+    opacity: 0.6;
+    z-index: 0;
+}
+
+.jp-watermark {
+    position: fixed;
+    font-family: "Noto Serif JP", serif;
+    font-weight: 900;
+    color: var(--primary);
+    opacity: 0.025;
+    font-size: 12rem;
+    z-index: -1;
+    pointer-events: none;
+    white-space: nowrap;
+    user-select: none;
+}
+
+.jp-pos-1 {
+    top: 15%;
+    right: 5%;
+    transform: rotate(15deg);
+}
+
+.jp-pos-2 {
+    bottom: 15%;
+    left: 5%;
+    transform: rotate(-15deg);
+}
+
+@keyframes fall {
+    0% {
+        transform: translate(0, -20px) rotate(0deg);
+        opacity: 0;
+    }
+
+    10% {
+        opacity: 0.8;
+    }
+
+    90% {
+        opacity: 0.8;
+    }
+
+    100% {
+        transform: translate(var(--sway, 100px), 110vh) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+/* Home Page Sakura Background Decoration */
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    pointer-events: none;
+    background-image: url('/theme/v1/img/photos/sakura.png'), url('/theme/v1/img/photos/sakura.png');
+    background-repeat: no-repeat, no-repeat;
+    background-position: -5% -5%, 105% 60%;
+    background-size: 500px auto, 600px auto;
+    opacity: 0.12;
+    mix-blend-mode: multiply;
 }
 
 /* ================================
@@ -31,8 +130,9 @@ body {
 [data-bs-theme="dark"] .sidebar-content,
 .sidebar,
 .sidebar-content {
-    background: linear-gradient(180deg, #fff7f3, #ffeae2) !important;
-    border-right: 1px solid var(--border-soft) !important;
+    background: linear-gradient(180deg, #ffffff 0%, #fffafa 100%) !important;
+    border-right: 1px solid rgba(255, 90, 95, 0.08) !important;
+    box-shadow: 10px 0 30px rgba(0, 0, 0, 0.02) !important;
 }
 
 /* Sidebar text & icons */
@@ -48,65 +148,86 @@ body {
     background: transparent !important;
 }
 
-    .sidebar-nav .sidebar-link::before {
-        display: none !important;
-    }
-
-    /* Hover */
-    .sidebar-nav .sidebar-link:hover {
-        background: #ffe3db !important;
-        color: var(--primary) !important;
-    }
-
-        .sidebar-nav .sidebar-link:hover svg {
-            color: var(--primary) !important;
-        }
-
-/* Active */
-.sidebar-item.active > .sidebar-link {
-    background: var(--primary) !important;
-    color: #ffffff !important;
+.sidebar-nav .sidebar-link::before {
+    display: none !important;
 }
 
-    .sidebar-item.active > .sidebar-link svg {
-        color: #ffffff !important;
-    }
+/* Hover */
+.sidebar-nav .sidebar-link:hover {
+    background: #fff0f1 !important;
+    color: var(--primary) !important;
+}
+
+.sidebar-nav .sidebar-link:hover svg {
+    color: var(--primary) !important;
+}
+
+/* Active */
+.sidebar-item.active>.sidebar-link {
+    background: linear-gradient(90deg, var(--primary) 0%, var(--primary-dark) 100%) !important;
+    color: #ffffff !important;
+    border-radius: 0 50px 50px 0 !important;
+    margin-right: 15px !important;
+    box-shadow: 0 8px 15px rgba(255, 90, 95, 0.2) !important;
+}
+
+.sidebar-item.active>.sidebar-link svg {
+    color: #ffffff !important;
+}
 
 /* ================================
    NAVBAR
    ================================ */
 .navbar,
 .navbar-bg {
-    background: rgba(255, 247, 243, 0.95) !important;
+    background: rgba(255, 251, 251, 0.95) !important;
     border-bottom: 1px solid var(--border-soft) !important;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
 }
 
-    .navbar .nav-link,
-    .navbar .nav-icon {
-        color: var(--text-main) !important;
-    }
+.navbar .nav-link,
+.navbar .nav-icon {
+    color: var(--text-main) !important;
+}
 
-    .navbar .indicator {
-        background: var(--primary) !important;
-    }
+.navbar .indicator {
+    background: var(--primary) !important;
+}
 
 /* ================================
    CARDS
    ================================ */
 .card {
-    background: var(--bg-card) !important;
-    border: 1px solid var(--border-soft) !important;
-    border-radius: 1.2rem !important;
-    box-shadow: 0 14px 30px rgba(227, 166, 149, 0.25) !important;
+    background: var(--glass-bg) !important;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border) !important;
+    border-top: 4px solid var(--primary) !important;
+    border-radius: 24px !important;
+    box-shadow: 0 10px 40px rgba(255, 90, 95, 0.04) !important;
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 50px rgba(255, 90, 95, 0.08) !important;
+    border-color: rgba(255, 90, 95, 0.2) !important;
 }
 
 .card-header {
-    background: transparent !important;
-    border-bottom: 1px solid var(--border-soft) !important;
+    background: rgba(255, 90, 95, 0.03) !important;
+    border-bottom: 1px solid rgba(255, 90, 95, 0.05) !important;
+    padding: 1.5rem 1.8rem !important;
+    border-top-left-radius: 24px !important;
+    border-top-right-radius: 24px !important;
 }
 
 .card-title {
     color: var(--text-main) !important;
+    font-weight: 800 !important;
+    font-size: 1.1rem !important;
+    letter-spacing: -0.02em;
 }
 
 /* ================================
@@ -115,13 +236,19 @@ body {
 .btn-primary {
     background: var(--primary) !important;
     border-color: var(--primary) !important;
-    box-shadow: 0 10px 22px rgba(255, 90, 95, 0.35) !important;
+    box-shadow: 0 8px 18px rgba(255, 90, 95, 0.25) !important;
+    border-radius: 12px !important;
+    font-weight: 700 !important;
+    padding: 0.6rem 1.5rem !important;
+    transition: all 0.3s ease !important;
 }
 
-    .btn-primary:hover {
-        background: var(--primary-dark) !important;
-        border-color: var(--primary-dark) !important;
-    }
+.btn-primary:hover {
+    background: var(--primary-dark) !important;
+    border-color: var(--primary-dark) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 12px 25px rgba(255, 90, 95, 0.35) !important;
+}
 
 /* ================================
    TABLES
@@ -130,30 +257,45 @@ body {
     color: var(--text-main) !important;
 }
 
-    .table thead th {
-        background: #fff0ea !important;
-        color: var(--text-main) !important;
-        border-bottom: 1px solid var(--border-soft) !important;
-    }
+.table thead th {
+    background: #fff5f6 !important;
+    color: var(--text-main) !important;
+    border-bottom: 1px solid var(--border-soft) !important;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+}
 
-    .table tbody tr:hover {
-        background: #fff3ee !important;
-    }
+.table tbody tr:hover {
+    background: #fff3ee !important;
+}
 
 /* ================================
    FORMS
    ================================ */
 .form-control,
 .form-select {
-    background: #fffaf7 !important;
-    border: 1px solid #ffd8c5 !important;
+    background: #ffffff !important;
+    border: 1px solid #f0f0f0 !important;
     color: var(--text-main) !important;
+    border-radius: 14px !important;
+    padding: 0.75rem 1.2rem !important;
+    font-size: 0.95rem !important;
+    transition: all 0.2s ease !important;
 }
 
-    .form-control:focus {
-        border-color: var(--primary) !important;
-        box-shadow: 0 0 0 0.15rem rgba(255, 90, 95, 0.25) !important;
-    }
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--primary) !important;
+    box-shadow: 0 0 0 4px rgba(255, 90, 95, 0.1) !important;
+    background: #fff !important;
+}
+
+.form-control:focus {
+    border-color: var(--primary) !important;
+    box-shadow: 0 0 0 0.15rem rgba(255, 90, 95, 0.25) !important;
+}
 
 /* ================================
    DROPDOWNS
@@ -201,13 +343,16 @@ body {
    ================================ */
 .dataTables_wrapper .dataTables_length select,
 .dataTables_wrapper .dataTables_filter input {
-    padding: 0.375rem 0.75rem;
-    border-radius: 0.375rem;
-    border: 1px solid #dee2e6;
+    padding: 0.5rem 1rem;
+    border-radius: 10px;
+    border: 1px solid #ffe0e0;
+    background: #ffffff;
+    font-size: 0.875rem;
 }
 
 .dataTables_wrapper .dataTables_filter {
     text-align: right;
+    margin-bottom: 1rem;
 }
 
 .dataTables_wrapper .dataTables_paginate .pagination {
@@ -222,18 +367,24 @@ body {
 
 /* Data Table Pagination */
 .dataTables_wrapper .pagination .page-item.active .page-link {
-    background-color: var(--primary);
-    border-color: var(--primary);
-    color: #000 !important;
+    background-color: var(--primary) !important;
+    border-color: var(--primary) !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 10px rgba(255, 90, 95, 0.2);
 }
 
 .dataTables_wrapper .pagination .page-link {
-    color: #000 !important;
+    color: var(--text-main) !important;
+    border: 1px solid #ffe0e0;
+    margin: 0 2px;
+    border-radius: 8px !important;
 }
 
-    .dataTables_wrapper .pagination .page-link:hover {
-        background-color: rgba(59, 125, 221, 0.1); 
-    }
+.dataTables_wrapper .pagination .page-link:hover {
+    background-color: var(--accent-sakura) !important;
+    color: var(--primary) !important;
+    border-color: var(--primary);
+}
 
 /* Data Table Pagination */
 .dataTables_wrapper .pagination {
@@ -242,11 +393,12 @@ body {
     --bs-pagination-font-size: 0.875rem;
 }
 
-    .dataTables_wrapper .pagination .page-link {
-        border-radius: 0.375rem;
-        min-width: 32px;
-        text-align: center;
-    }
+.dataTables_wrapper .pagination .page-link {
+    border-radius: 0.375rem;
+    min-width: 32px;
+    text-align: center;
+}
+
 .paginate_button.page-item.previous {
     margin-right: 10px;
 }
@@ -276,20 +428,21 @@ body {
     background: #fff7f3 !important;
     border: 1px solid #ffccc2;
     box-shadow: none;
-    color: transparent !important; /* hide text */
+    color: transparent !important;
+    /* hide text */
 }
 
-    .dataTables_wrapper .dataTables_processing > * {
-        display: none !important;
-    }
+.dataTables_wrapper .dataTables_processing>* {
+    display: none !important;
+}
 
-    .dataTables_wrapper .dataTables_processing::before {
-        content: "•••";
-        font-size: 20px;
-        letter-spacing: 6px;
-        color: #ff5a5f;
-        animation: pulseDots 1.2s infinite ease-in-out;
-    }
+.dataTables_wrapper .dataTables_processing::before {
+    content: "•••";
+    font-size: 20px;
+    letter-spacing: 6px;
+    color: #ff5a5f;
+    animation: pulseDots 1.2s infinite ease-in-out;
+}
 
 
 /* =====================================================
@@ -328,8 +481,7 @@ body {
    Focus state (MATCHES .form-control)
    ------------------------------- */
 
-.select2-container--bootstrap5.select2-container--focus
-.select2-selection {
+.select2-container--bootstrap5.select2-container--focus .select2-selection {
     border-color: var(--primary);
     box-shadow: 0 0 0 0.15rem rgba(255, 90, 95, 0.25);
 }
@@ -352,15 +504,13 @@ body {
 }
 
 /* Hover option (soft primary) */
-.select2-container--bootstrap5
-.select2-results__option--highlighted {
+.select2-container--bootstrap5 .select2-results__option--highlighted {
     background-color: rgba(255, 90, 95, 0.08);
     color: var(--text-main);
 }
 
 /* Selected option */
-.select2-container--bootstrap5
-.select2-results__option--selected {
+.select2-container--bootstrap5 .select2-results__option--selected {
     background-color: rgba(255, 90, 95, 0.12);
     color: var(--primary);
     font-weight: 500;
@@ -375,9 +525,9 @@ body {
     margin-right: .25rem;
 }
 
-    .select2-container--bootstrap5 .select2-selection__clear:hover {
-        color: var(--primary);
-    }
+.select2-container--bootstrap5 .select2-selection__clear:hover {
+    color: var(--primary);
+}
 
 /* -------------------------------
    Search box
@@ -390,10 +540,10 @@ body {
     color: var(--text-main);
 }
 
-    .select2-search__field:focus {
-        border-color: var(--primary);
-        box-shadow: 0 0 0 0.15rem rgba(255, 90, 95, 0.25);
-    }
+.select2-search__field:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 0.15rem rgba(255, 90, 95, 0.25);
+}
 
 /* -------------------------------
    Validation — INVALID
@@ -403,13 +553,12 @@ body {
     background: #fff0eb;
 }
 
-.is-invalid + .select2-container--bootstrap5 .select2-selection {
+.is-invalid+.select2-container--bootstrap5 .select2-selection {
     background: #fff0eb;
     border-color: #ffb4a2;
 }
 
-.is-invalid + .select2-container--bootstrap5.select2-container--focus
-.select2-selection {
+.is-invalid+.select2-container--bootstrap5.select2-container--focus .select2-selection {
     box-shadow: 0 0 0 0.15rem rgba(255, 90, 95, 0.25);
 }
 
@@ -421,7 +570,7 @@ body {
     background: #fffaf7;
 }
 
-.is-valid + .select2-container--bootstrap5 .select2-selection {
+.is-valid+.select2-container--bootstrap5 .select2-selection {
     background: #fffaf7;
     border-color: #ffd8c5;
 }
