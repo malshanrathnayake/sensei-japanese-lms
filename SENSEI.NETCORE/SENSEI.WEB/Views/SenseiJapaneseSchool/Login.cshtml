@@ -3,42 +3,385 @@
 	ViewData["Title"] = "Sign In";
 }
 
+@* FontAwesome for Premium Icons *@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
-<div class="container d-flex flex-column">
-	<div class="row vh-100">
-		<div class="col-sm-10 col-md-8 col-lg-6 col-xl-5 mx-auto d-table h-100">
-			<div class="d-table-cell align-middle">
+<style>
+    :root {
+        --primary: #ff5a5f;
+        --primary-dark: #d93d42;
+        --accent-sakura: #ffeff0;
+        --text-main: #1a1a1a;
+        --text-muted: #555555;
+        --glass-bg: rgba(255, 255, 255, 0.85);
+        --glass-border: rgba(255, 90, 95, 0.15);
+    }
 
-				<div class="text-center mt-4">
-					<h1 class="h2">Welcome back!</h1>
-					<p class="lead">
-						Log in to your account to continue
-					</p>
-				</div>
+    body {
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        background: linear-gradient(to bottom, #fffbfb 0%, #fff5f5 100%);
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        overflow-x: hidden;
+        position: relative;
+    }
 
-				<div class="card">
-					<div class="card-body">
-						<div class="m-sm-3">
+    /* Homepage Background Pattern */
+    body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: -1;
+        pointer-events: none;
+        background-image: url('../theme/v1/img/photos/sakura.png'), url('../theme/v1/img/photos/sakura.png');
+        background-repeat: no-repeat, no-repeat;
+        /* Matches homepage positions */
+        background-position: -5% -5%, 105% 60%;
+        background-size: 500px auto, 600px auto;
+        opacity: 0.12;
+        mix-blend-mode: multiply;
+    }
 
-							<div class="d-grid gap-2 mt-3">
-								<a asp-controller="SenseiJapaneseSchool" asp-action="OTPLogin" class="btn btn-lg btn-primary">
-									<i class="fab fa-google me-2"></i> Sign in with Mobile Number
-								</a>
-							</div>
+    /* Falling Sakura Animation Container */
+    .sakura-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 0;
+    }
 
-							<div class="d-grid gap-2 mt-3">
-								<a asp-controller="SenseiJapaneseSchool" asp-action="SigninGoogle" class="btn btn-lg btn-primary">
-									<i class="fab fa-google me-2"></i> Sign in with Google
-								</a>
-							</div>
+    .petal {
+        position: absolute;
+        background-color: #ffb7c5;
+        border-radius: 150% 0 150% 0;
+        opacity: 0.6;
+        z-index: 0;
+    }
 
-						</div>
-					</div>
-				</div>
-				<div class="text-center mb-3">
-					Don't have an account? <a asp-controller="SenseiJapaneseSchool" asp-action="Register" class="btn btn-lg btn-secondary">Register</a>
-				</div>
-			</div>
-		</div>
-	</div>
+    /* Navigation Header */
+    .nav-header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        padding: 1.2rem 3.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        z-index: 1000;
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(15px);
+        border-bottom: 1px solid rgba(255, 90, 95, 0.05);
+    }
+
+    .nav-brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        text-decoration: none;
+    }
+
+    .nav-brand img {
+        width: 40px;
+        height: 40px;
+        object-fit: contain;
+    }
+
+    .nav-brand span {
+        font-weight: 900;
+        font-size: 1.5rem;
+        color: #ff0000;
+        letter-spacing: -0.04em;
+    }
+
+    .nav-links {
+        display: flex;
+        gap: 2rem;
+        align-items: center;
+    }
+
+    .nav-links a {
+        text-decoration: none;
+        color: var(--text-main);
+        font-weight: 600;
+        font-size: 0.95rem;
+        transition: color 0.2s;
+        position: relative;
+    }
+
+    .nav-links a:hover {
+        color: var(--primary);
+    }
+
+    .nav-links a::after {
+        content: "";
+        position: absolute;
+        bottom: -4px;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: var(--primary);
+        transition: width 0.2s;
+    }
+
+    .nav-links a:hover::after {
+        width: 100%;
+    }
+
+    .login-wrapper {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 100px 20px 40px;
+        position: relative;
+        z-index: 10;
+        box-sizing: border-box;
+    }
+
+    .login-card {
+        background: var(--glass-bg);
+        backdrop-filter: blur(25px);
+        -webkit-backdrop-filter: blur(25px);
+        border: 1px solid var(--glass-border);
+        border-radius: 32px;
+        padding: 60px 50px;
+        width: 100%;
+        max-width: 500px;
+        box-shadow: 0 40px 100px rgba(255, 90, 95, 0.12);
+        animation: cardAppear 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+        text-align: center;
+    }
+
+    @@keyframes cardAppear {
+        0% { transform: translateY(40px); opacity: 0; }
+        100% { transform: translateY(0); opacity: 1; }
+    }
+
+    .logo-box {
+        margin-bottom: 35px;
+    }
+
+    .brand-logo {
+        width: 110px;
+        height: 110px;
+        object-fit: contain;
+        filter: drop-shadow(0 15px 30px rgba(255, 90, 95, 0.25));
+        /* Floating removed as requested */
+    }
+
+    .login-title {
+        font-weight: 900;
+        font-size: 2.5rem;
+        color: var(--text-main);
+        margin-bottom: 12px;
+        letter-spacing: -1px;
+    }
+
+    .login-subtitle {
+        color: var(--text-muted);
+        font-size: 1.15rem;
+        margin-bottom: 45px;
+    }
+
+    .action-stack {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .btn-auth {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 15px;
+        padding: 18px 30px;
+        border-radius: 16px;
+        font-weight: 700;
+        font-size: 1.1rem;
+        text-decoration: none !important;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border: none;
+        cursor: pointer;
+    }
+
+    .btn-mobile {
+        background: var(--primary);
+        color: white;
+        box-shadow: 0 12px 28px rgba(255, 90, 95, 0.3);
+    }
+
+    .btn-mobile:hover {
+        background: var(--primary-dark);
+        transform: translateY(-4px);
+        box-shadow: 0 18px 40px rgba(255, 90, 95, 0.4);
+    }
+
+    .btn-google {
+        background: white;
+        color: var(--text-main);
+        border: 1px solid #eeeeee;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
+    }
+
+    .btn-google:hover {
+        background: #fcfcfc;
+        transform: translateY(-4px);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+        border-color: #e0e0e0;
+    }
+
+    .register-prompt {
+        margin-top: 40px;
+        padding-top: 30px;
+        border-top: 1px solid rgba(255, 90, 95, 0.1);
+        font-size: 1.05rem;
+        color: var(--text-muted);
+    }
+
+    .btn-link {
+        color: var(--primary);
+        text-decoration: none !important;
+        font-weight: 800;
+        margin-left: 8px;
+    }
+
+    .btn-link:hover {
+        text-decoration: underline !important;
+    }
+
+    /* Japanese Background Watermark */
+    .jp-watermark {
+        position: absolute;
+        font-family: "Noto Serif JP", serif;
+        font-weight: 900;
+        color: var(--primary);
+        opacity: 0.03;
+        font-size: 15rem;
+        z-index: -1;
+        pointer-events: none;
+        white-space: nowrap;
+        user-select: none;
+    }
+
+    .jp-pos-1 { top: 10%; right: -5%; transform: rotate(15deg); }
+    .jp-pos-2 { bottom: 10%; left: -5%; transform: rotate(-15deg); }
+
+    @@media (max-width: 768px) {
+        .nav-links { display: none; }
+        .nav-header { padding: 1rem 1.5rem; }
+        .login-card { padding: 40px 30px; }
+    }
+
+</style>
+
+@* Navigation Header to match homepage *@
+<header class="nav-header">
+    <a href="~/" class="nav-brand">
+        <img src="~/theme/v1/img/photos/logo.PNG" alt="Sensei Logo" />
+        <span>Sensei Japanese Center</span>
+    </a>
+    <nav class="nav-links">
+        <a href="~/#courses">Courses</a>
+        <a href="~/#about">About</a>
+        <a href="~/#contact">Contact</a>
+        <a href="~/SenseiJapaneseSchool/Gallery">Gallery</a>
+        <a href="~/" class="btn-link" style="color:var(--text-main)"><i class="fas fa-home"></i> Home</a>
+    </nav>
+</header>
+
+<div class="sakura-container" id="sakura-box"></div>
+
+<div class="jp-watermark jp-pos-1">先生</div>
+<div class="jp-watermark jp-pos-2">日本語</div>
+
+<div class="login-wrapper">
+    <div class="login-card">
+        <div class="logo-box">
+            <img src="~/theme/v1/img/photos/logo.PNG" alt="Sensei Logo" class="brand-logo" />
+        </div>
+
+        <h1 class="login-title">Welcome back!</h1>
+        <p class="login-subtitle">Log in to your account to continue</p>
+
+        <div class="action-stack">
+            <a asp-controller="SenseiJapaneseSchool" asp-action="OTPLogin" class="btn-auth btn-mobile">
+                <i class="fas fa-phone-alt"></i> Sign in with Mobile Number
+            </a>
+
+            <a asp-controller="SenseiJapaneseSchool" asp-action="SigninGoogle" class="btn-auth btn-google">
+                <i class="fab fa-google" style="color: #DB4437;"></i>
+                Sign in with Google
+            </a>
+        </div>
+
+        <div class="register-prompt">
+            Don't have an account? 
+            <a asp-controller="SenseiJapaneseSchool" asp-action="Register" class="btn-link">Register Now</a>
+        </div>
+    </div>
 </div>
+
+<script>
+    function createPetal() {
+        const sakuraBox = document.getElementById('sakura-box');
+        if (!sakuraBox) return;
+
+        const petal = document.createElement('div');
+        petal.className = 'petal';
+        
+        const size = Math.random() * 12 + 8;
+        petal.style.width = size + 'px';
+        petal.style.height = (size * 0.8) + 'px';
+        petal.style.left = Math.random() * 100 + 'vw';
+        
+        const duration = Math.random() * 7 + 5;
+        const delay = Math.random() * 5;
+        
+        const sway = (Math.random() - 0.5) * 200;
+        petal.style.setProperty('--sway', sway + 'px');
+        petal.style.animation = `fall ${duration}s linear forwards`;
+
+        sakuraBox.appendChild(petal);
+
+        setTimeout(() => {
+            petal.remove();
+        }, duration * 1000);
+    }
+
+    for (let i = 0; i < 20; i++) {
+        setTimeout(createPetal, Math.random() * 3000);
+    }
+
+    setInterval(createPetal, 400);
+</script>
+
+<style>
+    @@keyframes fall {
+        0% {
+            transform: translate(0, -20px) rotate(0deg);
+            opacity: 0;
+        }
+        10% {
+            opacity: 0.8;
+        }
+        90% {
+            opacity: 0.8;
+        }
+        100% {
+            transform: translate(var(--sway, 100px), 110vh) rotate(360deg);
+            opacity: 0;
+        }
+    }
+</style>
+
+
+
+
