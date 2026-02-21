@@ -5,6 +5,7 @@ using SENSEI.SignalR.Interface;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace SENSEI.BLL.AdminPortalService
 {
@@ -26,7 +27,8 @@ namespace SENSEI.BLL.AdminPortalService
 
         public Task<IEnumerable<UserNotification>> GetUserNotificationForUser(long userId)
         {
-            throw new NotImplementedException();
+            IEnumerable<UserNotification> n = new List<UserNotification>();
+            return Task.FromResult(n);
         }
 
         public Task<IEnumerable<UserNotificationRead>> UpdateReadability(long userNotificationId, long userId)

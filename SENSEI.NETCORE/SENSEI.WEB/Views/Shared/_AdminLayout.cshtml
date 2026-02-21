@@ -11,15 +11,31 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<meta name="description" content="Responsive Admin &amp; Dashboard Template based on Bootstrap 5">
-	<meta name="author" content="AdminKit">
-	<meta name="keywords" content="adminkit, bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<!-- Primary SEO -->
+	<title>@ViewData["Title"] | SENSEI - Learning Management System</title>
+	<meta name="description" content="@ViewData["MetaDescription"] ?? " SENSEI is a modern Learning Management System designed for batch lessons, student management, course tracking, and interactive learning experiences."">
+	<meta name="keywords" content="SENSEI LMS, Learning Management System, Online Education, Batch Lessons, Student Portal, Course Management">
 
 	<link rel="preconnect" href="https://fonts.gstatic.com">
-	<link rel="shortcut icon" href="~/theme/v1/img/icons/icon-48x48.png" />
+	<link rel="shortcut icon" href="~/theme/v1/img/photos/logo.PNG" />
 
-	<link rel="canonical" href="https://demo-basic.adminkit.io/pages-blank.html" />
+	<link rel="canonical" href="@Context.Request.Scheme://@Context.Request.Host@Context.Request.Path" />
+
+	<!-- Open Graph (Facebook / LinkedIn) -->
+	<meta property="og:type" content="website">
+	<meta property="og:title" content="@ViewData["Title"] | SENSEI LMS">
+	<meta property="og:description" content="@ViewData["MetaDescription"] ?? " Modern LMS platform for managing students, lessons, and interactive education."">
+	<meta property="og:url" content="@Context.Request.Scheme://@Context.Request.Host@Context.Request.Path">
+	<meta property="og:site_name" content="SENSEI">
+	<meta property="og:image" content="https://www.senseijapanesecenter.com/theme/v1/img/photos/logo.PNG">
+
+	<!-- Twitter Card -->
+	<meta name="twitter:card" content="summary_large_image">
+	<meta name="twitter:title" content="@ViewData["Title"] | SENSEI LMS">
+	<meta name="twitter:description" content="@ViewData["MetaDescription"] ?? " Modern LMS platform for managing students and lessons."">
+	<meta name="twitter:image" content="https://www.senseijapanesecenter.com/theme/v1/img/photos/logo.PNG">
 
 	<title>SENSEI | @ViewData["Title"]</title>
 

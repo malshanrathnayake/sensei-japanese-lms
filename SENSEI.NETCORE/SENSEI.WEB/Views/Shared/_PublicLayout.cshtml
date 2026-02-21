@@ -1,4 +1,9 @@
-﻿<!DOCTYPE html>
+﻿@{
+    var userId = Context.Session.GetString("UserId");
+    var userType = Context.Session.GetString("UserType");
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
@@ -74,7 +79,23 @@
                 <a href="~/#about">About</a>
                 <a href="~/#contact">Contact</a>
                 <a href="~/SenseiJapaneseSchool/Gallery">Gallery</a>
-                <button id="loginbtn" class="btn-login" href="~/SenseiJapaneseSchool/Login">Login</button>
+                
+                @if (!string.IsNullOrEmpty(userId))
+                {
+                    if (userType == "Admin")
+                    {
+                        <button class="btn-login" onclick="location.href='@Url.Action("Index", "Home", new { Area = "Adminportal" })'">Go to Admin Portal</button>
+                    }
+                    else if (userType == "Student")
+                    {
+                        <button class="btn-login" onclick="location.href='@Url.Action("Index", "Home", new { Area = "Studentportal" })'">Go to Student Portal</button>
+                    }
+                }
+                else
+                {
+                    <button id="loginbtn" class="btn-login" href="~/SenseiJapaneseSchool/Login">Login</button>
+                }
+
             </nav>
         </div>
     </header>

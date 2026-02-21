@@ -345,10 +345,13 @@ namespace SENSEI.WEB.Controllers
             }
         }
 
-        public IActionResult LogoutGoogle()
+        public async Task<IActionResult> LogoutGoogle()
         {
-            return SignOut(
-                CookieAuthenticationDefaults.AuthenticationScheme);
+            HttpContext.Session.Clear();
+
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+            return RedirectToAction("Index");
         }
 
         #endregion
