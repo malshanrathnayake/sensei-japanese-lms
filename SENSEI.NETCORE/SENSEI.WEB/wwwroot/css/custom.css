@@ -30,6 +30,7 @@
 .main,
 .content {
     background-color: transparent !important;
+    overflow: visible !important;
 }
 
 body {
@@ -184,6 +185,16 @@ body::before {
     border-bottom: 1px solid var(--border-soft) !important;
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
+    position: sticky !important;
+    top: 0;
+    z-index: 1040 !important;
+    /* Ensure it's above cards but below overlays */
+}
+
+/* Fix for notification dropdown hiding behind content */
+.navbar .dropdown-menu {
+    z-index: 1050 !important;
+    margin-top: 10px !important;
 }
 
 .navbar .nav-link,
@@ -207,6 +218,12 @@ body::before {
     border-radius: 24px !important;
     box-shadow: 0 10px 40px rgba(255, 90, 95, 0.04) !important;
     transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    overflow: visible !important;
+    /* Ensure children like dropdowns aren't cut off */
+}
+
+.card-body {
+    overflow: visible !important;
 }
 
 .card:hover {
@@ -449,58 +466,67 @@ body::before {
    SELECT2 – CUSTOM THEME
    ===================================================== */
 
-/* -------------------------------
-   Base Select2 input
-   ------------------------------- */
+.select2-container {
+    z-index: 9999 !important;
+}
 
 .select2-container--bootstrap5 .select2-selection {
-    min-height: calc(1.5em + .75rem + 2px);
-    padding: .375rem .75rem;
-    background: #fffaf7;
-    border: 1px solid #ffd8c5;
-    border-radius: .375rem;
-    color: var(--text-main);
-    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+    min-height: 52px !important;
+    padding: 0.5rem 1rem !important;
+    background: #ffffff !important;
+    border: 1px solid #f0f0f0 !important;
+    border-radius: 14px !important;
+    color: var(--text-main) !important;
+    display: flex !important;
+    align-items: center !important;
+    transition: all 0.2s ease-in-out !important;
 }
 
 /* Text rendering */
 .select2-container--bootstrap5 .select2-selection__rendered {
-    padding-left: 0;
-    padding-right: 0;
-    color: var(--text-main);
-    line-height: 1.5;
+    padding-left: 0 !important;
+    color: var(--text-main) !important;
+    line-height: 1.5 !important;
+    font-size: 0.95rem !important;
 }
 
-/* Arrow alignment */
-.select2-container--bootstrap5 .select2-selection__arrow {
-    height: 100%;
-    top: 0;
+/* Clear (×) button */
+.select2-container--bootstrap5 .select2-selection__clear {
+    width: 1.2em !important;
+    height: 1.2em !important;
+    line-height: 1.1 !important;
+    background-color: #fff0f1 !important;
+    color: var(--primary) !important;
+    border-radius: 50% !important;
+    font-size: 0.8rem !important;
+    text-align: center !important;
+    margin-right: 0.5rem !important;
+    transition: all 0.2s !important;
+}
+
+.select2-container--bootstrap5 .select2-selection__clear:hover {
+    background-color: var(--primary) !important;
+    color: #fff !important;
 }
 
 /* -------------------------------
-   Focus state (MATCHES .form-control)
+   Focus state
    ------------------------------- */
 
 .select2-container--bootstrap5.select2-container--focus .select2-selection {
-    border-color: var(--primary);
-    box-shadow: 0 0 0 0.15rem rgba(255, 90, 95, 0.25);
+    border-color: var(--primary) !important;
+    box-shadow: 0 0 0 4px rgba(255, 90, 95, 0.1) !important;
 }
 
 /* -------------------------------
    Dropdown menu
    ------------------------------- */
 
-.select2-container--bootstrap5 .select2-dropdown {
-    background: #fffaf7;
-    border: 1px solid #ffd8c5;
-    border-radius: .375rem;
-    overflow: hidden;
-}
-
-/* Option padding */
 .select2-results__option {
-    padding: .375rem .75rem;
-    color: var(--text-main);
+    padding: 0.75rem 1.2rem !important;
+    font-size: 0.95rem !important;
+    color: var(--text-main) !important;
+    transition: background-color 0.2s !important;
 }
 
 /* Hover option (soft primary) */
@@ -533,16 +559,31 @@ body::before {
    Search box
    ------------------------------- */
 
-.select2-search__field {
-    background: #fffaf7;
-    border: 1px solid #ffd8c5;
-    border-radius: .375rem;
-    color: var(--text-main);
+.select2-container--bootstrap5 .select2-search__field {
+    background: #ffffff !important;
+    border: 1px solid #dee2e6 !important;
+    border-radius: 10px !important;
+    color: var(--text-main) !important;
+    padding: 0.5rem 0.75rem !important;
+    outline: none !important;
 }
 
-.select2-search__field:focus {
-    border-color: var(--primary);
-    box-shadow: 0 0 0 0.15rem rgba(255, 90, 95, 0.25);
+.select2-container--bootstrap5 .select2-search__field:focus {
+    border-color: var(--primary) !important;
+    box-shadow: 0 0 0 0.2rem rgba(255, 90, 95, 0.15) !important;
+}
+
+.select2-container--open,
+.select2-dropdown {
+    z-index: 999999 !important;
+}
+
+.select2-container--bootstrap5 .select2-dropdown {
+    border: 1px solid #ffd8c5 !important;
+    border-radius: 15px !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;
+    margin-top: 5px;
+    z-index: 1056;
 }
 
 /* -------------------------------

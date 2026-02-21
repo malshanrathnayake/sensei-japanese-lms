@@ -9,7 +9,7 @@
 
     var $dropdownParent = options.dropdownParentId
         ? $('#' + options.dropdownParentId)
-        : $select.parent();
+        : $(document.body); // Default to body to avoid clipping
 
     $select.select2({
         theme: 'bootstrap5',
