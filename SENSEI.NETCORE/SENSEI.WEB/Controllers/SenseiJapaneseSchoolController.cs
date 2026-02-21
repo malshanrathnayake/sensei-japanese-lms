@@ -152,8 +152,14 @@ namespace SENSEI.WEB.Controllers
             {
                 new Claim("UserId", user.UserId.ToString()),
                 new Claim(ClaimTypes.Email, user.userName),
-                new Claim(ClaimTypes.Name, user.Staff != null ? user.Staff.StaffPopulatedName : user.Student.StudentPopulatedName)
+                new Claim(ClaimTypes.Name, user.Staff != null ? user.Staff.StaffPopulatedName : user.Student.StudentPopulatedName),
+                new Claim(ClaimTypes.Role, user.UserTypeEnum.ToString())
             };
+
+            var identity = new ClaimsIdentity(appClaims, CookieAuthenticationDefaults.AuthenticationScheme);
+            var principal = new ClaimsPrincipal(identity);
+
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, new AuthenticationProperties { IsPersistent = true });
 
             TempData.AddNotification(new NotificationMessage
             {
@@ -299,13 +305,14 @@ namespace SENSEI.WEB.Controllers
             {
                 new Claim("UserId", user.UserId.ToString()),
                 new Claim(ClaimTypes.Email, email),
-                new Claim(ClaimTypes.Name, name)
+                new Claim(ClaimTypes.Name, name),
+                new Claim(ClaimTypes.Role, user.UserTypeEnum.ToString())
             };
 
             var identity = new ClaimsIdentity(appClaims, CookieAuthenticationDefaults.AuthenticationScheme);
             var principal = new ClaimsPrincipal(identity);
 
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, new AuthenticationProperties { IsPersistent = true });
 
             TempData.AddNotification(new NotificationMessage
             {
@@ -352,6 +359,11 @@ namespace SENSEI.WEB.Controllers
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
             return RedirectToAction("Index");
+        }
+
+        public async Task<IActionResult> AccessDenied()
+        {
+            return View();
         }
 
         #endregion

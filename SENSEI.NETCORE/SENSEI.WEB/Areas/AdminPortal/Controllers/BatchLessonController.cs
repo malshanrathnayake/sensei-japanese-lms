@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Mvc;
 using SENSEI.BLL.AdminPortalService.Interface;
@@ -6,6 +7,7 @@ using SENSEI.DOMAIN;
 namespace SENSEI.WEB.Areas.AdminPortal.Controllers
 {
     [Area("AdminPortal")]
+    [Authorize(Roles = "Admin,Manager")]
     public class BatchLessonController : Controller
     {
         private readonly IBatchLessonService _batchLessonService;

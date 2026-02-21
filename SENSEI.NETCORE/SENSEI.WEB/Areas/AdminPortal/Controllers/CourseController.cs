@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.DataProtection;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SENSEI.BLL.AdminPortalService.Interface;
@@ -8,6 +9,7 @@ using System.Linq;
 namespace SENSEI.WEB.Areas.AdminPortal.Controllers
 {
     [Area("AdminPortal")]
+    [Authorize(Roles = "Admin,Manager")]
     public class CourseController : Controller
     {
         private readonly ICourseService _courseService;

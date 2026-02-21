@@ -13,7 +13,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddDataProtection();
 
 builder.Services.AddSignalR();
 
@@ -43,6 +42,7 @@ builder.Services.AddAuthentication(options =>
 .AddCookie(options =>
 {
     options.LoginPath = "/SenseiJapaneseSchool/Login";
+    options.AccessDeniedPath = "/SenseiJapaneseSchool/AccessDenied";
 })
 .AddGoogle(options =>
 {
@@ -66,7 +66,23 @@ builder.Services.AddSingleton<IDatabaseService>(provider =>
 builder.Services.AddSingleton<IMailService, MailServiceImpl>();
 builder.Services.AddSingleton<ISmsService, SmsServiceImpl>();
 builder.Services.AddDataProtection();
-builder.Services.AddSession();
+
+builder.Services.AddDistributedMemoryCache();
+
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromHours(2);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminOnly", p => p.RequireRole("Admin"));
+    options.AddPolicy("ManagerOnly", p => p.RequireRole("Manager"));
+    options.AddPolicy("StudentOnly", p => p.RequireRole("Student"));
+});
+
 
 #endregion
 
@@ -90,9 +106,9 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseSession();
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseSession();
 
 app.MapHub<NotificationHub>("/hubs/notifications");
 

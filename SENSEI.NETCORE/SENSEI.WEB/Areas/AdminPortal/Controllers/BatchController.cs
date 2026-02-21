@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.DataProtection;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Mvc;
 using SENSEI.BLL.AdminPortalService.Interface;
 using SENSEI.DOMAIN;
@@ -6,6 +7,7 @@ using SENSEI.DOMAIN;
 namespace SENSEI.WEB.Areas.AdminPortal.Controllers
 {
     [Area("AdminPortal")]
+    [Authorize(Roles = "Admin,Manager")]
     public class BatchController : Controller
     {
         private IBatchService _batchService;

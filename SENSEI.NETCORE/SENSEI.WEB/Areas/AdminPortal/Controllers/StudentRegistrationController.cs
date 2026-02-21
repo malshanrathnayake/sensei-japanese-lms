@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.DataProtection;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Mvc;
 using SENSEI.BLL.AdminPortalService.Interface;
 using SENSEI.DOMAIN;
@@ -7,6 +8,7 @@ using SENSEI.WEB.Helpers;
 namespace SENSEI.WEB.Areas.AdminPortal.Controllers
 {
     [Area("AdminPortal")]
+    [Authorize(Roles = "Admin,Manager")]
     public class StudentRegistrationController : Controller
     {
         private readonly IStudentRegistrationService _studentRegistrationService;
