@@ -7,12 +7,246 @@
     ViewData["Title"] = "Register";
 }
 
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+    /* Sakura Theme Matching Home Page */
+    :root {
+        --bg-main: #fffbfb;
+        --primary: #ff5a5f;
+        --primary-dark: #d93d42;
+        --accent-sakura: #ffeff0;
+        --text-main: #1a1a1a;
+        --text-muted: #555555;
+        --border-soft: #ffe5e5;
+    }
+
+    body {
+        background: linear-gradient(to bottom, #fffbfb 0%, #fff5f5 100%) !important;
+        position: relative;
+    }
+
+    /* Sakura Background Decorations */
+    body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: -1;
+        pointer-events: none;
+        background-image: url('/theme/v1/img/photos/sakura.png'), url('/theme/v1/img/photos/sakura.png');
+        background-repeat: no-repeat, no-repeat;
+        background-position: -5% -5%, 105% 60%;
+        background-size: 500px auto, 600px auto;
+        opacity: 0.12;
+        mix-blend-mode: multiply;
+    }
+
+    .card {
+        background: rgba(255, 255, 255, 0.85) !important;
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 90, 95, 0.15) !important;
+        border-radius: 20px !important;
+        box-shadow: 0 20px 50px rgba(255, 90, 95, 0.08) !important;
+        margin-bottom: 2rem;
+        border: none;
+    }
+
+    .card-header {
+        background: rgba(255, 90, 95, 0.03) !important;
+        border-bottom: 1px solid rgba(255, 90, 95, 0.1) !important;
+        padding: 1.25rem 1.5rem !important;
+        border-top-left-radius: 20px !important;
+        border-top-right-radius: 20px !important;
+    }
+
+    .card-title {
+        color: var(--primary) !important;
+        font-weight: 800 !important;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        font-size: 0.95rem !important;
+        margin-bottom: 0 !important;
+    }
+
+    .btn-primary {
+        background: var(--primary) !important;
+        border: none !important;
+        border-radius: 12px !important;
+        padding: 1rem 2.5rem !important;
+        font-weight: 700 !important;
+        box-shadow: 0 8px 20px rgba(255, 90, 95, 0.3) !important;
+        transition: all 0.3s ease !important;
+    }
+
+    .btn-primary:hover {
+        background: var(--primary-dark) !important;
+        transform: translateY(-2px);
+        box-shadow: 0 12px 25px rgba(255, 90, 95, 0.4) !important;
+    }
+
+    .btn-back {
+        display: inline-flex;
+        align-items: center;
+        color: var(--text-muted);
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.9rem;
+        padding: 0.6rem 1.2rem;
+        border-radius: 50px;
+        background: rgba(255, 255, 255, 0.8);
+        border: 1px solid var(--border-soft);
+        transition: all 0.2s ease;
+        margin-top: 1.5rem;
+    }
+
+    .btn-back:hover {
+        color: var(--primary);
+        background: var(--accent-sakura);
+        border-color: var(--primary);
+        transform: translateX(-5px);
+        text-decoration: none;
+    }
+
+    h1 {
+        font-weight: 900 !important;
+        color: var(--text-main) !important;
+        letter-spacing: -0.02em;
+    }
+
+    .form-label {
+        font-weight: 700;
+        color: var(--text-main);
+        font-size: 0.88rem;
+        margin-bottom: 0.4rem;
+    }
+
+    .form-control, .form-select {
+        height: 48px !important;
+        border-radius: 12px !important;
+        border: 1px solid #ffe0e0 !important;
+        padding: 0.72rem 1rem !important;
+        background: #fff !important;
+        transition: all 0.2s ease;
+    }
+
+    .form-control:focus, .form-select:focus {
+        border-color: var(--primary) !important;
+        box-shadow: 0 0 0 4px rgba(255, 90, 95, 0.1) !important;
+        background: #fff !important;
+    }
+
+    /* Select2 Dropdown Visibility Fix */
+    .select2-container {
+        z-index: 9999 !important;
+        display: block !important;
+        width: 100% !important;
+    }
+
+    .select2-container .select2-selection--single {
+        height: 48px !important;
+        border-radius: 12px !important;
+        border: 1px solid #ffe0e0 !important;
+        background: #fff !important;
+        display: flex !important;
+        align-items: center !important;
+        padding-left: 8px !important;
+        position: relative !important;
+    }
+
+    .select2-container--bootstrap5 .select2-selection--single .select2-selection__rendered {
+        color: var(--text-main) !important;
+        line-height: normal !important;
+        padding-left: 4px !important;
+        flex: 1;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .select2-container--bootstrap5 .select2-selection--single .select2-selection__arrow {
+        position: absolute !important;
+        right: 15px !important;
+        top: 50% !important;
+        transform: translateY(-50%) !important;
+        width: 20px !important;
+        height: 20px !important;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23ff5a5f' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e") !important;
+        background-repeat: no-repeat !important;
+        background-position: center !important;
+        background-size: 12px !important;
+    }
+
+    .select2-container--bootstrap5 .select2-selection--single .select2-selection__clear {
+        position: absolute !important;
+        right: 40px !important;
+        top: 50% !important;
+        transform: translateY(-50%) !important;
+        margin-top: 0 !important;
+        background: none !important;
+        font-weight: bold !important;
+        font-size: 1.2rem !important;
+        color: #ff8a8f !important;
+        cursor: pointer !important;
+        z-index: 10 !important;
+    }
+
+    .select2-container--bootstrap5 .select2-selection--single .select2-selection__clear:hover {
+        color: var(--primary) !important;
+    }
+
+    .select2-dropdown {
+        background: #fff !important;
+        border: 1px solid #ffd8c5 !important;
+        border-radius: 12px !important;
+        box-shadow: 0 10px 30px rgba(255, 90, 95, 0.15) !important;
+        z-index: 99999 !important; /* Extremely high to beat any other layers */
+    }
+
+    /* ITI Override to prevent overlap */
+    .iti { width: 100%; display: block; }
+    
+    /* Phone Number dropdown styling when opening in document.body */
+    .iti__country-list { 
+        z-index: 99999 !important; 
+        background-color: #ffffff !important;
+        border: 1px solid #ffd8c5 !important;
+        border-radius: 12px !important;
+        box-shadow: 0 10px 30px rgba(255, 90, 95, 0.15) !important;
+        max-height: 280px !important;
+    }
+    
+    .iti input#PhoneNo {
+        padding-left: 95px !important; 
+        height: 48px !important;
+    }
+    
+    .iti--separate-dial-code .iti__selected-dial-code {
+        margin-left: 8px;
+        font-weight: 700;
+        color: var(--primary);
+    }
+</style>
+
+<!-- intl-tel-input -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@23.0.1/build/css/intlTelInput.css">
+
 <div class="container d-flex flex-column">
 
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h1></h1>
-        <h1 class="h1 mb-4 mt-4">Student Online Registration</h1>
-        <h1></h1>
+    <div class="d-flex justify-content-start align-items-center">
+        <a href="@Url.Action("Index", "SenseiJapaneseSchool")" class="btn-back">
+            <i class="fas fa-chevron-left me-2"></i> Back to Home
+        </a>
+    </div>
+
+    <div class="text-center mb-5 mt-4">
+        <h1 class="display-5">Student Online Registration 🌸</h1>
+        <p class="text-muted">Join our community and start your journey to Japanese fluency today.</p>
     </div>
 
     <form asp-action="Register" asp-controller="SenseiJapaneseSchool" asp-area="" method="post" id="student-register">
@@ -21,7 +255,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <h5 class="card-title mb-0">Personal Information</h5>
+                        <h5 class="card-title">Personal Information</h5>
                     </div>
                     <div class="card-body">
 
@@ -189,9 +423,9 @@
             </div>
         </div>
 
-        <div class="d-flex justify-content-end align-items-center mb-5">
-            <button type="submit" class="btn btn-primary btn-lg px-5 shadow-sm" id="btnRegister">
-                <i class="fas fa-paper-plane me-2"></i> Register Now
+        <div class="text-center mt-4 mb-5">
+            <button type="submit" class="btn-primary" style="min-width: 250px;" id="btnRegister">
+                <i class="fas fa-paper-plane me-2"></i> Complete Registration Now
             </button>
         </div>
 
@@ -200,9 +434,7 @@
 
 @section Scripts {
 
-    <!-- intl-tel-input -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@24.5.0/build/css/intlTelInput.css">
-    <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@24.5.0/build/js/intlTelInput.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@23.0.1/build/js/intlTelInput.min.js"></script>
 
     <style>
         .iti { width: 100%; }
@@ -229,11 +461,22 @@
                         .then(data => callback(data.country_code.toLowerCase()))
                         .catch(() => callback("lk"));
                 },
-                utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@24.5.0/build/js/utils.js",
+                utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@23.0.1/build/js/utils.js",
                 separateDialCode: true,
                 autoPlaceholder: "aggressive",
-                formatOnDisplay: true
+                formatOnDisplay: true,
+                dropdownContainer: document.body // Fixes visibility/clipping issues
             });
+
+            // Help Select2 data load
+            const initCountryDropdown = (data) => {
+                 loadSelectBox({
+                    data: data,
+                    className: 'country-select',
+                    title: 'Select Country',
+                    dropdownParentId: 'country-wrapper' // Re-added with better CSS
+                });
+            };
 
             const validatePhone = () => {
                 if (phoneInputField.value.trim()) {
@@ -247,7 +490,7 @@
                         return false;
                     }
                 }
-                return false;
+                return true; // Optional field bypass if empty, but here it's usually required
             };
 
             phoneInputField.addEventListener('blur', validatePhone);
@@ -263,18 +506,23 @@
 
             // Load Countries
             $.getJSON('/SenseiJapaneseSchool/GetCountryListJsonResult', function (data) {
+                initCountryDropdown(data);
+
+                // Initial sync from ITI
+                const countryData = iti.getSelectedCountryData();
+                if (countryData && countryData.iso2) {
+                    $('#CountryId').val(countryData.iso2.toUpperCase()).trigger('change');
+                }
+            });
+
+            // Load Learning Modes
+            $.getJSON('/SenseiJapaneseSchool/GetLearningModeListJsonResult', function (data) {
                 loadSelectBox({
                     data: data,
-                    className: 'country-select',
-                    title: 'Select Country',
-                    dropdownParentId: 'country-wrapper'
+                    className: 'learningmode-select',
+                    title: 'Select Learning Mode',
+                    dropdownParentId: 'learningmode-wrapper'
                 });
-
-                // Set initial country from ITI if available
-                const initialCountry = iti.getSelectedCountryData().iso2;
-                if (initialCountry) {
-                    $('#CountryId').val(initialCountry.toUpperCase()).trigger('change');
-                }
             });
 
             // Load Courses
@@ -294,16 +542,6 @@
                     className: 'branch-select',
                     title: 'Select Branch',
                     dropdownParentId: 'branch-wrapper'
-                });
-            });
-
-            // Load Learning Modes
-            $.getJSON('/SenseiJapaneseSchool/GetLearningModeListJsonResult', function (data) {
-                loadSelectBox({
-                    data: data,
-                    className: 'learningmode-select',
-                    title: 'Select Learning Mode',
-                    dropdownParentId: 'learningmode-wrapper'
                 });
             });
 
