@@ -105,26 +105,28 @@ namespace SENSEI.WEB.Controllers
 
             if (status)
             {
+                var phone = "94" + studentRegistration.PhoneNo;
+
+                var message = $"Your registration with sensei japanese center was successfull. You will get notified when an admin approve your registration request.";
+
+                //var messageStatus = await _smsService.SendSingleAsync(phone, message);
+
                 TempData.AddNotification(new NotificationMessage
                 {
                     Type = "success",
-                    Message = "Registration submitted successfully!"
+                    Message = "Registration success!"
                 });
-                return RedirectToAction("Index");
-            }
-            else
-            {
-                ModelState.AddModelError("", "An error occurred during registration. Please try again.");
-                return View(studentRegistration);
-            }
-        }
 
-        [HttpGet]
-        public async Task<JsonResult> CheckEmailUnique(string email)
-        {
-            // Placeholder for remote validation if needed
-            // var isUnique = await _studentRegistrationService.IsEmailUnique(email);
-            return Json(true);
+                return RedirectToAction("Login");
+            }
+
+            TempData.AddNotification(new NotificationMessage
+            {
+                Type = "error",
+                Message = "registration Failed!"
+            });
+
+            return View();
         }
         #endregion
 

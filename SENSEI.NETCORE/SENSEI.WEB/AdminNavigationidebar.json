@@ -25,6 +25,11 @@
     "Url": "/AdminPortal/Batch/Index"
   },
   {
+    "Title": "Student Registration",
+    "Icon": "user-check",
+    "Url": "/AdminPortal/StudentRegistration/Index"
+  },
+  {
     "Title": "Student Record Request",
     "Icon": "file-text",
     "Url": "/AdminPortal/Student/Index"

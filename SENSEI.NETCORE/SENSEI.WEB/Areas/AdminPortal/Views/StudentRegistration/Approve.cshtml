@@ -1,0 +1,79 @@
+﻿﻿@using SENSEI.DOMAIN
+@model StudentRegistration
+
+@{
+    Layout = null;
+}
+
+
+
+<div class="offcanvas-header">
+    <h5 class="offcanvas-title">New Batch</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+</div>
+
+<div class="offcanvas-body">
+
+    <form id="studentRegistration-Approve-create-form" asp-area="AdminPortal" asp-controller="StudentRegistration" asp-action="Approve"
+          data-ajax="true" data-ajax-method="POST"
+          data-ajax-begin="onApproveCreateBegin" data-ajax-success="onApproveCreateSuccess" data-ajax-failure="onApproveCreateFailure" data-ajax-complete="onApproveCreateComplete">
+
+
+        @Html.HiddenFor(m => m.StudentRegistrationId)
+        @Html.HiddenFor(m => m.CourseId)
+
+        <div class="mb-3">
+            <label class="form-label">@Html.DisplayNameFor(m => m.CourseId)</label>
+            <input id="CourseId" class="form-control course-select" value="@Model.Course.CourseName" readonly/>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">@Html.DisplayNameFor(m => m.StudentLearningModeId)</label>
+            <input class="form-control" value="@Model.StudentLearningMode.LearningModeName"/>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">@Html.DisplayNameFor(m => m.StudentRegistrationPopulatedName)</label>
+            <input class="form-control" value="@Model.StudentRegistrationPopulatedName" readonly />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">@Html.DisplayNameFor(m => m.Email)</label>
+            <input class="form-control" value="@Model.Email" readonly/>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">@Html.DisplayNameFor(m => m.PhoneNo)</label>
+            <input class="form-control" value="@Model.PhoneNo" readonly/>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">@Html.DisplayNameFor(m => m.CreatedDateTime)</label>
+            <input class="form-control" value="@Model.CreatedDateTime.ToString("yyyy-MM-dd")" readonly />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Batch</label>
+            <select id="BatchId" class="form-control batch-select" name="batchId"></select>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Index Number</label>
+            <input id="indexNumber" class="form-control" name="indexNumber" />
+        </div>
+
+        <div class="d-flex justify-content-end gap-2">
+
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="offcanvas">
+                Cancel
+            </button>
+
+            <button type="submit" id="btnApprove" class="btn btn-success ladda-button" data-style="zoom-in">
+                <span class="ladda-label">Save</span>
+            </button>
+
+        </div>
+
+    </form>
+
+</div>

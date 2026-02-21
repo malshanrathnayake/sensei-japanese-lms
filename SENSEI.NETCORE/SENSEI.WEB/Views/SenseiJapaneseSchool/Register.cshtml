@@ -340,9 +340,9 @@
 
                             <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
                                 <div class="mb-3" id="country-wrapper">
-                                    <label class="form-label" asp-for="CountryCode">Country *</label>
-                                    <select id="CountryId" class="form-control country-select" name="CountryCode" asp-for="CountryCode"></select>
-                                    <span asp-validation-for="CountryCode" class="text-danger"></span>
+                                    <label class="form-label">@Html.DisplayNameFor(m => m.City.State.CountryId)</label>
+                                    <select id="CountryId" class="form-control country-select" name="CountryId" asp-for="CountryId"></select>
+                                    <span asp-validation-for="CountryId" class="text-danger"></span>
                                 </div>
                             </div>
 
@@ -394,7 +394,7 @@
 
                             <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
                                 <div class="mb-3" id="learningmode-wrapper">
-                                    <label class="form-label" asp-for="StudentLearningModeId">Learning Mode *</label>
+                                    <label class="form-label">@Html.DisplayNameFor(m => m.StudentLearningModeId)</label>
                                     <select id="StudentLearningModeId" class="form-control learningmode-select" name="StudentLearningModeId" asp-for="StudentLearningModeId"></select>
                                     <span asp-validation-for="StudentLearningModeId" class="text-danger"></span>
                                 </div>
