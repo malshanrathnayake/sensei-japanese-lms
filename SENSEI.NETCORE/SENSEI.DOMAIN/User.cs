@@ -28,5 +28,7 @@ namespace SENSEI.DOMAIN
 
         [DisplayName("Is Suspend")]
         public bool IsSuspend { get; set; }
+
+        public int? LastOtpSequence { get; set; }
     }
 }

@@ -109,7 +109,7 @@ namespace SENSEI.WEB.Controllers
 
                 var message = $"Your registration with sensei japanese center was successfull. You will get notified when an admin approve your registration request.";
 
-                //var messageStatus = await _smsService.SendSingleAsync(phone, message);
+                var messageStatus = await _smsService.SendSingleAsync(phone, message);
 
                 TempData.AddNotification(new NotificationMessage
                 {

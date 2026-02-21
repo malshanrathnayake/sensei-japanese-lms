@@ -29,15 +29,9 @@
         </div>
 
         <div class="mb-3">
-            <label class="form-label">@Html.DisplayNameFor(m => m.LessonStartDateTime)</label>
-            <input type="datetime-local" class="form-control" asp-for="LessonStartDateTime" autocomplete="off" />
-            <span asp-validation-for="LessonStartDateTime" class="text-danger"></span>
-        </div>
-
-        <div class="mb-3">
-            <label class="form-label">@Html.DisplayNameFor(m => m.LessonEndDateTime)</label>
-            <input type="datetime-local" class="form-control" asp-for="LessonEndDateTime" autocomplete="off" />
-            <span asp-validation-for="LessonEndDateTime" class="text-danger"></span>
+            <label class="form-label">@Html.DisplayNameFor(m => m.LessonDateTime)</label>
+            <input type="text" id="LessonDateTime" class="form-control datepicker" asp-for="LessonDateTime" autocomplete="off" />
+            <span asp-validation-for="LessonDateTime" class="text-danger"></span>
         </div>
 
         <div class="mb-3">

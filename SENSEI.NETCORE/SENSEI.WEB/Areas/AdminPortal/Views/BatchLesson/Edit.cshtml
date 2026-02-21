@@ -33,19 +33,9 @@
         </div>
 
         <div class="mb-3">
-            <label class="form-label">@Html.DisplayNameFor(m => m.LessonStartDateTime)</label>
-            <input type="datetime-local" class="form-control" asp-for="LessonStartDateTime"
-                   value="@(Model.LessonStartDateTime != DateTime.MinValue ? Model.LessonStartDateTime.ToString("yyyy-MM-ddTHH:mm") : "")"
-                   autocomplete="off" />
-            <span asp-validation-for="LessonStartDateTime" class="text-danger"></span>
-        </div>
-
-        <div class="mb-3">
-            <label class="form-label">@Html.DisplayNameFor(m => m.LessonEndDateTime)</label>
-            <input type="datetime-local" class="form-control" asp-for="LessonEndDateTime"
-                   value="@(Model.LessonEndDateTime != DateTime.MinValue ? Model.LessonEndDateTime.ToString("yyyy-MM-ddTHH:mm") : "")"
-                   autocomplete="off" />
-            <span asp-validation-for="LessonEndDateTime" class="text-danger"></span>
+            <label class="form-label">@Html.DisplayNameFor(m => m.LessonDateTime)</label>
+            <input type="text" class="form-control datepicker" asp-for="LessonDateTime" autocomplete="off" value="@(Model.LessonDateTime.ToString("yyyy-MM-dd"))" />
+            <span asp-validation-for="LessonDateTime" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
@@ -56,9 +46,7 @@
 
         <div class="mb-3">
             <label class="form-label">@Html.DisplayNameFor(m => m.RecordingExpireDate)</label>
-            <input type="text" class="form-control datepicker" asp-for="RecordingExpireDate"
-                   value="@(Model.RecordingExpireDate != DateTime.MinValue ? Model.RecordingExpireDate.ToString("yyyy-MM-dd") : "")"
-                   autocomplete="off" />
+            <input type="text" class="form-control datepicker" asp-for="RecordingExpireDate" autocomplete="off" value="@(Model.RecordingExpireDate.ToString("yyyy-MM-dd"))" />
             <span asp-validation-for="RecordingExpireDate" class="text-danger"></span>
         </div>
 

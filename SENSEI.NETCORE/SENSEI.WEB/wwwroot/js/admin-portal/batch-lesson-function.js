@@ -71,6 +71,13 @@ $("#btnNewBatchLesson").on("click", function () {
             todayHighlight: true,
         });
 
+        // Init datepicker for recording expire date
+        $('#LessonDateTime').datepicker({
+            format: 'yyyy-mm-dd',
+            autoclose: true,
+            todayHighlight: true,
+        });
+
         loadBatchDropdown('batch-select', 'create-batch-wrapper', '#hdnBatchId');
         loadLessonDropdown('lesson-select', 'create-lesson-wrapper', '#hdnLessonId');
 
@@ -139,6 +146,13 @@ function editBatchLessonButton() {
 
             // Init datepicker for recording expire date
             $('#RecordingExpireDate').datepicker({
+                format: 'yyyy-mm-dd',
+                autoclose: true,
+                todayHighlight: true,
+            });
+
+            // Init datepicker for recording expire date
+            $('#LessonDateTime').datepicker({
                 format: 'yyyy-mm-dd',
                 autoclose: true,
                 todayHighlight: true,

@@ -25,13 +25,14 @@ BEGIN
 			[ApprovedById],
 			[AddressLineOne],
 			[AddressLineTwo],
-			[CityId],
 			[PostalCode],
 			[BranchId],
 			[StudentLearningModeId],
 			[CourseId],
 			[CreatedDateTime],
-			[CountryId]
+			[CountryId],
+			[State],
+			[City]
 		)
 		SELECT
 			[Email],
@@ -46,13 +47,14 @@ BEGIN
 			[ApprovedById],
 			[AddressLineOne],
 			[AddressLineTwo],
-			[CityId],
 			[PostalCode],
 			[BranchId],
 			[StudentLearningModeId],
 			[CourseId],
 			GETUTCDATE(),
-			[CountryId]
+			[CountryId],
+			[State],
+			[City]
 		FROM OPENJSON(@jsonString, '$')
 		WITH
 		(
@@ -68,12 +70,13 @@ BEGIN
 			[ApprovedById] BIGINT,
 			[AddressLineOne] NVARCHAR(200),
 			[AddressLineTwo] NVARCHAR(200),
-			[CityId] BIGINT,
 			[PostalCode] NVARCHAR(20),
 			[BranchId] BIGINT,
 			[StudentLearningModeId] INT,
 			[CourseId] BIGINT,
-			[CountryId] INT
+			[CountryId] INT,
+			[State] NVARCHAR(100),
+			[City] NVARCHAR(20)
 		);
 
 		SET @primaryKey = SCOPE_IDENTITY();

@@ -25,6 +25,11 @@
     "Url": "/AdminPortal/Batch/Index"
   },
   {
+    "Title": "Batch Lesson",
+    "Icon": "book-open",
+    "Url": "/AdminPortal/BatchLesson/Index"
+  },
+  {
     "Title": "Student Registration",
     "Icon": "user-check",
     "Url": "/AdminPortal/StudentRegistration/Index"

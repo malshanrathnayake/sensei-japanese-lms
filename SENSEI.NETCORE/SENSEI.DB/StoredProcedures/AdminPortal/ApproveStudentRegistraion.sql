@@ -36,12 +36,20 @@ BEGIN
 
 		SET @userId = SCOPE_IDENTITY();
 
-		INSERT INTO [Student]([UserId], [IndexNumber], [Email], [PhoneNo], [FirstName], [MiddleName], [LastName], [Initials], [CallingName], [NIC], [DateOfBirth], [CityId], [BranchId], [StudentLearningModeId], [CountryId])
-		SELECT @userId, @indexNumber, [Email], [PhoneNo], [FirstName], [MiddleName], [LastName], [Initials], [CallingName], [NIC], [DateOfBirth], [CityId], [BranchId], [StudentLearningModeId], [CountryId]
+		INSERT INTO [Student]([UserId], [IndexNumber], [Email], [PhoneNo], [FirstName], [MiddleName], [LastName], [Initials], [CallingName], [NIC], [DateOfBirth], [BranchId], [StudentLearningModeId], [CountryId])
+		SELECT @userId, @indexNumber, [Email], [PhoneNo], [FirstName], [MiddleName], [LastName], [Initials], [CallingName], [NIC], [DateOfBirth], [BranchId], [StudentLearningModeId], [CountryId]
 		FROM [StudentRegistration]
 		WHERE [StudentRegistrationId] = @studentRegistrationId;
 
 		SET @primaryKey = SCOPE_IDENTITY();
+
+		INSERT INTO [StudentAddress]([StudentId], [AddressLineOne], [AddressLineTwo], [CountryId], [State], [PostalCode])
+		SELECT @primaryKey, [AddressLineOne], [AddressLineTwo], [CountryId], [State], [PostalCode]
+		FROM [StudentRegistration]
+		WHERE [StudentRegistrationId] = @studentRegistrationId;
+
+		INSERT INTO StudentBatch(BatchId, StudentId)
+		VALUES(@batchId, @primaryKey);
 
 		COMMIT TRANSACTION;
 		SET @executionStatus = 1;
