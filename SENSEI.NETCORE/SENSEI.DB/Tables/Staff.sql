@@ -11,5 +11,7 @@ CREATE TABLE [dbo].[Staff]
     [CallingName] NVARCHAR(200) NOT NULL,
     [NIC] NVARCHAR(200) NOT NULL,
     [IsDeleted] BIT NOT NULL,
+    [PhoneNo] NVARCHAR(100) NULL,
+
     CONSTRAINT [PK_Staff] PRIMARY KEY CLUSTERED ([EmployeeId])
 );

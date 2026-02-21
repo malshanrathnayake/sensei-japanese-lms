@@ -7,6 +7,7 @@ CREATE TABLE [dbo].[StudentAddress]
     [CountryId] INT NOT NULL,
     [IsDeleted] BIT NOT NULL DEFAULT 0,
     [State] NVARCHAR(100) NULL,
+    [City] NVARCHAR(100) NULL,
     [PostalCode] NVARCHAR(20) NULL,
 
     CONSTRAINT [PK_StudentAddress] PRIMARY KEY CLUSTERED ([StudentAddressId]),

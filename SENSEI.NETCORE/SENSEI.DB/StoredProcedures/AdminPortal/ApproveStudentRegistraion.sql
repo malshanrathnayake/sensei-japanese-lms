@@ -29,8 +29,8 @@ BEGIN
 		SET [IsApproved] = 1, [ApprovedById] = @approvedById, [UpdatedDateTime] = GETUTCDATE()
 		WHERE [StudentRegistrationId] = @studentRegistrationId;
 
-		INSERT INTO [User]([UserName], [UserGlobalidentity], [CreatedDateTiime], [UserTypeEnum], [IsActive])
-		SELECT Email, NEWID(), GETUTCDATE(), 1, 1
+		INSERT INTO [User]([UserName], [UserGlobalidentity], [CreatedDateTiime], [UserTypeEnum], [IsActive], PhoneNo)
+		SELECT Email, NEWID(), GETUTCDATE(), 1, 1, [PhoneNo]
 		FROM [StudentRegistration]
 		WHERE [StudentRegistrationId] = @studentRegistrationId;
 
@@ -43,8 +43,8 @@ BEGIN
 
 		SET @primaryKey = SCOPE_IDENTITY();
 
-		INSERT INTO [StudentAddress]([StudentId], [AddressLineOne], [AddressLineTwo], [CountryId], [State], [PostalCode])
-		SELECT @primaryKey, [AddressLineOne], [AddressLineTwo], [CountryId], [State], [PostalCode]
+		INSERT INTO [StudentAddress]([StudentId], [AddressLineOne], [AddressLineTwo], [CountryId], [State], [PostalCode], [City])
+		SELECT @primaryKey, [AddressLineOne], [AddressLineTwo], [CountryId], [State], [PostalCode], [City]
 		FROM [StudentRegistration]
 		WHERE [StudentRegistrationId] = @studentRegistrationId;
 

@@ -2,7 +2,7 @@
 (
 	[StudentRegistrationId] BIGINT NOT NULL IDENTITY,
 	[Email] NVARCHAR(256) NOT NULL,
-	[PhoneNo] INT NOT NULL,
+	[PhoneNo] NVARCHAR(100) NULL,
 	[FirstName] NVARCHAR(100) NOT NULL,
 	[MiddleName] NVARCHAR(100) NULL,
 	[LastName] NVARCHAR(100) NOT NULL,

@@ -27,6 +27,7 @@ builder.Services.AddSingleton<IBatchService, BatchServiceImpl>();
 builder.Services.AddSingleton<IBatchLessonService, BatchLessonServiceImpl>();
 builder.Services.AddSingleton<ILocationService, LocationServiceImpl>();
 builder.Services.AddSingleton<IStudentRegistrationService, StudentRegistrationServiceImpl>();
+builder.Services.AddSingleton<IUserService, UserServiceImpl>();
 #endregion
 
 #region Login with Google

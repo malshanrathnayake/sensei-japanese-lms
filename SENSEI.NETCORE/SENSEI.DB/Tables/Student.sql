@@ -4,7 +4,7 @@ CREATE TABLE [dbo].[Student]
     [UserId] BIGINT NOT NULL,
     [IndexNumber] INT NOT NULL,
     [Email] NVARCHAR(200) NOT NULL,
-    [PhoneNo] INT NOT NULL,
+    [PhoneNo] NVARCHAR(100) NULL,
     [FirstName] NVARCHAR(200) NOT NULL,
     [MiddleName] NVARCHAR(200) NOT NULL,
     [LastName] NVARCHAR(200) NOT NULL,

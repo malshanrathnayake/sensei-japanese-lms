@@ -102,13 +102,7 @@
                                 <label class="form-label" asp-for="AddressLineTwo"></label>
                                 @Html.TextBoxFor(m => m.AddressLineTwo, new { @class = "form-control", placeholder = "Address Line 2 (Optional)" })
                             </div>
-                            <div class="col-md-6 mb-3">
-                                <div id="country-wrapper">
-                                    <label class="form-label">Country *</label>
-                                    <select id="CountryCode" class="form-control country-select" name="CountryCode" asp-for="CountryCode"></select>
-                                    <span asp-validation-for="CountryCode" class="text-danger"></span>
-                                </div>
-                            </div>
+                            
                             <div class="col-md-6 mb-3">
                                 <label class="form-label" asp-for="City"></label>
                                 @Html.TextBoxFor(m => m.City, new { @class = "form-control", placeholder = "City" })

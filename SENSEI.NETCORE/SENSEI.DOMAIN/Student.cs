@@ -77,6 +77,20 @@ namespace SENSEI.DOMAIN
         [DisplayName("Learning Mode *")]
         public int StudentLearningModeId { get; set; }
 
+        public string StudentPopulatedName
+        {
+            get
+            {
+                string populatedName = $"{FirstName} ";
+                if (!string.IsNullOrEmpty(MiddleName))
+                {
+                    populatedName += $"{MiddleName} ";
+                }
+                populatedName += $"{LastName}";
+                return populatedName;
+            }
+        }
+
         #region NAVIGATIONAL PROPERTIES
 
         public User User { get; set; }

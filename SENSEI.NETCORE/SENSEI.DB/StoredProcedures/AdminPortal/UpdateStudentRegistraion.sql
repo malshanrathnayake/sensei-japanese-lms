@@ -59,7 +59,7 @@ BEGIN
 		WITH
 		(
 			[Email] NVARCHAR(256),
-			[PhoneNo] INT,
+			[PhoneNo] NVARCHAR(100),
 			[FirstName] NVARCHAR(100),
 			[MiddleName] NVARCHAR(100),
 			[LastName] NVARCHAR(100),

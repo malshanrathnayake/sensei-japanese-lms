@@ -8,6 +8,8 @@
 	[IsActive] BIT NOT NULL DEFAULT 0,
 	[IsSuspend] BIT NOT NULL DEFAULT 0,
 	[LastOtpSequence] INT NULL,
+	[LastOtpSequencedateTime] DATETIME NULL,
+	[PhoneNo] NVARCHAR(100) NULL,
 
 	CONSTRAINT [PK_User_UserId] PRIMARY KEY CLUSTERED ([UserId])
 )

@@ -30,5 +30,12 @@ namespace SENSEI.DOMAIN
         public bool IsSuspend { get; set; }
 
         public int? LastOtpSequence { get; set; }
+        public DateTime? LastOtpSequencedateTime { get; set; }
+        public string PhoneNo { get; set; }
+
+        #region Navigation Properties
+        public Student Student { get; set; }
+        public Staff Staff { get; set; }
+        #endregion
     }
 }

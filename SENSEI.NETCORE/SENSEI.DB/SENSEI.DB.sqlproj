@@ -108,5 +108,8 @@
     <Build Include="StoredProcedures\AdminPortal\GetBatchLesson.sql" />
     <Build Include="StoredProcedures\AdminPortal\SearchBatchLessons.sql" />
     <Build Include="StoredProcedures\AdminPortal\DeleteBatchLesson.sql" />
+    <Build Include="StoredProcedures\AdminPortal\GetUser.sql" />
+    <Build Include="StoredProcedures\DatabseConfigurations\UpdateStaffData.sql" />
+    <Build Include="StoredProcedures\AdminPortal\UpdateUserOTPSequence.sql" />
   </ItemGroup>
 </Project>
