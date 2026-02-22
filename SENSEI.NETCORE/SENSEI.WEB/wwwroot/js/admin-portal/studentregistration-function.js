@@ -91,3 +91,65 @@ function onApproveCreateComplete() {
     }
 }
 
+function rejectButton() {
+    //Edit Batch
+    $(".reject-registration").on("click", function () {
+
+        var actionUrl = $(this).data("action-url");
+
+        $("#studentRegistration-offcanvas-content").load(actionUrl, function () {
+
+            // Reset unobtrusive validation (important)
+            var form = $("#studentRegistration-Reject-create-form");
+            if (form.length) {
+                form.removeData("validator");
+                form.removeData("unobtrusiveValidation");
+                $.validator.unobtrusive.parse(form);
+            }
+
+            // Show offcanvas
+            var offcanvasEl = document.getElementById('studentRegistrationOffcanvas');
+            var offcanvas = new bootstrap.Offcanvas(offcanvasEl);
+            offcanvas.show();
+
+        });
+
+    });
+
+}
+
+function onRejectCreateBegin() {
+    batchSaveLadda = Ladda.create($('#btnReject')[0]);
+    batchSaveLadda.start();
+}
+
+function onRejectCreateSuccess(response) {
+
+    if (response.success) {
+
+        // Close offcanvas
+        var offcanvasEl = document.getElementById('studentRegistrationOffcanvas');
+        var offcanvas = bootstrap.Offcanvas.getInstance(offcanvasEl);
+        offcanvas.hide();
+
+        loadStudentRegistrations();
+
+        popUpNotification('success', response.message);
+
+    } else {
+
+        popUpNotification('error', response.message);
+
+    }
+}
+
+function onRejectCreateFailure() {
+    popUpNotification('error', 'Failed to register student');
+}
+
+function onRejectCreateComplete() {
+    if (batchSaveLadda) {
+        batchSaveLadda.stop();
+    }
+}
+

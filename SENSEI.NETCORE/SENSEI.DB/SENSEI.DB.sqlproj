@@ -111,5 +111,6 @@
     <Build Include="StoredProcedures\AdminPortal\GetUser.sql" />
     <Build Include="StoredProcedures\DatabseConfigurations\UpdateStaffData.sql" />
     <Build Include="StoredProcedures\AdminPortal\UpdateUserOTPSequence.sql" />
+    <Build Include="StoredProcedures\AdminPortal\RejectStudentRegistraion.sql" />
   </ItemGroup>
 </Project>

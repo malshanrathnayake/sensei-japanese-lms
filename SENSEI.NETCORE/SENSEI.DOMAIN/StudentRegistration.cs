@@ -38,7 +38,7 @@ namespace SENSEI.DOMAIN
         public string CallingName { get; set; }
 
         [DisplayName("NIC")]
-        public string NIC { get; set; } // User didn't specify if NIC is required, but current model has it. I'll leave as is but maybe make it optional for foreign students? Actually current model has it required.
+        public string NIC { get; set; } 
 
         [Required(ErrorMessage = "Date of Birth is required.")]
         [DisplayName("Date Of Birth *")]
@@ -98,6 +98,8 @@ namespace SENSEI.DOMAIN
 
         public string EncryptedKey { get; set; }
         public DateTime CreatedDateTime { get; set; }
+        public bool IsRejected { get; set; }
+        public string RejectionComment { get; set; }
 
         [Required(ErrorMessage = "Country is required.")]
         [DisplayName("Country *")]

@@ -8,15 +8,15 @@
 
 
 <div class="offcanvas-header">
-    <h5 class="offcanvas-title">Approve</h5>
+    <h5 class="offcanvas-title">Reject</h5>
     <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
 </div>
 
 <div class="offcanvas-body">
 
-    <form id="studentRegistration-Approve-create-form" asp-area="AdminPortal" asp-controller="StudentRegistration" asp-action="Approve"
+    <form id="studentRegistration-Reject-create-form" asp-area="AdminPortal" asp-controller="StudentRegistration" asp-action="Reject"
           data-ajax="true" data-ajax-method="POST"
-          data-ajax-begin="onApproveCreateBegin" data-ajax-success="onApproveCreateSuccess" data-ajax-failure="onApproveCreateFailure" data-ajax-complete="onApproveCreateComplete">
+          data-ajax-begin="onRejectCreateBegin" data-ajax-success="onRejectCreateSuccess" data-ajax-failure="onRejectCreateFailure" data-ajax-complete="onRejectCreateComplete">
 
 
         @Html.HiddenFor(m => m.StudentRegistrationId)
@@ -24,7 +24,7 @@
 
         <div class="mb-3">
             <label class="form-label">@Html.DisplayNameFor(m => m.CourseId)</label>
-            <input id="CourseId" class="form-control course-select" value="@Model.Course.CourseName" readonly/>
+            <input id="CourseId" class="form-control course-select" value="@Model.Course.CourseName" readonly />
         </div>
 
         <div class="mb-3">
@@ -39,12 +39,12 @@
 
         <div class="mb-3">
             <label class="form-label">@Html.DisplayNameFor(m => m.Email)</label>
-            <input class="form-control" value="@Model.Email" readonly/>
+            <input class="form-control" value="@Model.Email" readonly />
         </div>
 
         <div class="mb-3">
             <label class="form-label">@Html.DisplayNameFor(m => m.PhoneNo)</label>
-            <input class="form-control" value="@Model.PhoneNo" readonly/>
+            <input class="form-control" value="@Model.PhoneNo" readonly />
         </div>
 
         <div class="mb-3">
@@ -53,13 +53,8 @@
         </div>
 
         <div class="mb-3">
-            <label class="form-label">Batch</label>
-            <select id="BatchId" class="form-control batch-select" name="batchId"></select>
-        </div>
-
-        <div class="mb-3">
-            <label class="form-label">Index Number</label>
-            <input id="indexNumber" class="form-control" name="indexNumber" />
+            <label class="form-label">Rejection Comment</label>
+            @Html.TextBoxFor(m => m.RejectionComment, new { @class = "form-control", placeholder = "Reject Comment" })
         </div>
 
         <div class="d-flex justify-content-end gap-2">
@@ -68,8 +63,8 @@
                 Cancel
             </button>
 
-            <button type="submit" id="btnApprove" class="btn btn-success ladda-button" data-style="zoom-in">
-                <span class="ladda-label">Approve</span>
+            <button type="submit" id="btnReject" class="btn btn-danger ladda-button" data-style="zoom-in">
+                <span class="ladda-label">Reject</span>
             </button>
 
         </div>

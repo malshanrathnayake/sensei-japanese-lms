@@ -152,6 +152,34 @@ namespace SENSEI.WEB.Areas.AdminPortal.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> Reject(string q)
+        {
+            long studentRegistrationId = Convert.ToInt64(_protector.Unprotect(q));
+
+            var studentRegistration = await _studentRegistrationService.GetStudentRegistraion(studentRegistrationId);
+
+            return View(studentRegistration);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Reject(long StudentRegistrationId, string RejectionComment)
+        {
+            var userId = Convert.ToInt64(HttpContext.Session.GetString("UserId"));
+
+            var result = await _studentRegistrationService.RejectStudentRegistraion(StudentRegistrationId, RejectionComment, userId);
+
+            if (result)
+            {
+                return Json(new { success = result, message = "Student registration rejected successfully" });
+            }
+            else
+            {
+                return Json(new { success = result, message = "Failed to reject student registration" });
+            }
+
+        }
+
+        [HttpGet]
         public async Task<JsonResult> GetCourseListJsonResult()
         {
             var courses = await _courseService.GetCourses();

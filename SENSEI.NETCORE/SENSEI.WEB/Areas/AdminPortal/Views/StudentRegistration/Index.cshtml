@@ -61,6 +61,7 @@
                                     <th>@Html.DisplayNameFor(m => m.Email)</th>
                                     <th>@Html.DisplayNameFor(m => m.PhoneNo)</th>
                                     <th>@Html.DisplayNameFor(m => m.CreatedDateTime)</th>
+                                    <th>Status</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -161,8 +162,19 @@
                             var approveUrl = `/AdminPortal/StudentRegistration/Approve/?q=${row.encryptedKey}`;
                             var rejectUrl = `/AdminPortal/StudentRegistration/Reject/?q=${row.encryptedKey}`;
 
-                            var approveBtn = `<li><a class="dropdown-item d-flex align-items-center gap-2 approve-registration" href="javascript:void(0)" data-action-url="${approveUrl}"> <i data-feather="check-circle"></i><span>Approve</span></a></li>`;
-                            var rejectBtn = `<li><a class="dropdown-item d-flex align-items-center gap-2 text-danger reject-registration" href="javascript:void(0)" data-action-url="${rejectUrl}" data-action-parameter="${row.studentRegistrationPopulatedName}"><i data-feather="x-circle"></i><span>Reject</span></a></li>`;
+                            var isFinalized = row.isApproved || row.isRejected;
+
+                            // Approve button
+                            var approveDisabled = isFinalized ? "disabled text-muted" : "";
+                            var approveClickClass = isFinalized ? "" : "approve-registration";
+
+                            // Reject button
+                            var rejectDisabled = isFinalized ? "disabled text-muted" : "";
+                            var rejectClickClass = isFinalized ? "" : "reject-registration";
+
+
+                            var approveBtn = `<li><a class="dropdown-item d-flex align-items-center gap-2 ${approveDisabled} ${approveClickClass}" href="javascript:void(0)" data-action-url="${approveUrl}"> <i data-feather="check-circle"></i><span>Approve</span></a></li>`;
+                            var rejectBtn = `<li><a class="dropdown-item d-flex align-items-center gap-2 ${rejectDisabled} ${rejectClickClass}" href="javascript:void(0)" data-action-url="${rejectUrl}" data-action-parameter="${row.studentRegistrationPopulatedName}"><i data-feather="x-circle"></i><span>Reject</span></a></li>`;
 
                             return `
                                 <div class="dropdown">
@@ -184,7 +196,21 @@
                     { data: 'studentRegistrationPopulatedName', name:'studentRegistrationPopulatedName' },
                     { data: 'email', name:'email' },
                     { data: 'phoneNo', name:'phoneNo' },
-                    { data: 'createdDateTime', name:'createdDateTime', render: function (data) { return renderDateOnly(data); } }
+                    { data: 'createdDateTime', name:'createdDateTime', render: function (data) { return renderDateOnly(data); } },
+                    { data: null, name: 'status', orderable: false, searchable: false,
+                        render: function (data, type, row) {
+
+                            if (row.isApproved) {
+                                return `<span class="badge bg-success">Approved</span>`;
+                            }
+
+                            if (row.isRejected) {
+                                return `<span class="badge bg-danger">Rejected</span>`;
+                            }
+
+                            return `<span class="badge bg-warning text-dark">Pending</span>`;
+                        }
+                    }
 
                 ],
                 drawCallback: function () {
@@ -194,7 +220,7 @@
                     }
 
                     approveButton();
-                    //rejectButton();
+                    rejectButton();
                 }
             });
 

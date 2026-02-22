@@ -22,7 +22,9 @@
 	[CreatedDateTime] DATETIME NULL,
 	[CountryId] INT NULL,
 	[UpdatedDateTime] DATETIME NULL,
-	[State] NVARCHAR(100) NULL
+	[State] NVARCHAR(100) NULL,
+	[IsRejected] BIT NULL DEFAULT 0,
+	[RejectionComment] NVARCHAR(100) NULL,
 
 	CONSTRAINT [PK_StudentRegistration_StudentRegistrationId] PRIMARY KEY CLUSTERED ([StudentRegistrationId])
 )

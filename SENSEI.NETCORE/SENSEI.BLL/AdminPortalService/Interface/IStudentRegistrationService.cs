@@ -11,5 +11,6 @@ namespace SENSEI.BLL.AdminPortalService.Interface
         Task<(IEnumerable<StudentRegistration>, long)> SearchStudentRegistraion(long courseId = 0, int start = 0, int length = 10, string searchValue = "", string sortColumn = "", string sortDirection = "");
         Task<StudentRegistration> GetStudentRegistraion(long studentRegistrationId);
         Task<bool> ApproveStudentRegistraion(long studentRegistrationId, string indexNumber, long batchId, long approvedById);
+        Task<bool> RejectStudentRegistraion(long studentRegistrationId, string rejectionComment, long rejectedById);
     }
 }

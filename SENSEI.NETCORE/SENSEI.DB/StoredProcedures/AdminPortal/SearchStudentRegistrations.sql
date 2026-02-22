@@ -19,8 +19,9 @@ BEGIN
 	FROM StudentRegistration STREG
 	INNER JOIN Course C ON C.CourseId = STREG.CourseId
 	INNER JOIN StudentLearningMode SLM ON SLM.StudentLearningModeId = STREG.StudentLearningModeId
-	WHERE STREG.IsApproved = 0
-		AND (@courseId = 0 OR STREG.CourseId = @courseId)
+	WHERE 
+		--STREG.IsApproved = 0
+		(@courseId = 0 OR STREG.CourseId = @courseId)
 		AND (@searchValue = '' OR STREG.FirstName LIKE '%' + @searchValue + '%' OR STREG.LastName LIKE '%' + @searchValue + '%' OR STREG.MiddleName LIKE '%' + @searchValue + '%' OR CAST(STREG.CreatedDateTime AS DATE) LIKE '%' + @searchValue + '%' OR C.CourseName LIKE '%' + @searchValue + '%' OR SLM.LearningModeName LIKE '%' + @searchValue + '%' OR STREG.Email LIKE '%' + @searchValue + '%' OR STREG.PhoneNo LIKE '%' + @searchValue + '%')
 	ORDER BY 
 		CASE WHEN @sortColumn = 'course.courseName' AND @sortDirection = 'ASC' THEN C.CourseName END ASC,CASE WHEN @sortColumn = 'course.courseName' AND @sortDirection = 'DESC' THEN C.CourseName END DESC,
