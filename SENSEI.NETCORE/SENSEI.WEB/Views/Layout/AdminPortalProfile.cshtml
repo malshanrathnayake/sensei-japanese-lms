@@ -1,7 +1,7 @@
 ﻿@{
 	Layout = null;
 	var userDisplayName = Context.Session.GetString("DisplayName") ?? "User";
-	var userProfileImage = Context.Session.GetString("ProfileImage") ?? "~/theme/v1/img/avatars/placeholder_1.jpeg";
+	var userProfileImage = Context.Session.GetString("ProfileImage") ?? "/theme/v1/img/avatars/placeholder_1.jpeg";
 }
 
 <li class="nav-item dropdown">
@@ -10,7 +10,7 @@
 	</a>
 
 	<a class="nav-link dropdown-toggle d-none d-sm-inline-block" href="#" data-bs-toggle="dropdown">
-		<img src="@userProfileImage" class="avatar img-fluid rounded-circle me-1" alt="Charles Hall" style="border: 2px solid var(--primary);" />
+		<img src="@userProfileImage" class="avatar img-fluid rounded-circle me-1" alt="@userDisplayName" style="border: 2px solid var(--primary);" />
 		<span class="text-dark fw-bold">@userDisplayName</span>
 	</a>
 	<div class="dropdown-menu dropdown-menu-end">

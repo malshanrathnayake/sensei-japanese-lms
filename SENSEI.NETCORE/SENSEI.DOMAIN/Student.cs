@@ -14,7 +14,7 @@ namespace SENSEI.DOMAIN
         public long UserId { get; set; }
 
         [DisplayName("Index Number")]
-        public int IndexNumber { get; set; }
+        public string IndexNumber { get; set; }
 
         [Required(ErrorMessage = "Email is required.")]
         [EmailAddress(ErrorMessage = "Invalid email format.")]
