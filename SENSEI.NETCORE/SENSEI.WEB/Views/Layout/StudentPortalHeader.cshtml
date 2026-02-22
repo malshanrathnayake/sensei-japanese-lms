@@ -1,0 +1,34 @@
+@using core_web.Helpers
+
+@{
+	Layout = null;
+}
+
+<nav class="navbar navbar-expand navbar-light navbar-bg">
+	<div class="d-flex align-items-center">
+		<a class="sidebar-toggle js-sidebar-toggle ms-2">
+			<i class="hamburger align-self-center"></i>
+		</a>
+		<div class="ms-3">
+			<span style="font-weight: 800; color: var(--bs-primary); font-size: 0.9rem; letter-spacing: 0.1em; text-transform: uppercase;">
+                Student Portal
+            </span>
+		</div>
+	</div>
+
+	<div class="navbar-collapse collapse">
+		<ul class="navbar-nav navbar-align">
+
+			<!-- notification -->
+			@Html.RenderAction("AdminPortalNotification", "Layout", new { area = "" })
+
+			<!-- message -->
+			@Html.RenderAction("AdminPortalMessages", "Layout", new { area = "" })
+
+
+			<!-- profile -->
+			@Html.RenderAction("AdminPortalProfile", "Layout", new { area = "" })
+
+		</ul>
+	</div>
+</nav>

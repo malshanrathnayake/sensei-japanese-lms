@@ -1,0 +1,17 @@
+[
+    {
+        "Title": "Dashboard",
+        "Icon": "home",
+        "Url": "/StudentPortal/Home/Index"
+    },
+    {
+        "Title": "My Learning",
+        "Icon": "book-open",
+        "Url": "/StudentPortal/MyLearning/Index"
+    },
+    {
+        "Title": "My Profile",
+        "Icon": "user",
+        "Url": "/StudentPortal/Profile/Index"
+    }
+]

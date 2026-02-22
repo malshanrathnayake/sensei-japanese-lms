@@ -1,10 +1,10 @@
-﻿@using core_web.Helpers
-@using System.Text.Json
-
 @{
 	Layout = null;
     var notificationsJson = TempData["Notifications"] as string;
 }
+
+@using core_web.Helpers
+@using System.Text.Json
 
 <!DOCTYPE html>
 <html lang="en">
@@ -13,16 +13,13 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<meta name="description" content="Responsive Admin &amp; Dashboard Template based on Bootstrap 5">
-	<meta name="author" content="AdminKit">
-	<meta name="keywords" content="adminkit, bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web">
+	<meta name="description" content="Student Portal - SENSEI Japanese LMS">
+	<meta name="author" content="SENSEI">
 
 	<link rel="preconnect" href="https://fonts.gstatic.com">
 	<link rel="shortcut icon" href="~/theme/v1/img/icons/icon-48x48.png" />
 
-	<link rel="canonical" href="https://demo-basic.adminkit.io/pages-blank.html" />
-
-	<title>SENSEI | @ViewData["Title"]</title>
+	<title>SENSEI Student | @ViewData["Title"]</title>
 
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 	<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
@@ -32,25 +29,35 @@
 	<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css">
 	<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-
 	<link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
-
 	<link href="~/lib/sweetalert2/sweetalert2.bundle.css" rel="stylesheet">
 	<link href="~/lib/ladda/dist/ladda-themeless.min.css" rel="stylesheet" />
 	<link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/dataTables.bootstrap5.min.css">
-
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap-datepicker@1.10.0/dist/css/bootstrap-datepicker.min.css" rel="stylesheet">
 
 	<style>
-		body {
+        /* 🛡️ Aggressive UI Fix: Completely remove any leaking global website components */
+        header, .nav, .brand, .brand-link, .nav-links, .btn-login, .site-footer { 
+            display: none !important; 
+            height: 0 !important;
+            visibility: hidden !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            position: absolute !important;
+            top: -9999px !important;
+        }
+
+        body {
+            margin-top: 0 !important;
+            padding-top: 0 !important;
 			font-family: 'Plus Jakarta Sans', sans-serif !important;
+            background-color: #f8f9fa;
 		}
 
 		.sidebar-brand span {
 			font-family: 'Noto Serif JP', serif !important;
 		}
 
-		/* Subtle Sakura ornament for Admin */
 		.main::after {
 			content: "";
 			position: fixed;
@@ -61,7 +68,7 @@
 			background-image: url('/theme/v1/img/photos/sakura.png');
 			background-size: contain;
 			background-repeat: no-repeat;
-			opacity: 0.05;
+			opacity: 0.03;
 			pointer-events: none;
 			z-index: 0;
 		}
@@ -69,12 +76,29 @@
 		.card-title {
 			font-weight: 800;
 			letter-spacing: -0.02em;
-			color: var(--primary) !important;
+			color: var(--bs-primary) !important;
 		}
 
 		.sidebar-link {
 			font-weight: 600;
 		}
+
+        .content {
+            padding: 2.5rem 1.5rem 1.5rem;
+        }
+
+        .jp-watermark {
+            position: fixed;
+            font-family: 'Noto Serif JP', serif;
+            font-size: 15rem;
+            color: rgba(255, 107, 107, 0.03);
+            z-index: -1;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+
+        .jp-pos-1 { top: 10%; left: -5%; transform: rotate(-15deg); }
+        .jp-pos-2 { bottom: 10%; right: -5%; transform: rotate(15deg); }
 	</style>
 </head>
 
@@ -82,15 +106,12 @@
 	<div class="wrapper">
 		
 		<!-- sidebar -->
-		@Html.RenderAction("AdminSidebar", "Layout", new { area = "" })
+		@Html.RenderAction("StudentSidebar", "Layout", new { area = "" })
 
 		<div class="main">
 			
 			<!-- header -->
-			@Html.RenderAction("AdminPortalHeader", "Layout", new { area = "" })
-
-			<div class="jp-watermark jp-pos-1">先生</div>
-			<div class="jp-watermark jp-pos-2">日本語</div>
+			@Html.RenderAction("StudentPortalHeader", "Layout", new { area = "" })
 
 			<!-- body -->
 			<main class="content">
@@ -100,140 +121,41 @@
 			</main>
 
 			<!-- footer -->
-			@Html.RenderAction("AdminPortalFooter", "Layout", new { area = "" })
+			@Html.RenderAction("StudentPortalFooter", "Layout", new { area = "" })
 
 		</div>
 
 	</div>
 
-	<!-- Core dependency -->
+	<!-- Scripts -->
 	<script src="~/lib/jquery/dist/jquery.min.js"></script>
-
-	<!-- jQuery plugins that depend on jQuery -->
-	<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
-	<script src="~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js"></script>
-	<script src="~/lib/jquery-ajax-unobtrusive/dist/jquery.unobtrusive-ajax.min.js"></script>
-
-	<!-- Bootstrap -->
 	<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-
-	<!-- Site -->
 	<script src="~/js/site.js"></script>
-
-	<!-- UI / Icon libraries -->
 	<script src="~/lib/feather/feather.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
-
-	<!-- Form / UX Enhancements -->
 	<script src="~/lib/select2-inspinia/select2.full.min.js"></script>
 	<script src="~/lib/sweetalert2/sweetalert2.bundle.js"></script>
-
-	<!-- Loading / Button state -->
 	<script src="~/lib/ladda/dist/spin.min.js"></script>
 	<script src="~/lib/ladda/dist/ladda.min.js"></script>
-
-	<!-- Your global helpers -->
 	<script src="~/js/global-function.js"></script>
-
-	<!-- Data Table -->
 	<script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
 	<script src="https://cdn.datatables.net/1.13.8/js/dataTables.bootstrap5.min.js"></script>
-
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
-
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap-datepicker@1.10.0/dist/js/bootstrap-datepicker.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 	<script>
-
 		window.notyf = new Notyf({
-			 position: {
-				x: 'right',
-				y: 'top'
-			},
-			types: [
-				{
-					type: 'info',
-					background: '#0dcaf0'
-				},
-				{
-					type: 'warning',
-					background: '#ffc107'
-				}
+			 position: { x: 'right', y: 'top' },
+			 types: [
+				{ type: 'info', background: '#0dcaf0' },
+				{ type: 'warning', background: '#ffc107' }
 			]
 		});
 
 		document.addEventListener("DOMContentLoaded", function () {
-
-			if (window.feather) {
-				feather.replace();
-			}
-
-			const notificationsJson = @Html.Raw(notificationsJson != null ? notificationsJson : "null");
-
-			if (!notificationsJson || notificationsJson.length === 0) return;
-
-			notificationsJson.forEach(n => {
-				window.notyf.open({
-					type: n.Type.toLowerCase(), // Notyf expects lowercase
-					message: n.Message,
-					duration: n.Duration,
-					dismissible: n.Dismissible,
-					position: {
-						x: n.PositionX,
-						y: n.PositionY
-					}
-				});
-			});
-
+			if (window.feather) { feather.replace(); }
 		});
-	</script>
-
-	<!--SignalR Connections-->
-	<script>
-
-		$(document).ready(function () {
-
-			const notificationConnection = new signalR.HubConnectionBuilder()
-				.withUrl("/hubs/notifications")
-				.build();
-
-			notificationConnection.on("ReceiveNotification", function (data) {
-
-				popUpNotification('success', data.message);
-
-				const html = `
-					<a href="#" class="list-group-item">
-						<div class="row g-0 align-items-center">
-							<div class="col-2">
-								<i class="text-warning" data-feather="${data.icon}"></i>
-							</div>
-							<div class="col-10">
-								<div class="text-dark">${data.title}</div>
-								<div class="text-muted small mt-1">${data.message}</div>
-								<div class="text-muted small mt-1">
-									${formatDate(data.createdAt)}
-								</div>
-							</div>
-						</div>
-					</a>
-				`;
-
-				$("#userNotificationlist").prepend(html);
-
-				if (window.feather) {
-					feather.replace();
-				}
-
-			});
-
-			notificationConnection.start();
-		});
-
-		function formatDate(dateStr) {
-			const d = new Date(dateStr);
-			return d.toLocaleDateString("en-GB") + " " + d.toLocaleTimeString("en-GB", { hour: '2-digit', minute: '2-digit' });
-		}
-
 	</script>
 
 	@await RenderSectionAsync("Scripts", required: false)
