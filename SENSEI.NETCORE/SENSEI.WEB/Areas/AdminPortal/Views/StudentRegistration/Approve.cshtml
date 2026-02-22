@@ -29,7 +29,7 @@
 
         <div class="mb-3">
             <label class="form-label">@Html.DisplayNameFor(m => m.StudentLearningModeId)</label>
-            <input class="form-control" value="@Model.StudentLearningMode.LearningModeName"/>
+            <input class="form-control" value="@Model.StudentLearningMode.LearningModeName" readonly />
         </div>
 
         <div class="mb-3">
@@ -69,7 +69,7 @@
             </button>
 
             <button type="submit" id="btnApprove" class="btn btn-success ladda-button" data-style="zoom-in">
-                <span class="ladda-label">Save</span>
+                <span class="ladda-label">Approve</span>
             </button>
 
         </div>

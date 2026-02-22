@@ -2,7 +2,7 @@ CREATE TABLE [dbo].[Student]
 (
     [StudentId] BIGINT NOT NULL IDENTITY,
     [UserId] BIGINT NOT NULL,
-    [IndexNumber] INT NOT NULL,
+    [IndexNumber] NVARCHAR(100) NOT NULL,
     [Email] NVARCHAR(200) NOT NULL,
     [PhoneNo] NVARCHAR(100) NULL,
     [FirstName] NVARCHAR(200) NOT NULL,

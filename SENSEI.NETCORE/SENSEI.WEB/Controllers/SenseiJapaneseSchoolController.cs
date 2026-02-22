@@ -282,6 +282,7 @@ namespace SENSEI.WEB.Controllers
 
             var email = claims?.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
             var name = claims?.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
+            var profileImage = claims?.FirstOrDefault(c => c.Type == "picture")?.Value;
 
             var user = await _userService.GetUserByEmail(email);
 
@@ -300,6 +301,7 @@ namespace SENSEI.WEB.Controllers
             HttpContext.Session.SetString("UserName", user.userName);
             HttpContext.Session.SetString("DisplayName", string.IsNullOrWhiteSpace(name) ? "User" : name);
             HttpContext.Session.SetString("UserType", user.UserTypeEnum.ToString());
+            HttpContext.Session.SetString("ProfileImage", string.IsNullOrWhiteSpace(profileImage) ? "/theme/v1/img/avatars/placeholder_1.jpeg" : profileImage);
 
             var appClaims = new List<Claim>
             {

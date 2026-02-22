@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.SignalR;
@@ -48,6 +49,9 @@ builder.Services.AddAuthentication(options =>
 {
     options.ClientId = googleClientId;
     options.ClientSecret = googleClientSecret;
+
+    options.Scope.Add("profile");
+    options.ClaimActions.MapJsonKey("picture", "picture");
 });
 
 #endregion

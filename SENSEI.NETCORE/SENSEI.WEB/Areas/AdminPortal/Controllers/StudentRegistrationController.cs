@@ -106,10 +106,10 @@ namespace SENSEI.WEB.Areas.AdminPortal.Controllers
             ViewBag.BatchId = batchId;
             ViewBag.IndexNumber = indexNumber;
 
-            if (!ModelState.IsValid)
-            {
-                return View(studentRegistration);
-            }
+            //if (!ModelState.IsValid)
+            //{
+            //    return View(studentRegistration);
+            //}
 
             var userId = Convert.ToInt64(HttpContext.Session.GetString("UserId") ?? "0");
 
@@ -135,6 +135,8 @@ namespace SENSEI.WEB.Areas.AdminPortal.Controllers
                         Type = "warning",
                         Message = "Student registration saved, but auto-approval failed. Please approve manually."
                     });
+
+                    return RedirectToAction("Index");
                 }
             }
             else
