@@ -14,7 +14,7 @@ namespace SENSEI.DOMAIN
         public long UserId { get; set; }
 
         [DisplayName("Index Number")]
-        public int IndexNumber { get; set; }
+        public string IndexNumber { get; set; }
 
         [Required(ErrorMessage = "Email is required.")]
         [EmailAddress(ErrorMessage = "Invalid email format.")]
@@ -76,6 +76,20 @@ namespace SENSEI.DOMAIN
         [Required]
         [DisplayName("Learning Mode *")]
         public int StudentLearningModeId { get; set; }
+
+        public string StudentPopulatedName
+        {
+            get
+            {
+                string populatedName = $"{FirstName} ";
+                if (!string.IsNullOrEmpty(MiddleName))
+                {
+                    populatedName += $"{MiddleName} ";
+                }
+                populatedName += $"{LastName}";
+                return populatedName;
+            }
+        }
 
         #region NAVIGATIONAL PROPERTIES
 

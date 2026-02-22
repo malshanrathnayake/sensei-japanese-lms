@@ -19,12 +19,8 @@ namespace SENSEI.DOMAIN
         public long BatchId { get; set; }
 
         [Required]
-        [DisplayName("Lesson Start Date Time")]
-        public DateTime LessonStartDateTime { get; set; }
-
-        [Required]
-        [DisplayName("Lesson End Date Time")]
-        public DateTime LessonEndDateTime { get; set; }
+        [DisplayName("Lesson Date")]
+        public DateTime LessonDateTime { get; set; }
 
         [DisplayName("Recording URL")]
         public string RecordingUrl { get; set; }

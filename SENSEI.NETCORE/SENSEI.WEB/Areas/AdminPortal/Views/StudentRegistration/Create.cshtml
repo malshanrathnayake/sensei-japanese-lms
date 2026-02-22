@@ -1,4 +1,4 @@
-@using SENSEI.DOMAIN
+﻿@using SENSEI.DOMAIN
 @model StudentRegistration
 
 @{
@@ -102,13 +102,15 @@
                                 <label class="form-label" asp-for="AddressLineTwo"></label>
                                 @Html.TextBoxFor(m => m.AddressLineTwo, new { @class = "form-control", placeholder = "Address Line 2 (Optional)" })
                             </div>
-                            <div class="col-md-6 mb-3">
-                                <div id="country-wrapper">
-                                    <label class="form-label">Country *</label>
-                                    <select id="CountryCode" class="form-control country-select" name="CountryCode" asp-for="CountryCode"></select>
-                                    <span asp-validation-for="CountryCode" class="text-danger"></span>
+
+                            <div class="col-6 mb-3">
+                                <div class="mb-3" id="country-wrapper">
+                                    <label class="form-label">@Html.DisplayNameFor(m => m.CountryId)</label>
+                                    <select id="CountryId" class="form-control country-select" name="CountryId" asp-for="CountryId"></select>
+                                    <span asp-validation-for="CountryId" class="text-danger"></span>
                                 </div>
                             </div>
+                            
                             <div class="col-md-6 mb-3">
                                 <label class="form-label" asp-for="City"></label>
                                 @Html.TextBoxFor(m => m.City, new { @class = "form-control", placeholder = "City" })
@@ -166,9 +168,7 @@
                                     <div class="col-md-6 mb-3">
                                         <div id="batch-wrapper">
                                             <label class="form-label fw-bold text-primary">Assign to Batch *</label>
-                                            <select id="BatchId" class="form-control batch-select @(ViewData.ModelState["batchId"]?.Errors.Count > 0 ? "is-invalid" : "")" name="batchId" required>
-                                                <option value="">Choose Course First</option>
-                                            </select>
+                                            <select id="BatchId" class="form-control batch-select" name="batchId" required> </select>
                                             <span class="text-danger">@Html.ValidationMessage("batchId")</span>
                                         </div>
                                     </div>
@@ -232,11 +232,17 @@
 
             // Load Courses
             $.getJSON('/AdminPortal/StudentRegistration/GetCourseListJsonResult', function (data) {
+                
                 loadSelectBox({
                     data: data,
                     className: 'course-select',
-                    title: 'Select Course'
+                    title: 'Select Course',
+                    dropdownParentId: 'branch-wrapper'
+
                 });
+
+                loadOnCourseChange();
+
             });
 
             // Load Branches
@@ -244,7 +250,8 @@
                 loadSelectBox({
                     data: data,
                     className: 'branch-select',
-                    title: 'Select Branch'
+                    title: 'Select Branch',
+                    dropdownParentId: 'branch-wrapper'
                 });
             });
 
@@ -290,7 +297,8 @@
                 loadSelectBox({
                     data: data,
                     className: 'country-select',
-                    title: 'Select Country'
+                    title: 'Select Country',
+                    dropdownParentId: 'country-wrapper'
                 });
             });
 
@@ -304,19 +312,7 @@
 
             // Dependent Batch Dropdown
             $('#CourseId').on('change', function() {
-                const courseId = $(this).val();
-                if (courseId && courseId != "0") {
-                    $.getJSON('/AdminPortal/StudentRegistration/GetBatchListJsonResult', { courseId: courseId }, function (data) {
-                         $('#BatchId').empty().append('<option value="">Select Batch</option>');
-                         loadSelectBox({
-                            data: data,
-                            className: 'batch-select',
-                            title: 'Select Batch'
-                        });
-                    });
-                } else {
-                    $('#BatchId').empty().append('<option value="">Choose Course First</option>');
-                }
+                loadOnCourseChange();
             });
 
             // Form Validation and Phone Formatting
@@ -341,6 +337,31 @@
                     return false;
                 }
             });
+
+            function loadOnCourseChange(){
+
+                var courseId = $("#CourseId").val();
+
+                if (courseId && courseId != "0") {
+                    $.getJSON('/AdminPortal/StudentRegistration/GetBatchListJsonResult', { courseId: courseId }, function (data) {
+                         $('#BatchId').empty().append('<option value="">Select Batch</option>');
+                         loadSelectBox({
+                            data: data,
+                            className: 'batch-select',
+                            title: 'Select Batch',
+                            dropdownParentId: 'batch-wrapper'
+                        });
+                    });
+                } else {
+                    $('#BatchId').empty().append('<option value="">Choose Course First</option>');
+                }
+
+                
+
+                setTimeout(function () {
+                    $("#batch-wrapper").find(".select2-container").css("width", "100%");
+                }, 500);
+            }
         });
     </script>
 }

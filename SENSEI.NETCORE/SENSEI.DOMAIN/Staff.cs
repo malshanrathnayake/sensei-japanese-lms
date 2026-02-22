@@ -44,6 +44,22 @@ namespace SENSEI.DOMAIN
         [DisplayName("Is Deleted")]
         public bool IsDeleted { get; set; }
 
+        public string StaffPopulatedName
+        {
+            get
+            {
+                string populatedName = $"{FirstName} ";
+                if (!string.IsNullOrEmpty(MiddleName))
+                {
+                    populatedName += $"{MiddleName} ";
+                }
+                populatedName += $"{LastName}";
+                return populatedName;
+            }
+        }
+
+        public string PhoneNo { get; set; }
+
         // Navigation
         public User User { get; set; }
         public ICollection<EmployeeAddress> Addresses { get; set; } = new List<EmployeeAddress>();

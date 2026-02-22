@@ -356,7 +356,7 @@
 
                             <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
                                 <div class="mb-3" id="country-wrapper">
-                                    <label class="form-label">@Html.DisplayNameFor(m => m.CountryCode)</label>
+                                    <label class="form-label">@Html.DisplayNameFor(m => m.CountryId)</label>
                                     <select id="CountryId" class="form-control country-select" name="CountryId" asp-for="CountryId"></select>
                                     <span asp-validation-for="CountryId" class="text-danger"></span>
                                 </div>
@@ -513,22 +513,29 @@
             phoneInputField.addEventListener('change', validatePhone);
 
             // Sync Country Dropdown with Phone
-            phoneInputField.addEventListener("countrychange", function() {
-                const countryData = iti.getSelectedCountryData();
-                if (countryData && countryData.iso2) {
-                    $('#CountryId').val(countryData.iso2.toUpperCase()).trigger('change');
-                }
-            });
+            // phoneInputField.addEventListener("countrychange", function() {
+            //     const countryData = iti.getSelectedCountryData();
+            //     if (countryData && countryData.iso2) {
+            //         $('#CountryId').val(countryData.iso2.toUpperCase()).trigger('change');
+            //     }
+            // });
 
             // Load Countries
             $.getJSON('/SenseiJapaneseSchool/GetCountryListJsonResult', function (data) {
-                initCountryDropdown(data);
+                //initCountryDropdown(data);
 
                 // Initial sync from ITI
-                const countryData = iti.getSelectedCountryData();
-                if (countryData && countryData.iso2) {
-                    $('#CountryId').val(countryData.iso2.toUpperCase()).trigger('change');
-                }
+                // const countryData = iti.getSelectedCountryData();
+                // if (countryData && countryData.iso2) {
+                //     $('#CountryId').val(countryData.iso2.toUpperCase()).trigger('change');
+                // }
+
+                loadSelectBox({
+                    data: data,
+                    className: 'country-select',
+                    title: 'Select Country',
+                    dropdownParentId: 'country-wrapper' 
+                });
             });
 
             // Load Learning Modes
@@ -592,10 +599,34 @@
             });
 
             // Sync phone with country dropdown change
-            $('#CountryId').on('change', function() {
-                const countryCode = $(this).val();
-                if (countryCode) {
-                    iti.setCountry(countryCode.toLowerCase());
+            // $('#CountryId').on('change', function() {
+            //     const countryCode = $(this).val();
+            //     if (countryCode) {
+            //         iti.setCountry(countryCode.toLowerCase());
+            //     }
+            // });
+
+            const form = phoneInputField.closest("form");
+
+            form.addEventListener("submit", function (event) {
+
+                if (phoneInputField.value.trim()) {
+
+                    if (iti.isValidNumber()) {
+
+                        // This automatically returns E164 format like +94771234567
+                        let fullNumber = iti.getNumber();
+
+                        // Extra safety cleanup
+                        fullNumber = fullNumber.replace(/\s+/g, '');
+
+                        phoneInputField.value = fullNumber;
+
+                    } else {
+                        phoneError.classList.remove("d-none");
+                        phoneInputField.classList.add("is-invalid");
+                        event.preventDefault();
+                    }
                 }
             });
 

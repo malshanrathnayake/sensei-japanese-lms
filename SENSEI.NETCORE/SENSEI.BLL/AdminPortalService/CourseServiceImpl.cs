@@ -51,10 +51,10 @@ namespace SENSEI.BLL.AdminPortalService
                 new SqlParameter("@sortDirection", sortDirection)
             ]);
 
-            await _realtimeNotifier.NotifyAll(new
-            {
-                message = "Hello from server"
-            });
+            //await _realtimeNotifier.NotifyAll(new
+            //{
+            //    message = "Hello from server"
+            //});
 
             return (courses, count);
         }

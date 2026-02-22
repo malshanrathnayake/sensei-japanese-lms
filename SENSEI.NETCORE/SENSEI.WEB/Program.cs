@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.SignalR;
@@ -13,7 +14,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddDataProtection();
 
 builder.Services.AddSignalR();
 
@@ -27,6 +27,7 @@ builder.Services.AddSingleton<IBatchService, BatchServiceImpl>();
 builder.Services.AddSingleton<IBatchLessonService, BatchLessonServiceImpl>();
 builder.Services.AddSingleton<ILocationService, LocationServiceImpl>();
 builder.Services.AddSingleton<IStudentRegistrationService, StudentRegistrationServiceImpl>();
+builder.Services.AddSingleton<IUserService, UserServiceImpl>();
 #endregion
 
 #region Login with Google
@@ -42,11 +43,15 @@ builder.Services.AddAuthentication(options =>
 .AddCookie(options =>
 {
     options.LoginPath = "/SenseiJapaneseSchool/Login";
+    options.AccessDeniedPath = "/SenseiJapaneseSchool/AccessDenied";
 })
 .AddGoogle(options =>
 {
     options.ClientId = googleClientId;
     options.ClientSecret = googleClientSecret;
+
+    options.Scope.Add("profile");
+    options.ClaimActions.MapJsonKey("picture", "picture");
 });
 
 #endregion
@@ -65,7 +70,23 @@ builder.Services.AddSingleton<IDatabaseService>(provider =>
 builder.Services.AddSingleton<IMailService, MailServiceImpl>();
 builder.Services.AddSingleton<ISmsService, SmsServiceImpl>();
 builder.Services.AddDataProtection();
-builder.Services.AddSession();
+
+builder.Services.AddDistributedMemoryCache();
+
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromHours(2);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminOnly", p => p.RequireRole("Admin"));
+    options.AddPolicy("ManagerOnly", p => p.RequireRole("Manager"));
+    options.AddPolicy("StudentOnly", p => p.RequireRole("Student"));
+});
+
 
 #endregion
 
@@ -89,9 +110,9 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseSession();
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseSession();
 
 app.MapHub<NotificationHub>("/hubs/notifications");
 

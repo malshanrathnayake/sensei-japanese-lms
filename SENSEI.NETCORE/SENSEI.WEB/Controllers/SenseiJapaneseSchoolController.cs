@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using Newtonsoft.Json;
 using SENSEI.BLL.AdminPortalService.Interface;
 using SENSEI.BLL.SystemService.Interfaces;
@@ -20,13 +21,22 @@ namespace SENSEI.WEB.Controllers
         private readonly ICourseService _courseService;
         private readonly ILocationService _locationService;
         private readonly IStudentRegistrationService _studentRegistrationService;
+        private readonly IUserService _userService;
 
-        public SenseiJapaneseSchoolController(ISmsService smsService, ICourseService courseService, ILocationService locationService, IStudentRegistrationService studentRegistrationService)
+        public SenseiJapaneseSchoolController
+        (
+            ISmsService smsService, 
+            ICourseService courseService, 
+            ILocationService locationService, 
+            IStudentRegistrationService studentRegistrationService,
+            IUserService userService
+        )
         {
             _smsService = smsService;
             _courseService = courseService;
             _locationService = locationService;
             _studentRegistrationService = studentRegistrationService;
+            _userService = userService;
         }
 
         public async Task<IActionResult> Index()
@@ -55,22 +65,137 @@ namespace SENSEI.WEB.Controllers
         [HttpPost]
         public async Task<IActionResult> OTPLogin(string phone)
         {
-            //94711408116 sample number
             var otpCode = GlobalHelpers.GenerateOtp();
+            var smsStatus = false;
+            var phoneNo = "94" + phone.ToString();
 
-            phone = "94" + phone;
+            var user = await _userService.GetUserByPhone("+" + phoneNo);
 
-            var message = $"Your OTP code is {otpCode}. This code is valid for 5 minutes.";
-
-            //var status = await _smsService.SendSingleAsync(phone, message);
-            var status = true;
-
-            if (!status)
+            if (user is null)
             {
+                TempData.AddNotification(new NotificationMessage
+                {
+                    Type = "Error",
+                    Message = "Your account is not registered."
+                });
+
                 return RedirectToAction("Login");
             }
 
-            return RedirectToAction("OtpConfirm");
+            var message = $"Your OTP code is {otpCode}. This code is valid for 5 minutes.";
+
+            var userOtp = new User
+            {
+                UserId = user.UserId,
+                LastOtpSequence = Convert.ToInt32(otpCode),
+            };
+
+            var optupdated = await _userService.UpdateOtpSequence(userOtp);
+
+            if (optupdated)
+            {
+                smsStatus = await _smsService.SendSingleAsync(phoneNo, message);
+            }
+
+            if (!smsStatus)
+            {
+                TempData.AddNotification(new NotificationMessage
+                {
+                    Type = "Error",
+                    Message = "OTP sent failed!"
+                });
+
+                return RedirectToAction("Login");
+            }
+
+            TempData.AddNotification(new NotificationMessage
+            {
+                Type = "success",
+                Message = "OTP sent successfully!"
+            });
+
+            return RedirectToAction("OtpConfirm", new { userGlobalIdentity = user.UserGlobalidentity, phone = phone });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> OtpConfirm(string userGlobalIdentity, int phone)
+        {
+            ViewBag.UserGlobalIdentity = userGlobalIdentity;
+            ViewBag.Phone = phone;
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> OtpConfirm(string userGlobalIdentity, int phone, int otpCode)
+        {
+            ViewBag.UserGlobalIdentity = userGlobalIdentity;
+
+            var user = await _userService.GetUserByUserGlobalIdentity(userGlobalIdentity);
+
+            if (user is null || user.LastOtpSequence != otpCode)
+            {
+                TempData.AddNotification(new NotificationMessage
+                {
+                    Type = "Error",
+                    Message = "Invalid OTP code."
+                });
+
+                return RedirectToAction("Login");
+            }
+
+            HttpContext.Session.SetString("UserId", user.UserId.ToString());
+            HttpContext.Session.SetString("UserName", user.userName);
+            HttpContext.Session.SetString("DisplayName", user.Staff != null ? user.Staff.StaffPopulatedName : user.Student.StudentPopulatedName);
+            HttpContext.Session.SetString("UserType", user.UserTypeEnum.ToString());
+
+            var appClaims = new List<Claim>
+            {
+                new Claim("UserId", user.UserId.ToString()),
+                new Claim(ClaimTypes.Email, user.userName),
+                new Claim(ClaimTypes.Name, user.Staff != null ? user.Staff.StaffPopulatedName : user.Student.StudentPopulatedName),
+                new Claim(ClaimTypes.Role, user.UserTypeEnum.ToString())
+            };
+
+            var identity = new ClaimsIdentity(appClaims, CookieAuthenticationDefaults.AuthenticationScheme);
+            var principal = new ClaimsPrincipal(identity);
+
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, new AuthenticationProperties { IsPersistent = true });
+
+            TempData.AddNotification(new NotificationMessage
+            {
+                Type = "Success",
+                Message = "Login successful!"
+            });
+
+            TempData.AddNotification(new NotificationMessage
+            {
+                Type = "info",
+                Message = $"Welcome {user?.Staff?.StaffPopulatedName ?? user?.Student?.StudentPopulatedName ?? "User"}"
+            });
+
+            if (user.UserTypeEnum == UserTypeEnum.Admin)
+            {
+                return RedirectToAction("Index", "Home", new { Area = "Adminportal" });
+
+            }
+            else if (user.UserTypeEnum == UserTypeEnum.Manager)
+            {
+                return RedirectToAction("Index", "Home", new { Area = "Adminportal" });
+            }
+            else if (user.UserTypeEnum == UserTypeEnum.Student)
+            {
+                return RedirectToAction("Index", "Home", new { Area = "Studentportal" });
+            }
+            else
+            {
+                TempData.AddNotification(new NotificationMessage
+                {
+                    Type = "error",
+                    Message = "Your account did not match any type"
+                });
+                return RedirectToAction("Login");
+            }
+            
         }
 
         #endregion
@@ -86,18 +211,20 @@ namespace SENSEI.WEB.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(StudentRegistration studentRegistration)
         {
-            if (!ModelState.IsValid)
-            {
-                return View(studentRegistration);
-            }
+            //if (!ModelState.IsValid)
+            //{
+            //    return View(studentRegistration);
+            //}
 
-            // Backend unique email validation (basic check for demonstration)
-            // In a real app, this would call a service to check the DB.
-            var isEmailUnique = true; // Replace with: await _studentRegistrationService.IsEmailUnique(studentRegistration.Email);
+            var isEmailUnique = await _userService.GetUserByEmail(studentRegistration.Email);
             
-            if (!isEmailUnique)
+            if (isEmailUnique != null)
             {
-                ModelState.AddModelError("Email", "This email is already registered.");
+                TempData.AddNotification(new NotificationMessage
+                {
+                    Type = "Error",
+                    Message = "This email is already registered.!"
+                });
                 return View(studentRegistration);
             }
 
@@ -105,11 +232,11 @@ namespace SENSEI.WEB.Controllers
 
             if (status)
             {
-                var phone = "94" + studentRegistration.PhoneNo;
+                var phone = studentRegistration.PhoneNo?.Replace("+", "");
 
                 var message = $"Your registration with sensei japanese center was successfull. You will get notified when an admin approve your registration request.";
 
-                //var messageStatus = await _smsService.SendSingleAsync(phone, message);
+                var messageStatus = await _smsService.SendSingleAsync(phone, message);
 
                 TempData.AddNotification(new NotificationMessage
                 {
@@ -155,24 +282,39 @@ namespace SENSEI.WEB.Controllers
 
             var email = claims?.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
             var name = claims?.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
+            var profileImage = claims?.FirstOrDefault(c => c.Type == "picture")?.Value;
 
-            Random rnd = new Random();
+            var user = await _userService.GetUserByEmail(email);
 
-            var randuserId = rnd.Next(1, 1000);
+            if(user is null)
+            {
+                TempData.AddNotification(new NotificationMessage
+                {
+                    Type = "Error",
+                    Message = "Your account is not registered."
+                });
 
-            HttpContext.Session.SetString("UserId", randuserId.ToString());
+                return RedirectToAction("Login");
+            }
+
+            HttpContext.Session.SetString("UserId", user.UserId.ToString());
+            HttpContext.Session.SetString("UserName", user.userName);
+            HttpContext.Session.SetString("DisplayName", string.IsNullOrWhiteSpace(name) ? "User" : name);
+            HttpContext.Session.SetString("UserType", user.UserTypeEnum.ToString());
+            HttpContext.Session.SetString("ProfileImage", string.IsNullOrWhiteSpace(profileImage) ? "/theme/v1/img/avatars/placeholder_1.jpeg" : profileImage);
 
             var appClaims = new List<Claim>
             {
-                new Claim("UserId", randuserId.ToString()),
+                new Claim("UserId", user.UserId.ToString()),
                 new Claim(ClaimTypes.Email, email),
-                new Claim(ClaimTypes.Name, name)
+                new Claim(ClaimTypes.Name, name),
+                new Claim(ClaimTypes.Role, user.UserTypeEnum.ToString())
             };
 
             var identity = new ClaimsIdentity(appClaims, CookieAuthenticationDefaults.AuthenticationScheme);
             var principal = new ClaimsPrincipal(identity);
 
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, new AuthenticationProperties { IsPersistent = true });
 
             TempData.AddNotification(new NotificationMessage
             {
@@ -187,13 +329,43 @@ namespace SENSEI.WEB.Controllers
             });
 
 
-            return RedirectToAction("Index", "Home", new { Area = "Adminportal" });
+            if (user.UserTypeEnum == UserTypeEnum.Admin)
+            {
+                return RedirectToAction("Index", "Home", new { Area = "Adminportal" });
+
+            }
+            else if (user.UserTypeEnum == UserTypeEnum.Manager)
+            {
+                return RedirectToAction("Index", "Home", new { Area = "Adminportal" });
+            }
+            else if (user.UserTypeEnum == UserTypeEnum.Student)
+            {
+                return RedirectToAction("Index", "Home", new { Area = "Studentportal" });
+            }
+            else
+            {
+                TempData.AddNotification(new NotificationMessage
+                {
+                    Type = "error",
+                    Message = "Your account did not match any type"
+                });
+
+                return RedirectToAction("Login");
+            }
         }
 
-        public IActionResult LogoutGoogle()
+        public async Task<IActionResult> LogoutGoogle()
         {
-            return SignOut(
-                CookieAuthenticationDefaults.AuthenticationScheme);
+            HttpContext.Session.Clear();
+
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+            return RedirectToAction("Index");
+        }
+
+        public async Task<IActionResult> AccessDenied()
+        {
+            return View();
         }
 
         #endregion
@@ -215,7 +387,7 @@ namespace SENSEI.WEB.Controllers
         {
             var countries = await _locationService.GetContries();
 
-            var result = countries.OrderBy(e => e.CountryName).Select(e => new { id = e.CountryCode, text = e.CountryName }).ToList();
+            var result = countries.OrderBy(e => e.CountryName).Select(e => new { id = e.CountryId, text = e.CountryName }).ToList();
 
             return Json(result);
         }

@@ -56,8 +56,7 @@
                                     <th></th>
                                     <th>@Html.DisplayNameFor(m => m.BatchId)</th>
                                     <th>@Html.DisplayNameFor(m => m.LessonId)</th>
-                                    <th>@Html.DisplayNameFor(m => m.LessonStartDateTime)</th>
-                                    <th>@Html.DisplayNameFor(m => m.LessonEndDateTime)</th>
+                                    <th>@Html.DisplayNameFor(m => m.LessonDateTime)</th>
                                     <th>@Html.DisplayNameFor(m => m.RecordingUrl)</th>
                                 </tr>
                             </thead>
@@ -175,8 +174,7 @@
                     },
                     { data: 'batch.batchName', name: 'batch.batchName', defaultContent: '' },
                     { data: 'lesson.lessonName', name: 'lesson.lessonName', defaultContent: '' },
-                    { data: 'lessonStartDateTime', name: 'lessonStartDateTime', render: function (data) { return renderDateTime(data); } },
-                    { data: 'lessonEndDateTime', name: 'lessonEndDateTime', render: function (data) { return renderDateTime(data); } },
+                    { data: 'lessonDateTime', name: 'lessonDateTime', render: function (data) { return renderDateTime(data); } },
                     { data: 'recordingUrl', name: 'recordingUrl', defaultContent: '', render: function (data) { return data ? `<a href="${data}" target="_blank">View</a>` : ''; } },
                 ],
                 drawCallback: function () {
@@ -195,8 +193,7 @@
         function renderDateTime(data) {
             if (!data) return '';
 
-            var dt = new Date(data);
-            return dt.toLocaleString();
+            return data.split('T')[0];
         }
 
 

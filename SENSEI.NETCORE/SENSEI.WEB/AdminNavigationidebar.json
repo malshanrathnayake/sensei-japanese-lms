@@ -15,24 +15,19 @@
     "Url": "/AdminPortal/Lesson/Index"
   },
   {
-    "Title": "Student",
-    "Icon": "users",
-    "Url": "/AdminPortal/Student/Index"
-  },
-  {
     "Title": "Batch",
     "Icon": "layers",
     "Url": "/AdminPortal/Batch/Index"
   },
   {
+    "Title": "Batch Lesson",
+    "Icon": "book-open",
+    "Url": "/AdminPortal/BatchLesson/Index"
+  },
+  {
     "Title": "Student Registration",
     "Icon": "user-check",
     "Url": "/AdminPortal/StudentRegistration/Index"
-  },
-  {
-    "Title": "Student Record Request",
-    "Icon": "file-text",
-    "Url": "/AdminPortal/Student/Index"
   }
 
 ]

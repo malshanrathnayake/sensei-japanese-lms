@@ -38,42 +38,42 @@ namespace SENSEI.WEB.Controllers
 
         public async Task<IActionResult> AdminPortalNotification()
         {
-            //var userId = Convert.ToInt64(HttpContext.Session.GetString("UserId"));
-            //var notifications = await _userNotificationService.GetUserNotificationForUser(userId);
+            var userId = Convert.ToInt64(HttpContext.Session.GetString("UserId"));
+            var notifications = await _userNotificationService.GetUserNotificationForUser(userId);
 
-            var notifications = new List<UserNotification>
-{
-                new UserNotification
-                {
-                    UserNotificationId = 1,
-                    NotificationType = "System",
-                    Message = "Your profile was updated successfully.",
-                    IsRead = false,
-                    CreatedAt = DateTime.Now.AddMinutes(-5),
-                    Icon = "user",
-                    IsDeleted = false
-                },
-                new UserNotification
-                {
-                    UserNotificationId = 2,
-                    NotificationType = "Course",
-                    Message = "New lesson has been added to your course.",
-                    IsRead = false,
-                    CreatedAt = DateTime.Now.AddHours(-1),
-                    Icon = "book-open",
-                    IsDeleted = false
-                },
-                new UserNotification
-                {
-                    UserNotificationId = 3,
-                    NotificationType = "Payment",
-                    Message = "Your payment was received successfully.",
-                    IsRead = true,
-                    CreatedAt = DateTime.Now.AddDays(-1),
-                    Icon = "credit-card",
-                    IsDeleted = false
-                }
-            };
+            //var notifications = new List<UserNotification>
+            //{
+            //    new UserNotification
+            //    {
+            //        UserNotificationId = 1,
+            //        NotificationType = "System",
+            //        Message = "Your profile was updated successfully.",
+            //        IsRead = false,
+            //        CreatedAt = DateTime.Now.AddMinutes(-5),
+            //        Icon = "user",
+            //        IsDeleted = false
+            //    },
+            //    new UserNotification
+            //    {
+            //        UserNotificationId = 2,
+            //        NotificationType = "Course",
+            //        Message = "New lesson has been added to your course.",
+            //        IsRead = false,
+            //        CreatedAt = DateTime.Now.AddHours(-1),
+            //        Icon = "book-open",
+            //        IsDeleted = false
+            //    },
+            //    new UserNotification
+            //    {
+            //        UserNotificationId = 3,
+            //        NotificationType = "Payment",
+            //        Message = "Your payment was received successfully.",
+            //        IsRead = true,
+            //        CreatedAt = DateTime.Now.AddDays(-1),
+            //        Icon = "credit-card",
+            //        IsDeleted = false
+            //    }
+            //};
 
 
             return View(notifications);

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Mvc;
 using SENSEI.BLL.AdminPortalService.Interface;
@@ -6,6 +7,7 @@ using SENSEI.DOMAIN;
 namespace SENSEI.WEB.Areas.AdminPortal.Controllers
 {
     [Area("AdminPortal")]
+    [Authorize(Roles = "Admin,Manager")]
     public class BatchLessonController : Controller
     {
         private readonly IBatchLessonService _batchLessonService;
@@ -31,7 +33,7 @@ namespace SENSEI.WEB.Areas.AdminPortal.Controllers
             return View();
         }
 
-        public async Task<IActionResult> ListOfBatchLessons(long batchId = 0)
+        public async Task<IActionResult> ListOfBatchLessons(long courseId = 0, long batchId = 0)
         {
             int draw = int.Parse(Request.Form["draw"]);
             int start = int.Parse(Request.Form["start"]);
@@ -44,7 +46,7 @@ namespace SENSEI.WEB.Areas.AdminPortal.Controllers
 
             IQueryable<BatchLesson> batchLessons = new List<BatchLesson>().AsQueryable();
 
-            var (batchLessonsList, count) = await _batchLessonService.SearchBatchLessons(batchId, start, length, searchValue, sortColumn, sortDirection);
+            var (batchLessonsList, count) = await _batchLessonService.SearchBatchLessons(courseId, batchId, start, length, searchValue, sortColumn, sortDirection);
             batchLessons = batchLessonsList.AsQueryable();
 
             batchLessons.ToList().ForEach(e =>

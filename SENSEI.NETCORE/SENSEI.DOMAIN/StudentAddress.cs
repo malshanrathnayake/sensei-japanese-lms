@@ -21,15 +21,18 @@ namespace SENSEI.DOMAIN
         public string AddressLineTwo { get; set; }
 
         [Required]
-        [DisplayName("City")]
-        public int CityId { get; set; }
+        [DisplayName("Country")]
+        public int CountryId { get; set; }
 
         [DisplayName("Is Deleted")]
         public bool IsDeleted { get; set; }
 
+        [DisplayName("Postal Code")]
+        public string? PostalCode { get; set; }
+
         #region NAVIGATIONAL PROPERTIES
         public Student Student { get; set; }
-        public City City { get; set; }
+        public Country Country { get; set; }
         #endregion
     }
 }

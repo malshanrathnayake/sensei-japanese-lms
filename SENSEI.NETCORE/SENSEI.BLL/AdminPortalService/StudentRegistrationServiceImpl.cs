@@ -87,6 +87,21 @@ namespace SENSEI.BLL.AdminPortalService
             var (status, primaryKey) = await dataTransactionManager.StudentRegistrationDataManager.UpdateDataReturnPrimaryKey("ApproveStudentRegistraion", jsonString);
             return status;
         }
-        
+
+        public async Task<bool> RejectStudentRegistraion(long studentRegistrationId, string rejectionComment, long rejectedById)
+        {
+            var approveData = new
+            {
+                StudentRegistrationId = studentRegistrationId,
+                RejectionComment = rejectionComment,
+                ApprovedById = rejectedById
+            };
+
+            string jsonString = JsonConvert.SerializeObject(approveData);
+            DataTransactionManager dataTransactionManager = new DataTransactionManager(_databaseService.GetConnectionString());
+            var (status, primaryKey) = await dataTransactionManager.StudentRegistrationDataManager.UpdateDataReturnPrimaryKey("RejectStudentRegistraion", jsonString);
+            return status;
+        }
+
     }
 }

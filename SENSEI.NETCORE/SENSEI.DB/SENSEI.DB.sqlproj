@@ -73,7 +73,7 @@
     <Build Include="Tables\Staff.sql" />
     <Build Include="Tables\Student.sql" />
     <Build Include="Tables\StudentAddress.sql" />
-    <Build Include="Tables\StudentBatchPayment.sql" />
+    <Build Include="Tables\StudentBatch.sql" />
     <Build Include="StoredProcedures\AdminPortal\UpdateCourse.sql" />
     <Build Include="StoredProcedures\AdminPortal\SearchCourses.sql" />
     <Build Include="StoredProcedures\AdminPortal\GetCourse.sql" />
@@ -104,5 +104,13 @@
     <Build Include="StoredProcedures\AdminPortal\GetStudentRegistration.sql" />
     <Build Include="StoredProcedures\AdminPortal\ApproveStudentRegistraion.sql" />
     <Build Include="StoredProcedures\AdminPortal\SearchStudentRegistrations.sql" />
+    <Build Include="StoredProcedures\AdminPortal\UpdateBatchLesson.sql" />
+    <Build Include="StoredProcedures\AdminPortal\GetBatchLesson.sql" />
+    <Build Include="StoredProcedures\AdminPortal\SearchBatchLessons.sql" />
+    <Build Include="StoredProcedures\AdminPortal\DeleteBatchLesson.sql" />
+    <Build Include="StoredProcedures\AdminPortal\GetUser.sql" />
+    <Build Include="StoredProcedures\DatabseConfigurations\UpdateStaffData.sql" />
+    <Build Include="StoredProcedures\AdminPortal\UpdateUserOTPSequence.sql" />
+    <Build Include="StoredProcedures\AdminPortal\RejectStudentRegistraion.sql" />
   </ItemGroup>
 </Project>

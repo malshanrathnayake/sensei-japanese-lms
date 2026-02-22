@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.DataProtection;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Mvc;
 using SENSEI.BLL.AdminPortalService.Interface;
 using SENSEI.DOMAIN;
@@ -7,6 +8,7 @@ using SENSEI.WEB.Helpers;
 namespace SENSEI.WEB.Areas.AdminPortal.Controllers
 {
     [Area("AdminPortal")]
+    [Authorize(Roles = "Admin,Manager")]
     public class StudentRegistrationController : Controller
     {
         private readonly IStudentRegistrationService _studentRegistrationService;
@@ -104,10 +106,10 @@ namespace SENSEI.WEB.Areas.AdminPortal.Controllers
             ViewBag.BatchId = batchId;
             ViewBag.IndexNumber = indexNumber;
 
-            if (!ModelState.IsValid)
-            {
-                return View(studentRegistration);
-            }
+            //if (!ModelState.IsValid)
+            //{
+            //    return View(studentRegistration);
+            //}
 
             var userId = Convert.ToInt64(HttpContext.Session.GetString("UserId") ?? "0");
 
@@ -133,6 +135,8 @@ namespace SENSEI.WEB.Areas.AdminPortal.Controllers
                         Type = "warning",
                         Message = "Student registration saved, but auto-approval failed. Please approve manually."
                     });
+
+                    return RedirectToAction("Index");
                 }
             }
             else
@@ -145,6 +149,34 @@ namespace SENSEI.WEB.Areas.AdminPortal.Controllers
             }
 
             return View(studentRegistration);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Reject(string q)
+        {
+            long studentRegistrationId = Convert.ToInt64(_protector.Unprotect(q));
+
+            var studentRegistration = await _studentRegistrationService.GetStudentRegistraion(studentRegistrationId);
+
+            return View(studentRegistration);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Reject(long StudentRegistrationId, string RejectionComment)
+        {
+            var userId = Convert.ToInt64(HttpContext.Session.GetString("UserId"));
+
+            var result = await _studentRegistrationService.RejectStudentRegistraion(StudentRegistrationId, RejectionComment, userId);
+
+            if (result)
+            {
+                return Json(new { success = result, message = "Student registration rejected successfully" });
+            }
+            else
+            {
+                return Json(new { success = result, message = "Failed to reject student registration" });
+            }
+
         }
 
         [HttpGet]

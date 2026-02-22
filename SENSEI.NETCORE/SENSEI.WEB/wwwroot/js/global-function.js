@@ -16,7 +16,7 @@
         allowClear: true,
         placeholder: options.title,
         dropdownParent: $dropdownParent,
-        data: options.data
+        data: options.data,
     });
 }
 

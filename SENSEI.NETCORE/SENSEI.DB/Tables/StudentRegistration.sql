@@ -2,7 +2,7 @@
 (
 	[StudentRegistrationId] BIGINT NOT NULL IDENTITY,
 	[Email] NVARCHAR(256) NOT NULL,
-	[PhoneNo] INT NOT NULL,
+	[PhoneNo] NVARCHAR(100) NULL,
 	[FirstName] NVARCHAR(100) NOT NULL,
 	[MiddleName] NVARCHAR(100) NULL,
 	[LastName] NVARCHAR(100) NOT NULL,
@@ -14,14 +14,17 @@
 	[ApprovedById] BIGINT NULL,
 	[AddressLineOne] NVARCHAR(200) NOT NULL,
 	[AddressLineTwo] NVARCHAR(200) NULL,
-	[CityId] BIGINT NOT NULL,
+	[City] NVARCHAR(20) NULL,
 	[PostalCode] NVARCHAR(20) NOT NULL,
 	[BranchId] BIGINT NULL,
 	[StudentLearningModeId] INT NOT NULL,
 	[CourseId] BIGINT NOT NULL,
 	[CreatedDateTime] DATETIME NULL,
 	[CountryId] INT NULL,
-	[UpdatedDateTime] DATETIME NULL
+	[UpdatedDateTime] DATETIME NULL,
+	[State] NVARCHAR(100) NULL,
+	[IsRejected] BIT NULL DEFAULT 0,
+	[RejectionComment] NVARCHAR(100) NULL,
 
 	CONSTRAINT [PK_StudentRegistration_StudentRegistrationId] PRIMARY KEY CLUSTERED ([StudentRegistrationId])
 )

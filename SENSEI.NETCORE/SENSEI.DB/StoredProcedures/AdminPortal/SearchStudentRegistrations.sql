@@ -13,19 +13,15 @@ BEGIN
 
 	SELECT STREG.*,
 		JSON_QUERY(ISNULL((SELECT Staff.* FROM Staff WHERE Staff.IsDeleted = 0 AND Staff.EmployeeId = STREG.ApprovedById FOR JSON PATH, WITHOUT_ARRAY_WRAPPER), null)) AS 'ApprovedBy',
-		JSON_QUERY(ISNULL((SELECT City.*,
-			JSON_QUERY(ISNULL((SELECT [State].*,
-				JSON_QUERY(ISNULL((SELECT Country.* FROM Country WHERE Country.CountryId = [State].CountryId FOR JSON PATH, WITHOUT_ARRAY_WRAPPER), null)) AS 'Country'
-			FROM [State] WHERE [State].StateId = City.StateId FOR JSON PATH, WITHOUT_ARRAY_WRAPPER), null)) AS 'State'
-		FROM City WHERE City.CityId = STREG.CityId FOR JSON PATH, WITHOUT_ARRAY_WRAPPER), null)) AS 'City',
 		JSON_QUERY(ISNULL((SELECT Branch.* FROM Branch WHERE Branch.BranchId = STREG.BranchId FOR JSON PATH, WITHOUT_ARRAY_WRAPPER), null)) AS 'Branch',
 		JSON_QUERY(ISNULL((SELECT StudentLearningMode.* FROM StudentLearningMode WHERE StudentLearningMode.StudentLearningModeId = STREG.StudentLearningModeId FOR JSON PATH, WITHOUT_ARRAY_WRAPPER), null)) AS 'StudentLearningMode',
 		JSON_QUERY(ISNULL((SELECT Course.* FROM Course WHERE Course.CourseId = STREG.CourseId FOR JSON PATH, WITHOUT_ARRAY_WRAPPER), null)) AS 'Course'
 	FROM StudentRegistration STREG
 	INNER JOIN Course C ON C.CourseId = STREG.CourseId
 	INNER JOIN StudentLearningMode SLM ON SLM.StudentLearningModeId = STREG.StudentLearningModeId
-	WHERE STREG.IsApproved = 0
-		AND (@courseId = 0 OR STREG.CourseId = @courseId)
+	WHERE 
+		--STREG.IsApproved = 0
+		(@courseId = 0 OR STREG.CourseId = @courseId)
 		AND (@searchValue = '' OR STREG.FirstName LIKE '%' + @searchValue + '%' OR STREG.LastName LIKE '%' + @searchValue + '%' OR STREG.MiddleName LIKE '%' + @searchValue + '%' OR CAST(STREG.CreatedDateTime AS DATE) LIKE '%' + @searchValue + '%' OR C.CourseName LIKE '%' + @searchValue + '%' OR SLM.LearningModeName LIKE '%' + @searchValue + '%' OR STREG.Email LIKE '%' + @searchValue + '%' OR STREG.PhoneNo LIKE '%' + @searchValue + '%')
 	ORDER BY 
 		CASE WHEN @sortColumn = 'course.courseName' AND @sortDirection = 'ASC' THEN C.CourseName END ASC,CASE WHEN @sortColumn = 'course.courseName' AND @sortDirection = 'DESC' THEN C.CourseName END DESC,

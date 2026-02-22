@@ -29,19 +29,27 @@ BEGIN
 		SET [IsApproved] = 1, [ApprovedById] = @approvedById, [UpdatedDateTime] = GETUTCDATE()
 		WHERE [StudentRegistrationId] = @studentRegistrationId;
 
-		INSERT INTO [User]([UserName], [UserGlobalidentity], [CreatedDateTiime], [UserTypeEnum], [IsActive])
-		SELECT Email, NEWID(), GETUTCDATE(), 1, 1
+		INSERT INTO [User]([UserName], [UserGlobalidentity], [CreatedDateTiime], [UserTypeEnum], [IsActive], PhoneNo)
+		SELECT Email, NEWID(), GETUTCDATE(), 1, 1, [PhoneNo]
 		FROM [StudentRegistration]
 		WHERE [StudentRegistrationId] = @studentRegistrationId;
 
 		SET @userId = SCOPE_IDENTITY();
 
-		INSERT INTO [Student]([UserId], [IndexNumber], [Email], [PhoneNo], [FirstName], [MiddleName], [LastName], [Initials], [CallingName], [NIC], [DateOfBirth], [CityId], [BranchId], [StudentLearningModeId], [CountryId])
-		SELECT @userId, @indexNumber, [Email], [PhoneNo], [FirstName], [MiddleName], [LastName], [Initials], [CallingName], [NIC], [DateOfBirth], [CityId], [BranchId], [StudentLearningModeId], [CountryId]
+		INSERT INTO [Student]([UserId], [IndexNumber], [Email], [PhoneNo], [FirstName], [MiddleName], [LastName], [Initials], [CallingName], [NIC], [DateOfBirth], [BranchId], [StudentLearningModeId], [CountryId])
+		SELECT @userId, @indexNumber, [Email], [PhoneNo], [FirstName], [MiddleName], [LastName], [Initials], [CallingName], [NIC], [DateOfBirth], [BranchId], [StudentLearningModeId], [CountryId]
 		FROM [StudentRegistration]
 		WHERE [StudentRegistrationId] = @studentRegistrationId;
 
 		SET @primaryKey = SCOPE_IDENTITY();
+
+		INSERT INTO [StudentAddress]([StudentId], [AddressLineOne], [AddressLineTwo], [CountryId], [State], [PostalCode], [City])
+		SELECT @primaryKey, [AddressLineOne], [AddressLineTwo], [CountryId], [State], [PostalCode], [City]
+		FROM [StudentRegistration]
+		WHERE [StudentRegistrationId] = @studentRegistrationId;
+
+		INSERT INTO StudentBatch(BatchId, StudentId)
+		VALUES(@batchId, @primaryKey);
 
 		COMMIT TRANSACTION;
 		SET @executionStatus = 1;
