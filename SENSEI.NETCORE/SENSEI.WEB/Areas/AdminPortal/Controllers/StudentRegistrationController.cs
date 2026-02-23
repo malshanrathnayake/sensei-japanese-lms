@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Mvc;
 using SENSEI.BLL.AdminPortalService.Interface;
+using SENSEI.BLL.SystemService.Interfaces;
 using SENSEI.DOMAIN;
 using SENSEI.WEB.Helpers;
 
@@ -15,19 +16,22 @@ namespace SENSEI.WEB.Areas.AdminPortal.Controllers
         private IBatchService _batchService;
         private readonly ICourseService _courseService;
         private readonly IDataProtector _protector;
+        private readonly ISmsService _smsService;
 
         public StudentRegistrationController
         (
             IStudentRegistrationService studentRegistrationService,
             IBatchService batchService,
             ICourseService courseService,
-            IDataProtectionProvider provider
+            IDataProtectionProvider provider,
+            ISmsService smsService
         )
         {
             _studentRegistrationService = studentRegistrationService;
             _batchService = batchService;
             _courseService = courseService;
             _protector = provider.CreateProtector("CourseProtector");
+            _smsService = smsService;
         }
 
         [HttpGet]
@@ -80,6 +84,16 @@ namespace SENSEI.WEB.Areas.AdminPortal.Controllers
 
             if (result)
             {
+                var studentRegistration = await _studentRegistrationService.GetStudentRegistraion(StudentRegistrationId);
+                var phone = studentRegistration.PhoneNo?.Replace("+", "");
+
+                var message =
+                        $"Your registration with Sensei Japanese Center was approved. " +
+                        $"Please use your index number {indexNumber} for future reference. " +
+                        $"Login using your Google account ({studentRegistration.Email}) " +
+                        $"or mobile number ({studentRegistration.PhoneNo}).";
+
+                var messageStatus = await _smsService.SendSingleAsync(phone, message);
                 return Json(new { success = result, message = "Student registration approved successfully" });
             }
             else
@@ -121,6 +135,16 @@ namespace SENSEI.WEB.Areas.AdminPortal.Controllers
 
                 if (approveResult)
                 {
+                    var studentRegistrationAfter = await _studentRegistrationService.GetStudentRegistraion(studentRegistrationId);
+                    var phone = studentRegistrationAfter.PhoneNo?.Replace("+", "");
+
+                    var message =
+                            $"Your registration with Sensei Japanese Center was approved. " +
+                            $"Please use your index number {indexNumber} for future reference. " +
+                            $"Login using your Google account ({studentRegistrationAfter.Email}) " +
+                            $"or mobile number ({studentRegistrationAfter.PhoneNo}).";
+
+                    var messageStatus = await _smsService.SendSingleAsync(phone, message);
                     TempData.AddNotification(new NotificationMessage
                     {
                         Type = "success",
