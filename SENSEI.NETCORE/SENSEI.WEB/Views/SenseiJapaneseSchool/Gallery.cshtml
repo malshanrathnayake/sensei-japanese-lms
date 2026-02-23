@@ -3,9 +3,9 @@
     Layout = "~/Views/Shared/_PublicLayout.cshtml";
 }
 
-<section class="gallery-section" style="padding-top: 3rem; padding-bottom: 5rem;">
+<section class="gallery-section" style="padding-top: 2.0rem; padding-bottom: 5rem;">
     <div class="container" style="max-width: 1200px; margin: 0 auto; padding: 0 2rem;">
-        <div style="text-align: center; margin-bottom: 3rem;">
+        <div style="text-align: center; margin-bottom: 3rem; position: relative; z-index: 1;">
             <h2 style="font-size: 2.5rem; margin-bottom: 1rem; color: var(--text-main);">Our Moments</h2>
             <p style="color: var(--text-muted); max-width: 600px; margin: 0 auto; font-size: 1.1rem;">
                 Explore moments from our classes, cultural events, and student achievements at Sensei Japanese Center.
@@ -27,6 +27,10 @@
 </section>
 
 <style>
+    /* Hide decorative watermark from home page if it leaks into gallery */
+    .jp-brand-sentence {
+        display: none !important;
+    }
     .gallery-grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
