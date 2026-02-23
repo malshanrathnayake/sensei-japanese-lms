@@ -333,10 +333,68 @@ body::before {
 }
 
 /* ================================
-   Offcanvas
+   Offcanvas & Premium Scrollbars
    ================================ */
 .offcanvas {
     background-color: var(--bg-main) !important;
+    border-left: 1px solid var(--border-soft) !important;
+    box-shadow: -10px 0 40px rgba(0, 0, 0, 0.05) !important;
+    z-index: 1060 !important;
+    /* Ensure it's above everything */
+}
+
+/* Fix for Offcanvas Body Scrolling - Ensure it scrolls correctly on all devices */
+.offcanvas-body {
+    flex-grow: 1 !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    padding: 1.5rem 1.8rem !important;
+
+    /* Premium Scrollbar Style */
+    scrollbar-width: thin;
+    scrollbar-color: var(--primary) transparent;
+}
+
+/* Webkit Scrollbar Customization for Offcanvas */
+.offcanvas-body::-webkit-scrollbar {
+    width: 6px;
+    display: block !important;
+    /* Force visibility */
+}
+
+.offcanvas-body::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.02);
+    border-radius: 10px;
+}
+
+.offcanvas-body::-webkit-scrollbar-thumb {
+    background: rgba(255, 90, 95, 0.3);
+    border-radius: 10px;
+    border: 1px solid transparent;
+    background-clip: content-box;
+    transition: background 0.3s;
+}
+
+.offcanvas-body:hover::-webkit-scrollbar-thumb {
+    background: var(--primary);
+}
+
+/* Ensure the header and body don't cause the container to scroll */
+.offcanvas {
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+.offcanvas-header {
+    flex-shrink: 0 !important;
+}
+
+/* Ensure the wrapper content inside the offcanvas behaves correctly with flex for scrolling */
+[id$="-offcanvas-content"] {
+    display: flex !important;
+    flex-direction: column !important;
+    height: 100%;
+    min-height: 0;
 }
 
 /* ================================
