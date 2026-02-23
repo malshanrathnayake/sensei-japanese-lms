@@ -21,6 +21,15 @@
     letter-spacing: -0.04em;
     color: #ff0000;
     line-height: 1;
+    display: flex !important;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.brand-name-img {
+    height: 1.2em;
+    width: auto;
+    object-fit: contain;
 }
 
 /* ================================

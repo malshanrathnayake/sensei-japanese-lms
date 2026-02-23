@@ -121,12 +121,57 @@ header {
 .brand-text {
     font-family: "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
     font-weight: 900;
-    font-size: clamp(1.2rem, 3vw, 2rem);
+    font-size: clamp(0.95rem, 4vw, 1.8rem);
     letter-spacing: -0.04em;
-    white-space: nowrap;
     color: #ff0000;
-    /* VIVID RED ONLY FOR TEXT NAME */
-    line-height: 1;
+    line-height: 1.1;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    /* Enable wrapping for small screens */
+    gap: 0.4rem;
+}
+
+@media (max-width: 640px) {
+    .brand {
+        flex-direction: row;
+        justify-content: center;
+        text-align: center;
+        width: 100%;
+        gap: 0.8rem;
+    }
+
+    .brand-text {
+        flex-direction: column;
+        /* Stack name and signature image */
+        align-items: center;
+        gap: 2px !important;
+        font-size: clamp(1.1rem, 5vw, 1.4rem) !important;
+    }
+
+    .brand-name-img {
+        height: 0.85em;
+        /* Scale signature appropriately */
+        margin-left: 0 !important;
+    }
+
+    .brand-logo {
+        width: 40px;
+        height: 40px;
+    }
+}
+
+@media (max-width: 400px) {
+    .brand-text {
+        font-size: 1.1rem !important;
+    }
+}
+
+.brand-name-img {
+    height: 1.1em;
+    /* Scales perfectly with font-size */
+    width: auto;
+    object-fit: contain;
 }
 
 .nav-links {
@@ -896,13 +941,10 @@ section p {
         height: 36px;
     }
 
-    .brand-text {
-        font-size: 1.4rem;
-    }
-
     .btn-login {
-        padding: 0.4rem 1rem;
+        padding: 0.45rem 1.2rem;
         font-size: 0.85rem;
+        margin-top: 5px;
     }
 
     main {
