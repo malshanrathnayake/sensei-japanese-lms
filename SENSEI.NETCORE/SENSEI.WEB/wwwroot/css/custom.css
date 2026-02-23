@@ -355,38 +355,47 @@ body::before {
     scrollbar-color: var(--primary) transparent;
 }
 
-/* Webkit Scrollbar Customization for Offcanvas */
+/* Webkit Scrollbar Customization for Offcanvas - FORCED VISIBILITY */
 .offcanvas-body::-webkit-scrollbar {
-    width: 6px;
+    width: 10px !important;
+    height: 10px !important;
     display: block !important;
-    /* Force visibility */
 }
 
 .offcanvas-body::-webkit-scrollbar-track {
-    background: rgba(0, 0, 0, 0.02);
-    border-radius: 10px;
+    background: #eeeeee !important;
+    border-radius: 0px;
 }
 
 .offcanvas-body::-webkit-scrollbar-thumb {
-    background: rgba(255, 90, 95, 0.3);
-    border-radius: 10px;
-    border: 1px solid transparent;
-    background-clip: content-box;
-    transition: background 0.3s;
+    background: var(--primary) !important;
+    border-radius: 5px;
 }
 
-.offcanvas-body:hover::-webkit-scrollbar-thumb {
-    background: var(--primary);
+.offcanvas-body::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-dark) !important;
 }
 
-/* Ensure the header and body don't cause the container to scroll */
-.offcanvas {
-    display: flex !important;
-    flex-direction: column !important;
+/* Force scrollbar visibility on Firefox */
+.offcanvas-body {
+    scrollbar-width: auto !important;
+    scrollbar-color: var(--primary) #eeeeee !important;
+}
+
+/* Ensure body is scrollable and constrained */
+.offcanvas-body {
+    flex: 1 1 auto !important;
+    overflow-y: scroll !important;
+    /* Force track visibility always */
+    overflow-x: hidden !important;
+    padding: 1.5rem 1.8rem !important;
+    min-height: 0 !important;
+    /* Flexbox scroll fix */
 }
 
 .offcanvas-header {
     flex-shrink: 0 !important;
+    border-bottom: 1px solid var(--border-soft) !important;
 }
 
 /* Ensure the wrapper content inside the offcanvas behaves correctly with flex for scrolling */
