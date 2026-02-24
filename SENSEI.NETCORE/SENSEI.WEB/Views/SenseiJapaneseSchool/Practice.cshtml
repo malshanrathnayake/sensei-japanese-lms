@@ -19,6 +19,7 @@
     <div class="game-modes">
         <button class="mode-btn active" data-mode="flashcards">Flashcards</button>
         <button class="mode-btn" data-mode="quiz">Matching Quiz</button>
+        <button class="mode-btn" data-mode="memory">Memory Match</button>
     </div>
 
     <!-- FLASHCARDS SECTION -->
@@ -75,6 +76,24 @@
             <div id="quiz-feedback" class="quiz-feedback"></div>
         </div>
     </section>
+
+    <!-- MEMORY MATCH SECTION -->
+    <section id="memory-section" class="game-section">
+        <div class="memory-status">
+            <span id="memory-moves">Moves: 0</span>
+            <span id="memory-matches">Matches: 0 / 6</span>
+        </div>
+        <div class="memory-grid" id="memory-grid">
+            <!-- Cards will be generated here -->
+        </div>
+        <div id="memory-win" class="memory-win-overlay">
+            <div class="win-content">
+                <h2>Omedetou! 🎉</h2>
+                <p>You matched all words!</p>
+                <button class="btn-primary" onclick="startMemoryGame()">Play Again</button>
+            </div>
+        </div>
+    </section>
 </div>
 
 <style>
@@ -92,6 +111,11 @@
     }
 
 
+    /* Tighten layout to the absolute minimum */
+    body {
+        padding-top: 45px !important; /* Extremely tight clearance */
+    }
+
     /* Hide floating flowers on games page */
     .sakura-container, .sakura-bg-elements, .sakura-petal {
         display: none !important;
@@ -101,7 +125,7 @@
     .practice-container {
         max-width: 1000px;
         margin: 0 auto;
-        padding: 100px 1rem 30px !important; /* Adjusted to clear fixed header safely */
+        padding: 0 1rem 30px !important; /* Zero top padding */
         min-height: 100vh;
         display: flex;
         flex-direction: column;
@@ -506,6 +530,108 @@
         min-height: 1.5rem;
     }
 
+    /* Memory Match Styles */
+    .memory-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 0.8rem;
+        width: 100%;
+        max-width: 600px;
+        margin-top: 1rem;
+    }
+
+    .memory-card {
+        aspect-ratio: 1;
+        perspective: 1000px;
+        cursor: pointer;
+        height: 120px;
+    }
+
+    .memory-card-inner {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        transition: transform 0.6s;
+        transform-style: preserve-3d;
+    }
+
+    .memory-card.flipped .memory-card-inner {
+        transform: rotateY(180deg);
+    }
+
+    .memory-card-front, .memory-card-back {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        backface-visibility: hidden;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 5px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    .memory-card-front {
+        background: linear-gradient(135deg, var(--primary), var(--primary-light));
+        color: white;
+        font-size: 1.5rem;
+    }
+
+    .memory-card-back {
+        background: white;
+        color: var(--primary);
+        transform: rotateY(180deg);
+        border: 2px solid var(--sakura-pink);
+        font-weight: 700;
+        font-size: 0.9rem;
+    }
+
+    .memory-card.matched {
+        opacity: 0.5;
+        cursor: default;
+        animation: match-pulse 0.5s ease-out;
+    }
+
+    @@keyframes match-pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+        100% { transform: scale(1); }
+    }
+
+    .memory-status {
+        display: flex;
+        gap: 2rem;
+        font-weight: 800;
+        color: var(--primary);
+        margin-bottom: 1rem;
+    }
+
+    .memory-win-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255,255,255,0.9);
+        z-index: 100;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .memory-win-overlay.active {
+        display: flex;
+        animation: fade-in 0.5s ease-out;
+    }
+
+    @@keyframes fade-in {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
     /* SAKURA ANIMATION */
     .sakura-bg-elements {
         position: fixed;
@@ -545,7 +671,7 @@
 
     @@media (max-width: 600px) {
         .practice-container {
-            padding-top: 50px !important; /* Specific adjustment for game area */
+            padding-top: 20px !important; /* Reduced mobile gap */
         }
 
         .practice-title {
@@ -631,6 +757,7 @@
                 document.getElementById(`${currentMode}-section`).classList.add('active');
                 
                 if(currentMode === 'quiz') startQuiz();
+                if(currentMode === 'memory') startMemoryGame();
             });
         });
 
@@ -643,6 +770,7 @@
                 currentIndex = 0;
                 updateCard();
                 if(currentMode === 'quiz') startQuiz();
+                if(currentMode === 'memory') startMemoryGame();
             });
         });
 
@@ -732,11 +860,110 @@
                 document.getElementById('quiz-feedback').style.color = '#DC3545';
                 
                 // Show correct one
-                const correctAnswer = `${quizTarget.english} / ${quizTarget.sinhala}`;
                 buttons.forEach(b => {
                     if(b.textContent === correctAnswer) b.classList.add('correct');
                 });
                 setTimeout(startQuiz, 3000);
+            }
+        }
+
+        // Memory Match Logic
+        let memoryCards = [];
+        let flippedCards = [];
+        let moves = 0;
+        let matches = 0;
+        let isLockGrid = false;
+
+        function startMemoryGame() {
+            const dataSet = vocabData[currentDay];
+            const cards = [];
+            moves = 0;
+            matches = 0;
+            flippedCards = [];
+            isLockGrid = false;
+            
+            document.getElementById('memory-moves').textContent = `Moves: ${moves}`;
+            document.getElementById('memory-matches').textContent = `Matches: 0 / ${dataSet.length}`;
+            document.getElementById('memory-win').classList.remove('active');
+
+            dataSet.forEach((item, index) => {
+                // Card for Japanese
+                cards.push({ type: 'jp', value: item.jp, id: index });
+                // Card for Translation
+                cards.push({ type: 'trans', value: `${item.romaji}\n${item.english}`, id: index });
+            });
+
+            // Shuffle
+            cards.sort(() => Math.random() - 0.5);
+
+            const grid = document.getElementById('memory-grid');
+            grid.innerHTML = '';
+            
+            // Adjust grid columns for 12 cards (Day sets are 6 words)
+            grid.style.gridTemplateColumns = 'repeat(4, 1fr)';
+
+            cards.forEach(cardData => {
+                const cardEl = document.createElement('div');
+                cardEl.className = 'memory-card';
+                cardEl.innerHTML = `
+                    <div class="memory-card-inner">
+                        <div class="memory-card-front">🌸</div>
+                        <div class="memory-card-back">${cardData.value.replace('\n', '<br>')}</div>
+                    </div>
+                `;
+                cardEl.dataset.id = cardData.id;
+                cardEl.onclick = () => flipMemoryCard(cardEl);
+                grid.appendChild(cardEl);
+            });
+        }
+
+        function flipMemoryCard(card) {
+            if (isLockGrid || card.classList.contains('flipped') || card.classList.contains('matched')) return;
+
+            card.classList.add('flipped');
+            flippedCards.push(card);
+
+            if (flippedCards.length === 2) {
+                moves++;
+                document.getElementById('memory-moves').textContent = `Moves: ${moves}`;
+                checkMemoryMatch();
+            }
+        }
+
+        function checkMemoryMatch() {
+            isLockGrid = true;
+            const card1 = flippedCards[0];
+            const card2 = flippedCards[1];
+
+            if (card1.dataset.id === card2.dataset.id) {
+                // Match!
+                setTimeout(() => {
+                    card1.classList.add('matched');
+                    card2.classList.add('matched');
+                    matches++;
+                    document.getElementById('memory-matches').textContent = `Matches: ${matches} / ${vocabData[currentDay].length}`;
+                    flippedCards = [];
+                    isLockGrid = false;
+
+                    if (matches === vocabData[currentDay].length) {
+                        celebrateWin();
+                    }
+                }, 500);
+            } else {
+                // No match
+                setTimeout(() => {
+                    card1.classList.remove('flipped');
+                    card2.classList.remove('flipped');
+                    flippedCards = [];
+                    isLockGrid = false;
+                }, 1000);
+            }
+        }
+
+        function celebrateWin() {
+            document.getElementById('memory-win').classList.add('active');
+            for(let i=0; i<3; i++) {
+                setTimeout(() => spawnSuccessParticles(document.querySelector('.win-content')), i * 300);
             }
         }
 
