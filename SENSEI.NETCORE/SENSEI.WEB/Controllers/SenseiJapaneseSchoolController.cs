@@ -148,7 +148,26 @@ namespace SENSEI.WEB.Controllers
             HttpContext.Session.SetString("DisplayName", user.Staff != null ? user.Staff.StaffPopulatedName : user.Student.StudentPopulatedName);
             HttpContext.Session.SetString("UserType", user.UserTypeEnum.ToString());
 
-            var appClaims = new List<Claim>
+            if (user.UserTypeEnum == UserTypeEnum.Admin)
+            {
+                HttpContext.Session.SetString("EmployeeId", user.Staff.EmployeeId.ToString());
+            
+            }
+            else if (user.UserTypeEnum == UserTypeEnum.Manager)
+            {
+                HttpContext.Session.SetString("EmployeeId", user.Staff.EmployeeId.ToString());
+            }
+            else if (user.UserTypeEnum == UserTypeEnum.Student)
+            {
+                HttpContext.Session.SetString("StudentId", user.Student.StudentId.ToString());
+            }
+            else
+            {
+
+            }
+
+
+                var appClaims = new List<Claim>
             {
                 new Claim("UserId", user.UserId.ToString()),
                 new Claim(ClaimTypes.Email, user.userName),
@@ -302,6 +321,24 @@ namespace SENSEI.WEB.Controllers
             HttpContext.Session.SetString("DisplayName", string.IsNullOrWhiteSpace(name) ? "User" : name);
             HttpContext.Session.SetString("UserType", user.UserTypeEnum.ToString());
             HttpContext.Session.SetString("ProfileImage", string.IsNullOrWhiteSpace(profileImage) ? "/theme/v1/img/avatars/placeholder_1.jpeg" : profileImage);
+
+            if (user.UserTypeEnum == UserTypeEnum.Admin)
+            {
+                HttpContext.Session.SetString("EmployeeId", user.Staff.EmployeeId.ToString());
+
+            }
+            else if (user.UserTypeEnum == UserTypeEnum.Manager)
+            {
+                HttpContext.Session.SetString("EmployeeId", user.Staff.EmployeeId.ToString());
+            }
+            else if (user.UserTypeEnum == UserTypeEnum.Student)
+            {
+                HttpContext.Session.SetString("StudentId", user.Student.StudentId.ToString());
+            }
+            else
+            {
+
+            }
 
             var appClaims = new List<Claim>
             {

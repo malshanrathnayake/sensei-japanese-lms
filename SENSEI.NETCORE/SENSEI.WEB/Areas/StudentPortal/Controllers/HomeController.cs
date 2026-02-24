@@ -7,6 +7,8 @@ namespace SENSEI.WEB.Areas.StudentPortal.Controllers
     {
         public IActionResult Index()
         {
+            var studentId = Convert.ToInt64(HttpContext.Session.GetString("StudentId"));
+
             return View();
         }
     }
