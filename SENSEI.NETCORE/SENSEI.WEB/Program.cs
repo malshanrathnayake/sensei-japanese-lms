@@ -9,6 +9,8 @@ using SENSEI.BLL.SystemService.Interfaces;
 using SENSEI.SignalR;
 using SENSEI.SignalR.Interface;
 using SENSEI.WEB.SignalR;
+using SENSEI.BLL.StudentPortalService;
+using SENSEI.BLL.StudentPortalService.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,6 +30,10 @@ builder.Services.AddSingleton<IBatchLessonService, BatchLessonServiceImpl>();
 builder.Services.AddSingleton<ILocationService, LocationServiceImpl>();
 builder.Services.AddSingleton<IStudentRegistrationService, StudentRegistrationServiceImpl>();
 builder.Services.AddSingleton<IUserService, UserServiceImpl>();
+#endregion
+
+#region StudentPortalServices
+builder.Services.AddSingleton<IStudentService, StudentServiceImpl>();
 #endregion
 
 #region Login with Google

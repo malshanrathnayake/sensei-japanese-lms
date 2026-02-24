@@ -12,6 +12,6 @@
     {
         "Title": "My Profile",
         "Icon": "user",
-        "Url": "/StudentPortal/Profile/Index"
+        "Url": "/StudentPortal/StudentProfile/Index"
     }
 ]

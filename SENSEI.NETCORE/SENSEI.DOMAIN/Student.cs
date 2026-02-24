@@ -57,7 +57,7 @@ namespace SENSEI.DOMAIN
 
         [Required(ErrorMessage = "Country is required.")]
         [DisplayName("Country *")]
-        public string CountryCode { get; set; }
+        public int CountryId { get; set; }
 
         [DisplayName("State / Province / Region")]
         public string State { get; set; }
@@ -101,6 +101,7 @@ namespace SENSEI.DOMAIN
         public City CityNav { get; set; }
         public Branch Branch { get; set; }
         public StudentLearningMode StudentLearningMode { get; set; }
+        public Country Country { get; set; }
 
         #endregion
     }
