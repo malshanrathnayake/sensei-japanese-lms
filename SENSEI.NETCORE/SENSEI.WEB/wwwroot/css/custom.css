@@ -21,10 +21,22 @@
 }
 
 .brand-name-img {
-    height: 1.6rem;
+    height: 1.8rem;
     width: auto;
     object-fit: contain;
     transition: transform 0.3s ease;
+}
+
+.header-logo-res {
+    height: 1.6rem;
+    width: auto;
+    object-fit: contain;
+}
+
+@media (max-width: 576px) {
+    .header-logo-res {
+        height: 1.3rem;
+    }
 }
 
 .admin-badge {
@@ -720,4 +732,106 @@ body::before {
 .is-valid+.select2-container--bootstrap5 .select2-selection {
     background: #fffaf7;
     border-color: #ffd8c5;
+}
+
+/* =====================================================
+   MOBILE RESPONSIVENESS FIXES (GLOBAL)
+   ===================================================== */
+@media (max-width: 768px) {
+    .content {
+        padding: 1.5rem 1rem 1rem !important;
+    }
+
+    .card-header {
+        padding: 1.2rem 1.25rem !important;
+    }
+
+    .card-body {
+        padding: 1.25rem !important;
+    }
+
+    .card-title {
+        font-size: 1rem !important;
+    }
+
+    .sidebar-brand {
+        padding: 1.5rem 1.25rem !important;
+    }
+
+    .brand-name-img {
+        height: 1.4rem !important;
+    }
+
+    .jp-watermark {
+        font-size: 8rem !important;
+    }
+
+    .navbar {
+        padding: 0.5rem 0.75rem !important;
+    }
+
+    .sidebar-toggle {
+        margin-left: 0.5rem !important;
+    }
+
+    /* Adjust form inputs for better thumb-touch targets */
+    .form-control,
+    .form-select,
+    .select2-container--bootstrap5 .select2-selection {
+        min-height: 48px !important;
+        font-size: 16px !important;
+        /* Prevents iOS auto-zoom */
+    }
+
+    .btn {
+        padding: 0.75rem 1.25rem !important;
+    }
+
+    /* DataTable Mobile Adjustments */
+    .dataTables_wrapper .dataTables_length,
+    .dataTables_wrapper .dataTables_filter {
+        text-align: center !important;
+        margin-bottom: 1rem;
+    }
+
+    .dataTables_wrapper .dataTables_filter input {
+        width: 100% !important;
+        margin-left: 0 !important;
+    }
+
+    /* Navbar icon spacing */
+    .navbar-nav.navbar-align {
+        gap: 0.25rem;
+    }
+
+    .nav-icon {
+        padding: 0.4rem 0.6rem !important;
+    }
+}
+
+/* Very Small Devices */
+@media (max-width: 480px) {
+    .brand-text {
+        display: none !important;
+    }
+
+    .sidebar-brand {
+        justify-content: center !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
+    .sidebar-brand .d-flex.flex-column {
+        display: none !important;
+    }
+}
+
+/* Update background to match new public theme */
+body::before {
+    opacity: 0.25 !important;
+}
+
+:root {
+    --bg-main: #fffafa;
+    --accent-sakura: #fff2f2;
 }
