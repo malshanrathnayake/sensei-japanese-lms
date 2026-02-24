@@ -44,13 +44,14 @@
         </p>
     </article>
 
-    <article class="feature-card">
+    <article class="feature-card practice-card-link" onclick="location.href='@Url.Action("Practice", "SenseiJapaneseSchool")'" style="cursor: pointer;">
         <div class="feature-icon">🤖</div>
         <h3 class="feature-title">Practice with AI Tools</h3>
         <p class="feature-text">
             Chat, quiz and role-play in Japanese using integrated AI practice
             partners.
         </p>
+        <div class="feature-cta">Play Now →</div>
     </article>
 
     <article class="feature-card">
@@ -552,6 +553,18 @@
         background: radial-gradient(circle at center, rgba(216, 50, 54, 0.03), transparent 70%);
         z-index: -2;
         pointer-events: none;
+    }
+    /* Feature Card CTA */
+    .feature-cta {
+        margin-top: 1rem;
+        font-weight: 700;
+        color: var(--primary);
+        font-size: 0.9rem;
+        transition: transform 0.2s;
+    }
+
+    .practice-card-link:hover .feature-cta {
+        transform: translateX(5px);
     }
 </style>
 

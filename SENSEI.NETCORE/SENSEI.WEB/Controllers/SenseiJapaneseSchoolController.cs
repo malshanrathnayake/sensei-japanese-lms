@@ -49,6 +49,11 @@ namespace SENSEI.WEB.Controllers
             return View();
         }
 
+        public async Task<IActionResult> Practice()
+        {
+            return View();
+        }
+
         #region Login
 
         public async Task<IActionResult> Login()
