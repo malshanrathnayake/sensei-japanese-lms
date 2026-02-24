@@ -15,6 +15,7 @@
         --text-muted: #555555;
         --glass-bg: rgba(255, 255, 255, 0.9);
         --glass-border: rgba(216, 50, 54, 0.12);
+        --bg-main: #fffbfb;
     }
 
     body {
@@ -42,7 +43,7 @@
         /* Matches homepage positions */
         background-position: -5% -5%, 105% 60%;
         background-size: 500px auto, 600px auto;
-        opacity: 0.12;
+        opacity: 0.25;
         mix-blend-mode: multiply;
     }
 
@@ -57,12 +58,14 @@
         z-index: 0;
     }
 
-    .petal {
+    .sakura-petal {
         position: absolute;
-        background-color: #ffb7c5;
-        border-radius: 150% 0 150% 0;
+        background-color: var(--primary);
+        border-radius: 150% 0 150% 150%;
         opacity: 0.6;
         z-index: 0;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        pointer-events: none;
     }
 
     /* Navigation Header */
@@ -71,62 +74,86 @@
         top: 0;
         left: 0;
         width: 100%;
-        padding: 1.2rem 3.5rem;
+        padding: 0.6rem 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        background: rgba(255, 255, 255, 0.65);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-bottom: 1px solid rgba(255, 225, 217, 0.4);
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.02);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .nav-header::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background: linear-gradient(90deg, var(--primary), #ffb7c5, var(--primary));
+        background-size: 200% auto;
+        animation: flow 4s linear infinite;
+        z-index: 1100;
+    }
+
+    @@keyframes flow {
+        0% { background-position: 0% 50%; }
+        100% { background-position: 200% 50%; }
+    }
+
+    .nav-container {
+        max-width: 1280px;
+        width: 100%;
+        margin: 0 auto;
+        padding: 0.4rem 2rem;
         display: flex;
         align-items: center;
         justify-content: space-between;
-        z-index: 1000;
-        background: rgba(255, 255, 255, 0.7);
-        backdrop-filter: blur(15px);
-        border-bottom: 1px solid rgba(255, 90, 95, 0.05);
     }
 
     .nav-brand {
         display: flex;
         align-items: center;
-        gap: 12px;
+        gap: 0.75rem;
         text-decoration: none;
     }
 
-    .nav-brand span {
-        font-weight: 900;
-        font-size: 1.5rem;
-        color: #ff0000;
-        letter-spacing: -0.04em;
+    .brand-logo-small {
+        width: 50px;
+        height: 50px;
+        object-fit: contain;
+    }
+
+    .brand-name-img {
+        height: 1.6rem;
+        width: auto;
+        object-fit: contain;
     }
 
     .nav-links {
         display: flex;
-        gap: 2rem;
+        gap: 0.5rem;
         align-items: center;
     }
 
     .nav-links a {
         text-decoration: none;
         color: var(--text-main);
-        font-weight: 600;
+        font-weight: 700;
+        padding: 0.6rem 1.2rem;
+        border-radius: 99px;
         font-size: 0.95rem;
-        transition: color 0.2s;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         position: relative;
     }
 
     .nav-links a:hover {
         color: var(--primary);
-    }
-
-    .nav-links a::after {
-        content: "";
-        position: absolute;
-        bottom: -4px;
-        left: 0;
-        width: 0;
-        height: 2px;
-        background: var(--primary);
-        transition: width 0.2s;
-    }
-
-    .nav-links a:hover::after {
-        width: 100%;
+        background: rgba(216, 50, 54, 0.06);
     }
 
     .login-wrapper {
@@ -246,6 +273,19 @@
         text-decoration: underline !important;
     }
 
+    .btn-link-home {
+        text-decoration: none !important;
+        color: var(--text-main) !important;
+        font-weight: 800 !important;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .btn-link-home:hover {
+        color: var(--primary) !important;
+    }
+
     /* Japanese Background Watermark */
     .jp-watermark {
         position: absolute;
@@ -271,19 +311,21 @@
 
 </style>
 
-@* Navigation Header to match homepage *@
 <header class="nav-header">
-    <a href="~/" class="nav-brand" style="display: flex; align-items: center; gap: 8px;">
-        <img src="~/theme/v1/img/photos/name1.png" alt="Sensei Japanese Center" class="brand-name-img" style="height: 2.2rem;" />
-        <img src="~/theme/v1/img/photos/name.png" alt="Name" class="brand-name-img" style="height: 2.2rem;" />
-    </a>
-    <nav class="nav-links">
-        <a href="~/#courses">Courses</a>
-        <a href="~/#about">About</a>
-        <a href="~/#contact">Contact</a>
-        <a href="~/SenseiJapaneseSchool/Gallery">Gallery</a>
-        <a href="~/" class="btn-link" style="color:var(--text-main)"><i class="fas fa-home"></i> Home</a>
-    </nav>
+    <div class="nav-container">
+        <a href="~/" class="nav-brand">
+            <img src="~/theme/v1/img/photos/logo.PNG" alt="Sensei Logo" class="brand-logo-small" />
+            <div class="brand-text">
+                <img src="~/theme/v1/img/photos/name1.png" alt="Sensei Japanese Center" class="brand-name-img" />
+                <img src="~/theme/v1/img/photos/name.png" alt="Name" class="brand-name-img" />
+            </div>
+        </a>
+        <nav class="nav-links">
+            <a href="~/#courses">Courses</a>
+            <a href="~/SenseiJapaneseSchool/Gallery">Gallery</a>
+            <a href="~/" class="btn-link-home"><i class="fas fa-home"></i> Home</a>
+        </nav>
+    </div>
 </header>
 
 <div class="sakura-container" id="sakura-box"></div>
@@ -323,10 +365,13 @@
         const sakuraBox = document.getElementById('sakura-box');
         if (!sakuraBox) return;
 
+        // Limiting total petals for performance and subtlety
+        if (sakuraBox.children.length > 15) return;
+
         const petal = document.createElement('div');
-        petal.className = 'petal';
+        petal.className = 'sakura-petal';
         
-        const size = Math.random() * 12 + 8;
+        const size = Math.random() * 8 + 6;
         petal.style.width = size + 'px';
         petal.style.height = (size * 0.8) + 'px';
         petal.style.left = Math.random() * 100 + 'vw';
@@ -345,11 +390,12 @@
         }, duration * 1000);
     }
 
-    for (let i = 0; i < 20; i++) {
-        setTimeout(createPetal, Math.random() * 3000);
+    // Initial burst
+    for (let i = 0; i < 8; i++) {
+        setTimeout(createPetal, Math.random() * 2000);
     }
 
-    setInterval(createPetal, 400);
+    setInterval(createPetal, 800);
 </script>
 
 <style>
