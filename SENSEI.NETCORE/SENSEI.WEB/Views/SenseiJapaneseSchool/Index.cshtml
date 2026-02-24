@@ -5,9 +5,11 @@
 <!-- HERO -->
 <section class="hero" id="top">
     <div class="hero-left fade-up">
-        <div class="hero-badge">Trusted by 500+ students • New groups starting monthly</div>
+        <div class="hero-badge">Trusted by 10k+ students • New groups starting monthly</div>
 
-        <h1 class="hero-title">Learn Japanese Easily Online</h1>
+        <h1 class="hero-title" id="hero-title">
+            <span class="typewriter-text" data-text="Learn Japanese Easily Online"></span><span class="typewriter-cursor"></span>
+        </h1>
         <p class="hero-subtitle">
             Join our interactive courses and start speaking Japanese with
             confidence from day one.
@@ -42,13 +44,14 @@
         </p>
     </article>
 
-    <article class="feature-card">
+    <article class="feature-card practice-card-link" onclick="location.href='@Url.Action("Practice", "SenseiJapaneseSchool")'" style="cursor: pointer;">
         <div class="feature-icon">🤖</div>
         <h3 class="feature-title">Practice with AI Tools</h3>
         <p class="feature-text">
             Chat, quiz and role-play in Japanese using integrated AI practice
             partners.
         </p>
+        <div class="feature-cta">Play Now →</div>
     </article>
 
     <article class="feature-card">
@@ -71,33 +74,30 @@
 
     <div class="course-grid">
         <article class="course-card">
-            <div class="course-level">Beginner</div>
-            <h3>Japanese Foundations</h3>
+            <div class="course-level">Beginner Track</div>
+            <h3>Japanese Foundations (N5)</h3>
             <p>
-                Learn hiragana, katakana, basic kanji and everyday phrases for
-                travel and conversation.
+                Comprehensive JLPT N5 & NAT-TEST Q5 preparation covering hiragana, katakana, 100+ kanji, and basic grammar for daily life.
             </p>
-            <p class="course-meta">8 weeks · 2 live classes per week</p>
+            <p class="course-meta">12 weeks · Live interactive sessions</p>
         </article>
 
         <article class="course-card">
-            <div class="course-level">Intermediate</div>
-            <h3>Conversation &amp; Culture</h3>
+            <div class="course-level">Intermediate Track</div>
+            <h3>Japanese Progress (N4)</h3>
             <p>
-                Improve listening and speaking skills with real-life scenarios and
-                cultural insights.
+                Structured transition to JLPT N4 & NAT-TEST Q4. Master 300+ kanji, polite speech, and complex sentence structures.
             </p>
-            <p class="course-meta">10 weeks · Live speaking labs</p>
+            <p class="course-meta">14 weeks · Speaking labs included</p>
         </article>
 
         <article class="course-card">
-            <div class="course-level">Exam</div>
-            <h3>JLPT Prep Programs</h3>
+            <div class="course-level">Exam Master</div>
+            <h3>JLPT & NAT Prep Pro</h3>
             <p>
-                Targeted practice, mock tests and feedback to reach your JLPT N5–N3
-                goals.
+                Intensive preparation for JLPT N3/N2 and specialized NAT exams with mock tests, vocabulary drills, and expert feedback.
             </p>
-            <p class="course-meta">Flexible · Self-paced + live review</p>
+            <p class="course-meta">8-12 weeks · Focus on past papers</p>
         </article>
     </div>
 </section>
@@ -124,8 +124,7 @@
                     motivated.
                 </p>
                 <div class="about-focus-box">
-                    We focus on real communication: speaking, listening, and expressing
-                    yourself naturally in everyday situations.
+                    Specialized training for JLPT (N5, N4, N3) and NAT-TEST certifications with a 95% student pass rate.
                 </div>
             </div>
         </div>
@@ -227,12 +226,13 @@
     }
 
     .about-focus-box {
-        background: var(--accent-sakura);
+        background: #fff0f0; /* Deeper red tint */
         padding: 1.2rem;
         border-radius: 8px;
         color: var(--primary-dark);
-        font-weight: 600;
+        font-weight: 700;
         margin-top: 1.5rem;
+        border-left: 4px solid var(--primary);
     }
 
     .about-stats-benefits {
@@ -439,23 +439,208 @@
     .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 18px 34px rgba(255,90,95,0.18); }
 
     /* DECORATIVE JAPANESE SENTENCE */
+    /* DECORATIVE JAPANESE SENTENCE */
     .jp-brand-sentence {
         position: absolute;
-        top: 6.5rem;
+        top: 8rem; 
         left: 0;
         width: 100%;
         text-align: center;
         font-family: "Noto Serif JP", serif;
-        font-weight: 800;
-        font-size: clamp(1rem, 4vw, 2.5rem); /* Smaller as requested */
-        color: var(--primary);
-        opacity: 0.9; /* Highly visible */
+        font-weight: 900;
+        font-size: clamp(1.4rem, 6vw, 3.5rem); 
+        color: var(--primary-dark); /* Deeper Red */
+        opacity: 0.35; /* Stronger presence */
         z-index: 0;
         pointer-events: none;
-        letter-spacing: 0.3em;
+        letter-spacing: 0.5em; 
         white-space: nowrap;
+        text-transform: uppercase;
+        filter: drop-shadow(0 0 15px rgba(216, 50, 54, 0.1));
+    }
+
+    /* LARGE BACKGROUND KANJI WATERMARKS */
+    .jp-watermark {
+        position: absolute;
+        font-family: "Noto Serif JP", serif;
+        font-weight: 900;
+        color: var(--primary-dark); /* Deeper Red */
+        opacity: 0.08; /* Darker atmosphere */
+        font-size: clamp(10rem, 25vw, 20rem);
+        z-index: -1;
+        pointer-events: none;
+        white-space: nowrap;
+        user-select: none;
+    }
+
+    .jp-pos-right { top: 15%; right: -5%; transform: rotate(15deg); }
+    .jp-pos-left { top: 55%; left: -5%; transform: rotate(-15deg); }
+
+    @@media (max-width: 640px) {
+        .jp-brand-sentence {
+            top: 28rem; /* Move below the hero image on mobile */
+            opacity: 0.2; /* Subtle background */
+            font-size: 1.1rem;
+            letter-spacing: 0.1em;
+        }
+        
+        .jp-watermark {
+            opacity: 0.08; /* Slightly stronger on mobile */
+            font-size: 12rem;
+        }
+
+        .jp-pos-right { top: 20%; right: -10%; }
+        .jp-pos-left { top: 70%; left: -10%; }
+    }
+    .hero-title {
+        min-height: 2.2em; /* Prevents shifting */
+        margin-bottom: 1.2rem;
+        display: block;
+    }
+
+    .typewriter-text {
+        color: var(--text-main);
+        vertical-align: middle;
+    }
+
+    /* TYPEWRITER EFFECT */
+    .typewriter-cursor {
+        display: inline-block;
+        width: 4px;
+        height: 1em;
+        background-color: var(--primary);
+        margin-left: 2px;
+        vertical-align: middle;
+        animation: typewriter-blink 0.8s step-end infinite;
+        border-radius: 2px;
+        box-shadow: 0 0 8px rgba(255, 90, 95, 0.5);
+    }
+
+    @@keyframes typewriter-blink {
+        from, to { opacity: 1; }
+        50% { opacity: 0; }
+    }
+
+    .sakura-sparkle {
+        position: fixed;
+        width: 8px;
+        height: 6px;
+        background-color: var(--primary);
+        border-radius: 120% 0 120% 120%;
+        pointer-events: none;
+        z-index: 10000;
+        animation: sparkle-float 1s ease-out forwards;
+        opacity: 0.8;
+    }
+
+    @@keyframes sparkle-float {
+        0% { transform: translate(0, 0) rotate(0) scale(1); opacity: 1; filter: drop-shadow(0 0 5px var(--primary)); }
+        100% { transform: translate(20px, -30px) rotate(180deg) scale(0); opacity: 0; }
+    }
+
+    /* Subtle Dark Red Atmospheric Glows */
+    #courses, #about, #contact {
+        position: relative;
+    }
+
+    #courses::before, #about::before, #contact::before {
+        content: "";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        background: radial-gradient(circle at center, rgba(216, 50, 54, 0.03), transparent 70%);
+        z-index: -2;
+        pointer-events: none;
+    }
+    /* Feature Card CTA */
+    .feature-cta {
+        margin-top: 1rem;
+        font-weight: 700;
+        color: var(--primary);
+        font-size: 0.9rem;
+        transition: transform 0.2s;
+    }
+
+    .practice-card-link:hover .feature-cta {
+        transform: translateX(5px);
     }
 </style>
 
 <!-- DECORATIVE ELEMENTS -->
-<div class="jp-brand-sentence">先生 日本語 センター</div> <!-- Sensei Japanese Center -->
+<div class="jp-brand-sentence">先生 日本語 センター</div> 
+<div class="jp-watermark jp-pos-right">先生</div>
+<div class="jp-watermark jp-pos-left">日本語</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const target = document.querySelector('.typewriter-text');
+            const cursor = document.querySelector('.typewriter-cursor');
+            if (!target) return;
+
+            const text = target.getAttribute('data-text');
+            let index = 0;
+
+            function type() {
+                if (index < text.length) {
+                    target.textContent += text.charAt(index);
+                    
+                    // Only spawn sparkle on non-space characters for cleaner look
+                    if (text.charAt(index) !== ' ') {
+                        spawnSparkle();
+                    }
+
+                    index++;
+                    setTimeout(type, Math.random() * 80 + 40); 
+                } else {
+                    // Stay: Keep cursor blinking or hide it? 
+                    // Let's keep it for a bit then fade out
+                    setTimeout(() => {
+                        cursor.style.transition = 'opacity 1s ease';
+                        cursor.style.opacity = '0';
+                    }, 2000);
+                }
+            }
+
+            function spawnSparkle() {
+                const rect = target.getBoundingClientRect();
+                const sparkle = document.createElement('div');
+                sparkle.className = 'sakura-sparkle';
+                
+                // Position at the "end" of the current text
+                sparkle.style.left = rect.right + 'px';
+                sparkle.style.top = (rect.top + rect.height / 2) + 'px';
+                
+                // Random drift direction
+                const driftX = (Math.random() - 0.5) * 40;
+                const driftY = -20 - Math.random() * 30;
+                sparkle.style.setProperty('--drift-x', `${driftX}px`);
+                sparkle.style.setProperty('--drift-y', `${driftY}px`);
+                
+                // Random size
+                const size = Math.random() * 6 + 4;
+                sparkle.style.width = size + 'px';
+                sparkle.style.height = (size * 0.8) + 'px';
+
+                document.body.appendChild(sparkle);
+                
+                // Use a more dynamic animation via JS for true randomness
+                sparkle.animate([
+                    { transform: 'translate(0, 0) rotate(0deg) scale(1)', opacity: 1 },
+                    { transform: `translate(${driftX}px, ${driftY}px) rotate(${Math.random() * 360}deg) scale(0)`, opacity: 0 }
+                ], {
+                    duration: 800 + Math.random() * 400,
+                    easing: 'ease-out',
+                    fill: 'forwards'
+                });
+
+                setTimeout(() => sparkle.remove(), 1200);
+            }
+
+            // Start typing after initial fade-in
+            setTimeout(type, 800);
+        });
+    </script>
+}

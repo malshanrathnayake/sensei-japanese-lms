@@ -4,23 +4,51 @@
 :root {
     --bg-main: #fffbfb;
     --bg-card: #ffffff;
-    --primary: #ff5a5f;
-    --primary-dark: #d93d42;
-    --accent-sakura: #ffeff0;
+    --primary: #D83236;
+    --primary-dark: #b1282c;
+    --accent-sakura: #fff5f5;
     --text-main: #1a1a1a;
     --text-muted: #555555;
-    --border-soft: #ffe5e5;
-    --glass-bg: rgba(255, 255, 255, 0.85);
-    --glass-border: rgba(255, 90, 95, 0.15);
+    --border-soft: #fdeaea;
+    --glass-bg: rgba(255, 255, 255, 0.9);
+    --glass-border: rgba(216, 50, 54, 0.12);
 }
 
 .brand-text {
-    font-family: 'Noto Serif JP', serif !important;
-    font-weight: 900;
-    font-size: 1.25rem;
-    letter-spacing: -0.04em;
-    color: #ff0000;
-    line-height: 1;
+    display: flex !important;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.brand-name-img {
+    height: 1.8rem;
+    width: auto;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+}
+
+.header-logo-res {
+    height: 1.6rem;
+    width: auto;
+    object-fit: contain;
+}
+
+@media (max-width: 576px) {
+    .header-logo-res {
+        height: 1.3rem;
+    }
+}
+
+.admin-badge {
+    padding: 0.2rem 0.8rem;
+    background: rgba(216, 50, 54, 0.08);
+    color: var(--primary);
+    font-size: 0.7rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    border-radius: 99px;
+    border: 1px solid rgba(216, 50, 54, 0.1);
 }
 
 /* ================================
@@ -38,6 +66,29 @@ body {
     background-color: var(--bg-main) !important;
     position: relative;
     overflow-x: hidden;
+
+    /* Firefox */
+    scrollbar-width: thin;
+    scrollbar-color: var(--primary) var(--bg-main);
+}
+
+/* Webkit (Chrome, Edge, Safari, Opera) */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-main);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--primary);
+    border-radius: 20px;
+    border: 3px solid var(--bg-main);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-dark);
 }
 
 /* =====================================================
@@ -352,7 +403,7 @@ body::before {
 
     /* Premium Scrollbar Style */
     scrollbar-width: thin;
-    scrollbar-color: var(--primary) transparent;
+    scrollbar-color: var(--primary) var(--bg-main);
 }
 
 /* Webkit Scrollbar Customization for Offcanvas - FORCED VISIBILITY */
@@ -681,4 +732,106 @@ body::before {
 .is-valid+.select2-container--bootstrap5 .select2-selection {
     background: #fffaf7;
     border-color: #ffd8c5;
+}
+
+/* =====================================================
+   MOBILE RESPONSIVENESS FIXES (GLOBAL)
+   ===================================================== */
+@media (max-width: 768px) {
+    .content {
+        padding: 1.5rem 1rem 1rem !important;
+    }
+
+    .card-header {
+        padding: 1.2rem 1.25rem !important;
+    }
+
+    .card-body {
+        padding: 1.25rem !important;
+    }
+
+    .card-title {
+        font-size: 1rem !important;
+    }
+
+    .sidebar-brand {
+        padding: 1.5rem 1.25rem !important;
+    }
+
+    .brand-name-img {
+        height: 1.4rem !important;
+    }
+
+    .jp-watermark {
+        font-size: 8rem !important;
+    }
+
+    .navbar {
+        padding: 0.5rem 0.75rem !important;
+    }
+
+    .sidebar-toggle {
+        margin-left: 0.5rem !important;
+    }
+
+    /* Adjust form inputs for better thumb-touch targets */
+    .form-control,
+    .form-select,
+    .select2-container--bootstrap5 .select2-selection {
+        min-height: 48px !important;
+        font-size: 16px !important;
+        /* Prevents iOS auto-zoom */
+    }
+
+    .btn {
+        padding: 0.75rem 1.25rem !important;
+    }
+
+    /* DataTable Mobile Adjustments */
+    .dataTables_wrapper .dataTables_length,
+    .dataTables_wrapper .dataTables_filter {
+        text-align: center !important;
+        margin-bottom: 1rem;
+    }
+
+    .dataTables_wrapper .dataTables_filter input {
+        width: 100% !important;
+        margin-left: 0 !important;
+    }
+
+    /* Navbar icon spacing */
+    .navbar-nav.navbar-align {
+        gap: 0.25rem;
+    }
+
+    .nav-icon {
+        padding: 0.4rem 0.6rem !important;
+    }
+}
+
+/* Very Small Devices */
+@media (max-width: 480px) {
+    .brand-text {
+        display: none !important;
+    }
+
+    .sidebar-brand {
+        justify-content: center !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
+    .sidebar-brand .d-flex.flex-column {
+        display: none !important;
+    }
+}
+
+/* Update background to match new public theme */
+body::before {
+    opacity: 0.25 !important;
+}
+
+:root {
+    --bg-main: #fffafa;
+    --accent-sakura: #fff2f2;
 }

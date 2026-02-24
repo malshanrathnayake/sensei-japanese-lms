@@ -49,6 +49,11 @@ namespace SENSEI.WEB.Controllers
             return View();
         }
 
+        public async Task<IActionResult> Practice()
+        {
+            return View();
+        }
+
         #region Login
 
         public async Task<IActionResult> Login()
@@ -147,6 +152,7 @@ namespace SENSEI.WEB.Controllers
             HttpContext.Session.SetString("UserName", user.userName);
             HttpContext.Session.SetString("DisplayName", user.Staff != null ? user.Staff.StaffPopulatedName : user.Student.StudentPopulatedName);
             HttpContext.Session.SetString("UserType", user.UserTypeEnum.ToString());
+            HttpContext.Session.SetString("ProfileImage", "/theme/v1/img/avatars/placeholder_1.jpeg");
 
             if (user.UserTypeEnum == UserTypeEnum.Admin)
             {

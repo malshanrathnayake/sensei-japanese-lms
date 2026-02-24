@@ -14,131 +14,287 @@
 <style>
     /* Sakura Theme Matching Home Page */
     :root {
-        --bg-main: #fffbfb;
-        --primary: #ff5a5f;
-        --primary-dark: #d93d42;
-        --accent-sakura: #ffeff0;
+        --bg-main: #fffcfc;
+        --primary: #D83236;
+        --primary-dark: #a11d21;
+        --primary-glow: rgba(216, 50, 54, 0.15);
+        --accent-sakura: #fff5f5;
         --text-main: #1a1a1a;
-        --text-muted: #555555;
-        --border-soft: #ffe5e5;
+        --text-muted: #666666;
+        --glass-bg: rgba(255, 255, 255, 0.92);
+        --card-shadow: 0 25px 60px -15px rgba(216, 50, 54, 0.12);
     }
 
     body {
-        background: linear-gradient(to bottom, #fffbfb 0%, #fff5f5 100%) !important;
+        font-family: 'Plus Jakarta Sans', sans-serif !important;
+        background: linear-gradient(135deg, #fffcfc 0%, #fff0f0 100%) !important;
         position: relative;
+        min-height: 100vh;
     }
 
-    /* Sakura Background Decorations */
+    /* Fixed Atmospheric Background Watermarks */
     body::before {
-        content: "";
+        content: "先生";
         position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
+        bottom: 5%;
+        right: 2%;
+        font-family: 'Noto Serif JP', serif;
+        font-size: 15rem;
+        font-weight: 900;
+        color: var(--primary);
+        opacity: 0.03;
         z-index: -1;
         pointer-events: none;
-        background-image: url('/theme/v1/img/photos/sakura.png'), url('/theme/v1/img/photos/sakura.png');
-        background-repeat: no-repeat, no-repeat;
-        background-position: -5% -5%, 105% 60%;
-        background-size: 500px auto, 600px auto;
-        opacity: 0.12;
-        mix-blend-mode: multiply;
+        user-select: none;
+    }
+
+    body::after {
+        content: "日本語";
+        position: fixed;
+        top: 15%;
+        left: 2%;
+        font-family: 'Noto Serif JP', serif;
+        font-size: 12rem;
+        font-weight: 900;
+        color: var(--primary);
+        opacity: 0.03;
+        z-index: -1;
+        pointer-events: none;
+        user-select: none;
+        transform: rotate(-10deg);
     }
 
     .card {
-        background: rgba(255, 255, 255, 0.85) !important;
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
-        border: 1px solid rgba(255, 90, 95, 0.15) !important;
-        border-radius: 20px !important;
-        box-shadow: 0 20px 50px rgba(255, 90, 95, 0.08) !important;
-        margin-bottom: 2rem;
-        border: none;
+        background: var(--glass-bg) !important;
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.8) !important;
+        border-radius: 24px !important;
+        box-shadow: var(--card-shadow) !important;
+        margin-bottom: 2.5rem;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        overflow: hidden;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 35px 70px -10px rgba(216, 50, 54, 0.18) !important;
     }
 
     .card-header {
-        background: rgba(255, 90, 95, 0.03) !important;
-        border-bottom: 1px solid rgba(255, 90, 95, 0.1) !important;
-        padding: 1.25rem 1.5rem !important;
-        border-top-left-radius: 20px !important;
-        border-top-right-radius: 20px !important;
+        background: linear-gradient(90deg, rgba(216, 50, 54, 0.08), transparent) !important;
+        border-bottom: 1px solid rgba(216, 50, 54, 0.05) !important;
+        padding: 1.5rem 2rem !important;
+        position: relative;
+    }
+
+    .card-header::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 4px;
+        height: 60%;
+        background: var(--primary);
+        border-radius: 0 4px 4px 0;
     }
 
     .card-title {
-        color: var(--primary) !important;
+        color: var(--text-main) !important;
         font-weight: 800 !important;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        font-size: 0.95rem !important;
-        margin-bottom: 0 !important;
+        font-size: 1.1rem !important;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .card-title i {
+        color: var(--primary);
+        font-size: 1.2rem;
     }
 
     .btn-primary {
-        background: var(--primary) !important;
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%) !important;
         border: none !important;
-        border-radius: 12px !important;
-        padding: 1rem 2.5rem !important;
-        font-weight: 700 !important;
-        box-shadow: 0 8px 20px rgba(255, 90, 95, 0.3) !important;
-        transition: all 0.3s ease !important;
+        border-radius: 16px !important;
+        padding: 1.2rem 3rem !important;
+        font-weight: 800 !important;
+        font-size: 1.1rem !important;
+        letter-spacing: 0.02em;
+        box-shadow: 0 15px 35px rgba(216, 50, 54, 0.35) !important;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
     }
 
     .btn-primary:hover {
-        background: var(--primary-dark) !important;
-        transform: translateY(-2px);
-        box-shadow: 0 12px 25px rgba(255, 90, 95, 0.4) !important;
+        transform: translateY(-4px) scale(1.02);
+        box-shadow: 0 20px 45px rgba(216, 50, 54, 0.45) !important;
     }
 
-    .btn-back {
-        display: inline-flex;
-        align-items: center;
-        color: var(--text-muted);
-        text-decoration: none;
-        font-weight: 600;
-        font-size: 0.9rem;
-        padding: 0.6rem 1.2rem;
-        border-radius: 50px;
+    /* Navigation Header Refinement */
+    .nav-header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1000;
         background: rgba(255, 255, 255, 0.8);
-        border: 1px solid var(--border-soft);
-        transition: all 0.2s ease;
-        margin-top: 1.5rem;
+        backdrop-filter: blur(15px);
+        border-bottom: 1px solid rgba(216, 50, 54, 0.05);
+        padding: 0.5rem 0;
     }
 
-    .btn-back:hover {
-        color: var(--primary);
-        background: var(--accent-sakura);
-        border-color: var(--primary);
-        transform: translateX(-5px);
+    .nav-header::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background: linear-gradient(90deg, var(--primary), #ffb7c5, var(--primary));
+        background-size: 200% auto;
+        animation: flow 4s linear infinite;
+        z-index: 1100;
+    }
+
+    @@keyframes flow {
+        0% { background-position: 0% 50%; }
+        100% { background-position: 200% 50%; }
+    }
+
+    .nav-container {
+        max-width: 1280px;
+        width: 100%;
+        margin: 0 auto;
+        padding: 0.4rem 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .nav-brand {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
         text-decoration: none;
     }
 
-    h1 {
-        font-weight: 900 !important;
-        color: var(--text-main) !important;
-        letter-spacing: -0.02em;
+    .brand-logo-small {
+        width: 50px;
+        height: 50px;
+        object-fit: contain;
     }
+
+    .brand-name-img {
+        height: 1.6rem;
+        width: auto;
+        object-fit: contain;
+    }
+
+    .nav-links {
+        display: flex;
+        gap: 0.5rem;
+        align-items: center;
+    }
+
+    .nav-links a {
+        text-decoration: none;
+        color: var(--text-main);
+        font-weight: 700;
+        padding: 0.6rem 1.2rem;
+        border-radius: 99px;
+        font-size: 0.95rem;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+    }
+
+    .nav-links a:hover {
+        color: var(--primary);
+        background: rgba(216, 50, 54, 0.06);
+    }
+
+    .btn-link-home {
+        text-decoration: none !important;
+        color: var(--text-main) !important;
+        font-weight: 800 !important;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .btn-link-home:hover {
+        color: var(--primary) !important;
+    }
+
+    .register-wrapper {
+        padding-top: 120px;
+    }
+
 
     .form-label {
         font-weight: 700;
         color: var(--text-main);
-        font-size: 0.88rem;
-        margin-bottom: 0.4rem;
+        font-size: 0.85rem;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .form-label i {
+        color: var(--primary);
+        font-size: 0.9rem;
+        opacity: 0.7;
     }
 
     .form-control, .form-select {
-        height: 48px !important;
-        border-radius: 12px !important;
-        border: 1px solid #ffe0e0 !important;
-        padding: 0.72rem 1rem !important;
-        background: #fff !important;
-        transition: all 0.2s ease;
+        height: 52px !important;
+        border-radius: 14px !important;
+        border: 1px solid #f0f0f0 !important;
+        padding: 0 1.25rem !important;
+        background: #fdfdfd !important;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        font-size: 0.95rem !important;
     }
 
     .form-control:focus, .form-select:focus {
         border-color: var(--primary) !important;
-        box-shadow: 0 0 0 4px rgba(255, 90, 95, 0.1) !important;
+        box-shadow: 0 0 0 5px var(--primary-glow) !important;
         background: #fff !important;
+        transform: scale(1.002);
+    }
+
+    /* Multi-step indicator or current view vibe */
+    .registration-progress {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin-bottom: 3rem;
+    }
+
+    .progress-step {
+        width: 40px;
+        height: 8px;
+        border-radius: 4px;
+        background: #eee;
+        transition: all 0.5s ease;
+    }
+
+    .progress-step.active {
+        width: 60px;
+        background: var(--primary);
+        box-shadow: 0 0 15px var(--primary-glow);
+    }
+
+    .register-header h1 {
+        font-family: 'Noto Serif JP', serif;
+        font-weight: 900;
+        color: var(--text-main);
+        letter-spacing: -0.02em;
+    }
+
+    .form-group-wrap {
+        position: relative;
     }
 
     /* Select2 Dropdown Visibility Fix */
@@ -239,30 +395,55 @@
     }
 
     .brand-logo {
-        width: 100px;
-        height: 100px;
+        width: 80px;
+        height: 80px;
         object-fit: contain;
-        /* Stay: No floating animation or drop shadow */
     }
+    
+    @@media (max-width: 768px) {
+        .nav-links { display: none; }
+        .nav-header { padding: 1rem 1.5rem; }
+        .register-wrapper { padding-top: 100px; }
+    }
+
 </style>
 
 <!-- intl-tel-input -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@23.0.1/build/css/intlTelInput.css">
 
-<div class="container d-flex flex-column">
-
-    <div class="d-flex justify-content-start align-items-center">
-        <a href="@Url.Action("Index", "SenseiJapaneseSchool")" class="btn-back">
-            <i class="fas fa-chevron-left me-2"></i> Back to Home
+<header class="nav-header">
+    <div class="nav-container">
+        <a href="~/" class="nav-brand">
+            <img src="~/theme/v1/img/photos/logo.PNG" alt="Sensei Logo" class="brand-logo-small" />
+            <div class="brand-text">
+                <img src="~/theme/v1/img/photos/name1.png" alt="Sensei Japanese Center" class="brand-name-img" />
+                <img src="~/theme/v1/img/photos/name.png" alt="Name" class="brand-name-img" />
+            </div>
         </a>
+        <nav class="nav-links">
+            <a href="~/#courses">Courses</a>
+            <a href="~/SenseiJapaneseSchool/Gallery">Gallery</a>
+            <a href="~/" class="btn-link-home"><i class="fas fa-home"></i> Home</a>
+        </nav>
+    </div>
+</header>
+
+@* Removed Sakura Decoration *@
+
+<div class="container register-wrapper d-flex flex-column">
+
+    <div class="text-center mb-5 mt-4 register-header">
+        <div class="logo-box">
+            <img src="~/theme/v1/img/photos/logo.PNG" alt="Sensei Logo" class="brand-logo" style="filter: drop-shadow(0 10px 20px rgba(216, 50, 54, 0.1));" />
+        </div>
+        <h1 class="display-5">Japanese Online Registration</h1>
+        <p class="text-muted" style="font-size: 1.1rem; max-width: 600px; margin: 0 auto;">Join 10,000+ students mastering Japanese at the Sensei Center 🌸</p>
     </div>
 
-    <div class="text-center mb-5 mt-4">
-        <div class="logo-box">
-            <img src="~/theme/v1/img/photos/logo.PNG" alt="Sensei Logo" class="brand-logo" />
-        </div>
-        <h1 class="display-5">Student Online Registration 🌸</h1>
-        <p class="text-muted">Join our community and start your journey to Japanese fluency today.</p>
+    <div class="registration-progress">
+        <div class="progress-step active"></div>
+        <div class="progress-step"></div>
+        <div class="progress-step"></div>
     </div>
 
     <form asp-action="Register" asp-controller="SenseiJapaneseSchool" asp-area="" method="post" id="student-register">
@@ -271,51 +452,51 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <h5 class="card-title">Personal Information</h5>
+                        <h5 class="card-title mb-0 fw-bold"><i class="fas fa-user-circle"></i> Personal Information</h5>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body p-4 p-lg-5">
 
                         <div class="row">
 
-                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 mb-3">
-                                <label class="form-label" asp-for="Initials"></label>
+                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 mb-4">
+                                <label class="form-label" asp-for="Initials"><i class="fas fa-id-card"></i> Initials (Optional)</label>
                                 @Html.TextBoxFor(m => m.Initials, new { @class = "form-control", placeholder = "e.g. A.B.C." })
                                 <span asp-validation-for="Initials" class="text-danger"></span>
                             </div>
 
-                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 mb-3">
-                                <label class="form-label" asp-for="FirstName">First Name *</label>
-                                @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control", placeholder = "Enter first name" })
+                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 mb-4">
+                                <label class="form-label" asp-for="FirstName"><i class="fas fa-signature"></i> First Name *</label>
+                                @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control", placeholder = "First Name" })
                                 <span asp-validation-for="FirstName" class="text-danger"></span>
                             </div>
 
-                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 mb-3">
-                                <label class="form-label" asp-for="MiddleName"></label>
-                                @Html.TextBoxFor(m => m.MiddleName, new { @class = "form-control", placeholder = "Enter middle name (Optional)" })
+                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 mb-4">
+                                <label class="form-label" asp-for="MiddleName"><i class="fas fa-signature"></i> Middle Name (Optional)</label>
+                                @Html.TextBoxFor(m => m.MiddleName, new { @class = "form-control", placeholder = "Middle Name" })
                                 <span asp-validation-for="MiddleName" class="text-danger"></span>
                             </div>
 
-                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 mb-3">
-                                <label class="form-label" asp-for="LastName">Last Name *</label>
-                                @Html.TextBoxFor(m => m.LastName, new { @class = "form-control", placeholder = "Enter last name" })
+                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 mb-4">
+                                <label class="form-label" asp-for="LastName"><i class="fas fa-signature"></i> Last Name *</label>
+                                @Html.TextBoxFor(m => m.LastName, new { @class = "form-control", placeholder = "Last Name" })
                                 <span asp-validation-for="LastName" class="text-danger"></span>
                             </div>
 
-                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 mb-3">
-                                <label class="form-label" asp-for="CallingName"></label>
-                                @Html.TextBoxFor(m => m.CallingName, new { @class = "form-control", placeholder = "Name you want to be called" })
+                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 mb-4">
+                                <label class="form-label" asp-for="CallingName"><i class="fas fa-comment-dots"></i> Calling Name (Optional)</label>
+                                @Html.TextBoxFor(m => m.CallingName, new { @class = "form-control", placeholder = "Calling Name" })
                                 <span asp-validation-for="CallingName" class="text-danger"></span>
                             </div>
 
-                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 mb-3">
-                                <label class="form-label" asp-for="NIC"></label>
-                                @Html.TextBoxFor(m => m.NIC, new { @class = "form-control", placeholder = "National Identity Card No" })
+                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 mb-4">
+                                <label class="form-label" asp-for="NIC"><i class="fas fa-fingerprint"></i> NIC *</label>
+                                @Html.TextBoxFor(m => m.NIC, new { @class = "form-control", placeholder = "Identity Card No" })
                                 <span asp-validation-for="NIC" class="text-danger"></span>
                             </div>
 
-                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 mb-3">
-                                <label class="form-label" asp-for="DateOfBirth">Date Of Birth *</label>
-                                @Html.TextBoxFor(m => m.DateOfBirth, new { @class = "form-control datepicker", placeholder = "YYYY-MM-DD" })
+                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 mb-4">
+                                <label class="form-label" asp-for="DateOfBirth"><i class="fas fa-calendar-alt"></i> Date Of Birth *</label>
+                                @Html.TextBoxFor(m => m.DateOfBirth, new { @class = "form-control datepicker", placeholder = "Select Birth Date" })
                                 <span asp-validation-for="DateOfBirth" class="text-danger"></span>
                             </div>
 
@@ -326,67 +507,62 @@
             </div>
         </div>
 
-        <div class="row">
+                    <div class="row">
             <div class="col-12">
                 <div class="card shadow-sm border-0">
-                    <div class="card-header bg-white border-bottom py-3">
-                        <h5 class="card-title mb-0 fw-bold">Contact Information</h5>
+                    <div class="card-header">
+                        <h5 class="card-title mb-0 fw-bold"><i class="fas fa-map-marker-alt"></i> Contact Information</h5>
                     </div>
-                    <div class="card-body py-4">
+                    <div class="card-body p-4 p-lg-5">
 
-                        <div class="row g-3">
+                        <div class="row">
 
-                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 mb-3">
-                                <label class="form-label" asp-for="AddressLineOne"></label>
-                                @Html.TextBoxFor(m => m.AddressLineOne, new { @class = "form-control", placeholder = "Street address, P.O. box, etc." })
+                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 mb-4">
+                                <label class="form-label" asp-for="AddressLineOne"><i class="fas fa-home"></i> Address Line One *</label>
+                                @Html.TextBoxFor(m => m.AddressLineOne, new { @class = "form-control", placeholder = "Street address" })
                                 <span asp-validation-for="AddressLineOne" class="text-danger"></span>
                             </div>
 
-                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 mb-3">
-                                <label class="form-label" asp-for="AddressLineTwo"></label>
-                                @Html.TextBoxFor(m => m.AddressLineTwo, new { @class = "form-control", placeholder = "Apartment, suite, unit, building, floor, etc. (Optional)" })
+                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 mb-4">
+                                <label class="form-label" asp-for="AddressLineTwo"><i class="fas fa-building"></i> Address Line Two</label>
+                                @Html.TextBoxFor(m => m.AddressLineTwo, new { @class = "form-control", placeholder = "Apt / Suite / Floor (Optional)" })
                                 <span asp-validation-for="AddressLineTwo" class="text-danger"></span>
                             </div>
 
-                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 mb-3">
-                                <label class="form-label" asp-for="PostalCode"></label>
-                                @Html.TextBoxFor(m => m.PostalCode, new { @class = "form-control", placeholder = "Postal / Zip Code (Optional)" })
+                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 mb-4">
+                                <label class="form-label" asp-for="PostalCode"><i class="fas fa-mail-bulk"></i> Postal Code (Optional)</label>
+                                @Html.TextBoxFor(m => m.PostalCode, new { @class = "form-control", placeholder = "Zip Code" })
                                 <span asp-validation-for="PostalCode" class="text-danger"></span>
                             </div>
 
-                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
-                                <div class="mb-3" id="country-wrapper">
-                                    <label class="form-label">@Html.DisplayNameFor(m => m.CountryId)</label>
+                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 mb-4">
+                                <div id="country-wrapper">
+                                    <label class="form-label"><i class="fas fa-globe"></i> Country *</label>
                                     <select id="CountryId" class="form-control country-select" name="CountryId" asp-for="CountryId"></select>
                                     <span asp-validation-for="CountryId" class="text-danger"></span>
                                 </div>
                             </div>
 
-                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
-                                <div class="mb-3">
-                                    <label class="form-label" asp-for="State"></label>
-                                    @Html.TextBoxFor(m => m.State, new { @class = "form-control", placeholder = "State / Province / Region (Optional)" })
-                                    <span asp-validation-for="State" class="text-danger"></span>
-                                </div>
+                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 mb-4">
+                                <label class="form-label" asp-for="State"><i class="fas fa-map"></i> State / Region</label>
+                                @Html.TextBoxFor(m => m.State, new { @class = "form-control", placeholder = "State / Province" })
+                                <span asp-validation-for="State" class="text-danger"></span>
                             </div>
 
-                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
-                                <div class="mb-3">
-                                    <label class="form-label" asp-for="City">City *</label>
-                                    @Html.TextBoxFor(m => m.City, new { @class = "form-control", placeholder = "City" })
-                                    <span asp-validation-for="City" class="text-danger"></span>
-                                </div>
+                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 mb-4">
+                                <label class="form-label" asp-for="City"><i class="fas fa-city"></i> City *</label>
+                                @Html.TextBoxFor(m => m.City, new { @class = "form-control", placeholder = "City" })
+                                <span asp-validation-for="City" class="text-danger"></span>
                             </div>
 
-                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 mb-3">
-                                <label class="form-label d-block" asp-for="PhoneNo">Phone Number *</label>
+                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 mb-4">
+                                <label class="form-label d-block" asp-for="PhoneNo"><i class="fas fa-phone-alt"></i> Phone Number *</label>
                                 @Html.TextBoxFor(m => m.PhoneNo, new { @class = "form-control w-100", id = "PhoneNo", type = "tel" })
-                                <span id="phone-error" class="text-danger d-none mt-1">Please enter a valid international phone number.</span>
-                                <span asp-validation-for="PhoneNo" class="text-danger"></span>
+                                <span id="phone-error" class="text-danger d-none mt-1 small">Invalid international phone number.</span>
                             </div>
 
-                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 mb-3">
-                                <label class="form-label" asp-for="Email">Email *</label>
+                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 mb-4">
+                                <label class="form-label" asp-for="Email"><i class="fas fa-envelope"></i> Email *</label>
                                 @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "Email Address", type = "email" })
                                 <span asp-validation-for="Email" class="text-danger"></span>
                             </div>
@@ -401,7 +577,7 @@
         <div class="row">
             <div class="col-12">
                 <div class="card shadow-sm border-0">
-                    <div class="card-header bg-white border-bottom py-3">
+                    <div class="card-header">
                         <h5 class="card-title mb-0 fw-bold">Course Information</h5>
                     </div>
                     <div class="card-body py-4">
@@ -410,7 +586,7 @@
 
                             <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
                                 <div class="mb-3" id="learningmode-wrapper">
-                                    <label class="form-label">@Html.DisplayNameFor(m => m.StudentLearningModeId)</label>
+                                    <label class="form-label">Learning Mode *</label>
                                     <select id="StudentLearningModeId" class="form-control learningmode-select" name="StudentLearningModeId" asp-for="StudentLearningModeId"></select>
                                     <span asp-validation-for="StudentLearningModeId" class="text-danger"></span>
                                 </div>
@@ -447,6 +623,8 @@
 
     </form>
 </div>
+
+@* Falling Sakura script removed *@
 
 @section Scripts {
 
@@ -577,55 +755,72 @@
                 endDate: new Date()
             });
 
+            // Select2 change triggers validation
+            $('select').on('change', function() {
+                $(this).valid(); 
+            });
+
             // Form Validation Configuration
             $("#student-register").validate({
-                errorClass: "text-danger",
+                rules: {
+                    FirstName: "required",
+                    LastName: "required",
+                    NIC: "required",
+                    DateOfBirth: "required",
+                    AddressLineOne: "required",
+                    City: "required",
+                    Email: {
+                        required: true,
+                        email: true
+                    },
+                    CountryId: {
+                        required: true,
+                        min: 1
+                    },
+                    StudentLearningModeId: {
+                        required: true,
+                        min: 1
+                    },
+                    BranchId: {
+                        required: true,
+                        min: 1
+                    },
+                    CourseId: {
+                        required: true,
+                        min: 1
+                    }
+                },
+                messages: {
+                    FirstName: "Please enter your first name",
+                    LastName: "Please enter your last name",
+                    NIC: "Please enter your NIC number",
+                    DateOfBirth: "Birth date is required",
+                    AddressLineOne: "Primary address is required",
+                    City: "Please enter your city",
+                    Email: "Enter a valid email address",
+                    CountryId: "Please select your country",
+                    StudentLearningModeId: "Select a learning mode",
+                    BranchId: "Select a branch",
+                    CourseId: "Select a course"
+                },
+                errorClass: "text-danger small mt-1",
+                errorElement: "div",
                 highlight: function(element) {
                     $(element).addClass("is-invalid");
+                    $(element).siblings(".select2-container").addClass("is-invalid-select2");
                 },
                 unhighlight: function(element) {
                     $(element).removeClass("is-invalid");
+                    $(element).siblings(".select2-container").removeClass("is-invalid-select2");
                 },
                 submitHandler: function(form) {
                     if (validatePhone()) {
-                        // Set full E.164 number before submit
+                        $("#btnRegister").prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Processing...');
                         phoneInputField.value = iti.getNumber();
                         form.submit();
                     } else {
-                        window.notyf.error("Please correct the errors in the form.");
+                        window.notyf.error("Please enter a valid phone number.");
                         return false;
-                    }
-                }
-            });
-
-            // Sync phone with country dropdown change
-            // $('#CountryId').on('change', function() {
-            //     const countryCode = $(this).val();
-            //     if (countryCode) {
-            //         iti.setCountry(countryCode.toLowerCase());
-            //     }
-            // });
-
-            const form = phoneInputField.closest("form");
-
-            form.addEventListener("submit", function (event) {
-
-                if (phoneInputField.value.trim()) {
-
-                    if (iti.isValidNumber()) {
-
-                        // This automatically returns E164 format like +94771234567
-                        let fullNumber = iti.getNumber();
-
-                        // Extra safety cleanup
-                        fullNumber = fullNumber.replace(/\s+/g, '');
-
-                        phoneInputField.value = fullNumber;
-
-                    } else {
-                        phoneError.classList.remove("d-none");
-                        phoneInputField.classList.add("is-invalid");
-                        event.preventDefault();
                     }
                 }
             });

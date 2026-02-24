@@ -37,7 +37,8 @@ namespace SENSEI.DOMAIN
         [DisplayName("Calling Name")]
         public string CallingName { get; set; }
 
-        [DisplayName("NIC")]
+        [Required(ErrorMessage = "NIC is required.")]
+        [DisplayName("NIC *")]
         public string NIC { get; set; } 
 
         [Required(ErrorMessage = "Date of Birth is required.")]

@@ -1,0 +1,1001 @@
+@{
+    ViewData["Title"] = "Vocabulary Practice Games";
+}
+
+<div class="practice-container">
+    <header class="practice-header">
+        <a href="@Url.Action("Index", "SenseiJapaneseSchool")" class="back-link">← Back to Home</a>
+        <h1 class="practice-title">Mainichi Kotoba 🌸</h1>
+        <p class="practice-subtitle">Interactive Vocabulary Practice & Games</p>
+    </header>
+
+    <div class="day-selector">
+        <button class="day-btn active" data-day="1">Day 01</button>
+        <button class="day-btn" data-day="2">Day 02</button>
+        <button class="day-btn" data-day="3">Day 03</button>
+        <button class="day-btn" data-day="4">Day 04</button>
+    </div>
+
+    <div class="game-modes">
+        <button class="mode-btn active" data-mode="flashcards">Flashcards</button>
+        <button class="mode-btn" data-mode="quiz">Matching Quiz</button>
+        <button class="mode-btn" data-mode="memory">Memory Match</button>
+    </div>
+
+    <!-- FLASHCARDS SECTION -->
+    <section id="flashcards-section" class="game-section active">
+        <div class="flashcard-container">
+            <div class="flashcard" id="main-card">
+                <div class="card-inner">
+                    <div class="card-front">
+                        <div class="card-content-wrapper">
+                            <div class="japanese-team">
+                                <div class="jp-text" id="front-text">あめ</div>
+                                <div class="romaji-text" id="back-romaji">AME</div>
+                            </div>
+                            
+                            <div class="divider-line"></div>
+                            
+                            <div class="translation-team">
+                                <div class="translation-box">
+                                    <span class="english-label">English</span>
+                                    <div class="english-text" id="back-english">Rain</div>
+                                    <span class="sinhala-label">Sinhala</span>
+                                    <div class="sinhala-text" id="back-sinhala">වැස්ස</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-watermark">🌸</div>
+                    </div>
+                    <div class="card-back">
+                        <!-- Keep back for cool flip effect or extra info -->
+                        <div class="jp-text-large-bg">先生</div>
+                        <p>Sensei Japanese Center</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-controls">
+            <button class="control-btn" id="prev-btn">Prev</button>
+            <span class="card-counter" id="card-counter">1 / 6</span>
+            <button class="control-btn" id="next-btn">Next</button>
+        </div>
+        <p class="hint">Click the card to flip!</p>
+    </section>
+
+    <!-- QUIZ SECTION -->
+    <section id="quiz-section" class="game-section">
+        <div class="quiz-container">
+            <div class="quiz-question">
+                <p>What is the meaning of:</p>
+                <div class="jp-text-large" id="quiz-q-text">あめ</div>
+            </div>
+            <div class="quiz-options" id="quiz-options">
+                <!-- Options will be generated here -->
+            </div>
+            <div id="quiz-feedback" class="quiz-feedback"></div>
+        </div>
+    </section>
+
+    <!-- MEMORY MATCH SECTION -->
+    <section id="memory-section" class="game-section">
+        <div class="memory-status">
+            <span id="memory-moves">Moves: 0</span>
+            <span id="memory-matches">Matches: 0 / 6</span>
+        </div>
+        <div class="memory-grid" id="memory-grid">
+            <!-- Cards will be generated here -->
+        </div>
+        <div id="memory-win" class="memory-win-overlay">
+            <div class="win-content">
+                <h2>Omedetou! 🎉</h2>
+                <p>You matched all words!</p>
+                <button class="btn-primary" onclick="startMemoryGame()">Play Again</button>
+            </div>
+        </div>
+    </section>
+</div>
+
+<style>
+    :root {
+        --primary: #D83236; /* Bold Japanese Red */
+        --primary-light: #FF5A5F;
+        --primary-dark: #8B0000;
+        --sakura-pink: #FFD1D1;
+        --background: #FFFBFB;
+        --text-main: #1A1A1A;
+        --text-muted: #555555;
+        --white: #FFFFFF;
+        --shadow: 0 15px 35px rgba(216, 50, 54, 0.15);
+        --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+
+    /* Tighten layout to the absolute minimum */
+    body {
+        padding-top: 45px !important; /* Extremely tight clearance */
+    }
+
+    /* Hide floating flowers on games page */
+    .sakura-container, .sakura-bg-elements, .sakura-petal {
+        display: none !important;
+        visibility: hidden !important;
+    }
+
+    .practice-container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 0 1rem 30px !important; /* Zero top padding */
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: relative;
+        z-index: 10;
+    }
+
+    .practice-header {
+        text-align: center;
+        margin-bottom: 1.5rem;
+        width: 100%;
+        position: relative;
+    }
+
+    .back-link {
+        color: var(--primary);
+        text-decoration: none;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        display: inline-block;
+        padding: 0.5rem 1rem;
+        border: 1px solid var(--sakura-pink);
+        border-radius: 99px;
+        font-size: 0.9rem;
+        transition: var(--transition);
+    }
+
+    .back-link:hover {
+        background: var(--sakura-pink);
+        transform: translateX(-5px);
+    }
+
+    .back-link:hover {
+        transform: translateX(-5px);
+    }
+
+    .practice-title {
+        font-size: clamp(2.2rem, 8vw, 3.5rem);
+        font-weight: 900;
+        color: var(--primary);
+        margin: 0;
+        text-align: center;
+        text-transform: uppercase;
+        letter-spacing: -1px;
+        line-height: 1.2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .practice-subtitle {
+        color: var(--text-muted);
+        font-size: 1.2rem;
+        margin-top: 0.5rem;
+        text-align: center;
+    }
+
+    .day-selector {
+        display: flex;
+        gap: 0.5rem; /* Reduced gap */
+        margin: 1.5rem 0; /* Reduced margin */
+        flex-wrap: wrap;
+        justify-content: center;
+        max-width: 400px;
+    }
+
+    .day-btn {
+        padding: 0.8rem 1.5rem;
+        border-radius: 999px;
+        border: 2px solid var(--sakura-pink);
+        background: var(--white);
+        color: var(--primary);
+        font-weight: 700;
+        cursor: pointer;
+        transition: var(--transition);
+    }
+
+    .day-btn.active, .day-btn:hover {
+        background: var(--primary);
+        color: var(--white);
+        border-color: var(--primary);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(255, 90, 95, 0.2);
+    }
+
+    .game-modes {
+        display: flex;
+        background: var(--white);
+        padding: 0.3rem;
+        border-radius: 999px;
+        box-shadow: var(--shadow);
+        margin-bottom: 2rem; /* Reduced space below modes */
+    }
+
+    .mode-btn {
+        padding: 0.7rem 2rem;
+        border: none;
+        background: none;
+        color: var(--text-muted);
+        font-weight: 700;
+        cursor: pointer;
+        border-radius: 999px;
+        transition: var(--transition);
+    }
+
+    .mode-btn.active {
+        background: var(--primary);
+        color: var(--white);
+    }
+
+    /* GAME SECTIONS */
+    .game-section {
+        display: none;
+        width: 100%;
+        max-width: 600px;
+        animation: fadeIn 0.5s ease;
+    }
+
+    .game-section.active {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    @@keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* FLASHCARD STYLES */
+    .flashcard-container {
+        perspective: 1200px;
+        width: 100%;
+        max-width: 480px; 
+        height: 400px; 
+        margin-bottom: 1rem;
+    }
+
+    .flashcard {
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+        transition: transform 0.6s;
+        transform-style: preserve-3d;
+        position: relative;
+    }
+
+    .flashcard.flipped {
+        transform: rotateY(180deg);
+    }
+
+    .card-inner {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        transition: transform 0.6s;
+        transform-style: preserve-3d;
+    }
+
+    .card-front, .card-back {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        backface-visibility: hidden;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: var(--white);
+        border-radius: 40px;
+        box-shadow: var(--shadow);
+        border: 4px solid var(--sakura-pink);
+        overflow: hidden;
+    }
+
+    /* Shimmer Effect */
+    .card-front::after, .card-back::after {
+        content: "";
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: linear-gradient(
+            45deg,
+            transparent 45%,
+            rgba(255, 255, 255, 0.8) 50%,
+            transparent 55%
+        );
+        transform: rotate(45deg);
+        animation: shimmer 6s infinite;
+        pointer-events: none;
+    }
+
+    @@keyframes shimmer {
+        0% { transform: translateX(-100%) rotate(45deg); }
+        20%, 100% { transform: translateX(100%) rotate(45deg); }
+    }
+
+    .card-back {
+        transform: rotateY(180deg);
+        background: radial-gradient(circle at top right, #fff, #fff5f5);
+    }
+
+    .card-content-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        padding: 1rem;
+        height: 100%;
+        justify-content: center;
+    }
+
+    .japanese-team {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 0.5rem;
+    }
+
+    .divider-line {
+        width: 40%;
+        height: 2px;
+        background: var(--sakura-pink);
+        margin: 0.8rem 0;
+        border-radius: 99px;
+        opacity: 0.6;
+    }
+
+    .translation-team {
+        opacity: 1;
+    }
+
+    .jp-text {
+        font-size: clamp(3.5rem, 10vw, 4.5rem);
+        font-weight: 900;
+        color: var(--primary);
+        font-family: 'Noto Sans JP', sans-serif;
+        text-shadow: 4px 4px 0px rgba(216, 50, 54, 0.05);
+        margin-bottom: 0.5rem;
+    }
+
+    .romaji-text {
+        font-size: 1.1rem;
+        font-weight: 800;
+        color: var(--text-muted);
+        letter-spacing: 4px;
+        text-transform: uppercase;
+        margin: 0;
+        padding: 0;
+        border: none;
+    }
+
+    .jp-text-large-bg {
+        font-size: 8rem;
+        font-weight: 900;
+        color: var(--primary);
+        opacity: 0.1;
+    }
+
+    .translation-box {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: center;
+    }
+
+    .english-label, .sinhala-label {
+        font-size: 0.75rem;
+        font-weight: 800;
+        color: var(--primary);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: -0.2rem;
+    }
+
+    .english-text {
+        font-size: 2.2rem;
+        font-weight: 800;
+        color: var(--primary-dark);
+        margin: 0;
+    }
+
+    .sinhala-text {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--text-main);
+        margin: 0;
+    }
+
+    /* Card Watermark */
+    .card-watermark {
+        position: absolute;
+        bottom: 20px;
+        right: 20px;
+        font-size: 3rem;
+        opacity: 0.05;
+        color: var(--primary);
+        pointer-events: none;
+    }
+
+    .card-controls {
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+        margin-bottom: 1rem;
+    }
+
+    .control-btn {
+        padding: 0.8rem 1.5rem;
+        border-radius: 12px;
+        border: 1px solid var(--sakura-pink);
+        background: var(--white);
+        color: var(--primary);
+        font-weight: 700;
+        cursor: pointer;
+        transition: var(--transition);
+    }
+
+    .control-btn:hover {
+        background: var(--sakura-pink);
+    }
+
+    .card-counter {
+        font-weight: 700;
+        color: var(--text-muted);
+    }
+
+    .hint {
+        color: var(--text-muted);
+        font-size: 0.9rem;
+        font-style: italic;
+    }
+
+    /* QUIZ STYLES */
+    .quiz-container {
+        width: 100%;
+        background: var(--white);
+        padding: 2.5rem;
+        border-radius: 30px;
+        box-shadow: var(--shadow);
+        border: 2px solid var(--sakura-pink);
+        text-align: center;
+    }
+
+    .jp-text-large {
+        font-size: 4rem;
+        font-weight: 900;
+        color: var(--primary-dark);
+        margin: 1rem 0 2rem;
+    }
+
+    .quiz-options {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+
+    .option-btn {
+        padding: 1.2rem;
+        border-radius: 15px;
+        border: 2px solid #F0F0F0;
+        background: var(--white);
+        color: var(--text-main);
+        font-weight: 600;
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition: var(--transition);
+    }
+
+    .option-btn:hover {
+        border-color: var(--primary);
+        background: var(--primary);
+        color: var(--white);
+        transform: translateY(-5px) scale(1.05);
+        box-shadow: 0 10px 20px rgba(216, 50, 54, 0.2);
+    }
+
+    .option-btn:active {
+        transform: scale(0.95);
+    }
+
+    .option-btn.correct {
+        background: #D4EDDA;
+        border-color: #28A745;
+        color: #155724;
+    }
+
+    .option-btn.wrong {
+        background: #F8D7DA;
+        border-color: #DC3545;
+        color: #721C24;
+    }
+
+    .quiz-feedback {
+        margin-top: 2rem;
+        font-weight: 700;
+        min-height: 1.5rem;
+    }
+
+    /* Memory Match Styles */
+    .memory-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 0.8rem;
+        width: 100%;
+        max-width: 600px;
+        margin-top: 1rem;
+    }
+
+    .memory-card {
+        aspect-ratio: 1;
+        perspective: 1000px;
+        cursor: pointer;
+        height: 120px;
+    }
+
+    .memory-card-inner {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        transition: transform 0.6s;
+        transform-style: preserve-3d;
+    }
+
+    .memory-card.flipped .memory-card-inner {
+        transform: rotateY(180deg);
+    }
+
+    .memory-card-front, .memory-card-back {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        backface-visibility: hidden;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 5px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    .memory-card-front {
+        background: linear-gradient(135deg, var(--primary), var(--primary-light));
+        color: white;
+        font-size: 1.5rem;
+    }
+
+    .memory-card-back {
+        background: white;
+        color: var(--primary);
+        transform: rotateY(180deg);
+        border: 2px solid var(--sakura-pink);
+        font-weight: 700;
+        font-size: 0.9rem;
+    }
+
+    .memory-card.matched {
+        opacity: 0.5;
+        cursor: default;
+        animation: match-pulse 0.5s ease-out;
+    }
+
+    @@keyframes match-pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+        100% { transform: scale(1); }
+    }
+
+    .memory-status {
+        display: flex;
+        gap: 2rem;
+        font-weight: 800;
+        color: var(--primary);
+        margin-bottom: 1rem;
+    }
+
+    .memory-win-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255,255,255,0.9);
+        z-index: 100;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .memory-win-overlay.active {
+        display: flex;
+        animation: fade-in 0.5s ease-out;
+    }
+
+    @@keyframes fade-in {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    /* SAKURA ANIMATION */
+    .sakura-bg-elements {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    .sakura-petal {
+        position: absolute;
+        background: var(--sakura-pink);
+        border-radius: 150% 0 150% 150%;
+        opacity: 0.6;
+        pointer-events: none;
+        animation: petal-fall linear infinite;
+    }
+
+    @@keyframes petal-fall {
+        0% {
+            transform: translate(0, -10%) rotate(0deg);
+            opacity: 0;
+        }
+        10% {
+            opacity: 0.8;
+        }
+        90% {
+            opacity: 0.8;
+        }
+        100% {
+            transform: translate(100px, 100vh) rotate(720deg);
+            opacity: 0;
+        }
+    }
+
+    @@media (max-width: 600px) {
+        .practice-container {
+            padding-top: 20px !important; /* Reduced mobile gap */
+        }
+
+        .practice-title {
+            font-size: 1.8rem;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .quiz-options {
+            grid-template-columns: 1fr;
+        }
+        .jp-text { font-size: 3rem; }
+        .english-text { font-size: 1.8rem; }
+        .sinhala-text { font-size: 1.6rem; }
+        
+        .flashcard-container {
+            height: 340px;
+        }
+    }
+</style>
+
+@section Scripts {
+    <script>
+        const vocabData = {
+            1: [
+                { jp: 'あめ', romaji: 'AME', english: 'Rain', sinhala: 'වැස්ස' },
+                { jp: 'め', romaji: 'ME', english: 'Eye', sinhala: 'ඇස' },
+                { jp: 'しろい', romaji: 'SHIROI', english: 'White', sinhala: 'සුදු' },
+                { jp: 'あまい', romaji: 'AMAI', english: 'Sweet', sinhala: 'පැණි රසයි' },
+                { jp: 'かきます', romaji: 'KAKIMASU', english: 'Write', sinhala: 'ලියනවා' },
+                { jp: 'よみます', romaji: 'YOMIMASU', english: 'Read', sinhala: 'කියවනවා' }
+            ],
+            2: [
+                { jp: 'はれ', romaji: 'HARE', english: 'Sunny', sinhala: 'පායනවා' },
+                { jp: 'あし', romaji: 'ASHI', english: 'Leg', sinhala: 'කකුල' },
+                { jp: 'あかい', romaji: 'AKAI', english: 'Red', sinhala: 'රතු' },
+                { jp: 'たかい', romaji: 'TAKAI', english: 'High / Expensive', sinhala: 'උසයි / මිල අධිකයි' },
+                { jp: 'のみます', romaji: 'NOMIMASU', english: 'Drink', sinhala: 'බොනවා' },
+                { jp: 'すみます', romaji: 'SUMIMASU', english: 'Live', sinhala: 'ජීවත් වෙනවා' }
+            ],
+            3: [
+                { jp: 'ゆき', romaji: 'YUKI', english: 'Snow', sinhala: 'හිම' },
+                { jp: 'みみ', romaji: 'MIMI', english: 'Ear', sinhala: 'කන' },
+                { jp: 'くろい', romaji: 'KUROI', english: 'Black', sinhala: 'කලු' },
+                { jp: 'やすい', romaji: 'YASUI', english: 'Cheap', sinhala: 'ලාභයි' },
+                { jp: 'あいます', romaji: 'AIMASU', english: 'Meet', sinhala: 'හමු වෙනවා' },
+                { jp: 'いきます', romaji: 'IKIMASU', english: 'Go', sinhala: 'යනවා' }
+            ],
+            4: [
+                { jp: 'はる', romaji: 'HARU', english: 'Spring', sinhala: 'වසන්තය' },
+                { jp: 'て', romaji: 'TE', english: 'Hand', sinhala: 'අත' },
+                { jp: 'あおい', romaji: 'AOI', english: 'Blue', sinhala: 'නිල්' },
+                { jp: 'わかい', romaji: 'WAKAI', english: 'Young', sinhala: 'තරුණ' },
+                { jp: 'きます', romaji: 'KIMASU', english: 'Come', sinhala: 'එනවා' },
+                { jp: 'みます', romaji: 'MIMASU', english: 'See / Watch', sinhala: 'බලනවා' }
+            ]
+        };
+
+        let currentDay = 1;
+        let currentIndex = 0;
+        let currentMode = 'flashcards';
+
+        const card = document.getElementById('main-card');
+        const frontText = document.getElementById('front-text');
+        const backRomaji = document.getElementById('back-romaji');
+        const backEnglish = document.getElementById('back-english');
+        const backSinhala = document.getElementById('back-sinhala');
+        const counter = document.getElementById('card-counter');
+        const nextBtn = document.getElementById('next-btn');
+        const prevBtn = document.getElementById('prev-btn');
+
+        // Initial setup
+        updateCard();
+
+        // Mode Switching
+        document.querySelectorAll('.mode-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentMode = btn.dataset.mode;
+                
+                document.querySelectorAll('.game-section').forEach(s => s.classList.remove('active'));
+                document.getElementById(`${currentMode}-section`).classList.add('active');
+                
+                if(currentMode === 'quiz') startQuiz();
+                if(currentMode === 'memory') startMemoryGame();
+            });
+        });
+
+        // Day Switching
+        document.querySelectorAll('.day-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentDay = parseInt(btn.dataset.day);
+                currentIndex = 0;
+                updateCard();
+                if(currentMode === 'quiz') startQuiz();
+                if(currentMode === 'memory') startMemoryGame();
+            });
+        });
+
+        // Flashcard logic
+        card.addEventListener('click', () => {
+            card.classList.toggle('flipped');
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if(currentIndex < vocabData[currentDay].length - 1) {
+                currentIndex++;
+                transitionCard();
+            }
+        });
+
+        prevBtn.addEventListener('click', () => {
+            if(currentIndex > 0) {
+                currentIndex--;
+                transitionCard();
+            }
+        });
+
+        function transitionCard() {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            setTimeout(() => {
+                updateCard();
+                card.classList.remove('flipped');
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+            }, 300);
+        }
+
+        function updateCard() {
+            const data = vocabData[currentDay][currentIndex];
+            frontText.textContent = data.jp;
+            backRomaji.textContent = data.romaji;
+            backEnglish.textContent = data.english;
+            backSinhala.textContent = data.sinhala;
+            counter.textContent = `${currentIndex + 1} / ${vocabData[currentDay].length}`;
+        }
+
+        // Quiz Logic
+        let quizTarget;
+        function startQuiz() {
+            const dataSet = vocabData[currentDay];
+            quizTarget = dataSet[Math.floor(Math.random() * dataSet.length)];
+            
+            document.getElementById('quiz-q-text').textContent = quizTarget.jp;
+            document.getElementById('quiz-feedback').textContent = '';
+            
+            // Create options
+            let options = [`${quizTarget.english} / ${quizTarget.sinhala}`];
+            while(options.length < 4) {
+                let randomDay = Math.floor(Math.random() * 4) + 1;
+                let wordObj = vocabData[randomDay][Math.floor(Math.random() * 6)];
+                let randomOption = `${wordObj.english} / ${wordObj.sinhala}`;
+                if(!options.includes(randomOption)) options.push(randomOption);
+            }
+            options.sort(() => Math.random() - 0.5);
+
+            const optionsContainer = document.getElementById('quiz-options');
+            optionsContainer.innerHTML = '';
+            options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.textContent = opt;
+                btn.onclick = () => checkAnswer(btn, opt);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(btn, selection) {
+            const buttons = document.querySelectorAll('.option-btn');
+            buttons.forEach(b => b.disabled = true);
+
+            const correctAnswer = `${quizTarget.english} / ${quizTarget.sinhala}`;
+            if(selection === correctAnswer) {
+                btn.classList.add('correct');
+                document.getElementById('quiz-feedback').textContent = '✨ Excellent! Properly identified.';
+                document.getElementById('quiz-feedback').style.color = '#28A745';
+                spawnSuccessParticles(btn);
+                setTimeout(startQuiz, 2000);
+            } else {
+                btn.classList.add('wrong');
+                document.getElementById('quiz-feedback').textContent = '❌ Not quite. Try again!';
+                document.getElementById('quiz-feedback').style.color = '#DC3545';
+                
+                // Show correct one
+                buttons.forEach(b => {
+                    if(b.textContent === correctAnswer) b.classList.add('correct');
+                });
+                setTimeout(startQuiz, 3000);
+            }
+        }
+
+        // Memory Match Logic
+        let memoryCards = [];
+        let flippedCards = [];
+        let moves = 0;
+        let matches = 0;
+        let isLockGrid = false;
+
+        function startMemoryGame() {
+            const dataSet = vocabData[currentDay];
+            const cards = [];
+            moves = 0;
+            matches = 0;
+            flippedCards = [];
+            isLockGrid = false;
+            
+            document.getElementById('memory-moves').textContent = `Moves: ${moves}`;
+            document.getElementById('memory-matches').textContent = `Matches: 0 / ${dataSet.length}`;
+            document.getElementById('memory-win').classList.remove('active');
+
+            dataSet.forEach((item, index) => {
+                // Card for Japanese
+                cards.push({ type: 'jp', value: item.jp, id: index });
+                // Card for Translation
+                cards.push({ type: 'trans', value: `${item.romaji}\n${item.english}`, id: index });
+            });
+
+            // Shuffle
+            cards.sort(() => Math.random() - 0.5);
+
+            const grid = document.getElementById('memory-grid');
+            grid.innerHTML = '';
+            
+            // Adjust grid columns for 12 cards (Day sets are 6 words)
+            grid.style.gridTemplateColumns = 'repeat(4, 1fr)';
+
+            cards.forEach(cardData => {
+                const cardEl = document.createElement('div');
+                cardEl.className = 'memory-card';
+                cardEl.innerHTML = `
+                    <div class="memory-card-inner">
+                        <div class="memory-card-front">🌸</div>
+                        <div class="memory-card-back">${cardData.value.replace('\n', '<br>')}</div>
+                    </div>
+                `;
+                cardEl.dataset.id = cardData.id;
+                cardEl.onclick = () => flipMemoryCard(cardEl);
+                grid.appendChild(cardEl);
+            });
+        }
+
+        function flipMemoryCard(card) {
+            if (isLockGrid || card.classList.contains('flipped') || card.classList.contains('matched')) return;
+
+            card.classList.add('flipped');
+            flippedCards.push(card);
+
+            if (flippedCards.length === 2) {
+                moves++;
+                document.getElementById('memory-moves').textContent = `Moves: ${moves}`;
+                checkMemoryMatch();
+            }
+        }
+
+        function checkMemoryMatch() {
+            isLockGrid = true;
+            const card1 = flippedCards[0];
+            const card2 = flippedCards[1];
+
+            if (card1.dataset.id === card2.dataset.id) {
+                // Match!
+                setTimeout(() => {
+                    card1.classList.add('matched');
+                    card2.classList.add('matched');
+                    matches++;
+                    document.getElementById('memory-matches').textContent = `Matches: ${matches} / ${vocabData[currentDay].length}`;
+                    flippedCards = [];
+                    isLockGrid = false;
+
+                    if (matches === vocabData[currentDay].length) {
+                        celebrateWin();
+                    }
+                }, 500);
+            } else {
+                // No match
+                setTimeout(() => {
+                    card1.classList.remove('flipped');
+                    card2.classList.remove('flipped');
+                    flippedCards = [];
+                    isLockGrid = false;
+                }, 1000);
+            }
+        }
+
+        function celebrateWin() {
+            document.getElementById('memory-win').classList.add('active');
+            for(let i=0; i<3; i++) {
+                setTimeout(() => spawnSuccessParticles(document.querySelector('.win-content')), i * 300);
+            }
+        }
+
+        function spawnSuccessParticles(target) {
+            const rect = target.getBoundingClientRect();
+            // Confetti effect
+            for(let i=0; i<30; i++) {
+                const p = document.createElement('div');
+                p.style.position = 'fixed';
+                p.style.width = Math.random() * 10 + 5 + 'px';
+                p.style.height = Math.random() * 5 + 5 + 'px';
+                p.style.background = i % 2 === 0 ? 'var(--primary)' : 'var(--sakura-pink)';
+                p.style.borderRadius = '2px';
+                p.style.left = (rect.left + rect.width/2) + 'px';
+                p.style.top = (rect.top + rect.height/2) + 'px';
+                p.style.pointerEvents = 'none';
+                p.style.zIndex = '1000';
+                document.body.appendChild(p);
+
+                const angle = Math.random() * Math.PI * 2;
+                const velocity = 5 + Math.random() * 10;
+                const driftX = Math.cos(angle) * velocity * 20;
+                const driftY = Math.sin(angle) * velocity * 20;
+                
+                p.animate([
+                    { transform: 'translate(0, 0) rotate(0deg)', opacity: 1 },
+                    { transform: `translate(${driftX}px, ${driftY}px) rotate(${Math.random() * 720}deg)`, opacity: 0 }
+                ], {
+                    duration: 1500,
+                    easing: 'cubic-bezier(0, .9, .57, 1)'
+                }).onfinish = () => p.remove();
+            }
+        }
+    </script>
+}
