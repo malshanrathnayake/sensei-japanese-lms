@@ -13,5 +13,10 @@
         "Title": "My Profile",
         "Icon": "user",
         "Url": "/StudentPortal/StudentProfile/Index"
+    },
+    {
+        "Title": "My Payments",
+        "Icon": "credit-card",
+        "Url": "/StudentPortal/StudentBatchPayment/Index"
     }
 ]

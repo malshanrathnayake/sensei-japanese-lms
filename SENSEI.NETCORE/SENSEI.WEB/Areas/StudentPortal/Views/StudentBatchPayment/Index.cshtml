@@ -1,0 +1,341 @@
+@model SENSEI.DOMAIN.Student
+@{
+    ViewData["Title"] = "My Payments";
+}
+
+<style>
+    .error {
+        color: var(--sensei-red);
+        font-size: 0.8rem;
+        font-weight: 600;
+        margin-top: 4px;
+    }
+    .form-control:focus, .form-select:focus {
+        border-color: var(--sensei-red) !important;
+        box-shadow: 0 0 0 0.25rem rgba(216, 50, 54, 0.1) !important;
+    }
+    .table thead th {
+        background: rgba(216, 50, 54, 0.02);
+        color: var(--sensei-red-dark);
+        font-weight: 800;
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        letter-spacing: 0.05em;
+        border-bottom: 2px solid rgba(216, 50, 54, 0.1);
+    }
+</style>
+
+<div class="container-fluid p-0">
+
+    <div class="row mb-3 mb-xl-4 align-items-center">
+        <div class="col-auto d-none d-sm-block">
+            <h3 class="fw-800 text-dark mb-0"><span style="color: var(--sensei-red);">My</span> Payments</h3>
+            <p class="text-muted small mb-0">Student: <span class="fw-700">@Model?.StudentPopulatedName</span> (@Model?.IndexNumber)</p>
+        </div>
+
+        <div class="col-auto ms-auto text-end mt-n1">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb bg-transparent p-0 mt-1 mb-0">
+                    <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home", new { area = "StudentPortal" })" class="text-muted">LMS</a></li>
+                    <li class="breadcrumb-item active" aria-current="page" style="color: var(--sensei-red)">Payments</li>
+                </ol>
+            </nav>
+            <button class="btn btn-primary mt-2 shadow-sm" onclick="openPaymentModal(0)">
+                <i class="align-middle me-1" data-feather="plus-circle"></i> New Payment
+            </button>
+        </div>
+    </div>
+
+    <!-- Summary Section -->
+    <div class="row mb-3" id="summaryContainer">
+        <!-- Summaries will be injected here via AJAX -->
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-transparent border-0 pb-0">
+                    <h5 class="card-title mb-0">Payment History</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table id="paymentTable" class="table table-hover w-100">
+                            <thead>
+                                <tr>
+                                    <th>Course / Batch</th>
+                                    <th>Month</th>
+                                    <th>Amount</th>
+                                    <th>Date Paid</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Payment Modal -->
+<div class="modal fade" id="paymentModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 20px;">
+            <div class="modal-header bg-transparent border-0">
+                <h5 class="fw-800 mb-0" id="modalTitle" style="color: var(--sensei-red)">Add Payment</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body pt-0">
+                <form id="paymentForm">
+                    <input type="hidden" id="StudentBatchPaymentId" name="StudentBatchPaymentId" value="0" />
+                    <div class="mb-4">
+                        <label class="form-label fw-700 small text-uppercase" style="color: var(--sensei-red-dark)">Select Batch</label>
+                        <select class="form-select form-select-lg" id="StudentBatchId" name="StudentBatchId" required>
+                            <option value="">-- Choose Batch --</option>
+                        </select>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label fw-700 small text-uppercase" style="color: var(--sensei-red-dark)">Amount</label>
+                        <div class="input-group input-group-lg">
+                            <span class="input-group-text bg-light border-end-0">Rs.</span>
+                            <input type="number" step="0.01" class="form-control border-start-0" id="Amount" name="Amount" placeholder="0.00" required />
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label fw-700 small text-uppercase" style="color: var(--sensei-red-dark)">Payment Month</label>
+                        <input type="month" class="form-control form-control-lg" id="PaymentMonthStr" name="PaymentMonthStr" required />
+                    </div>
+                    <div class="mb-0">
+                        <label class="form-label fw-700 small text-uppercase" style="color: var(--sensei-red-dark)">Reference / Note</label>
+                        <input type="text" class="form-control form-control-lg" id="SlipUrl" name="SlipUrl" placeholder="Optional reference or link" />
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-light fw-600 rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary px-4 fw-700 rounded-pill" id="btnSavePayment" onclick="savePayment()">
+                    <i class="align-middle me-1" data-feather="check"></i> Save Record
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+    <script>
+        let paymentTable;
+
+        $(document).ready(function() {
+            loadBatches();
+            loadPaymentTable();
+            loadSummary();
+
+            $("#paymentForm").validate({
+                rules: {
+                    StudentBatchId: "required",
+                    Amount: { required: true, min: 1 },
+                    PaymentMonthStr: "required"
+                },
+                messages: {
+                    StudentBatchId: "Please select a batch",
+                    Amount: "Enter a valid amount",
+                    PaymentMonthStr: "Select month"
+                },
+                errorClass: "text-danger small mt-1",
+                errorElement: "div"
+            });
+        });
+
+        function loadPaymentTable() {
+            paymentTable = $('#paymentTable').DataTable({
+                "processing": true,
+                "serverSide": true,
+                "ajax": {
+                    "url": "@Url.Action("SearchPayments", "StudentBatchPayment")",
+                    "type": "POST"
+                },
+                "columns": [
+                    { 
+                        "data": "BatchDetails",
+                        "render": function(data) {
+                            return `<div><span class="fw-800 text-dark">${data.Course.CourseName}</span><br><small class="text-muted fw-600">${data.BatchName}</small></div>`;
+                        }
+                    },
+                    { 
+                        "data": "PaymentMonth",
+                        "render": function(data) {
+                            return `<span class="fw-700 text-secondary">${moment(data).format('MMMM YYYY')}</span>`;
+                        }
+                    },
+                    { 
+                        "data": "Amount",
+                        "render": function(data) {
+                            return `<span class="fw-900" style="color: var(--sensei-red)">Rs. ${parseFloat(data).toLocaleString(undefined, {minimumFractionDigits: 2})}</span>`;
+                        }
+                    },
+                    { 
+                        "data": "PaymentDate",
+                        "render": function(data) {
+                            return `<small class="text-muted fw-600">${moment(data).format('YYYY-MM-DD HH:mm')}</small>`;
+                        }
+                    },
+                    { 
+                        "data": "IsApproved",
+                        "render": function(data) {
+                            return data ? 
+                                '<span class="badge rounded-pill fw-800 p-2 px-3" style="background: rgba(40, 167, 69, 0.1); color: #28a745;">Approved</span>' : 
+                                '<span class="badge rounded-pill fw-800 p-2 px-3" style="background: rgba(255, 193, 7, 0.1); color: #ffc107;">Pending</span>';
+                        }
+                    },
+                    {
+                        "data": "StudentBatchPaymentId",
+                        "render": function(data, type, row) {
+                            if (row.IsApproved) return '';
+                            return `
+                                <div class="btn-group shadow-sm">
+                                    <button class="btn btn-sm btn-white border" onclick="openPaymentModal(${data})"><i class="align-middle text-primary" data-feather="edit-2"></i></button>
+                                    <button class="btn btn-sm btn-white border" onclick="deletePayment(${data})"><i class="align-middle text-danger" data-feather="trash"></i></button>
+                                </div>
+                            `;
+                        }
+                    }
+                ],
+                "drawCallback": function() {
+                    if (window.feather) { feather.replace(); }
+                }
+            });
+        }
+
+        function loadBatches() {
+            $.get("@Url.Action("GetBatches", "StudentBatchPayment")", function(data) {
+                let options = '<option value="">-- Choose Batch --</option>';
+                data.forEach(item => {
+                    options += `<option value="${item.StudentBatchId}">${item.CourseName} - ${item.BatchName}</option>`;
+                });
+                $('#StudentBatchId').html(options);
+            });
+        }
+
+        function loadSummary() {
+            $.get("@Url.Action("GetPaymentSummary", "StudentBatchPayment")", function(data) {
+                let html = '';
+                data.forEach(item => {
+                    html += `
+                        <div class="col-md-4 col-sm-6 mb-3">
+                            <div class="card h-100 mb-0 shadow-sm">
+                                <div class="card-body p-4">
+                                    <div class="row align-items-center">
+                                        <div class="col">
+                                            <h6 class="text-muted mb-2 text-uppercase fw-800 small letter-spacing-05 text-truncate" style="max-width: 150px;">${item.CourseName}</h6>
+                                            <h4 class="fw-900 mb-0" style="color: var(--sensei-red)">${item.BatchName}</h4>
+                                        </div>
+                                        <div class="col-auto">
+                                            <div class="stat" style="background: rgba(216, 50, 54, 0.08); color: var(--sensei-red) !important;">
+                                                <i class="align-middle" data-feather="award"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mt-4 pt-3 border-top border-light">
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <span class="text-muted small fw-700 text-uppercase">Submited</span>
+                                            <span class="fw-800">Rs. ${parseFloat(item.TotalPaid).toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span class="text-muted small fw-700 text-uppercase">Verified</span>
+                                            <span class="badge fw-900 p-2 px-3 rounded-pill" style="background: rgba(40, 167, 69, 0.1); color: #28a745;">
+                                                Rs. ${parseFloat(item.TotalApproved).toLocaleString(undefined, {minimumFractionDigits: 2})}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                $('#summaryContainer').html(html);
+                if (window.feather) { feather.replace(); }
+            });
+        }
+
+        function openPaymentModal(id) {
+            $('#paymentForm')[0].reset();
+            $("#paymentForm").validate().resetForm();
+            $('#StudentBatchPaymentId').val(id);
+            
+            if (id === 0) {
+                $('#modalTitle').text('New Payment Record');
+                $('#paymentModal').modal('show');
+            } else {
+                $('#modalTitle').text('Update Payment');
+                $.get("@Url.Action("GetPayment", "StudentBatchPayment")/" + id, function(data) {
+                    $('#StudentBatchId').val(data.StudentBatchId);
+                    $('#Amount').val(data.Amount);
+                    $('#PaymentMonthStr').val(moment(data.PaymentMonth).format('YYYY-MM'));
+                    $('#SlipUrl').val(data.SlipUrl);
+                    $('#paymentModal').modal('show');
+                });
+            }
+        }
+
+        function savePayment() {
+            if (!$("#paymentForm").valid()) return;
+
+            const btn = $("#btnSavePayment");
+            const originalHtml = btn.html();
+            btn.html('<span class="spinner-border spinner-border-sm me-1"></span> Processing...').prop('disabled', true);
+
+            let formData = {
+                StudentBatchPaymentId: $('#StudentBatchPaymentId').val(),
+                StudentBatchId: $('#StudentBatchId').val(),
+                Amount: $('#Amount').val(),
+                PaymentMonth: $('#PaymentMonthStr').val() + "-01",
+                SlipUrl: $('#SlipUrl').val()
+            };
+
+            $.post("@Url.Action("UpdatePayment", "StudentBatchPayment")", formData, function(response) {
+                btn.html(originalHtml).prop('disabled', false);
+                if (response.status) {
+                    $('#paymentModal').modal('hide');
+                    paymentTable.ajax.reload();
+                    loadSummary();
+                    notyf.success("Payment successful! Pending verification.");
+                } else {
+                    notyf.error("Failed to save payment record.");
+                }
+            }).fail(function() {
+                btn.html(originalHtml).prop('disabled', false);
+                notyf.error("Connection error. Try again.");
+            });
+        }
+
+        function deletePayment(id) {
+            Swal.fire({
+                title: 'Delete Record?',
+                text: "This record will be permanently removed.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, Delete',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.post("@Url.Action("DeletePayment", "StudentBatchPayment")", { id: id }, function(response) {
+                        if (response.success) {
+                            paymentTable.ajax.reload();
+                            loadSummary();
+                            notyf.success("Payment deleted successfully.");
+                        } else {
+                            notyf.error("Could not delete record.");
+                        }
+                    });
+                }
+            });
+        }
+    </script>
+}

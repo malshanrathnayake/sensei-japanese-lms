@@ -3,17 +3,52 @@
     ViewData["Title"] = "My Profile";
 }
 
+<style>
+    .profile-card {
+        border-top: 4px solid var(--sensei-red) !important;
+    }
+    .profile-img-container {
+        position: relative;
+        display: inline-block;
+    }
+    .profile-img-container::after {
+        content: "🌸";
+        position: absolute;
+        bottom: 5px;
+        right: 5px;
+        font-size: 1.5rem;
+    }
+    .form-control:focus {
+        border-color: var(--sensei-red) !important;
+        box-shadow: 0 0 0 0.25rem rgba(216, 50, 54, 0.1) !important;
+    }
+    .form-label {
+        font-weight: 700;
+        color: var(--sensei-red-dark);
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+    .error {
+        color: var(--sensei-red);
+        font-size: 0.8rem;
+        font-weight: 600;
+        margin-top: 4px;
+    }
+</style>
+
 <div class="container-fluid p-0">
-    <div class="row mb-2 mb-xl-3">
+    <div class="row mb-3 mb-xl-4 align-items-center">
         <div class="col-auto d-none d-sm-block">
-            <h3><strong>My</strong> Profile</h3>
+            <h3 class="fw-800 text-dark mb-0"><span style="color: var(--sensei-red);">My</span> Profile</h3>
+            <p class="text-muted small mb-0">Manage your personal information and account details.</p>
         </div>
 
         <div class="col-auto ms-auto text-end mt-n1">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb bg-transparent p-0 mt-1 mb-0">
-                    <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home", new { area = "StudentPortal" })">Dashboards</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Profile</li>
+                    <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home", new { area = "StudentPortal" })" class="text-muted">LMS</a></li>
+                    <li class="breadcrumb-item active" aria-current="page" style="color: var(--sensei-red)">Profile</li>
                 </ol>
             </nav>
         </div>
@@ -21,25 +56,37 @@
 
     <div class="row">
         <div class="col-md-4 col-xl-3">
-            <div class="card mb-3">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">Profile Details</h5>
+            <div class="card mb-3 profile-card">
+                <div class="card-header bg-transparent border-0 pb-0">
+                    <h5 class="card-title mb-0">Account Info</h5>
                 </div>
                 <div class="card-body text-center">
-                    <img src="@(Context.Session.GetString("ProfileImage") ?? "/theme/v1/img/avatars/placeholder_1.jpeg")" alt="@(Model?.FirstName ?? "Student")" class="img-fluid rounded-circle mb-2" width="128" height="128" />
-                    <h5 class="card-title mb-0">@(Model?.StudentPopulatedName ?? "Student Name")</h5>
-                    <div class="text-muted mb-2">@(Model?.IndexNumber ?? "N/A")</div>
+                    <div class="profile-img-container mb-3">
+                        <img src="@(Context.Session.GetString("ProfileImage") ?? "/theme/v1/img/avatars/placeholder_1.jpeg")" 
+                             alt="@(Model?.StudentPopulatedName ?? "Student")" 
+                             class="img-fluid rounded-circle shadow-sm" 
+                             width="128" height="128" 
+                             style="border: 4px solid #fff;"/>
+                    </div>
+                    <h5 class="fw-800 mb-0">@(Model?.StudentPopulatedName ?? "N/A")</h5>
+                    <div class="text-muted mb-3 small fw-600">@(Model?.IndexNumber ?? "N/A")</div>
 
-                    <div class="mt-2">
-                        <span class="badge bg-primary">Student</span>
+                    <div class="mb-2">
+                        <span class="badge px-3 py-2 rounded-pill" style="background: rgba(216, 50, 54, 0.1); color: var(--sensei-red); font-weight: 800;">STUDENT</span>
                     </div>
                 </div>
-                <hr class="my-0" />
+                <hr class="my-0 opacity-10" />
                 <div class="card-body">
-                    <h5 class="h6 card-title">Information</h5>
+                    <h5 class="small text-uppercase fw-800 text-muted mb-3">Institutional Links</h5>
                     <ul class="list-unstyled mb-0">
-                        <li class="mb-1"><span data-feather="home" class="feather-sm me-1"></span> Branch: @(Model?.Branch?.BranchName ?? "N/A")</li>
-                        <li class="mb-1"><span data-feather="briefcase" class="feather-sm me-1"></span> Mode: @(Model?.StudentLearningMode?.LearningModeName ?? "N/A")</li>
+                        <li class="mb-2 d-flex align-items-center text-dark">
+                            <span data-feather="home" class="feather-sm me-2 text-primary"></span> 
+                            <span>Branch: <span class="fw-700">@(Model?.Branch?.BranchName ?? "N/A")</span></span>
+                        </li>
+                        <li class="mb-0 d-flex align-items-center text-dark">
+                            <span data-feather="briefcase" class="feather-sm me-2 text-primary"></span> 
+                            <span>Mode: <span class="fw-700">@(Model?.StudentLearningMode?.LearningModeName ?? "N/A")</span></span>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -47,44 +94,47 @@
 
         <div class="col-md-8 col-xl-9">
             <div class="card">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">General Information</h5>
+                <div class="card-header bg-transparent border-0">
+                    <h5 class="card-title mb-0">General Details</h5>
                 </div>
-                <div class="card-body">
-                    <form asp-action="UpdateProfile" method="post">
+                <div class="card-body pt-0">
+                    <form id="profileForm" asp-action="UpdateProfile" method="post">
                         <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label" asp-for="FirstName">First Name</label>
-                                <input type="text" class="form-control" asp-for="FirstName" placeholder="First name">
+                            <div class="col-md-6 mb-4">
+                                <label class="form-label">First Name</label>
+                                <input type="text" class="form-control form-control-lg" asp-for="FirstName" placeholder="Enter first name" required>
                             </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label" asp-for="LastName">Last Name</label>
-                                <input type="text" class="form-control" asp-for="LastName" placeholder="Last name">
+                            <div class="col-md-6 mb-4">
+                                <label class="form-label">Last Name</label>
+                                <input type="text" class="form-control form-control-lg" asp-for="LastName" placeholder="Enter last name" required>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label" asp-for="Email">Email</label>
-                                <input type="email" class="form-control" asp-for="Email" placeholder="Email" readonly>
+                            <div class="col-md-6 mb-4">
+                                <label class="form-label">Email Address</label>
+                                <input type="email" class="form-control form-control-lg bg-light" asp-for="Email" placeholder="Email" readonly>
+                                <small class="text-muted">Email cannot be changed.</small>
                             </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label" asp-for="PhoneNo">Phone Number</label>
-                                <input type="text" class="form-control" asp-for="PhoneNo" placeholder="Phone number">
+                            <div class="col-md-6 mb-4">
+                                <label class="form-label">Phone Number</label>
+                                <input type="text" class="form-control form-control-lg" asp-for="PhoneNo" placeholder="e.g. +94 77 XXX XXXX" required>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label" asp-for="NIC">NIC</label>
-                                <input type="text" class="form-control" asp-for="NIC" placeholder="NIC">
+                            <div class="col-md-6 mb-4">
+                                <label class="form-label">NIC / Identity Number</label>
+                                <input type="text" class="form-control form-control-lg" asp-for="NIC" placeholder="Identity number" required>
                             </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label" asp-for="DateOfBirth">Date of Birth</label>
-                                <input type="text" class="form-control" value="@Model?.DateOfBirth.ToString("yyyy-MM-dd")" readonly>
+                            <div class="col-md-6 mb-4">
+                                <label class="form-label">Date of Birth</label>
+                                <input type="text" class="form-control form-control-lg bg-light" value="@Model?.DateOfBirth.ToString("yyyy-MM-dd")" readonly>
                             </div>
                         </div>
                         
-                        <div class="text-end">
-                             <button type="submit" class="btn btn-primary">Update Profile</button>
+                        <div class="text-end pt-3">
+                             <button type="submit" class="btn btn-primary btn-lg px-5">
+                                 <i class="align-middle me-1" data-feather="save"></i> Update Profile
+                             </button>
                         </div>
                     </form>
                 </div>
@@ -92,3 +142,35 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $("#profileForm").validate({
+                rules: {
+                    FirstName: "required",
+                    LastName: "required",
+                    PhoneNo: {
+                        required: true,
+                        minlength: 10
+                    },
+                    NIC: "required"
+                },
+                messages: {
+                    FirstName: "Please enter your first name",
+                    LastName: "Please enter your last name",
+                    PhoneNo: "Please enter a valid phone number",
+                    NIC: "Identity number is required"
+                }
+            });
+
+            @if (TempData["Success"] != null)
+            {
+                <text>
+                notyf.success("@TempData["Success"]");
+                </text>
+            }
+        });
+    </script>
+}

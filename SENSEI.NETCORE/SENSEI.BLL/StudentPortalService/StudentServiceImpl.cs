@@ -81,5 +81,57 @@ namespace SENSEI.BLL.StudentPortalService
             });
             return (registrations, count);
         }
+
+        public async Task<(IEnumerable<StudentBatchPayment>, long)> SearchStudentBatchPayments(long studentId, long studentBatchId = 0, int start = 0, int length = 10)
+        {
+            DataTransactionManager dataTransactionManager = new DataTransactionManager(_databaseService.GetConnectionString());
+            var (payments, count) = await dataTransactionManager.StudentBatchPaymentDataManager.RetrieveDataWithCount("SearchStudentBatchPayments", new SqlParameter[] {
+                new SqlParameter("@studentId", studentId),
+                new SqlParameter("@studentBatchId", studentBatchId),
+                new SqlParameter("@start", start),
+                new SqlParameter("@length", length)
+            });
+            return (payments, count);
+        }
+
+        public async Task<StudentBatchPayment> GetStudentBatchPayment(long paymentId)
+        {
+            DataTransactionManager dataTransactionManager = new DataTransactionManager(_databaseService.GetConnectionString());
+            var payments = await dataTransactionManager.StudentBatchPaymentDataManager.RetrieveData("GetStudentBatchPayment", new SqlParameter[] {
+                new SqlParameter("@paymentId", paymentId)
+            });
+            return payments.FirstOrDefault();
+        }
+
+        public async Task<(bool, long)> UpdateStudentBatchPayment(StudentBatchPayment payment)
+        {
+            string jsonString = JsonConvert.SerializeObject(payment);
+            DataTransactionManager dataTransactionManager = new DataTransactionManager(_databaseService.GetConnectionString());
+            return await dataTransactionManager.StudentBatchPaymentDataManager.UpdateDataReturnPrimaryKey("UpdateStudentBatchPayment", jsonString);
+        }
+
+        public async Task<bool> DeleteStudentBatchPayment(long paymentId)
+        {
+            DataTransactionManager dataTransactionManager = new DataTransactionManager(_databaseService.GetConnectionString());
+            return await dataTransactionManager.StudentBatchPaymentDataManager.ExecuteNonQuery("DeleteStudentBatchPayment", new SqlParameter[] {
+                new SqlParameter("@paymentId", paymentId)
+            });
+        }
+
+        public async Task<IEnumerable<dynamic>> GetStudentBatchesList(long studentId)
+        {
+            DataTransactionManager dataTransactionManager = new DataTransactionManager(_databaseService.GetConnectionString());
+            return await dataTransactionManager.StudentBatchPaymentDataManager.RetrieveDynamicData("GetStudentBatchesList", new SqlParameter[] {
+                new SqlParameter("@studentId", studentId)
+            });
+        }
+
+        public async Task<IEnumerable<dynamic>> GetStudentPaymentSummary(long studentId)
+        {
+            DataTransactionManager dataTransactionManager = new DataTransactionManager(_databaseService.GetConnectionString());
+            return await dataTransactionManager.StudentBatchPaymentDataManager.RetrieveDynamicData("GetStudentPaymentSummary", new SqlParameter[] {
+                new SqlParameter("@studentId", studentId)
+            });
+        }
     }
 }

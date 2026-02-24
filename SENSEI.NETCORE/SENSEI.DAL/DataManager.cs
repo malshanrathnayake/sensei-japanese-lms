@@ -359,10 +359,74 @@ namespace devspark_core_data_access_layer
             {
                 return status;
             }
-
-
-
         }
-        
+
+        public async Task<bool> ExecuteNonQuery(string procedureName, SqlParameter[] parameters = null)
+        {
+            try
+            {
+                using (var sqlConnection = new SqlConnection(_connectionString))
+                using (var sqlCommand = new SqlCommand(procedureName, sqlConnection))
+                {
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    if (parameters != null)
+                        sqlCommand.Parameters.AddRange(parameters);
+
+                    sqlConnection.Open();
+                    sqlCommand.ExecuteNonQuery();
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        public async Task<IEnumerable<dynamic>> RetrieveDynamicData(string procedureName, SqlParameter[] parameters = null)
+        {
+            var data = new List<dynamic>();
+            using (var sqlConnection = new SqlConnection(_connectionString))
+            using (var sqlCommand = new SqlCommand(procedureName, sqlConnection))
+            {
+                try
+                {
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    if (parameters != null)
+                        sqlCommand.Parameters.AddRange(parameters);
+
+                    sqlConnection.Open();
+                    var jsonResult = new StringBuilder();
+                    using (var reader = sqlCommand.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            while (reader.Read())
+                            {
+                                jsonResult.Append(reader.GetValue(0)?.ToString());
+                            }
+                        }
+                        else
+                        {
+                            jsonResult.Append("[]");
+                        }
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(jsonResult.ToString()))
+                    {
+                        data = JsonConvert.DeserializeObject<List<dynamic>>(jsonResult.ToString()) ?? new List<dynamic>();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw;
+                }
+                finally
+                {
+                    sqlConnection.Close();
+                }
+                return data;
+            }
+        }
     }
 }
