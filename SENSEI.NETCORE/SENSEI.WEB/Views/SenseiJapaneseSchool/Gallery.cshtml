@@ -3,87 +3,262 @@
     Layout = "~/Views/Shared/_PublicLayout.cshtml";
 }
 
-<section class="gallery-section" style="padding-top: 2.0rem; padding-bottom: 5rem;">
-    <div class="container" style="max-width: 1280px; margin: 0 auto; padding: 0 2rem;">
-        <div style="text-align: center; margin-bottom: 3rem; position: relative; z-index: 1;">
-            <h1 style="font-size: 2.5rem; margin-bottom: 1rem; color: var(--text-main); font-weight: 800;">Our Moments</h1>
-            <p style="color: var(--text-muted); max-width: 600px; margin: 0 auto; font-size: 1.1rem;">
-                Explore moments from our classes, cultural events, and student achievements at Sensei Japanese Center.
-            </p>
-        </div>
-        
-        <div class="gallery-grid">
-            @for (int i = 1; i <= 17; i++)
-            {
-                <div class="gallery-item">
-                    <img src="~/theme/v1/img/photos/gallery/@(i).jpeg" alt="Gallery Image @i" loading="lazy" />
-                    <div class="overlay">
-                        <span class="view-icon">🌸</span>
-                    </div>
-                </div>
-            }
-        </div>
-    </div>
-</section>
-
 <style>
-    /* Hide decorative watermark from home page if it leaks into gallery */
-    .jp-brand-sentence {
+    :root {
+        --primary: #D83236;
+        --primary-dark: #a11d21;
+        --text-main: #1a1a1a;
+        --text-muted: #666666;
+        --accent-glow: rgba(216, 50, 54, 0.05);
+    }
+
+    body {
+        background: #fffcfc !important;
+        font-family: 'Plus Jakarta Sans', sans-serif !important;
+    }
+
+    /* Remove floating flowers for Gallery */
+    .sakura-container {
         display: none !important;
     }
+
+    .gallery-hero {
+        padding: 6rem 0 4rem;
+        background: radial-gradient(circle at top right, rgba(216, 50, 54, 0.04), transparent 70%);
+        position: relative;
+        overflow: hidden;
+        text-align: center;
+    }
+
+    /* Vertical Japanese Watermark */
+    .jp-vertical-text {
+        position: absolute;
+        top: 2rem;
+        right: 2rem;
+        font-family: 'Noto Serif JP', serif;
+        font-size: 5rem;
+        font-weight: 900;
+        color: var(--primary);
+        opacity: 0.03;
+        writing-mode: vertical-rl;
+        z-index: 0;
+        pointer-events: none;
+    }
+
+    .gallery-hero h1 {
+        font-family: 'Noto Serif JP', serif;
+        font-weight: 900;
+        font-size: clamp(2.5rem, 6vw, 4rem);
+        color: var(--text-main);
+        letter-spacing: -0.02em;
+        margin-bottom: 1rem;
+        position: relative;
+        display: inline-block;
+    }
+
+    .gallery-hero h1::after {
+        content: "ギャラリー"; /* Gallery in Katakana */
+        position: absolute;
+        top: -1.5rem;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 0.9rem;
+        letter-spacing: 0.5em;
+        color: var(--primary);
+        opacity: 0.6;
+        font-weight: 700;
+    }
+
+    .gallery-hero p {
+        color: var(--text-muted);
+        font-size: 1.1rem;
+        max-width: 600px;
+        margin: 0 auto;
+        line-height: 1.8;
+    }
+
+    /* Gallery Grid System */
+    .gallery-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 1.5rem 8rem;
+    }
+
     .gallery-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-        gap: 1.5rem;
+        columns: 4 300px;
+        column-gap: 1.5rem;
+        width: 100%;
+        display: block; /* Masonry fallback */
     }
 
     .gallery-item {
-        border-radius: 16px;
+        break-inside: avoid;
+        margin-bottom: 1.5rem;
+        border-radius: 20px;
         overflow: hidden;
         position: relative;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         cursor: pointer;
-        aspect-ratio: 4/3; /* Consistent aspect ratio */
+        background: #f8f8f8;
+        transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+        min-height: 200px; /* Ensure visible even if img slow */
     }
 
     .gallery-item img {
         width: 100%;
-        height: 100%;
-        object-fit: cover;
+        height: auto;
         display: block;
-        transition: transform 0.5s ease;
+        transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+        border: 0;
+    }
+
+    .gallery-item .overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to top, rgba(216, 50, 54, 0.4), transparent);
+        opacity: 0;
+        transition: all 0.4s ease;
+        display: flex;
+        align-items: flex-end;
+        padding: 1.5rem;
+    }
+
+    .gallery-item:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 40px rgba(216, 50, 54, 0.12);
     }
 
     .gallery-item:hover img {
-        transform: scale(1.08);
-    }
-
-    /* Optional Overlay Effect */
-    .overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0,0,0,0.2);
-        opacity: 0;
-        transition: opacity 0.3s ease;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        transform: scale(1.1);
     }
 
     .gallery-item:hover .overlay {
         opacity: 1;
     }
 
-    .view-icon {
-        font-size: 2rem;
-        transform: scale(0);
-        transition: transform 0.3s ease 0.1s;
+    .overlay-content {
+        color: white;
+        transform: translateY(20px);
+        transition: transform 0.4s ease;
     }
 
-    .gallery-item:hover .view-icon {
+    .gallery-item:hover .overlay-content {
+        transform: translateY(0);
+    }
+
+    .overlay-content h4 {
+        margin: 0;
+        font-weight: 800;
+        font-size: 0.9rem;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+    }
+
+    /* Modal / Lightbox */
+    .modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.92);
+        backdrop-filter: blur(10px);
+        z-index: 2000;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+        cursor: zoom-out;
+    }
+
+    .modal-content {
+        max-width: 90%;
+        max-height: 90vh;
+        border-radius: 12px;
+        box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+        transform: scale(0.9);
+        transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .modal-overlay.active {
+        display: flex;
+    }
+
+    .modal-overlay.active .modal-content {
         transform: scale(1);
     }
+
+    .close-modal {
+        position: absolute;
+        top: 2rem;
+        right: 2rem;
+        color: white;
+        font-size: 2.5rem;
+        cursor: pointer;
+        opacity: 0.6;
+        transition: opacity 0.3s;
+    }
+
+    .close-modal:hover {
+        opacity: 1;
+    }
+
+    @@media (max-width: 991px) {
+        .gallery-grid { columns: 2; }
+    }
+
+    @@media (max-width: 576px) {
+        .gallery-grid { columns: 1; }
+    }
 </style>
+
+<div class="gallery-hero">
+    <div class="jp-vertical-text">思い出</div> <!-- Memories -->
+    <div class="container">
+        <h1>Our Moments</h1>
+        <p>A visual journey through cultural festivities, classroom triumphs, and the vibrant life at Sensei Japanese Center.</p>
+    </div>
+</div>
+
+<section class="gallery-container">
+    <div class="gallery-grid">
+        @for (int i = 1; i <= 17; i++)
+        {
+            <div class="gallery-item" onclick="openLightbox(this.querySelector('img').src)">
+                <img src="~/theme/v1/img/photos/gallery/@(i).jpeg" alt="Sensei Gallery @i" loading="lazy" />
+                <div class="overlay">
+                    <div class="overlay-content">
+                        <h4>Sensei Moments</h4>
+                        <span class="bad-red">🌸 Click to Zoom</span>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</section>
+
+<!-- Lightbox Modal -->
+<div class="modal-overlay" id="galleryModal" onclick="closeLightbox()">
+    <span class="close-modal">&times;</span>
+    <img src="" class="modal-content" id="modalImg" />
+</div>
+
+@section Scripts {
+    <script>
+        function openLightbox(src) {
+            const modal = document.getElementById('galleryModal');
+            const modalImg = document.getElementById('modalImg');
+            modalImg.src = src;
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden'; // Prevent scroll
+        }
+
+        function closeLightbox() {
+            const modal = document.getElementById('galleryModal');
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto'; // Restore scroll
+        }
+
+        // Handle Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeLightbox();
+        });
+    </script>
+}

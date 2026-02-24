@@ -70,7 +70,7 @@
     <header>
         <div class="nav">
             <div class="brand">
-                <a href="~/" class="brand-link">
+                <a asp-action="Index" asp-controller="SenseiJapaneseSchool" asp-area="" class="brand-link">
                     <img src="~/theme/v1/img/photos/logo.PNG" alt="Sensei Japanese Center" class="brand-logo" />
                 </a>
                 <div class="brand-text">
@@ -78,28 +78,33 @@
                     <img src="~/theme/v1/img/photos/name.png" alt="Name" class="brand-name-img" />
                 </div>
             </div>
-            <nav class="nav-links">
-                <a href="~/#courses">Courses</a>
-                <a href="~/#about">About</a>
-                <a href="~/#contact">Contact</a>
-                <a href="~/SenseiJapaneseSchool/Gallery">Gallery</a>
+
+            <!-- Mobile Toggle -->
+            <button class="menu-toggle" aria-label="Toggle Menu" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <nav class="nav-links" id="navLinks">
+                <a href="@Url.Action("Index", "SenseiJapaneseSchool")#courses">Courses</a>
+                <a href="@Url.Action("Index", "SenseiJapaneseSchool")#about">About</a>
+                <a href="@Url.Action("Index", "SenseiJapaneseSchool")#contact">Contact</a>
+                <a asp-action="Gallery" asp-controller="SenseiJapaneseSchool" asp-area="">Gallery</a>
                 
                 @if (!string.IsNullOrEmpty(userId))
                 {
                     if (userType == "Admin")
                     {
-                        <button class="btn-login" onclick="location.href='@Url.Action("Index", "Home", new { Area = "Adminportal" })'">Go to Admin Portal</button>
+                        <button class="btn-login" onclick="location.href='@Url.Action("Index", "Home", new { Area = "Adminportal" })'">Admin Portal</button>
                     }
                     else if (userType == "Student")
                     {
-                        <button class="btn-login" onclick="location.href='@Url.Action("Index", "Home", new { Area = "Studentportal" })'">Go to Student Portal</button>
+                        <button class="btn-login" onclick="location.href='@Url.Action("Index", "Home", new { Area = "Studentportal" })'">Student Portal</button>
                     }
                 }
                 else
                 {
-                    <button id="loginbtn" class="btn-login" href="~/SenseiJapaneseSchool/Login">Login</button>
+                    <a asp-action="Login" asp-controller="SenseiJapaneseSchool" asp-area="" class="btn-login">Login</a>
                 }
-
             </nav>
         </div>
     </header>
@@ -201,9 +206,29 @@
         // Update year
         document.getElementById("year").textContent = new Date().getFullYear().toString();
         
-        // Login button redirect
-        $("#loginbtn").click(function() {
-            window.location.href = "/SenseiJapaneseSchool/Login";
+        // Mobile Menu Toggle
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const navLinks = document.getElementById('navLinks');
+        
+        if (mobileMenuBtn) {
+            mobileMenuBtn.addEventListener('click', () => {
+                navLinks.classList.toggle('active');
+                const icon = mobileMenuBtn.querySelector('i');
+                icon.classList.toggle('fa-bars');
+                icon.classList.toggle('fa-times');
+            });
+        }
+
+        // Close menu on link click (mobile)
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                const icon = mobileMenuBtn.querySelector('i');
+                if (icon) {
+                    icon.classList.add('fa-bars');
+                    icon.classList.remove('fa-times');
+                }
+            });
         });
 
         // Dynamic Header on Scroll
