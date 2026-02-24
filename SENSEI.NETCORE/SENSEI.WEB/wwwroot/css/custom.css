@@ -4,32 +4,39 @@
 :root {
     --bg-main: #fffbfb;
     --bg-card: #ffffff;
-    --primary: #ff5a5f;
-    --primary-dark: #d93d42;
-    --accent-sakura: #ffeff0;
+    --primary: #D83236;
+    --primary-dark: #b1282c;
+    --accent-sakura: #fff5f5;
     --text-main: #1a1a1a;
     --text-muted: #555555;
-    --border-soft: #ffe5e5;
-    --glass-bg: rgba(255, 255, 255, 0.85);
-    --glass-border: rgba(255, 90, 95, 0.15);
+    --border-soft: #fdeaea;
+    --glass-bg: rgba(255, 255, 255, 0.9);
+    --glass-border: rgba(216, 50, 54, 0.12);
 }
 
 .brand-text {
-    font-family: 'Noto Serif JP', serif !important;
-    font-weight: 900;
-    font-size: 1.25rem;
-    letter-spacing: -0.04em;
-    color: #ff0000;
-    line-height: 1;
     display: flex !important;
     align-items: center;
-    gap: 0.4rem;
+    gap: 0.5rem;
 }
 
 .brand-name-img {
-    height: 1.2em;
+    height: 1.6rem;
     width: auto;
     object-fit: contain;
+    transition: transform 0.3s ease;
+}
+
+.admin-badge {
+    padding: 0.2rem 0.8rem;
+    background: rgba(216, 50, 54, 0.08);
+    color: var(--primary);
+    font-size: 0.7rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    border-radius: 99px;
+    border: 1px solid rgba(216, 50, 54, 0.1);
 }
 
 /* ================================
@@ -47,6 +54,29 @@ body {
     background-color: var(--bg-main) !important;
     position: relative;
     overflow-x: hidden;
+
+    /* Firefox */
+    scrollbar-width: thin;
+    scrollbar-color: var(--primary) var(--bg-main);
+}
+
+/* Webkit (Chrome, Edge, Safari, Opera) */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-main);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--primary);
+    border-radius: 20px;
+    border: 3px solid var(--bg-main);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-dark);
 }
 
 /* =====================================================
@@ -361,7 +391,7 @@ body::before {
 
     /* Premium Scrollbar Style */
     scrollbar-width: thin;
-    scrollbar-color: var(--primary) transparent;
+    scrollbar-color: var(--primary) var(--bg-main);
 }
 
 /* Webkit Scrollbar Customization for Offcanvas - FORCED VISIBILITY */

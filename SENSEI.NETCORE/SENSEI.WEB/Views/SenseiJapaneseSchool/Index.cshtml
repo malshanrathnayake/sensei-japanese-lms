@@ -5,9 +5,11 @@
 <!-- HERO -->
 <section class="hero" id="top">
     <div class="hero-left fade-up">
-        <div class="hero-badge">Trusted by 500+ students • New groups starting monthly</div>
+        <div class="hero-badge">Trusted by 10k+ students • New groups starting monthly</div>
 
-        <h1 class="hero-title">Learn Japanese Easily Online</h1>
+        <h1 class="hero-title" id="hero-title">
+            <span class="typewriter-text" data-text="Learn Japanese Easily Online"></span><span class="typewriter-cursor"></span>
+        </h1>
         <p class="hero-subtitle">
             Join our interactive courses and start speaking Japanese with
             confidence from day one.
@@ -475,12 +477,12 @@
     .jp-pos-right { top: 15%; right: -5%; transform: rotate(15deg); }
     .jp-pos-left { top: 55%; left: -5%; transform: rotate(-15deg); }
 
-    @media (max-width: 640px) {
+    @@media (max-width: 640px) {
         .jp-brand-sentence {
-            top: 11.5rem; /* Space for stacked header */
-            opacity: 0.35; /* Stronger visibility on mobile as requested */
-            letter-spacing: 0.15em;
-            font-size: 1.25rem;
+            top: 28rem; /* Move below the hero image on mobile */
+            opacity: 0.2; /* Subtle background */
+            font-size: 1.1rem;
+            letter-spacing: 0.1em;
         }
         
         .jp-watermark {
@@ -491,9 +493,126 @@
         .jp-pos-right { top: 20%; right: -10%; }
         .jp-pos-left { top: 70%; left: -10%; }
     }
+    .hero-title {
+        min-height: 2.2em; /* Prevents shifting */
+        margin-bottom: 1.2rem;
+        display: block;
+    }
+
+    .typewriter-text {
+        color: var(--text-main);
+        vertical-align: middle;
+    }
+
+    /* TYPEWRITER EFFECT */
+    .typewriter-cursor {
+        display: inline-block;
+        width: 4px;
+        height: 1em;
+        background-color: var(--primary);
+        margin-left: 2px;
+        vertical-align: middle;
+        animation: typewriter-blink 0.8s step-end infinite;
+        border-radius: 2px;
+        box-shadow: 0 0 8px rgba(255, 90, 95, 0.5);
+    }
+
+    @@keyframes typewriter-blink {
+        from, to { opacity: 1; }
+        50% { opacity: 0; }
+    }
+
+    .sakura-sparkle {
+        position: fixed;
+        width: 8px;
+        height: 6px;
+        background-color: var(--primary);
+        border-radius: 120% 0 120% 120%;
+        pointer-events: none;
+        z-index: 10000;
+        animation: sparkle-float 1s ease-out forwards;
+        opacity: 0.8;
+    }
+
+    @@keyframes sparkle-float {
+        0% { transform: translate(0, 0) rotate(0) scale(1); opacity: 1; }
+        100% { transform: translate(20px, -30px) rotate(180deg) scale(0); opacity: 0; }
+    }
 </style>
 
 <!-- DECORATIVE ELEMENTS -->
 <div class="jp-brand-sentence">先生 日本語 センター</div> 
 <div class="jp-watermark jp-pos-right">先生</div>
 <div class="jp-watermark jp-pos-left">日本語</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const target = document.querySelector('.typewriter-text');
+            const cursor = document.querySelector('.typewriter-cursor');
+            if (!target) return;
+
+            const text = target.getAttribute('data-text');
+            let index = 0;
+
+            function type() {
+                if (index < text.length) {
+                    target.textContent += text.charAt(index);
+                    
+                    // Only spawn sparkle on non-space characters for cleaner look
+                    if (text.charAt(index) !== ' ') {
+                        spawnSparkle();
+                    }
+
+                    index++;
+                    setTimeout(type, Math.random() * 80 + 40); 
+                } else {
+                    // Stay: Keep cursor blinking or hide it? 
+                    // Let's keep it for a bit then fade out
+                    setTimeout(() => {
+                        cursor.style.transition = 'opacity 1s ease';
+                        cursor.style.opacity = '0';
+                    }, 2000);
+                }
+            }
+
+            function spawnSparkle() {
+                const rect = target.getBoundingClientRect();
+                const sparkle = document.createElement('div');
+                sparkle.className = 'sakura-sparkle';
+                
+                // Position at the "end" of the current text
+                sparkle.style.left = rect.right + 'px';
+                sparkle.style.top = (rect.top + rect.height / 2) + 'px';
+                
+                // Random drift direction
+                const driftX = (Math.random() - 0.5) * 40;
+                const driftY = -20 - Math.random() * 30;
+                sparkle.style.setProperty('--drift-x', `${driftX}px`);
+                sparkle.style.setProperty('--drift-y', `${driftY}px`);
+                
+                // Random size
+                const size = Math.random() * 6 + 4;
+                sparkle.style.width = size + 'px';
+                sparkle.style.height = (size * 0.8) + 'px';
+
+                document.body.appendChild(sparkle);
+                
+                // Use a more dynamic animation via JS for true randomness
+                sparkle.animate([
+                    { transform: 'translate(0, 0) rotate(0deg) scale(1)', opacity: 1 },
+                    { transform: `translate(${driftX}px, ${driftY}px) rotate(${Math.random() * 360}deg) scale(0)`, opacity: 0 }
+                ], {
+                    duration: 800 + Math.random() * 400,
+                    easing: 'ease-out',
+                    fill: 'forwards'
+                });
+
+                setTimeout(() => sparkle.remove(), 1200);
+            }
+
+            // Start typing after initial fade-in
+            setTimeout(type, 800);
+        });
+    </script>
+}

@@ -37,9 +37,10 @@
     <link rel="icon" type="image/png" href="~/theme/v1/img/photos/logo.PNG" />
 
     <!-- Theme Color (Mobile Browser UI) -->
-    <meta name="theme-color" content="#ff5a5f" />
+    <meta name="theme-color" content="#D83236" />
 
     <!-- CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="~/css/public-web.css" asp-append-version="true" />
 
     <!-- Structured Data (Organization Schema) -->
@@ -63,6 +64,8 @@
 
 </head>
 <body>
+    <div class="sakura-container"></div>
+
     <!-- HEADER / NAV -->
     <header>
         <div class="nav">
@@ -71,7 +74,7 @@
                     <img src="~/theme/v1/img/photos/logo.PNG" alt="Sensei Japanese Center" class="brand-logo" />
                 </a>
                 <div class="brand-text">
-                    <span>Sensei Japanese Center</span>
+                    <img src="~/theme/v1/img/photos/name1.png" alt="Sensei Japanese Center" class="brand-name-img" />
                     <img src="~/theme/v1/img/photos/name.png" alt="Name" class="brand-name-img" />
                 </div>
             </div>
@@ -110,84 +113,108 @@
 
     <!-- PROFESSIONAL FOOTER -->
     <footer class="site-footer">
+        <div class="footer-wave"></div>
         <div class="footer-content">
-            <!-- Brand Hidden as requested -->
-            <div class="footer-brand" style="display:none;"></div>
+            <div class="footer-brand-col">
+                <div class="footer-logo-wrap">
+                    <img src="~/theme/v1/img/photos/logo.PNG" alt="Sensei Logo" class="footer-logo" />
+                    <div class="footer-brand-images">
+                        <img src="~/theme/v1/img/photos/name1.png" alt="Sensei Japanese Center" class="footer-brand-img" />
+                        <img src="~/theme/v1/img/photos/name.png" alt="Name" class="footer-brand-img" />
+                    </div>
+                </div>
+                <p class="footer-tagline">
+                    Bridging cultures through language excellence. Start your Japanese journey with 10k+ successful students.
+                </p>
+                <div class="social-icons">
+                    <a href="https://www.facebook.com/Sensei-japanese-center-Matara-100189525137202/" class="social-link fb" aria-label="Facebook" target="_blank">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="https://www.instagram.com/senseijapanesecenter/" class="social-link ig" aria-label="Instagram" target="_blank">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="https://www.tiktok.com/@@senseijapanesecenter" class="social-link tk" aria-label="TikTok" target="_blank">
+                        <i class="fab fa-tiktok"></i>
+                    </a>
+                    <a href="https://www.youtube.com/@@senseijapanesecenter" class="social-link yt" aria-label="YouTube" target="_blank">
+                        <i class="fab fa-youtube"></i>
+                    </a>
+                    <a href="https://wa.me/94773833011" class="social-link wa" aria-label="WhatsApp" target="_blank">
+                        <i class="fab fa-whatsapp"></i>
+                    </a>
+                </div>
+            </div>
             
-            <div class="footer-links">
+            <div class="footer-links-grid">
                 <div class="link-group">
-                    <h4>Learn</h4>
-                    <a href="#courses">All Courses</a>
-                    <a href="#about">Our Method</a>
-                    <a href="#">Pricing</a>
-                    <a href="#">Success Stories</a>
-                </div>
-                
-                <div class="link-group">
-                    <h4>Company</h4>
+                    <h4>Quick Links</h4>
+                    <a href="#top">Hero Section</a>
+                    <a href="#courses">Courses</a>
                     <a href="#about">About Us</a>
-                    <a href="#">Careers</a>
-                    <a href="#">Privacy Policy</a>
-                    <a href="#">Terms of Service</a>
-                    <div class="social-icons">
-                        <a href="https://www.facebook.com/Sensei-japanese-center-Matara-100189525137202/" class="social-link fb" aria-label="Facebook" target="_blank">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
-                        </a>
-                        <a href="https://www.tiktok.com/@@senseijapanesecenter" class="social-link tk" aria-label="TikTok" target="_blank">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"></path></svg>
-                        </a>
-                        <a href="https://www.instagram.com/senseijapanesecenter/" class="social-link ig" aria-label="Instagram" target="_blank">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
-                        </a>
-                        <a href="https://www.youtube.com/@@senseijapanesecenter" class="social-link yt" aria-label="YouTube" target="_blank">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.33 29 29 0 0 0-.46-5.33z"></path><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon></svg>
-                        </a>
-                        <a href="https://wa.me/94773833011" class="social-link wa" aria-label="WhatsApp" target="_blank">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 448 512" fill="currentColor"><path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-5.5-2.8-23.4-8.6-44.6-27.6-16.5-14.7-27.6-32.8-30.8-38.4-3.2-5.6-.3-8.6 2.5-11.4 2.5-2.5 5.5-6.5 8.3-9.7 2.8-3.2 3.7-5.5 5.5-9.2 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 13.2 5.8 23.5 9.2 31.5 11.8 13.3 4.2 25.4 3.6 35 2.2 10.7-1.5 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/></svg>
-                        </a>
-                    </div>
+                    <a href="/SenseiJapaneseSchool/Gallery">Gallery</a>
                 </div>
                 
-                <div class="link-group" style="flex: 2; min-width: 300px;"> <!-- Expand column for address details -->
+                <div class="link-group">
+                    <h4>Support</h4>
+                    <a href="/SenseiJapaneseSchool/Login">Student Login</a>
+                    <a href="/SenseiJapaneseSchool/Register">Online Registration</a>
+                    <a href="#contact">Contact Support</a>
+                    <a href="mailto:hello@senseijapanese.com">hello@senseijapanese.com</a>
+                </div>
+                
+                <div class="link-group centers-group">
                     <h4>Our Centers</h4>
-                    <div class="footer-address-wrap">
-                        <div class="footer-address">
-                            <strong>Matara</strong><br>
-                            Sensei Japanese Center,<br>
-                            No: 13/1, Richard Building,<br>
-                            Medagoda, Matara.<br>
-                            <span style="display:block; margin-top:0.3rem;">📞 076 765 6635 / 077 383 3011</span>
-                        </div>
-                        <div class="footer-address">
-                            <strong>Galle</strong><br>
-                            Sensei Japanese Center,<br>
-                            No: 12/2, Colombo Road,<br>
-                            Kaluwella, Galle.<br>
-                            <span style="display:block; margin-top:0.3rem;">📞 072 723 3188</span>
+                    <div class="center-item">
+                        <div class="center-icon"><i class="fas fa-map-marker-alt"></i></div>
+                        <div class="center-details">
+                            <strong>Matara Center</strong>
+                            <p>No: 13/1, Medagoda, Matara.</p>
+                            <span class="center-phone">076 765 6635 / 077 383 3011</span>
                         </div>
                     </div>
-                    <div style="margin-top: 1.5rem;">
-                        <a href="mailto:hello@senseijapanese.com" style="color:var(--primary); font-weight:700;">✉ hello@senseijapanese.com</a>
+                    <div class="center-item">
+                        <div class="center-icon"><i class="fas fa-map-marker-alt"></i></div>
+                        <div class="center-details">
+                            <strong>Galle Center</strong>
+                            <p>No: 12/2, Kaluwella, Galle.</p>
+                            <span class="center-phone">072 723 3188</span>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         
         <div class="footer-bottom">
-            <p>&copy; <span id="year">2026</span> Sensei Japanese Center. All rights reserved.</p>
+            <div class="footer-bottom-content">
+                <p>&copy; <span id="year">2026</span> Sensei Japanese Center. All rights reserved.</p>
+                <div class="footer-legal">
+                    <a href="#">Privacy Policy</a>
+                    <span class="dot"></span>
+                    <a href="#">Terms of Service</a>
+                </div>
+            </div>
         </div>
     </footer>
-
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
 
     <script>
-        // update year without needing external scripts
+        // Update year
         document.getElementById("year").textContent = new Date().getFullYear().toString();
         
+        // Login button redirect
         $("#loginbtn").click(function() {
             window.location.href = "/SenseiJapaneseSchool/Login";
         });
 
+        // Dynamic Header on Scroll
+        const header = document.querySelector('header');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
     </script>
     <!-- Animation Scripts -->
     <script>
@@ -231,6 +258,32 @@
                     child.style.transitionDelay = `${delay}s`;
                 });
             });
+            // Sakura Falling Petals
+            const sakuraContainer = document.querySelector('.sakura-container');
+            if (sakuraContainer) {
+                const petalCount = 12;
+                for (let i = 0; i < petalCount; i++) {
+                    const petal = document.createElement('div');
+                    petal.classList.add('sakura-petal');
+                    
+                    const left = Math.random() * 100;
+                    const size = Math.random() * 8 + 6;
+                    const duration = Math.random() * 7 + 5;
+                    const delay = Math.random() * 10;
+                    
+                    petal.style.left = `${left}%`;
+                    petal.style.width = `${size}px`;
+                    petal.style.height = `${size * 0.8}px`; // Slightly elliptical
+                    petal.style.animationDuration = `${duration}s`;
+                    petal.style.animationDelay = `${delay}s`;
+                    
+                    // Random horizontal drift
+                    const drift = (Math.random() - 0.5) * 100; // -50 to 50px
+                    petal.style.setProperty('--drift', `${drift}px`);
+                    
+                    sakuraContainer.appendChild(petal);
+                }
+            }
         });
     </script>
     
