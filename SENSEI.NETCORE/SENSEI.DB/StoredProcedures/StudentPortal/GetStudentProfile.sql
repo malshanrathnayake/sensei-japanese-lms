@@ -15,7 +15,7 @@ BEGIN
 			JSON_QUERY(ISNULL((SELECT Country.* FROM Country WHERE Country.CountryId = S.CountryId FOR JSON PATH, WITHOUT_ARRAY_WRAPPER), null)) AS 'Country'
 		FROM Student S
 		WHERE S.StudentId = @studentId AND S.IsDeleted = 0
-		FOR JSON PATH, WITHOUT_ARRAY_WRAPPER;
+		FOR JSON PATH;
 	END
 	ELSE IF @userId <> 0
 	BEGIN
@@ -26,7 +26,7 @@ BEGIN
 			JSON_QUERY(ISNULL((SELECT Country.* FROM Country WHERE Country.CountryId = S.CountryId FOR JSON PATH, WITHOUT_ARRAY_WRAPPER), null)) AS 'Country'
 		FROM Student S
 		WHERE S.UserId = @userId AND S.IsDeleted = 0
-		FOR JSON PATH, WITHOUT_ARRAY_WRAPPER;
+		FOR JSON PATH;
 	END
 
 END

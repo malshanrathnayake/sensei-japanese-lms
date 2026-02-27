@@ -129,7 +129,7 @@ namespace SENSEI.BLL.StudentPortalService
         public async Task<IEnumerable<dynamic>> GetStudentPaymentSummary(long studentId)
         {
             DataTransactionManager dataTransactionManager = new DataTransactionManager(_databaseService.GetConnectionString());
-            return await dataTransactionManager.StudentBatchPaymentDataManager.RetrieveDynamicData("GetStudentPaymentSummary", new SqlParameter[] {
+            return await dataTransactionManager.StudentBatchPaymentSummaryDataManager.RetrieveData("GetStudentPaymentSummary", new SqlParameter[] {
                 new SqlParameter("@studentId", studentId)
             });
         }

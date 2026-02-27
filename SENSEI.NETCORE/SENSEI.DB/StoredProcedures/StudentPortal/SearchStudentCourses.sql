@@ -11,7 +11,7 @@ BEGIN
 
 	SET NOCOUNT ON;
 
-	SELECT DISTINCT C.*
+	SELECT C.*
 	FROM Course C
 	INNER JOIN Batch B ON B.CourseId = C.CourseId
 	INNER JOIN StudentBatch SB ON SB.BatchId = B.BatchId

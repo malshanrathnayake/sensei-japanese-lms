@@ -38,5 +38,6 @@ namespace SENSEI.DOMAIN
         public Lesson Lesson { get; set; }
         public Batch Batch { get; set; }
         public ICollection<BatchStudentLessonAccess> BatchStudentLessonAccesses { get; set; } = new List<BatchStudentLessonAccess>();
+        public ICollection<BatchLessonReference> BatchLessonReferences { get; set; } = new List<BatchLessonReference>();
     }
 }

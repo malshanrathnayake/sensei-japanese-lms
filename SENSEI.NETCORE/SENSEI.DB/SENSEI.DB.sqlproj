@@ -60,6 +60,7 @@
     <Folder Include="StoredProcedures" />
     <Folder Include="StoredProcedures\AdminPortal" />
     <Folder Include="StoredProcedures\DatabseConfigurations" />
+    <Folder Include="StoredProcedures\StudentPortal" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="Tables\User.sql" />
@@ -112,5 +113,18 @@
     <Build Include="StoredProcedures\DatabseConfigurations\UpdateStaffData.sql" />
     <Build Include="StoredProcedures\AdminPortal\UpdateUserOTPSequence.sql" />
     <Build Include="StoredProcedures\AdminPortal\RejectStudentRegistraion.sql" />
+    <Build Include="StoredProcedures\StudentPortal\DeleteStudentBatchPayment.sql" />
+    <Build Include="StoredProcedures\StudentPortal\GetStudentBatchesList.sql" />
+    <Build Include="StoredProcedures\StudentPortal\GetStudentBatchLesson.sql" />
+    <Build Include="StoredProcedures\StudentPortal\GetStudentBatchPayment.sql" />
+    <Build Include="StoredProcedures\StudentPortal\GetStudentPaymentSummary.sql" />
+    <Build Include="StoredProcedures\StudentPortal\GetStudentProfile.sql" />
+    <Build Include="StoredProcedures\StudentPortal\SearchMyRegistrations.sql" />
+    <Build Include="StoredProcedures\StudentPortal\SearchStudentBatches.sql" />
+    <Build Include="StoredProcedures\StudentPortal\SearchStudentBatchLessons.sql" />
+    <Build Include="StoredProcedures\StudentPortal\SearchStudentBatchPayments.sql" />
+    <Build Include="StoredProcedures\StudentPortal\SearchStudentCourses.sql" />
+    <Build Include="StoredProcedures\StudentPortal\UpdateStudentBatchPayment.sql" />
+    <Build Include="Tables\StudentBatchPayment.sql" />
   </ItemGroup>
 </Project>

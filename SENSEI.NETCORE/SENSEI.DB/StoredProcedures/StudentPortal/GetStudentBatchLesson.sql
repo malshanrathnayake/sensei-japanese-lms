@@ -15,6 +15,6 @@ BEGIN
 		AND BL.IsDeleted = 0 
 		AND SB.StudentId = @studentId 
 		AND SB.IsDeleted = 0
-	FOR JSON PATH, WITHOUT_ARRAY_WRAPPER;
+	FOR JSON PATH;
 
 END

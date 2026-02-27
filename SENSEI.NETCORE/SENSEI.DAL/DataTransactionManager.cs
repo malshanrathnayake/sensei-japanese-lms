@@ -326,6 +326,20 @@ namespace devspark_core_data_access_layer
             }
         }
 
+        private DataManager<StudentPaymentSummary> _studentBatchPaymentSummaryDataManager;
+        public DataManager<StudentPaymentSummary> StudentBatchPaymentSummaryDataManager
+        {
+            get
+            {
+                if (this._studentBatchPaymentSummaryDataManager == null)
+                {
+                    this._studentBatchPaymentSummaryDataManager = new DataManager<StudentPaymentSummary>(_connectionString);
+                }
+
+                return this._studentBatchPaymentSummaryDataManager;
+            }
+        }
+
         #endregion
 
         private bool _disposed = false;
