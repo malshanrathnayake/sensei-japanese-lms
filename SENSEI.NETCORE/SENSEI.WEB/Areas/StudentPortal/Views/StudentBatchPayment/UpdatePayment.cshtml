@@ -1,0 +1,54 @@
+﻿@using SENSEI.DOMAIN
+@model StudentBatchPayment
+
+@{
+    Layout = null;
+}
+
+<div class="offcanvas-header">
+    <h5 class="offcanvas-title">Add New payment</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+</div>
+
+<div class="offcanvas-body">
+
+    <form id="studentbatchpayment-create-form" asp-area="StudentPortal" asp-controller="StudentBatchPayment" asp-action="UpdatePayment"
+          data-ajax="true" data-ajax-method="POST" enctype="multipart/form-data"
+          data-ajax-begin="onPaymentCreateBegin" data-ajax-success="onPaymentCreateSuccess" data-ajax-failure="onPaymentCreateFailure" data-ajax-complete="onPaymentCreateComplete" >
+
+        <input type="hidden" id="StudentBatchId" name="StudentBatchId" value="@Model.StudentBatchId" />
+
+        <div class="mb-4">
+            <label class="form-label">@Html.DisplayNameFor(m => m.Amount)</label>
+            <input class="form-control" asp-for="Amount" />
+            <span asp-validation-for="Amount" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">@Html.DisplayNameFor(m => m.PaymentMonth)</label>
+            <input type="text" class="form-control datepicker" asp-for="PaymentMonth" autocomplete="off" value=""/>
+            <span asp-validation-for="PaymentMonth" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label fw-700 small text-uppercase" style="color: var(--sensei-red-dark)">Payment Slip (Image)</label>
+            <input type="file" class="form-control form-control-lg"
+                   id="SlipImage" name="SlipImage" accept="image/*" required />
+            <div class="form-text">Upload JPG/PNG/WebP (max 5MB).</div>
+        </div>
+
+        <div class="d-flex justify-content-end gap-2 mt-4">
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="offcanvas">
+                Cancel
+            </button>
+
+            <button type="submit" class="btn btn-primary" id="btnSavePayment">
+                <i class="align-middle me-1" data-feather="check"></i> Save Record
+            </button>
+        </div>
+
+    </form>
+
+</div>
+
+

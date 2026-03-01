@@ -1,0 +1,49 @@
+﻿@using SENSEI.DOMAIN
+@model IEnumerable<BatchLesson>
+@{
+    Layout = null;
+    var studentIdStr = Context.Session.GetString("StudentId") ?? "0";
+    long studentId = Convert.ToInt64(studentIdStr);
+}
+
+@{
+    if(Model != null && Model.Any())
+    {
+        foreach(var batchLesson in Model)
+        {
+
+            var progressPercent = batchLesson.StudentBatchLessonViews.Count(e => e.StudentId == studentId) / (double)Model.Count(e => e.LessonId == batchLesson.Lesson.LessonId) * 100;
+
+            <div class="col-12 col-md-6 col-xl-4 mb-4">
+                <div class="card lesson-card">
+                    <div class="lesson-image-wrapper">
+                        <img src="~/theme/v1/img/photos/unsplash-1.jpg" alt="@batchLesson.Lesson.LessonName" class="lesson-image">
+                        <span class="lesson-badge">@batchLesson.Lesson.Course.CourseName</span>
+                    </div>
+                    <div class="lesson-content">
+                        <h3 class="lesson-title">@batchLesson.Lesson.LessonName</h3>
+                        <div class="lesson-meta">
+                            <span><i class="align-middle me-1" data-feather="book-open"></i>@Model.Count(e => e.LessonId == batchLesson.Lesson.LessonId)</span>
+                        </div>
+                        <p class="text-muted small">@batchLesson.Lesson.Description</p>
+                        <div class="progress-wrapper">
+                            <div class="d-flex justify-content-between mb-1 small text-muted">
+                                <span>Progress</span>
+                                <span>@progressPercent %</span>
+                            </div>
+                            <div class="progress">
+                                <div class="progress-bar" role="progressbar" style="width: @progressPercent"
+                                     aria-valuenow="@progressPercent"
+                                     aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                        </div>
+                        <div class="lesson-footer">
+                            <span class="text-primary fw-bold small">Current: @batchLesson.Lesson.LessonName</span>
+                            <a href="@Url.Action("LessonDetail", "MyLearning", new { batchLessonId = batchLesson.BatchLessonId })" class="btn btn-primary btn-continue">Go to Lesson <i class="align-middle ms-1" data-feather="arrow-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+}

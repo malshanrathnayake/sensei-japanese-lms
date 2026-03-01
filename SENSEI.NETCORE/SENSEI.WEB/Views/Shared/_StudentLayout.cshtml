@@ -188,35 +188,134 @@
 
 	</div>
 
-	<!-- Scripts -->
+	<!-- Core dependency -->
 	<script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+	<!-- jQuery plugins that depend on jQuery -->
+	<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+	<script src="~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js"></script>
+	<script src="~/lib/jquery-ajax-unobtrusive/dist/jquery.unobtrusive-ajax.min.js"></script>
+
+	<!-- Bootstrap -->
 	<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+	<!-- Site -->
 	<script src="~/js/site.js"></script>
+
+	<!-- UI / Icon libraries -->
 	<script src="~/lib/feather/feather.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
+
+	<!-- Form / UX Enhancements -->
 	<script src="~/lib/select2-inspinia/select2.full.min.js"></script>
 	<script src="~/lib/sweetalert2/sweetalert2.bundle.js"></script>
+
+	<!-- Loading / Button state -->
 	<script src="~/lib/ladda/dist/spin.min.js"></script>
 	<script src="~/lib/ladda/dist/ladda.min.js"></script>
+
+	<!-- Your global helpers -->
 	<script src="~/js/global-function.js"></script>
+
+	<!-- Data Table -->
 	<script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
 	<script src="https://cdn.datatables.net/1.13.8/js/dataTables.bootstrap5.min.js"></script>
+
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap-datepicker@1.10.0/dist/js/bootstrap-datepicker.min.js"></script>
 
 	<script>
+
 		window.notyf = new Notyf({
-			 position: { x: 'right', y: 'top' },
-			 types: [
-				{ type: 'info', background: '#0dcaf0' },
-				{ type: 'warning', background: '#ffc107' }
+			 position: {
+				x: 'right',
+				y: 'top'
+			},
+			types: [
+				{
+					type: 'info',
+					background: '#0dcaf0'
+				},
+				{
+					type: 'warning',
+					background: '#ffc107'
+				}
 			]
 		});
 
 		document.addEventListener("DOMContentLoaded", function () {
-			if (window.feather) { feather.replace(); }
+
+			if (window.feather) {
+				feather.replace();
+			}
+
+			const notificationsJson = @Html.Raw(notificationsJson != null ? notificationsJson : "null");
+
+			if (!notificationsJson || notificationsJson.length === 0) return;
+
+			notificationsJson.forEach(n => {
+				window.notyf.open({
+					type: n.Type.toLowerCase(), // Notyf expects lowercase
+					message: n.Message,
+					duration: n.Duration,
+					dismissible: n.Dismissible,
+					position: {
+						x: n.PositionX,
+						y: n.PositionY
+					}
+				});
+			});
+
 		});
+	</script>
+
+	<!--SignalR Connections-->
+	<script>
+
+		$(document).ready(function () {
+
+			const notificationConnection = new signalR.HubConnectionBuilder()
+				.withUrl("/hubs/notifications")
+				.build();
+
+			notificationConnection.on("ReceiveNotification", function (data) {
+
+				popUpNotification('success', data.message);
+
+				const html = `
+					<a href="#" class="list-group-item">
+						<div class="row g-0 align-items-center">
+							<div class="col-2">
+								<i class="text-warning" data-feather="${data.icon}"></i>
+							</div>
+							<div class="col-10">
+								<div class="text-dark">${data.title}</div>
+								<div class="text-muted small mt-1">${data.message}</div>
+								<div class="text-muted small mt-1">
+									${formatDate(data.createdAt)}
+								</div>
+							</div>
+						</div>
+					</a>
+				`;
+
+				$("#userNotificationlist").prepend(html);
+
+				if (window.feather) {
+					feather.replace();
+				}
+
+			});
+
+			notificationConnection.start();
+		});
+
+		function formatDate(dateStr) {
+			const d = new Date(dateStr);
+			return d.toLocaleDateString("en-GB") + " " + d.toLocaleTimeString("en-GB", { hour: '2-digit', minute: '2-digit' });
+		}
+
 	</script>
 
 	@await RenderSectionAsync("Scripts", required: false)

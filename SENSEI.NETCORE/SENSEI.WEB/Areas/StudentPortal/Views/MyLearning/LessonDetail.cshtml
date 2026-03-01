@@ -1,0 +1,190 @@
+﻿@using SENSEI.DOMAIN
+@using core_web.Helpers
+@model BatchLesson
+
+@{
+    ViewData["Title"] = $"Lesson {Model?.Lesson?.LessonName}";
+    var videoId = Model.RecordingUrl?.Split("v=").LastOrDefault();
+    var name = "malsh";
+}
+
+<style>
+    .player-wrapper {
+        position: relative;
+        width: 640px;
+        height: 390px;
+    }
+
+    #player {
+        width: 100%;
+        height: 100%;
+    }
+
+    .top-blocker {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 80%; 
+        z-index: 10;
+        background: transparent;
+    }
+
+    .bottom-right-blocker {
+        position: absolute;
+        top: 80%;
+        left: 60%;
+        width: 170px; 
+        height: 40px;
+        z-index: 20;
+        background: transparent;
+    }
+</style>
+
+<div class="container-fluid p-0">
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="h3 mb-0">@Model?.Lesson?.LessonName</h1>
+
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8 col-md-12 col-sm-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">@Model.Lesson.LessonName</h5>
+                </div>
+                <div class="card-body">
+
+                    <div class="row">
+                        <div class="player-wrapper">
+                            <div id="player"></div>
+
+                            <div class="top-blocker"></div>
+                            <div class="bottom-right-blocker"></div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-12 col-sm-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Lesson References</h5>
+                </div>
+                <div class="card-body">
+
+                    @if (Model.BatchLessonReferences != null && Model.BatchLessonReferences.Any(r => !r.IsDeleted))
+                    {
+                        <div class="accordion" id="lessonRefsAccordion">
+                            @{
+                                var refs = Model.BatchLessonReferences.Where(r => !r.IsDeleted).ToList();
+
+                                @for (int i = 0; i < refs.Count; i++)
+                                {
+                                    var r = refs[i];
+                                    var headingId = $"refHeading{i}";
+                                    var collapseId = $"refCollapse{i}";
+                                    var isFirst = i == 0;
+                                    var viewerUrl = Uri.EscapeDataString(r.ReferenceUrl);
+
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header" id="@headingId">
+                                            <button class="accordion-button @(isFirst ? "" : "collapsed")" type="button"
+                                                    data-bs-toggle="collapse"
+                                                    data-bs-target="#@collapseId"
+                                                    aria-expanded="@(isFirst ? "true" : "false")"
+                                                    aria-controls="@collapseId">
+                                                @(string.IsNullOrWhiteSpace(r.Description) ? $"Reference {i + 1}" : r.Description)
+                                            </button>
+                                        </h2>
+
+                                        <div id="@collapseId"
+                                             class="accordion-collapse collapse @(isFirst ? "show" : "")"
+                                             aria-labelledby="@headingId"
+                                             data-bs-parent="#lessonRefsAccordion">
+                                            <div class="accordion-body">
+                                                <div class="ratio ratio-16x9">
+                                                    <iframe src="@viewerUrl" allowfullscreen></iframe>
+                                                </div>
+
+                                                <div class="mt-2 d-flex gap-2">
+                                                    <a class="btn btn-sm btn-outline-primary" href="@r.ReferenceUrl" target="_blank" rel="noopener">
+                                                        Open in new tab
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-muted">No references added for this lesson.</div>
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+
+    <script>
+
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+
+        var player;
+
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('player', {
+                height: '390',
+                width: '640',
+                videoId: '@videoId',
+                playerVars: {
+                    controls: 1,
+                    playsinline: 1,
+                    rel: 0
+                },
+                events: {
+                    onReady: onPlayerReady,
+                    onStateChange: onPlayerStateChange
+                }
+            });
+        }
+
+
+        function onPlayerReady(event) {
+          event.target.playVideo();
+        }
+
+
+        var done = false;
+        function onPlayerStateChange(event) {
+            if (event.data == YT.PlayerState.PLAYING && !done) {
+                setTimeout(stopVideo, 6000);
+                done = true;
+            }
+        }
+
+        function stopVideo() {
+            player.stopVideo();
+        }
+
+        document.querySelector('.top-blocker').addEventListener('contextmenu', function(e){
+            e.preventDefault();
+        });
+
+    </script>
+
+}

@@ -126,5 +126,7 @@
     <Build Include="StoredProcedures\StudentPortal\SearchStudentCourses.sql" />
     <Build Include="StoredProcedures\StudentPortal\UpdateStudentBatchPayment.sql" />
     <Build Include="Tables\StudentBatchPayment.sql" />
+    <Build Include="StoredProcedures\StudentPortal\GetStudentBatchById.sql" />
+    <Build Include="Tables\BatchLessonReference.sql" />
   </ItemGroup>
 </Project>

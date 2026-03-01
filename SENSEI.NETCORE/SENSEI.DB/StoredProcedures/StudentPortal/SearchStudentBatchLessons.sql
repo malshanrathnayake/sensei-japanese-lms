@@ -14,7 +14,9 @@ BEGIN
 
 	SELECT BL.*,
 		JSON_QUERY(ISNULL((SELECT Batch.* FROM Batch WHERE Batch.BatchId = BL.BatchId FOR JSON PATH, WITHOUT_ARRAY_WRAPPER), null)) AS 'Batch',
-		JSON_QUERY(ISNULL((SELECT Lesson.* FROM Lesson WHERE Lesson.LessonId = BL.LessonId FOR JSON PATH, WITHOUT_ARRAY_WRAPPER), null)) AS 'Lesson'
+		JSON_QUERY(ISNULL((SELECT Lesson.*,
+			JSON_QUERY(ISNULL((SELECT Course.* FROM Course WHERE Course.CourseId = Lesson.CourseId FOR JSON PATH, WITHOUT_ARRAY_WRAPPER), null)) AS 'Course'
+		FROM Lesson WHERE Lesson.LessonId = BL.LessonId FOR JSON PATH, WITHOUT_ARRAY_WRAPPER), null)) AS 'Lesson'
 	FROM BatchLesson BL
 	INNER JOIN Batch B ON B.BatchId = BL.BatchId
 	INNER JOIN Lesson LES ON LES.LessonId = BL.LessonId

@@ -1,6 +1,6 @@
-using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Http;
 
 namespace SENSEI.DOMAIN
 {
@@ -21,13 +21,15 @@ namespace SENSEI.DOMAIN
         [DisplayName("Amount")]
         public decimal Amount { get; set; }
 
-        public DateTime PaymentDate { get; set; }
+        public DateTime? PaymentDate { get; set; }
         public string SlipUrl { get; set; }
         public bool IsApproved { get; set; }
         public long? ApprovedById { get; set; }
 
         [DisplayName("Is Deleted")]
         public bool IsDeleted { get; set; }
+
+        public IFormFile SlipImage { get; set; }
 
         // Navigation
         public StudentBatch StudentBatch { get; set; }

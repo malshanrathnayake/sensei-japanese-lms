@@ -16,6 +16,8 @@ namespace SENSEI.BLL.StudentPortalService.Interfaces
         Task<(bool, long)> UpdateStudentBatchPayment(StudentBatchPayment payment);
         Task<bool> DeleteStudentBatchPayment(long paymentId);
         Task<IEnumerable<dynamic>> GetStudentBatchesList(long studentId);
-        Task<IEnumerable<dynamic>> GetStudentPaymentSummary(long studentId);
+        Task<IEnumerable<StudentPaymentSummary>> GetStudentPaymentSummary(long studentId);
+        Task<IEnumerable<StudentBatch>> GetStudentBatchById(long studentBatchId);
+        Task<BatchLesson> GetBatchLesson(long batchLessonId);
     }
 }

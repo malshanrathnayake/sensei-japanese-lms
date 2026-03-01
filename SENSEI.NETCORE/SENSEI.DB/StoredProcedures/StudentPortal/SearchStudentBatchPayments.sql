@@ -9,14 +9,12 @@ BEGIN
 	SET NOCOUNT ON;
 
 	SELECT SBP.*,
-		JSON_QUERY(ISNULL((
-			SELECT B.*, 
-				JSON_QUERY(ISNULL((SELECT C.* FROM Course C WHERE C.CourseId = B.CourseId FOR JSON PATH, WITHOUT_ARRAY_WRAPPER), null)) AS 'Course' 
-			FROM Batch B 
-			INNER JOIN StudentBatch SB ON SB.BatchId = B.BatchId 
-			WHERE SB.StudentBatchId = SBP.StudentBatchId 
-			FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
-		), null)) AS 'BatchDetails'
+		JSON_QUERY(ISNULL((SELECT StudentBatch.*,
+			JSON_QUERY(ISNULL((SELECT Batch.*,
+				JSON_QUERY(ISNULL((SELECT Course.* FROM Course WHERE Course.CourseId = Batch.CourseId FOR JSON PATH, WITHOUT_ARRAY_WRAPPER), null)) AS 'Course' 
+			FROM Batch WHERE Batch.BatchId = StudentBatch.BatchId FOR JSON PATH, WITHOUT_ARRAY_WRAPPER), null)) AS 'Batch',
+			JSON_QUERY(ISNULL((SELECT Student.* FROM Student WHERE Student.StudentId = StudentBatch.StudentId FOR JSON PATH, WITHOUT_ARRAY_WRAPPER), null)) AS 'Student' 
+		FROM StudentBatch WHERE StudentBatch.StudentBatchId = SBP.StudentBatchId FOR JSON PATH, WITHOUT_ARRAY_WRAPPER), null)) AS 'StudentBatch' 
 	FROM StudentBatchPayment SBP
 	INNER JOIN StudentBatch SB ON SB.StudentBatchId = SBP.StudentBatchId
 	WHERE SB.StudentId = @studentId 

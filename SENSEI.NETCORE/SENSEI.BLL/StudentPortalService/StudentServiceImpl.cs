@@ -126,12 +126,29 @@ namespace SENSEI.BLL.StudentPortalService
             });
         }
 
-        public async Task<IEnumerable<dynamic>> GetStudentPaymentSummary(long studentId)
+        public async Task<IEnumerable<StudentPaymentSummary>> GetStudentPaymentSummary(long studentId)
         {
             DataTransactionManager dataTransactionManager = new DataTransactionManager(_databaseService.GetConnectionString());
             return await dataTransactionManager.StudentBatchPaymentSummaryDataManager.RetrieveData("GetStudentPaymentSummary", new SqlParameter[] {
                 new SqlParameter("@studentId", studentId)
             });
+        }
+
+        public async Task<IEnumerable<StudentBatch>> GetStudentBatchById(long studentBatchId)
+        {
+            DataTransactionManager dataTransactionManager = new DataTransactionManager(_databaseService.GetConnectionString());
+            return await dataTransactionManager.StudentBatchDataManager.RetrieveData("GetStudentBatchById", new SqlParameter[] {
+                new SqlParameter("@studentBatchId", studentBatchId)
+            });
+        }
+
+        public async Task<BatchLesson> GetBatchLesson(long batchLessonId)
+        {
+            DataTransactionManager dataTransactionManager = new DataTransactionManager(_databaseService.GetConnectionString());
+            var lessons = await dataTransactionManager.BatchLessonDataManager.RetrieveData("GetBatchLesson", new SqlParameter[] {
+                new SqlParameter("@batchLessonId", batchLessonId)
+            });
+            return lessons.FirstOrDefault();
         }
     }
 }

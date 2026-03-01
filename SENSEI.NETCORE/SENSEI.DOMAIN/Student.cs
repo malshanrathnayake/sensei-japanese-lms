@@ -96,7 +96,7 @@ namespace SENSEI.DOMAIN
         public User User { get; set; }
         public ICollection<StudentAddress> Addresses { get; set; } = new List<StudentAddress>();
         public ICollection<StudentBatch> StudentBatches { get; set; } = new List<StudentBatch>();
-        public ICollection<BatchStudentLessonAccess> LessonAccesses { get; set; } = new List<BatchStudentLessonAccess>();
+        public ICollection<BatchStudentLessonAccess> BatchStudentLessonAccesses { get; set; } = new List<BatchStudentLessonAccess>();
         public StudentRegistration StudentRegistration { get; set; }
         public City CityNav { get; set; }
         public Branch Branch { get; set; }
