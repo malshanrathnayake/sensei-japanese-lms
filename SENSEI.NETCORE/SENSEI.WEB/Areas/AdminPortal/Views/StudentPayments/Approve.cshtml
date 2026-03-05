@@ -1,0 +1,75 @@
+﻿﻿@using SENSEI.DOMAIN
+@model StudentBatchPayment
+
+@{
+    Layout = null;
+}
+
+
+
+<div class="offcanvas-header">
+    <h5 class="offcanvas-title">Approve</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+</div>
+
+<div class="offcanvas-body">
+
+    <form id="studentPayment-Approve-create-form" asp-area="AdminPortal" asp-controller="StudentPayments" asp-action="Approve"
+          data-ajax="true" data-ajax-method="POST"
+          data-ajax-begin="onApproveCreateBegin" data-ajax-success="onApproveCreateSuccess" data-ajax-failure="onApproveCreateFailure" data-ajax-complete="onApproveCreateComplete">
+
+
+        @Html.HiddenFor(m => m.StudentBatchPaymentId)
+        @Html.HiddenFor(m => m.StudentBatchId)
+        
+        <div class="mb-3">
+            <label class="form-label">@Html.DisplayNameFor(m => m.StudentBatch.Student.StudentPopulatedName)</label>
+            <input id="CourseId" class="form-control course-select" value="@Model.StudentBatch.Student.StudentPopulatedName" readonly />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">@Html.DisplayNameFor(m => m.StudentBatch.Batch.Course.CourseName)</label>
+            <input class="form-control" value="@Model.StudentBatch.Batch.Course.CourseName" readonly />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">@Html.DisplayNameFor(m => m.StudentBatch.Batch.BatchName)</label>
+            <input class="form-control" value="@Model.StudentBatch.Batch.BatchName" readonly />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">@Html.DisplayNameFor(m => m.PaymentMonth)</label>
+            <input class="form-control" value="@Model.PaymentMonth.ToString("MMM-yyyy")" readonly />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">@Html.DisplayNameFor(m => m.PaymentDate)</label>
+            <input class="form-control" value="@Model.PaymentDate?.ToString("yyyy-MM-dd")" readonly />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">@Html.DisplayNameFor(m => m.SlipUrl)</label>
+
+            <a href="@Model.SlipUrl" target="_blank">
+                <img src="@Model.SlipUrl"
+                     alt="Payment Slip"
+                     class="img-fluid border rounded"
+                     style="max-height:300px; cursor:pointer;" />
+            </a>
+        </div>
+
+        <div class="d-flex justify-content-end gap-2">
+
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="offcanvas">
+                Cancel
+            </button>
+
+            <button type="submit" id="btnApprove" class="btn btn-success ladda-button" data-style="zoom-in">
+                <span class="ladda-label">Approve</span>
+            </button>
+
+        </div>
+
+    </form>
+
+</div>

@@ -1,0 +1,286 @@
+﻿﻿@using SENSEI.DOMAIN
+@using core_web.Helpers
+@model StudentBatchPayment
+
+@{
+    ViewData["Title"] = "Student Payments";
+}
+
+<div class="container-fluid p-0">
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="h3 mb-0">Student Payments</h1>
+
+        <button type="button" class="btn btn-primary" id="btnNewStudentPayment" data-action-url="/AdminPortal/StudentPayments/Create">
+            <i class="fas fa-plus"></i> New
+        </button>
+
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Search By</h5>
+                </div>
+                <div class="card-body">
+
+                    <div class="row">
+                        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xm-12">
+                            <div class="mb-3" id="search-course-wrapper">
+                                <label class="form-label">Course</label>
+                                <select id="SearchCourseId" class="form-control search-course-select" name="SearchCourseId"></select>
+                                @* <span asp-validation-for="CourseId" class="text-danger"></span> *@
+                            </div>
+                        </div>
+
+                        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xm-12">
+                            <div class="mb-3" id="search-course-wrapper">
+                                <label class="form-label">@Html.DisplayNameFor(m => m.StudentBatch.BatchId)</label>
+                                <select id="SearchBatchId" class="form-control search-batch-select" name="SearchBatchId"></select>
+                                @* <span asp-validation-for="CourseId" class="text-danger"></span> *@
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">List of Student Payments</h5>
+                </div>
+                <div class="card-body">
+
+                    <div id="StudentPaymentTableContent" class="table-responsive">
+
+                        <table id="StudentPaymentDataTable" class="table table-hover align-middle mb-0 w-100">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>@Html.DisplayNameFor(m => m.StudentBatch.Batch.Course.CourseName)</th>
+                                    <th>@Html.DisplayNameFor(m => m.StudentBatch.BatchId)</th>
+                                    <th>@Html.DisplayNameFor(m => m.PaymentMonth)</th>
+                                    <th>@Html.DisplayNameFor(m => m.PaymentDate)</th>
+                                    <th>@Html.DisplayNameFor(m => m.Amount)</th>
+                                    <th>@Html.DisplayNameFor(m => m.SlipUrl)</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@Html.RenderAction("StudentPaymentOffCanvas", "StudentPayments", new { area = "AdminPortal" })
+
+@section Scripts {
+
+    <script src="~/js/admin-portal/studentpayment-function.js"></script>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            $('#SearchCourseId').change(function () {
+                var courseId = $(this).val();
+
+                console.log(courseId);
+
+                loadStudentPayments();
+            });
+
+            $('#SearchBatchId').change(function () {
+                var batchId = $(this).val();
+
+                console.log(batchId);
+
+                loadStudentPayments();
+            });
+
+
+            $.getJSON('/AdminPortal/StudentPayments/GetCourseListJsonResult', function (data) {
+
+                $('#SearchCourseId').empty();
+                $('#SearchCourseId').append('<option value="0">All Courses</option>')
+
+                loadSelectBox({
+                    data: data,
+                    className: 'search-course-select',
+                    title: 'Select Course'
+                });
+
+                var courseId = $('#SearchCourseId').val();
+
+                if (courseId) {
+                    $('#SearchCourseId').val(courseId).trigger('change');
+                }
+
+                loadBatches();
+            });
+
+            function loadBatches(){
+                $.getJSON('/AdminPortal/StudentPayments/GetBatchListJsonResult', 
+                    {
+                        courseId: $('#SearchCourseId').val() || 0
+                    },
+                    function (data) {
+
+                        $('#SearchBatchId').empty();
+                        $('#SearchBatchId').append('<option value="0">All Batches</option>')
+
+                        loadSelectBox({
+                            data: data,
+                            className: 'search-batch-select',
+                            title: 'Select Batch'
+                        });
+
+                        var courseId = $('#SearchBatchId').val();
+
+                        if (courseId) {
+                            $('#SearchBatchId').val(courseId).trigger('change');
+                        }
+                    });
+            }
+
+            loadStudentPayments();
+
+        });
+
+        function loadStudentPayments() {
+
+            if ($.fn.DataTable.isDataTable('#StudentPaymentDataTable')) {
+                $('#StudentPaymentDataTable').DataTable().clear().destroy();
+                $('#StudentPaymentDataTable tbody').empty();
+            }
+
+            $('#StudentPaymentDataTable').DataTable({
+                processing: true,
+                serverSide: true,
+                autoWidth: false,
+                lengthMenu: [10, 20, 50, 100],
+                columnDefs: [
+                    { targets: 0, className: 'noVis' },
+                    { width: 25, targets: 0, orderable: false },
+                ],
+                dom:
+                    "<'row mb-3'<'col-sm-6'l><'col-sm-6 text-end'f>>" +
+                    "<'row'<'col-sm-12'tr>>" +
+                    "<'row mt-3'<'col-sm-5'i><'col-sm-7'p>>",
+                ajax: {
+                    url: '/AdminPortal/StudentPayments/ListOfStudentPayments',
+                    type: 'POST',
+                    data: function (d) {
+                        d.courseId = $('#SearchCourseId').val() || 0;
+                        d.batchId = $('#SearchBatchId').val() || 0;
+                    }
+                },
+                columns: [
+                    {
+                        data: null,
+                        orderable: false,
+                        searchable: false,
+                        width: "25px",
+                        className: "text-end",
+                        render: function (data, type, row) {
+
+                            var approveUrl = `/AdminPortal/StudentPayments/Approve/?q=${row.encryptedKey}`;
+                            var rejectUrl = `/AdminPortal/StudentPayments/Reject/?q=${row.encryptedKey}`;
+
+                            var isFinalized = row.isApproved || row.isRejected;
+
+                            // Approve button
+                            var approveDisabled = isFinalized ? "disabled text-muted" : "";
+                            var approveClickClass = isFinalized ? "" : "approve-payment";
+
+                            // Reject button
+                            var rejectDisabled = isFinalized ? "disabled text-muted" : "";
+                            var rejectClickClass = isFinalized ? "" : "reject-payment";
+
+
+                            var approveBtn = `<li><a class="dropdown-item d-flex align-items-center gap-2 ${approveDisabled} ${approveClickClass}" href="javascript:void(0)" data-action-url="${approveUrl}"> <i data-feather="check-circle"></i><span>Approve</span></a></li>`;
+                            var rejectBtn = `<li><a class="dropdown-item d-flex align-items-center gap-2 ${rejectDisabled} ${rejectClickClass}" href="javascript:void(0)" data-action-url="${rejectUrl}" data-action-parameter="${row.studentRegistrationPopulatedName}"><i data-feather="x-circle"></i><span>Reject</span></a></li>`;
+
+                            return `
+                                <div class="dropdown">
+                                    <button class="btn btn-sm btn-light p-1" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i data-feather="more-vertical"></i>
+                                    </button>
+
+                                    <ul class="dropdown-menu dropdown-menu-end">
+                                        ${approveBtn}
+                                        ${rejectBtn}
+                                    </ul>
+                                </div>
+
+                            `;
+                        }
+                    },
+                    { data: 'studentBatch.batch.course.courseName', name:'studentBatch.batch.course.courseName' },
+                    { data: 'studentBatch.batch.batchName', name:'studentBatch.batch.batchName' },
+                    { data: 'paymentMonth', name:'paymentMonth', render: function (data) { return renderDateOnly(data); } },
+                    { data: 'paymentDate', name:'paymentDate', render: function (data) { return renderDateOnly(data); } },
+                    { data: 'amount', name:'amount' },
+                    { data: 'slipUrl', name:'slipUrl', render: function (data) { return renderSlipUrl(data); } },
+                    { data: null, name: 'status', orderable: false, searchable: false,
+                        render: function (data, type, row) {
+
+                            if (row.isApproved) {
+                                return `<span class="badge bg-success">Approved</span>`;
+                            }
+
+                            if (row.isRejected) {
+                                return `<span class="badge bg-danger">Rejected</span>`;
+                            }
+
+                            return `<span class="badge bg-warning text-dark">Pending</span>`;
+                        }
+                    }
+
+                ],
+                drawCallback: function () {
+
+                    if (window.feather) {
+                        feather.replace();
+                    }
+
+                    approveButton();
+                    rejectButton();
+                }
+            });
+
+        }
+
+        function renderDateOnly(data) {
+            if (!data) return '';
+
+            return data.split('T')[0];
+        }
+
+        function renderSlipUrl(data) {
+
+            if (!data) return "";
+
+            return `
+                <a href="${data}" target="_blank" rel="noopener noreferrer">
+                    View Slip
+                </a>
+            `;
+        }
+
+    </script>
+
+}

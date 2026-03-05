@@ -30,6 +30,7 @@ builder.Services.AddSingleton<IBatchLessonService, BatchLessonServiceImpl>();
 builder.Services.AddSingleton<ILocationService, LocationServiceImpl>();
 builder.Services.AddSingleton<IStudentRegistrationService, StudentRegistrationServiceImpl>();
 builder.Services.AddSingleton<IUserService, UserServiceImpl>();
+builder.Services.AddSingleton<IStudentPaymentService, StudentPaymentServiceImpl>();
 #endregion
 
 #region StudentPortalServices

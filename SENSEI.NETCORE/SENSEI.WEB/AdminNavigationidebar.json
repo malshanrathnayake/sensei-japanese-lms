@@ -28,6 +28,11 @@
     "Title": "Student Registration",
     "Icon": "user-check",
     "Url": "/AdminPortal/StudentRegistration/Index"
+  },
+  {
+    "Title": "Student Payments",
+    "Icon": "credit-card",
+    "Url": "/AdminPortal/StudentPayments/Index"
   }
 
 ]

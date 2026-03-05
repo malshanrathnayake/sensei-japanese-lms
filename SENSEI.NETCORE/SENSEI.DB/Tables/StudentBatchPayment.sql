@@ -9,6 +9,8 @@ CREATE TABLE [dbo].[StudentBatchPayment]
     [IsApproved] BIT NOT NULL DEFAULT 0,
     [ApprovedById] BIGINT NULL,
     [IsDeleted] BIT NOT NULL DEFAULT 0,
+    [IsRejected] BIT NOT NULL DEFAULT 0,
+    [ChangeDateTIme] DATETIME NULL DEFAULT GETUTCDATE(),
 
     CONSTRAINT [PK_StudentBatchPayment] PRIMARY KEY CLUSTERED ([StudentBatchPaymentId]),
     CONSTRAINT [FK_StudentBatchPayment_StudentBatchId] FOREIGN KEY ([StudentBatchId]) REFERENCES [StudentBatch]([StudentBatchId])

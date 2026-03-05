@@ -25,13 +25,17 @@ namespace SENSEI.DOMAIN
         public string SlipUrl { get; set; }
         public bool IsApproved { get; set; }
         public long? ApprovedById { get; set; }
+        public DateTime? ChangeDateTIme { get; set; }
+        public bool IsRejected { get; set; }
 
         [DisplayName("Is Deleted")]
         public bool IsDeleted { get; set; }
 
         public IFormFile SlipImage { get; set; }
+        public string EncryptedKey { get; set; }
 
         // Navigation
         public StudentBatch StudentBatch { get; set; }
+        public Staff ApprovedBy { get; set; }
     }
 }
