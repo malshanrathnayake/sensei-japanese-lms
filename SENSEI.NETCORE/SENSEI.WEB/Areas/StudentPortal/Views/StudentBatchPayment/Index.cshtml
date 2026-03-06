@@ -25,7 +25,10 @@
         letter-spacing: 0.05em;
         border-bottom: 2px solid rgba(216, 50, 54, 0.1);
     }
-
+    .card.hover-elevate:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.08) !important;
+    }
 </style>
 
 <div class="container-fluid p-0">
@@ -50,26 +53,29 @@
     </div>
 
     <!-- Summary Section -->
-    <div class="row mb-3" id="summaryContainer">
+    <div class="row mb-4" id="summaryContainer">
         <!-- Summaries will be injected here via AJAX -->
     </div>
 
     <div class="row">
         <div class="col-12">
-            <div class="card shadow-sm border-0">
-                <div class="card-header bg-transparent border-0 pb-0">
-                    <h5 class="card-title mb-0">Payment History</h5>
+            <div class="card shadow-sm border-0 rounded-4 overflow-hidden">
+                <div class="card-header bg-transparent border-0 pt-4 pb-2 px-4 d-flex justify-content-between align-items-center">
+                    <h5 class="card-title fw-800 text-dark mb-0 d-flex align-items-center">
+                        <i data-feather="list" class="me-2" style="color: var(--sensei-red);"></i> 
+                        Payment History
+                    </h5>
                 </div>
-                <div class="card-body">
+                <div class="card-body px-4 pb-4">
                     <div class="table-responsive">
-                        <table id="paymentTable" class="table table-hover w-100">
-                            <thead>
+                        <table id="paymentTable" class="table table-hover align-middle w-100 mb-0" style="border-collapse: separate; border-spacing: 0 8px;">
+                            <thead class="bg-light">
                                 <tr>
-                                    <th>Course / Batch</th>
-                                    <th>Month</th>
-                                    <th>Amount</th>
-                                    <th>Date Paid</th>
-                                    <th>Status</th>
+                                    <th class="border-0 rounded-start">Course / Batch</th>
+                                    <th class="border-0">Month</th>
+                                    <th class="border-0">Amount</th>
+                                    <th class="border-0">Date Paid</th>
+                                    <th class="border-0 rounded-end">Status</th>
                                 </tr>
                             </thead>
                             <tbody></tbody>
@@ -102,42 +108,60 @@
             paymentTable = $('#paymentTable').DataTable({
                 "processing": true,
                 "serverSide": true,
+                "responsive": true,
                 "ajax": {
                     "url": "@Url.Action("SearchPayments", "StudentBatchPayment")",
                     "type": "POST"
                 },
+                "language": {
+                    "processing": `<div class="d-flex justify-content-center"><div class="spinner-border" style="color: var(--sensei-red);" role="status"><span class="visually-hidden">Loading...</span></div></div>`
+                },
                 "columns": [
                     { 
                         "data": null,
-                        title: "Batch Details",
+                        title: "Course / Batch",
                         "render": function(data) {
-                            return `<div><span class="fw-800 text-dark">${data.studentBatch.batch.course.courseName}</span><br><small class="text-muted fw-600">${data.studentBatch.batch.batchName}</small></div>`;
+                            return `<div class="d-flex align-items-center">
+                                        <div class="bg-light rounded-3 d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px; color: var(--sensei-red);">
+                                            <i data-feather="book"></i>
+                                        </div>
+                                        <div>
+                                            <span class="fw-800 text-dark d-block mb-1" style="font-size: 0.9rem;">${data.studentBatch.batch.course.courseName}</span>
+                                            <span class="badge bg-light text-dark border fw-600">${data.studentBatch.batch.batchName}</span>
+                                        </div>
+                                    </div>`;
                         }
                     },
                     { 
                         "data": "PaymentMonth",
                         "render": function(data) {
-                            return `<span class="fw-700 text-secondary">${moment(data).format('MMMM YYYY')}</span>`;
+                            return `<div class="d-flex align-items-center">
+                                        <i data-feather="calendar" class="me-2 text-muted" style="width: 14px; height: 14px;"></i>
+                                        <span class="fw-700 text-dark">${moment(data).format('MMMM YYYY')}</span>
+                                    </div>`;
                         }
                     },
                     { 
                         "data": null,
                         "render": function(data) {
-                            return `<span class="fw-900" style="color: var(--sensei-red)">Rs. ${data.amount}</span>`;
+                            return `<div class="fw-800" style="color: var(--sensei-red); font-size: 0.95rem;">Rs. ${parseFloat(data.amount).toLocaleString(undefined, {minimumFractionDigits: 2})}</div>`;
                         }
                     },
                     { 
                         "data": "PaymentDate",
                         "render": function(data) {
-                            return `<small class="text-muted fw-600">${moment(data).format('YYYY-MM-DD')}</small>`;
+                            return `<div class="text-muted fw-600 small">
+                                        <i data-feather="clock" class="me-1" style="width: 12px; height: 12px;"></i>
+                                        ${moment(data).format('MMM DD, YYYY')}
+                                    </div>`;
                         }
                     },
                     { 
                         "data": "IsApproved",
                         "render": function(data) {
                             return data ? 
-                                '<span class="badge rounded-pill fw-800 p-2 px-3" style="background: rgba(40, 167, 69, 0.1); color: #28a745;">Approved</span>' : 
-                                '<span class="badge rounded-pill fw-800 p-2 px-3" style="background: rgba(255, 193, 7, 0.1); color: #ffc107;">Pending</span>';
+                                '<div class="d-inline-flex align-items-center badge rounded-pill fw-800 p-2 px-3" style="background: rgba(40, 167, 69, 0.1); color: #28a745;"><i data-feather="check-circle" class="me-1" style="width: 14px; height: 14px;"></i> Verified</div>' : 
+                                '<div class="d-inline-flex align-items-center badge rounded-pill fw-800 p-2 px-3" style="background: rgba(255, 193, 7, 0.1); color: #B08D00;"><i data-feather="clock" class="me-1" style="width: 14px; height: 14px;"></i> Pending</div>';
                         }
                     }
                 ],
@@ -150,39 +174,67 @@
         function loadSummary() {
             $.get("@Url.Action("GetPaymentSummary", "StudentBatchPayment")", function(data) {
                 let html = '';
-                data.forEach(item => {
-                    html += `
-                        <div class="col-md-4 col-sm-6 mb-3">
-                            <div class="card h-100 mb-0 shadow-sm">
-                                <div class="card-body p-4">
-                                    <div class="row align-items-center">
-                                        <div class="col">
-                                            <h6 class="text-muted mb-2 text-uppercase fw-800 small letter-spacing-05 text-truncate" style="max-width: 150px;">${item.courseName}</h6>
-                                            <h4 class="fw-900 mb-0" style="color: var(--sensei-red)">${item.batchName}</h4>
-                                        </div>
-                                        <div class="col-auto">
-                                            <div class="stat" style="background: rgba(216, 50, 54, 0.08); color: var(--sensei-red) !important;">
-                                                <i class="align-middle" data-feather="award"></i>
+                if (data && data.length > 0) {
+                    data.forEach(item => {
+                        html += `
+                            <div class="col-md-6 col-xl-4 mb-4">
+                                <div class="card h-100 shadow-sm hover-elevate border-0 rounded-4 overflow-hidden position-relative" style="transition: transform 0.2s, boxShadow 0.2s;">
+                                    <div class="position-absolute top-0 start-0 w-100 h-100" style="background: linear-gradient(135deg, rgba(216, 50, 54, 0.03) 0%, rgba(216, 50, 54, 0) 100%); pointer-events: none;"></div>
+                                    <div class="card-body p-4 position-relative z-1">
+                                        <div class="d-flex justify-content-between align-items-start mb-4">
+                                            <div>
+                                                <div class="text-uppercase text-muted fw-bold small mb-1" style="letter-spacing: 0.05em; font-size: 0.75rem;">${item.courseName}</div>
+                                                <h4 class="fw-900 mb-0 text-dark" style="font-size: 1.15rem;">${item.batchName}</h4>
+                                            </div>
+                                            <div class="flex-shrink-0 ms-3">
+                                                <div class="d-flex align-items-center justify-content-center bg-light rounded-circle" style="width: 48px; height: 48px; color: var(--sensei-red);">
+                                                    <i data-feather="book-open" style="width: 20px; height: 20px;"></i>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="mt-4 pt-3 border-top border-light">
-                                        <div class="d-flex justify-content-between mb-2">
-                                            <span class="text-muted small fw-700 text-uppercase">Submited</span>
-                                            <span class="fw-800">Rs. ${parseFloat(item.totalPaid).toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
-                                        </div>
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <span class="text-muted small fw-700 text-uppercase">Verified</span>
-                                            <span class="badge fw-900 p-2 px-3 rounded-pill" style="background: rgba(40, 167, 69, 0.1); color: #28a745;">
-                                                Rs. ${parseFloat(item.totalApproved).toLocaleString(undefined, {minimumFractionDigits: 2})}
-                                            </span>
+                                        
+                                        <div class="pt-3 border-top" style="border-color: rgba(0,0,0,0.05) !important;">
+                                            <div class="row g-0 align-items-center mb-3">
+                                                <div class="col">
+                                                    <div class="text-muted small fw-bold text-uppercase mb-1" style="font-size: 0.7rem;">Total Submitted</div>
+                                                    <div class="fw-800 text-dark">Rs. ${parseFloat(item.totalPaid).toLocaleString(undefined, {minimumFractionDigits: 2})}</div>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <i data-feather="arrow-up-right" class="text-muted opacity-50"></i>
+                                                </div>
+                                            </div>
+                                            <div class="row g-0 align-items-center bg-light rounded-3 p-3">
+                                                <div class="col">
+                                                    <div class="text-success small fw-bold text-uppercase mb-1" style="font-size: 0.7rem;">Total Verified</div>
+                                                    <div class="fw-900 text-success mb-0" style="font-size: 1.1rem;">Rs. ${parseFloat(item.totalApproved).toLocaleString(undefined, {minimumFractionDigits: 2})}</div>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <div class="d-flex align-items-center justify-content-center bg-success rounded-circle bg-opacity-10 text-success" style="width: 32px; height: 32px;">
+                                                        <i data-feather="check" style="width: 16px; height: 16px;"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                        `;
+                    });
+                } else {
+                    html = `
+                        <div class="col-12">
+                            <div class="alert alert-light border-0 shadow-sm d-flex align-items-center p-4 rounded-4" role="alert">
+                                <div class="bg-white rounded-circle d-flex align-items-center justify-content-center shadow-sm me-4 flex-shrink-0" style="width: 48px; height: 48px; color: var(--sensei-red);">
+                                    <i data-feather="info"></i>
+                                </div>
+                                <div>
+                                    <h6 class="alert-heading fw-800 mb-1 text-dark">No Payment Summaries Found</h6>
+                                    <p class="mb-0 text-muted small">You don't have any payment history yet. New payments will appear here.</p>
+                                </div>
+                            </div>
                         </div>
                     `;
-                });
+                }
                 $('#summaryContainer').html(html);
                 if (window.feather) { feather.replace(); }
             });
