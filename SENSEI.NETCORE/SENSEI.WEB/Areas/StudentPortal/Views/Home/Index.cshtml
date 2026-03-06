@@ -1,5 +1,7 @@
 @{
     ViewData["Title"] = "Student Dashboard";
+    long totalCourses = ViewBag.TotalCourses ?? 0;
+    var upcomingLessons = ViewBag.UpcomingLessons as IEnumerable<SENSEI.DOMAIN.BatchLesson> ?? new List<SENSEI.DOMAIN.BatchLesson>();
 }
 
 <div class="container-fluid p-0">
@@ -19,106 +21,24 @@
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-xl-6 col-xxl-5 d-flex">
-            <div class="w-100">
-                <div class="row">
-                    <div class="col-sm-6">
-                        <div class="card">
-                            <div class="card-body p-4">
-                                <div class="row">
-                                    <div class="col mt-0">
-                                        <h5 class="card-title text-uppercase small fw-800" style="color: var(--sensei-red) !important; letter-spacing: 0.05em;">Enrolled Courses</h5>
-                                    </div>
-
-                                    <div class="col-auto">
-                                        <div class="stat" style="background: rgba(216, 50, 54, 0.08); color: var(--sensei-red) !important;">
-                                            <i class="align-middle" data-feather="book-open"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                                <h1 class="mt-2 mb-3 fw-900">4</h1>
-                                <div class="mb-0">
-                                    <span class="badge bg-success-light text-success me-1" style="background: rgba(40, 167, 69, 0.1)"> <i class="mdi mdi-arrow-bottom-right"></i> +1 </span>
-                                    <span class="text-muted small fw-600">Since last month</span>
-                                </div>
-                            </div>
+    <div class="row mb-4">
+        <div class="col-12 col-sm-6 col-xl-4 d-flex">
+            <div class="card flex-fill shadow-sm border-0 w-100">
+                <div class="card-body p-4">
+                    <div class="row align-items-center">
+                        <div class="col mt-0">
+                            <h5 class="card-title text-uppercase small fw-800 mb-0" style="color: var(--sensei-red) !important; letter-spacing: 0.05em;">Enrolled Courses</h5>
                         </div>
-                        <div class="card">
-                            <div class="card-body p-4">
-                                <div class="row">
-                                    <div class="col mt-0">
-                                        <h5 class="card-title text-uppercase small fw-800" style="color: var(--sensei-red) !important; letter-spacing: 0.05em;">Completed Lessons</h5>
-                                    </div>
 
-                                    <div class="col-auto">
-                                        <div class="stat" style="background: rgba(216, 50, 54, 0.08); color: var(--sensei-red) !important;">
-                                            <i class="align-middle" data-feather="check-circle"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                                <h1 class="mt-2 mb-3 fw-900">24</h1>
-                                <div class="mb-0">
-                                    <span class="badge bg-success-light text-success me-1" style="background: rgba(40, 167, 69, 0.1)"> <i class="mdi mdi-arrow-bottom-right"></i> 5.25% </span>
-                                    <span class="text-muted small fw-600">Since last week</span>
-                                </div>
+                        <div class="col-auto">
+                            <div class="stat d-flex align-items-center justify-content-center rounded-circle" style="width: 48px; height: 48px; background: rgba(216, 50, 54, 0.08); color: var(--sensei-red) !important;">
+                                <i class="align-middle" data-feather="book-open" style="width: 24px; height: 24px;"></i>
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-6">
-                        <div class="card">
-                            <div class="card-body p-4">
-                                <div class="row">
-                                    <div class="col mt-0">
-                                        <h5 class="card-title text-uppercase small fw-800" style="color: var(--sensei-red) !important; letter-spacing: 0.05em;">Hours Studied</h5>
-                                    </div>
-
-                                    <div class="col-auto">
-                                        <div class="stat" style="background: rgba(216, 50, 54, 0.08); color: var(--sensei-red) !important;">
-                                            <i class="align-middle" data-feather="clock"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                                <h1 class="mt-2 mb-3 fw-900">12.5h</h1>
-                                <div class="mb-0">
-                                    <span class="badge bg-danger-light text-danger me-1" style="background: rgba(220, 53, 69, 0.1)"> <i class="mdi mdi-arrow-bottom-right"></i> -2.25% </span>
-                                    <span class="text-muted small fw-600">Since last week</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card">
-                            <div class="card-body p-4">
-                                <div class="row">
-                                    <div class="col mt-0">
-                                        <h5 class="card-title text-uppercase small fw-800" style="color: var(--sensei-red) !important; letter-spacing: 0.05em;">Average Score</h5>
-                                    </div>
-
-                                    <div class="col-auto">
-                                        <div class="stat" style="background: rgba(216, 50, 54, 0.08); color: var(--sensei-red) !important;">
-                                            <i class="align-middle" data-feather="trending-up"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                                <h1 class="mt-2 mb-3 fw-900">88%</h1>
-                                <div class="mb-0">
-                                    <span class="badge bg-success-light text-success me-1" style="background: rgba(40, 167, 69, 0.1)"> <i class="mdi mdi-arrow-bottom-right"></i> 4.65% </span>
-                                    <span class="text-muted small fw-600">Since last month</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-xl-6 col-xxl-7">
-            <div class="card flex-fill w-100">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">Study Progress</h5>
-                </div>
-                <div class="card-body py-3">
-                    <div class="chart chart-sm">
-                        <canvas id="chartjs-dashboard-line"></canvas>
+                    <h1 class="mt-3 mb-3 fw-900" style="font-size: 2.5rem;">@totalCourses</h1>
+                    <div class="mb-0">
+                        <span class="text-muted small fw-600">Active enrollments</span>
                     </div>
                 </div>
             </div>
@@ -126,82 +46,66 @@
     </div>
 
     <div class="row">
-        <div class="col-12 col-md-6 col-xxl-3 d-flex order-2 order-xxl-3">
-            <div class="card flex-fill w-100">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">Upcoming Lessons</h5>
+        <div class="col-12 col-xl-7 d-flex">
+            <div class="card flex-fill w-100 shadow-sm border-0">
+                <div class="card-header bg-transparent border-0 pt-4 pb-2 px-4">
+                    <h5 class="card-title fw-800 text-dark mb-0">Upcoming Lessons</h5>
                 </div>
-                <div class="card-body d-flex">
-                    <div class="align-self-center w-100">
-                        <div class="py-3">
-                            <div class="chart chart-xs">
-                                <canvas id="chartjs-dashboard-pie"></canvas>
-                            </div>
-                        </div>
-
-                        <table class="table mb-0">
+                <div class="card-body px-4 pb-4 px-0 pt-0">
+                    <div class="table-responsive">
+                        <table class="table mb-0 table-hover align-middle">
+                            <thead class="bg-light">
+                                <tr>
+                                    <th class="border-0 rounded-start text-muted text-uppercase small fw-bold">Lesson & Batch</th>
+                                    <th class="border-0 rounded-end text-end text-muted text-uppercase small fw-bold">Schedule</th>
+                                </tr>
+                            </thead>
                             <tbody>
-                                <tr>
-                                    <td>JLPT N5 - Grammar</td>
-                                    <td class="text-end">Tomorrow, 10:00 AM</td>
-                                </tr>
-                                <tr>
-                                    <td>Kanji Master - Level 1</td>
-                                    <td class="text-end">Tuesday, 02:00 PM</td>
-                                </tr>
-                                <tr>
-                                    <td>Conversation Practice</td>
-                                    <td class="text-end">Thursday, 04:30 PM</td>
-                                </tr>
+                                @if (upcomingLessons.Any())
+                                {
+                                    foreach (var lesson in upcomingLessons)
+                                    {
+                                        <tr>
+                                            <td class="py-3">
+                                                <div class="fw-700 text-dark">@(lesson.Lesson?.LessonName ?? "Unknown Lesson")</div>
+                                                <div class="text-muted small fw-600 mt-1">@(lesson.Batch?.BatchName ?? "Unknown Batch")</div>
+                                            </td>
+                                            <td class="text-end py-3">
+                                                <div class="d-inline-flex align-items-center badge rounded-pill fw-600 p-2 px-3 bg-light text-dark border shadow-sm">
+                                                    <i data-feather="clock" class="me-2 text-muted" style="width: 14px; height: 14px;"></i>
+                                                    @lesson.LessonDateTime.ToString("MMM dd, yyyy h:mm tt")
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="2" class="text-center text-muted p-5">
+                                            <div class="mb-3">
+                                                <i data-feather="calendar" style="width: 48px; height: 48px; opacity: 0.5;"></i>
+                                            </div>
+                                            <div class="fw-bold">No upcoming lessons scheduled.</div>
+                                            <div class="small mt-1">Check back later for updates.</div>
+                                        </td>
+                                    </tr>
+                                }
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-12 col-md-12 col-xxl-6 d-flex order-3 order-xxl-2">
-            <div class="card flex-fill w-100">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">Recent Activities</h5>
+
+        <div class="col-12 col-xl-5 d-flex">
+            <div class="card flex-fill shadow-sm border-0 w-100">
+                <div class="card-header bg-transparent border-0 pt-4 pb-2 px-4">
+                    <h5 class="card-title fw-800 text-dark mb-0">Calendar</h5>
                 </div>
-                <div class="card-body p-0">
-                    <div class="list-group list-group-flush">
-                        <a href="#" class="list-group-item list-group-item-action">
-                            <div class="d-flex w-100 justify-content-between">
-                                <h5 class="mb-1">Lesson Completed: Particles (は, が, を)</h5>
-                                <small class="text-muted">3 days ago</small>
-                            </div>
-                            <p class="mb-1">You've successfully completed the lesson and passed the quiz with 95%.</p>
-                            <small class="text-muted">In JLPT N5 - Grammar.</small>
-                        </a>
-                        <a href="#" class="list-group-item list-group-item-action">
-                            <div class="d-flex w-100 justify-content-between">
-                                <h5 class="mb-1">New Material Added: Honorifics</h5>
-                                <small class="text-muted">5 days ago</small>
-                            </div>
-                            <p class="mb-1">A new PDF guide for business Japanese has been added to your course.</p>
-                            <small class="text-muted">In Conversation Practice.</small>
-                        </a>
-                        <a href="#" class="list-group-item list-group-item-action">
-                            <div class="d-flex w-100 justify-content-between">
-                                <h5 class="mb-1">Assignment Due: Kanji Workbook</h5>
-                                <small class="text-muted">1 week ago</small>
-                            </div>
-                            <p class="mb-1">Don't forget to submit your weekly Kanji practice before Monday.</p>
-                            <small class="text-muted">In Kanji Master.</small>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-12 col-md-6 col-xxl-3 d-flex order-1 order-xxl-1">
-            <div class="card flex-fill">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">Calendar</h5>
-                </div>
-                <div class="card-body d-flex">
-                    <div class="align-self-center w-100">
-                        <div id="datetimepicker-dashboard"></div>
+                <div class="card-body d-flex justify-content-center p-4 pt-2">
+                    <div class="w-100 d-flex justify-content-center" style="max-width: 400px;">
+                        <input type="text" id="datetimepicker-dashboard" class="d-none" />
                     </div>
                 </div>
             </div>
@@ -213,95 +117,7 @@
 @section Scripts {
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            var ctx = document.getElementById("chartjs-dashboard-line").getContext("2d");
-            var gradient = ctx.createLinearGradient(0, 0, 0, 225);
-            gradient.addColorStop(0, "rgba(215, 227, 244, 1)");
-            gradient.addColorStop(1, "rgba(215, 227, 244, 0)");
-            // Line chart
-            new Chart(document.getElementById("chartjs-dashboard-line"), {
-                type: "line",
-                data: {
-                    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-                    datasets: [{
-                        label: "Study Hours",
-                        fill: true,
-                        backgroundColor: gradient,
-                        borderColor: window.theme.primary,
-                        data: [
-                            21, 15, 25, 18, 22, 30, 25, 35, 32, 40, 38, 45
-                        ]
-                    }]
-                },
-                options: {
-                    maintainAspectRatio: false,
-                    legend: {
-                        display: false
-                    },
-                    tooltips: {
-                        intersect: false
-                    },
-                    hover: {
-                        intersect: true
-                    },
-                    plugins: {
-                        filler: {
-                            propagate: false
-                        }
-                    },
-                    scales: {
-                        xAxes: [{
-                            reverse: true,
-                            gridLines: {
-                                color: "rgba(0,0,0,0.0)"
-                            }
-                        }],
-                        yAxes: [{
-                            ticks: {
-                                stepSize: 10
-                            },
-                            display: true,
-                            borderDash: [3, 3],
-                            gridLines: {
-                                color: "rgba(0,0,0,0.0)"
-                            }
-                        }]
-                    }
-                }
-            });
-        });
-    </script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            // Pie chart
-            new Chart(document.getElementById("chartjs-dashboard-pie"), {
-                type: "pie",
-                data: {
-                    labels: ["Grammar", "Kanji", "Conversation", "Listening"],
-                    datasets: [{
-                        data: [4306, 3801, 1689, 2101],
-                        backgroundColor: [
-                            window.theme.primary,
-                            window.theme.warning,
-                            window.theme.danger,
-                            "#E8EAED"
-                        ],
-                        borderWidth: 5
-                    }]
-                },
-                options: {
-                    responsive: !window.MSInputMethodContext,
-                    maintainAspectRatio: false,
-                    legend: {
-                        display: false
-                    },
-                    cutoutPercentage: 75
-                }
-            });
-        });
-    </script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            var date = new Date(Date.now() - 5 * 24 * 60 * 60 * 1000);
+            var date = new Date();
             var defaultDate = date.getUTCFullYear() + "-" + (date.getUTCMonth() + 1) + "-" + date.getUTCDate();
             document.getElementById("datetimepicker-dashboard").flatpickr({
                 inline: true,
