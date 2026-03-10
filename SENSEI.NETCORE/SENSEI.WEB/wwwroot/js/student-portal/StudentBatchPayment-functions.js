@@ -81,7 +81,6 @@ function applyFormValidations() {
         ignore: [],
 
         rules: {
-            StudentBatchId: "required",
             Amount: { required: true, min: 1 },
             PaymentMonth: "required",
             SlipImage: {
@@ -91,7 +90,6 @@ function applyFormValidations() {
         },
 
         messages: {
-            StudentBatchId: "Please select a batch",
             Amount: "Enter a valid amount",
             PaymentMonth: "Select month",
             SlipImage: "Upload a valid image (JPG/PNG/WebP max 5MB)"
