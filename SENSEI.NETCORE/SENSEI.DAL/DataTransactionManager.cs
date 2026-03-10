@@ -340,6 +340,20 @@ namespace devspark_core_data_access_layer
             }
         }
 
+        private DataManager<BatchLessonReference> _batchLessonReferenceDataManager;
+        public DataManager<BatchLessonReference> BatchLessonReferenceDataManager
+        {
+            get
+            {
+                if (this._batchLessonReferenceDataManager == null)
+                {
+                    this._batchLessonReferenceDataManager = new DataManager<BatchLessonReference>(_connectionString);
+                }
+
+                return this._batchLessonReferenceDataManager;
+            }
+        }
+
         #endregion
 
         private bool _disposed = false;

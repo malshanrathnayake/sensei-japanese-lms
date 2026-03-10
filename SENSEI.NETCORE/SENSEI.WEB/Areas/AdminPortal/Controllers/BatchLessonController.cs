@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Mvc;
 using SENSEI.BLL.AdminPortalService.Interface;
+using SENSEI.BLL.SystemService;
+using SENSEI.BLL.SystemService.Interfaces;
 using SENSEI.DOMAIN;
 
 namespace SENSEI.WEB.Areas.AdminPortal.Controllers
@@ -14,18 +16,24 @@ namespace SENSEI.WEB.Areas.AdminPortal.Controllers
         private readonly IBatchService _batchService;
         private readonly ILessonService _lessonService;
         private readonly IDataProtector _protector;
+        private readonly IViewRenderService _viewRenderService;
+        private readonly IMailService _mailService;
 
         public BatchLessonController(
             IBatchLessonService batchLessonService,
             IBatchService batchService,
             ILessonService lessonService,
-            IDataProtectionProvider provider
+            IDataProtectionProvider provider,
+            IViewRenderService viewRenderService,
+            IMailService mailService
         )
         {
             _batchLessonService = batchLessonService;
             _batchService = batchService;
             _lessonService = lessonService;
             _protector = provider.CreateProtector("BatchLessonProtector");
+            _viewRenderService = viewRenderService;
+            _mailService = mailService;
         }
 
         public async Task<IActionResult> Index()
@@ -124,6 +132,49 @@ namespace SENSEI.WEB.Areas.AdminPortal.Controllers
             {
                 return Json(new { success = false, message = "Invalid request" });
             }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> AddReference(string q)
+        {
+            long batchLessonId = Convert.ToInt64(_protector.Unprotect(q));
+
+            var batchLesson = await _batchLessonService.GetBatchLesson(batchLessonId);
+            batchLesson.EncryptedKey = q;
+
+            var newBatchLessonReference = new BatchLessonReference
+            {
+                BatchLessonId = batchLesson.BatchLessonId,
+                BatchLesson = batchLesson
+            };
+
+            return View(newBatchLessonReference);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddReference(BatchLessonReference batchLessonReference)
+        {
+            var (status, batchLessonId) = await _batchLessonService.UpdateBatchLessonReference(batchLessonReference);
+
+            if (status)
+            {
+                return Json(new { success = status, message = "Batch lesson reference updated successfully" });
+            }
+            else
+            {
+                return Json(new { success = status, message = "Failed to update batch lesson reference" });
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> View(string q)
+        {
+            long batchLessonId = Convert.ToInt64(_protector.Unprotect(q));
+
+            var batchLesson = await _batchLessonService.GetBatchLesson(batchLessonId);
+            batchLesson.EncryptedKey = q;
+
+            return View(batchLesson);
         }
 
         public async Task<IActionResult> BatchLessonOffCanvas()

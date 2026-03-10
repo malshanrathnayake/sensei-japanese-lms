@@ -1,0 +1,62 @@
+﻿@using SENSEI.DOMAIN
+@model BatchLessonReference
+
+@{
+    Layout = null;
+}
+
+<div class="offcanvas-header">
+    <h5 class="offcanvas-title">New Reference</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+</div>
+
+<div class="offcanvas-body">
+
+    <form id="batch-lesson-reference-create-form" asp-area="AdminPortal" asp-controller="BatchLesson" asp-action="AddReference"
+          data-ajax="true" data-ajax-method="POST"
+          data-ajax-begin="onBatchLessonReferenceCreateBegin" data-ajax-success="onBatchLessonReferenceCreateSuccess" data-ajax-failure="onBatchLessonReferenceCreateFailure" data-ajax-complete="onBatchLessonReferenceCreateComplete">
+
+        @Html.HiddenFor(m => m.BatchLessonId)
+
+        <div class="mb-3" id="create-batch-wrapper">
+            <label class="form-label">@Html.DisplayNameFor(m => m.BatchLesson.BatchId)</label>
+            @Html.TextBoxFor(m => m.BatchLesson.Batch.BatchName, new { @class = "form-control", @readonly = "readonly" })
+        </div>
+
+        <div class="mb-3" id="create-batch-wrapper">
+            <label class="form-label">@Html.DisplayNameFor(m => m.BatchLesson.LessonId)</label>
+            @Html.TextBoxFor(m => m.BatchLesson.Lesson.LessonName, new { @class = "form-control", @readonly = "readonly" })
+        </div>
+
+        <div class="mb-3" id="create-batch-wrapper">
+            <label class="form-label">@Html.DisplayNameFor(m => m.BatchLesson.BatchId)</label>
+            @Html.TextBoxFor(m => m.BatchLesson.LessonDateTime, "{0:yyyy-MM-dd}", new { @class = "form-control", @readonly = "readonly" })
+        </div>
+
+        <div class="mb-3" id="create-lesson-wrapper">
+            <label class="form-label">@Html.DisplayNameFor(m => m.ReferenceUrl)</label>
+            <input class="form-control" asp-for="ReferenceUrl" />
+            <span asp-validation-for="ReferenceUrl" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">@Html.DisplayNameFor(m => m.Description)</label>
+            <input class="form-control" asp-for="Description" />
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+
+        <div class="d-flex justify-content-end gap-2">
+
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="offcanvas">
+                Cancel
+            </button>
+
+            <button type="submit" id="btnSaveBatchLessonReference" class="btn btn-success ladda-button" data-style="zoom-in">
+                <span class="ladda-label">Save</span>
+            </button>
+
+        </div>
+
+    </form>
+
+</div>

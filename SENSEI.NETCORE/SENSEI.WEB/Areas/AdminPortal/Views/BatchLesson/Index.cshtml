@@ -78,6 +78,7 @@
 @section Scripts {
 
     <script src="~/js/admin-portal/batch-lesson-function.js"></script>
+    <script src="~/js/admin-portal/batch-lesson-reference-function.js"></script>
 
     <script type="text/javascript">
 
@@ -153,9 +154,13 @@
 
                             var editUrl = `/AdminPortal/BatchLesson/Edit/?q=${row.encryptedKey}`;
                             var deleteUrl = `/AdminPortal/BatchLesson/Delete/?q=${row.encryptedKey}`;
+                            var addReferenceUrl = `/AdminPortal/BatchLesson/AddReference/?q=${row.encryptedKey}`;
+                            var viewUrl = `/AdminPortal/BatchLesson/View/?q=${row.encryptedKey}`;
 
                             var editBtn = `<li><a class="dropdown-item d-flex align-items-center gap-2 edit-batch-lesson" href="javascript:void(0)" data-action-url="${editUrl}"> <i data-feather="edit"></i><span>Edit</span></a></li>`;
                             var deleteBtn = `<li><a class="dropdown-item d-flex align-items-center gap-2 text-danger delete-batch-lesson" href="javascript:void(0)" data-action-url="${deleteUrl}" data-action-parameter="${row.batch ? row.batch.batchName + ' - ' + (row.lesson ? row.lesson.lessonName : '') : ''}"><i data-feather="trash-2"></i><span>Delete</span></a></li>`;
+                            var addReferenceBtn = `<li><a class="dropdown-item d-flex align-items-center gap-2 add-batch-lesson-reference" href="javascript:void(0)" data-action-url="${addReferenceUrl}"> <i data-feather="link"></i><span>Add Reference</span></a></li>`;
+                            var viewBtn = `<li><a class="dropdown-item d-flex align-items-center gap-2" href="${viewUrl}"> <i data-feather="eye"></i><span>View</span></a></li>`;
 
                             return `
                                 <div class="dropdown">
@@ -164,7 +169,9 @@
                                     </button>
 
                                     <ul class="dropdown-menu dropdown-menu-end">
+                                        ${addReferenceBtn}
                                         ${editBtn}
+                                        ${viewBtn}
                                         ${deleteBtn}
                                     </ul>
                                 </div>
@@ -185,6 +192,7 @@
 
                     editBatchLessonButton();
                     deleteBatchLessonButton();
+                    addBatchLessonReferenceButton();
                 }
             });
 

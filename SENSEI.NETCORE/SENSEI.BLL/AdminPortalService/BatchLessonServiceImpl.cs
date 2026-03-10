@@ -68,5 +68,13 @@ namespace SENSEI.BLL.AdminPortalService
             ]);
             return status;
         }
+
+        public async Task<(bool, long)> UpdateBatchLessonReference(BatchLessonReference batchLessonReference)
+        {
+            string jsonString = JsonConvert.SerializeObject(batchLessonReference);
+            DataTransactionManager dataTransactionManager = new DataTransactionManager(_databaseService.GetConnectionString());
+            var (status, primaryKey) = await dataTransactionManager.BatchLessonReferenceDataManager.UpdateDataReturnPrimaryKey("UpdateBatchLessonReference", jsonString);
+            return (status, primaryKey);
+        }
     }
 }
