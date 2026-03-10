@@ -10,11 +10,6 @@
     "Url": "/AdminPortal/Course/Index"
   },
   {
-    "Title": "Lesson",
-    "Icon": "file-text",
-    "Url": "/AdminPortal/Lesson/Index"
-  },
-  {
     "Title": "Batch",
     "Icon": "layers",
     "Url": "/AdminPortal/Batch/Index"
@@ -23,6 +18,11 @@
     "Title": "Batch Lesson",
     "Icon": "book-open",
     "Url": "/AdminPortal/BatchLesson/Index"
+  },
+  {
+    "Title": "Lesson",
+    "Icon": "file-text",
+    "Url": "/AdminPortal/Lesson/Index"
   },
   {
     "Title": "Student Registration",
@@ -34,5 +34,4 @@
     "Icon": "credit-card",
     "Url": "/AdminPortal/StudentPayments/Index"
   }
-
 ]

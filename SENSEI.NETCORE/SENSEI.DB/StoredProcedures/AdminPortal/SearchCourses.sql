@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [dbo].[SearchCourses]
+CREATE PROCEDURE [dbo].[SearchCourses]
 	@start INT = 0,
 	@length INT = 10,
 	@searchValue NVARCHAR(MAX),
@@ -18,7 +18,7 @@ BEGIN
 		CASE WHEN @sortColumn = 'courseName' AND @sortDirection = 'ASC' THEN CourseName END ASC,CASE WHEN @sortColumn = 'courseName' AND @sortDirection = 'DESC' THEN CourseName END DESC,
 		CASE WHEN @sortColumn = 'courseCode' AND @sortDirection = 'ASC' THEN CourseCode END ASC,CASE WHEN @sortColumn = 'courseCode' AND @sortDirection = 'DESC' THEN CourseCode END DESC
 	OFFSET @start ROWS
-	FETCH NEXT @length ROWS ONLY
+	FETCH NEXT (CASE WHEN @length = -1 THEN 2147483647 ELSE @length END) ROWS ONLY
 	FOR JSON PATH;
 
 	SELECT @count = COUNT(*)

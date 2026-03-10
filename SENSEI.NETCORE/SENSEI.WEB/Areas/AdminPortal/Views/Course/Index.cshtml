@@ -1,4 +1,4 @@
-﻿@using core_web.Helpers
+@using core_web.Helpers
 @{
 	ViewData["Title"] = "Course";
 }
@@ -58,6 +58,7 @@
 
             loadCourses();
 
+
         });
 
         function loadCourses() {
@@ -71,7 +72,8 @@
                 processing: true,
                 serverSide: true,
                 autoWidth: false,
-                lengthMenu: [10, 20, 50, 100],
+                lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
+                pageLength: 25,
                 columnDefs: [
                     { targets: 0, className: 'noVis' },
                     { width: 25, targets: 0, orderable: false },

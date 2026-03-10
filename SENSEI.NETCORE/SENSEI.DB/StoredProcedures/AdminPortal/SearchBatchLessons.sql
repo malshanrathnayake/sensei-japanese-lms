@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [dbo].[SearchBatchLessons]
+CREATE PROCEDURE [dbo].[SearchBatchLessons]
 	@courseId BIGINT = 0,
 	@batchId BIGINT = 0,
 	@start INT = 0,
@@ -28,7 +28,7 @@ BEGIN
 		CASE WHEN @sortColumn = 'lessonDateTime' AND @sortDirection = 'ASC' THEN BL.LessonDateTime END ASC,CASE WHEN @sortColumn = 'lessonDateTime' AND @sortDirection = 'DESC' THEN BL.LessonDateTime END DESC,
 		CASE WHEN @sortColumn = 'recordingUrl' AND @sortDirection = 'ASC' THEN BL.RecordingUrl END ASC,CASE WHEN @sortColumn = 'recordingUrl' AND @sortDirection = 'DESC' THEN BL.RecordingUrl END DESC
 	OFFSET @start ROWS
-	FETCH NEXT @length ROWS ONLY
+	FETCH NEXT (CASE WHEN @length = -1 THEN 2147483647 ELSE @length END) ROWS ONLY
 	FOR JSON PATH;
 
 

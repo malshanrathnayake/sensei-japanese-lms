@@ -1,4 +1,4 @@
-﻿function loadSelectBox(options) {
+function loadSelectBox(options) {
 
     var $select = $('.' + options.className);
     if (!$select.length) return;
@@ -18,6 +18,16 @@
         dropdownParent: $dropdownParent,
         data: options.data,
     });
+}
+
+/**
+ * Enhanced placeholder/reset for DataTables Search
+ */
+function initDataTableSearch(tableId) {
+    const $searchWrapper = $(`#${tableId}_wrapper .dataTables_filter`);
+    if ($searchWrapper.length) {
+        $searchWrapper.find('input').attr('placeholder', 'Search anything...');
+    }
 }
 
 
