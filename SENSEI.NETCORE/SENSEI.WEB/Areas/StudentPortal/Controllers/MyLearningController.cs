@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Mvc;
 using SENSEI.BLL.StudentPortalService.Interfaces;
 using System.Threading.Tasks;
@@ -8,13 +9,16 @@ namespace SENSEI.WEB.Areas.StudentPortal.Controllers
     public class MyLearningController : Controller
     {
         private readonly IStudentService _studentService;
+        private readonly IDataProtector _protector;
 
         public MyLearningController
         (
-            IStudentService studentService
+            IStudentService studentService,
+            IDataProtectionProvider provider
         )
         {
             _studentService = studentService;
+            _protector = provider.CreateProtector("CourseProtector");
         }
 
         public async Task<IActionResult> Index()
@@ -42,12 +46,15 @@ namespace SENSEI.WEB.Areas.StudentPortal.Controllers
             var userId = Convert.ToInt64(HttpContext.Session.GetString("UserId"));
             var student = await _studentService.GetStudentProfile(userId);
             var (lessons, count) = await _studentService.SearchStudentBatchLessons(studentId, student.StudentBatches.FirstOrDefault().BatchId, start, length, searchValue);
+            lessons.ToList().ForEach(e => e.EncryptedKey = _protector.Protect(e.BatchLessonId.ToString()));
             return View(lessons);
         }
 
         [HttpGet]
-        public async Task<IActionResult> LessonDetail(int batchLessonId)
+        public async Task<IActionResult> LessonDetail(string q)
         {
+            long batchLessonId = Convert.ToInt64(_protector.Unprotect(q));
+
             var lesson = await _studentService.GetBatchLesson(batchLessonId);
             return View(lesson);
         }

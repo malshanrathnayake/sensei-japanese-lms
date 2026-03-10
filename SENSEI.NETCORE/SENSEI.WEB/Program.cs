@@ -65,7 +65,7 @@ builder.Services.AddAuthentication(options =>
 
 #region System Services
 
-var connectionString = configuration.GetConnectionString("dev");
+var connectionString = configuration.GetConnectionString("prod");
 
 builder.Services.AddSingleton<IDatabaseService>(provider =>
 {
