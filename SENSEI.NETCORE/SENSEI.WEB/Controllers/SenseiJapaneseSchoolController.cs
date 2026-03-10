@@ -22,6 +22,8 @@ namespace SENSEI.WEB.Controllers
         private readonly ILocationService _locationService;
         private readonly IStudentRegistrationService _studentRegistrationService;
         private readonly IUserService _userService;
+        private readonly IViewRenderService _viewRenderService;
+        private readonly IMailService _mailService;
 
         public SenseiJapaneseSchoolController
         (
@@ -29,7 +31,9 @@ namespace SENSEI.WEB.Controllers
             ICourseService courseService, 
             ILocationService locationService, 
             IStudentRegistrationService studentRegistrationService,
-            IUserService userService
+            IUserService userService,
+            IViewRenderService viewRenderService,
+            IMailService mailService
         )
         {
             _smsService = smsService;
@@ -37,6 +41,8 @@ namespace SENSEI.WEB.Controllers
             _locationService = locationService;
             _studentRegistrationService = studentRegistrationService;
             _userService = userService;
+            _viewRenderService = viewRenderService;
+            _mailService = mailService;
         }
 
         public async Task<IActionResult> Index()
@@ -263,6 +269,9 @@ namespace SENSEI.WEB.Controllers
 
                 var messageStatus = await _smsService.SendSingleAsync(phone, message);
 
+                var mailbody = await _viewRenderService.RenderViewToString("~/Views/EmailTemplate/StudentRegistrationTemplate.cshtml", studentRegistration);
+                var mailStatus = await _mailService.SendGraphMail(studentRegistration.Email, "Registration Successful", mailbody);
+
                 TempData.AddNotification(new NotificationMessage
                 {
                     Type = "success",
@@ -370,7 +379,6 @@ namespace SENSEI.WEB.Controllers
                 Type = "info",
                 Message = $"Welcome {name}"
             });
-
 
             if (user.UserTypeEnum == UserTypeEnum.Admin)
             {

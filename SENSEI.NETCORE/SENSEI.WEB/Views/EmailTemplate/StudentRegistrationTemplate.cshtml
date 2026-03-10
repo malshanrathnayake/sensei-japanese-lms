@@ -1,0 +1,49 @@
+﻿@using SENSEI.DOMAIN
+@model StudentRegistration
+
+
+@{
+    Layout = "~/Views/Shared/EmailTemplateLayout01.cshtml";
+}
+
+<table class="container" cellpadding="0" cellspacing="0" role="presentation">
+
+    <tr>
+        <td class="header">
+            <div class="logo">花</div>
+            <p class="title">Sensei Japanese Center</p>
+            <p class="subtitle">Learn Japanese with confidence</p>
+        </td>
+    </tr>
+
+    <tr>
+        <td class="body">
+            <p class="hello">Hello 👋 @Model.StudentRegistrationPopulatedName</p>
+
+            <p class="text-main">
+                Thank you for choosing <strong>Sensei Japanese Center</strong>.
+                We are excited to help you start learning Japanese in a simple,
+                friendly, and effective way.
+            </p>
+
+            <p class="text-main">
+                Your registration is under review. You will get notified once the registration approved.
+            </p>
+
+            <p class="text-secondary">
+                You can join live classes, watch recorded lessons,
+                and practice daily to build confidence from day one.
+            </p>
+
+            <a href="www.senseijapanesecenter.com" class="button">Get Started</a>
+        </td>
+    </tr>
+
+    <tr>
+        <td class="footer">
+            <p class="footer-text">© 2025 Sensei Japanese Center</p>
+            <p class="footer-contact">Tokyo, Japan · hello@senseijapanese.com</p>
+        </td>
+    </tr>
+
+</table>

@@ -94,7 +94,8 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("StudentOnly", p => p.RequireRole("Student"));
 });
 
-
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<IViewRenderService, ViewRenderService>();
 #endregion
 
 #region SignalR Services
