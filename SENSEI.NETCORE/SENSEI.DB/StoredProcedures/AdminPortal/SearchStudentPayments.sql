@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [dbo].[SearchStudentPayments]
+CREATE PROCEDURE [dbo].[SearchStudentPayments]
 	@courseId BIGINT = 0,
 	@batchId BIGINT = 0,
 	@start INT = 0,
@@ -37,7 +37,7 @@ BEGIN
 		CASE WHEN @sortColumn = 'approvedBy.staffPopulatedName' AND @sortDirection = 'ASC' THEN Staff.FirstName + ' ' + Staff.LastName END ASC,CASE WHEN @sortColumn = 'approvedBy.staffPopulatedName' AND @sortDirection = 'DESC' THEN Staff.FirstName + ' ' + Staff.LastName END DESC,
 		CASE WHEN @sortColumn = 'changeDateTIme' AND @sortDirection = 'ASC' THEN SBP.ChangeDateTIme END ASC,CASE WHEN @sortColumn = 'changeDateTIme' AND @sortDirection = 'DESC' THEN SBP.ChangeDateTIme END DESC
 	OFFSET @start ROWS
-	FETCH NEXT @length ROWS ONLY
+	FETCH NEXT (CASE WHEN @length = -1 THEN 2147483647 ELSE @length END) ROWS ONLY
 	FOR JSON PATH;
 
 	SELECT @count = COUNT(*) 

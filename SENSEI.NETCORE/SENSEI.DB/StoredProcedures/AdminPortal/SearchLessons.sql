@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [dbo].[SearchLessons]
+CREATE PROCEDURE [dbo].[SearchLessons]
 	@courseId BIGINT = 0,
 	@start INT = 0,
 	@length INT = 10,
@@ -21,7 +21,7 @@ BEGIN
 		CASE WHEN @sortColumn = 'lessonName' AND @sortDirection = 'ASC' THEN LSN.LessonName END ASC,CASE WHEN @sortColumn = 'lessonName' AND @sortDirection = 'DESC' THEN LSN.LessonName END DESC,
 		CASE WHEN @sortColumn = 'lessonCode' AND @sortDirection = 'ASC' THEN LSN.[Description] END ASC,CASE WHEN @sortColumn = 'lessonCode' AND @sortDirection = 'DESC' THEN LSN.[Description] END DESC
 	OFFSET @start ROWS
-	FETCH NEXT @length ROWS ONLY
+	FETCH NEXT (CASE WHEN @length = -1 THEN 2147483647 ELSE @length END) ROWS ONLY
 	FOR JSON PATH;
 
 	SELECT @count = COUNT(*)

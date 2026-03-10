@@ -1,4 +1,4 @@
-﻿/* ================================
+/* ================================
    THEME VARIABLES
    ================================ */
 :root {
@@ -318,6 +318,22 @@ body::before {
     box-shadow: 0 12px 25px rgba(255, 90, 95, 0.35) !important;
 }
 
+.btn-outline-secondary {
+    border: 2px solid #fdeaea !important;
+    color: var(--text-muted) !important;
+    border-radius: 12px !important;
+    background: #ffffff !important;
+    font-weight: 600 !important;
+    transition: all 0.3s ease !important;
+}
+
+.btn-outline-secondary:hover {
+    background: var(--accent-sakura) !important;
+    border-color: var(--primary) !important;
+    color: var(--primary) !important;
+    transform: translateY(-2px);
+}
+
 /* ================================
    TABLES
    ================================ */
@@ -478,11 +494,28 @@ body::before {
    ================================ */
 .dataTables_wrapper .dataTables_length select,
 .dataTables_wrapper .dataTables_filter input {
-    padding: 0.5rem 1rem;
-    border-radius: 10px;
-    border: 1px solid #ffe0e0;
+    padding: 0.6rem 1.2rem;
+    border-radius: 12px;
+    border: 2px solid #fdeaea;
     background: #ffffff;
-    font-size: 0.875rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.dataTables_wrapper .dataTables_length select:focus,
+.dataTables_wrapper .dataTables_filter input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(216, 50, 54, 0.1);
+    outline: none;
+}
+
+.dataTables_wrapper .dataTables_length label {
+    font-weight: 600;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
 .dataTables_wrapper .dataTables_filter {
@@ -589,15 +622,21 @@ body::before {
 }
 
 .select2-container--bootstrap5 .select2-selection {
-    min-height: 52px !important;
+    min-height: 48px !important;
     padding: 0.5rem 1rem !important;
     background: #ffffff !important;
-    border: 1px solid #f0f0f0 !important;
-    border-radius: 14px !important;
+    border: 2px solid #fdeaea !important;
+    border-radius: 16px !important;
     color: var(--text-main) !important;
     display: flex !important;
     align-items: center !important;
-    transition: all 0.2s ease-in-out !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    box-shadow: 0 4px 12px rgba(216, 50, 54, 0.03) !important;
+}
+
+.select2-container--bootstrap5 .select2-selection:hover {
+    border-color: var(--primary) !important;
+    box-shadow: 0 6px 16px rgba(216, 50, 54, 0.08) !important;
 }
 
 /* Text rendering */

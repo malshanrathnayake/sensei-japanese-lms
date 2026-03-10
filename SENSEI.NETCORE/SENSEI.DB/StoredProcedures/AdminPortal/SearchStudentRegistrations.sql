@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [dbo].[SearchStudentRegistrations]
+CREATE PROCEDURE [dbo].[SearchStudentRegistrations]
 	@courseId BIGINT = 0,
 	@start INT = 0,
 	@length INT = 10,
@@ -31,7 +31,7 @@ BEGIN
 		CASE WHEN @sortColumn = 'phoneNo' AND @sortDirection = 'ASC' THEN STREG.PhoneNo END ASC,CASE WHEN @sortColumn = 'phoneNo' AND @sortDirection = 'DESC' THEN STREG.PhoneNo END DESC,
 		CASE WHEN @sortColumn = 'createdDateTime' AND @sortDirection = 'ASC' THEN STREG.CreatedDateTime END ASC,CASE WHEN @sortColumn = 'createdDateTime' AND @sortDirection = 'DESC' THEN STREG.CreatedDateTime END DESC
 	OFFSET @start ROWS
-	FETCH NEXT @length ROWS ONLY
+	FETCH NEXT (CASE WHEN @length = -1 THEN 2147483647 ELSE @length END) ROWS ONLY
 	FOR JSON PATH;
 
 	SELECT @count = COUNT(*)

@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [dbo].[SearchBatches]
+CREATE PROCEDURE [dbo].[SearchBatches]
 	@courseId BIGINT = 0,
 	@start INT = 0,
 	@length INT = 10,
@@ -22,7 +22,7 @@ BEGIN
 		CASE WHEN @sortColumn = 'batchStartDate' AND @sortDirection = 'ASC' THEN BTC.BatchStartDate END ASC,CASE WHEN @sortColumn = 'batchStartDate' AND @sortDirection = 'DESC' THEN BTC.BatchStartDate END DESC,
 		CASE WHEN @sortColumn = 'batchEndDate' AND @sortDirection = 'ASC' THEN BTC.BatchEndDate END ASC,CASE WHEN @sortColumn = 'batchEndDate' AND @sortDirection = 'DESC' THEN BTC.BatchEndDate END DESC
 	OFFSET @start ROWS
-	FETCH NEXT @length ROWS ONLY
+	FETCH NEXT (CASE WHEN @length = -1 THEN 2147483647 ELSE @length END) ROWS ONLY
 	FOR JSON PATH;
 
 	SELECT @count = COUNT(*)
