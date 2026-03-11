@@ -8,57 +8,57 @@ namespace SENSEI.DOMAIN
     public enum FeatherIconEnum
     {
         // General notification
-        [Display(Name = "Bell")]
+        [Display(Name = "bell")]
         Bell,
-        [Display(Name = "Bell-Off")]
+        [Display(Name = "bell-off")]
         BellOff,
-        [Display(Name = "Information")]
+        [Display(Name = "information")]
         Info,
 
         // Success
-        [Display(Name = "Check")]
+        [Display(Name = "check")]
         Check,
-        [Display(Name = "Check-Circle")]
+        [Display(Name = "check-circle")]
         CheckCircle,
-        [Display(Name = "Check-Square")]
+        [Display(Name = "check-square")]
         CheckSquare,
 
         // Error / failure
-        [Display(Name = "X")]
+        [Display(Name = "x")]
         X,
-        [Display(Name = "X-Circle")]
+        [Display(Name = "x-circle")]
         XCircle,
-        [Display(Name = "Alert-Circle")]
+        [Display(Name = "alert-circle")]
         AlertCircle,
-        [Display(Name = "Alert-Triangle")]
+        [Display(Name = "alert-triangle")]
         AlertTriangle,
 
         // Warning
-        [Display(Name = "Alert-Octagon")]
+        [Display(Name = "alert-octagon")]
         AlertOctagon,
 
         // Status / activity
-        [Display(Name = "Clock")]
+        [Display(Name = "clock")]
         Clock,
-        [Display(Name = "Loader")]
+        [Display(Name = "loader")]
         Loader,
-        [Display(Name = "Refresh")]
+        [Display(Name = "refresh-cw")]
         RefreshCw,
 
         // Message / communication
-        [Display(Name = "Message-Circle")]
+        [Display(Name = "message-circle")]
         MessageCircle,
-        [Display(Name = "Message-Square")]
+        [Display(Name = "message-square")]
         MessageSquare,
-        [Display(Name = "Mail")]
+        [Display(Name = "mail")]
         Mail,
 
         // Attention
-        [Display(Name = "Flag")]
+        [Display(Name = "flag")]
         Flag,
-        [Display(Name = "Eye")]
+        [Display(Name = "eye")]
         Eye,
-        [Display(Name = "Eye-Off")]
+        [Display(Name = "eye-off")]
         EyeOff
     }
 }
