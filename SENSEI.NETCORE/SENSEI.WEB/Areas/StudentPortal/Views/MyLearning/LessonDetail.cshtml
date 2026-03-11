@@ -49,13 +49,13 @@
         @if (Model.StudentBatchLessonViews.Where(e => e.BatchLessonId == Model.BatchLessonId && e.StudentId == studentId && e.IsCompleted).Any())
         {
             <button type="button" class="btn btn-primary" disabled>
-                <i class="fas fa-plus"></i> Completed
+                Completed
             </button>
         }
         else
         {
             <button type="button" class="btn btn-primary" id="btnComplete" data-action-url="/StudentPortal/MyLearning/MarkBatchLessonComplete?q=@Model.EncryptedKey">
-                <i class="fas fa-plus"></i> Mark as Complete
+                Mark as Complete
             </button>
         }
 
