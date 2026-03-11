@@ -97,3 +97,53 @@ function swalDelete(actionUrl, actionParameter, callback) {
         }
     });
 }
+
+function updateUserNotification() {
+
+    $(".usernotification-item").on("click", function () {
+
+        var item = $(this);
+        var q = item.data("action-parameter");
+
+        $.ajax({
+            url: "/Layout/UpdateUserNotificationReadability",
+            type: "POST",
+            data: { q: q },
+            success: function (response) {
+
+                if (response.success) {
+                    item.remove();
+                    popUpNotification('success', 'Notification marked as read');
+                }
+                else {
+                    //console.log(response.message);
+                    //popUpNotification('error', 'Failed to mark notification as read');
+                    item.remove();
+                }
+
+                updateUserNotificationCount();
+            },
+            error: function () {
+                //console.log("Something went wrong");
+                //popUpNotification('error', 'Failed to mark notification as read');
+                item.remove();
+                updateUserNotificationCount();
+            }
+        });
+
+    });
+
+}
+
+function updateUserNotificationCount() {
+
+    var count = $(".usernotification-item").length;
+
+    $("#notification-count").text(count);
+
+    if (count > 0) {
+        $("#notification-list").html(count + " <span>New Notifications</span>");
+    } else {
+        $("#notification-list").html("<span>No Notifications</span>");
+    }
+}

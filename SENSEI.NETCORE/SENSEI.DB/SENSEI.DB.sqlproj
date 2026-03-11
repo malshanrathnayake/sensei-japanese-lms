@@ -132,5 +132,8 @@
     <Build Include="StoredProcedures\AdminPortal\ApproveStudentBatchPayment.sql" />
     <Build Include="StoredProcedures\AdminPortal\RejectStudentBatchPayment.sql" />
     <Build Include="StoredProcedures\AdminPortal\UpdateBatchLessonReference.sql" />
+    <Build Include="StoredProcedures\AdminPortal\GetUserNotificationForUser.sql" />
+    <Build Include="StoredProcedures\AdminPortal\UpdateUserNotification.sql" />
+    <Build Include="StoredProcedures\AdminPortal\UpdateUserNotificationReadability.sql" />
   </ItemGroup>
 </Project>

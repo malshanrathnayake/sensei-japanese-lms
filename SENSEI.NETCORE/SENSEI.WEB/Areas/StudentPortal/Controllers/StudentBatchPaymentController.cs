@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using SENSEI.BLL.AdminPortalService.Interface;
 using SENSEI.BLL.StudentPortalService.Interfaces;
 using SENSEI.DOMAIN;
+using SENSEI.WEB.Helpers;
 using System;
 using System.Globalization;
 using System.Linq;
@@ -15,11 +17,13 @@ namespace SENSEI.WEB.Areas.StudentPortal.Controllers
     {
         private readonly IStudentService _studentService;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly IUserNotificationService _userNotificationService;
 
-        public StudentBatchPaymentController(IStudentService studentService, IWebHostEnvironment webHostEnvironment)
+        public StudentBatchPaymentController(IStudentService studentService, IWebHostEnvironment webHostEnvironment, IUserNotificationService userNotificationService)
         {
             _studentService = studentService;
             _webHostEnvironment = webHostEnvironment;
+            _userNotificationService = userNotificationService;
         }
 
         public async Task<IActionResult> Index()
@@ -139,6 +143,22 @@ namespace SENSEI.WEB.Areas.StudentPortal.Controllers
             };
 
             var (status, primaryKey) = await _studentService.UpdateStudentBatchPayment(payment);
+
+            if (status)
+            {
+                var userNotification = new UserNotification
+                {
+                    UserId = null,
+                    UserTypeEnum = UserTypeEnum.Admin,
+                    NotificationType = "New Student Payment",
+                    Message = "New Student Payment for " + student.StudentBatches.FirstOrDefault().Batch.BatchName.ToString() + " by the student " + student.StudentPopulatedName.ToString() + " has been uploaded.",
+                    Icon = GlobalHelpers.GetEnumDisplayName(FeatherIconEnum.MessageCircle),
+                    BatchId = student.StudentBatches.FirstOrDefault().Batch.BatchId,
+                    CourseId = student.StudentBatches.FirstOrDefault().Batch.CourseId,
+                };
+
+                await _userNotificationService.UpdateUserNotification(userNotification);
+            }
 
             return Json(new { success = status, message = "Slip Submitted Successfully!" });
         }

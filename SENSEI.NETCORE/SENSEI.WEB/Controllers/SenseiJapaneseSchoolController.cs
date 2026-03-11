@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using SENSEI.BLL.AdminPortalService.Interface;
 using SENSEI.BLL.SystemService.Interfaces;
 using SENSEI.DOMAIN;
+using SENSEI.SignalR.Interface;
 using SENSEI.WEB.Helpers;
 using System.Net.Http.Headers;
 using System.Runtime.InteropServices.JavaScript;
@@ -24,6 +25,8 @@ namespace SENSEI.WEB.Controllers
         private readonly IUserService _userService;
         private readonly IViewRenderService _viewRenderService;
         private readonly IMailService _mailService;
+        private readonly IUserNotificationService _userNotificationService;
+        private readonly IRealtimeNotifier _realtimeNotifier;
 
         public SenseiJapaneseSchoolController
         (
@@ -33,7 +36,9 @@ namespace SENSEI.WEB.Controllers
             IStudentRegistrationService studentRegistrationService,
             IUserService userService,
             IViewRenderService viewRenderService,
-            IMailService mailService
+            IMailService mailService,
+            IUserNotificationService userNotificationService,
+            IRealtimeNotifier realtimeNotifier
         )
         {
             _smsService = smsService;
@@ -43,6 +48,8 @@ namespace SENSEI.WEB.Controllers
             _userService = userService;
             _viewRenderService = viewRenderService;
             _mailService = mailService;
+            _userNotificationService = userNotificationService;
+            _realtimeNotifier = realtimeNotifier;
         }
 
         public async Task<IActionResult> Index()
@@ -271,6 +278,23 @@ namespace SENSEI.WEB.Controllers
 
                 var mailbody = await _viewRenderService.RenderViewToString("~/Views/EmailTemplate/StudentRegistrationTemplate.cshtml", studentRegistration);
                 var mailStatus = await _mailService.SendGraphMail(studentRegistration.Email, "Registration Successful", mailbody);
+
+                var course = await _courseService.GetCourse(studentRegistration.CourseId);
+
+                var userNotification = new UserNotification
+                {
+                    UserId = null,
+                    UserTypeEnum = UserTypeEnum.Admin,
+                    NotificationType = "Student Registration",
+                    Message = "New Student named " + studentRegistration.StudentRegistrationPopulatedName.ToString() + " Has been registered for " + course.CourseName.ToString() + " Course",
+                    Icon = GlobalHelpers.GetEnumDisplayName(FeatherIconEnum.MessageCircle),
+                    BatchId = null,
+                    CourseId = null,
+                };
+
+                await _userNotificationService.UpdateUserNotification(userNotification);
+
+                //await _realtimeNotifier.NotifyAll(userNotification);
 
                 TempData.AddNotification(new NotificationMessage
                 {

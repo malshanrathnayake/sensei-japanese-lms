@@ -1,4 +1,6 @@
-﻿using SENSEI.BLL.AdminPortalService.Interface;
+﻿using devspark_core_data_access_layer;
+using Newtonsoft.Json;
+using SENSEI.BLL.AdminPortalService.Interface;
 using SENSEI.BLL.SystemService.Interfaces;
 using SENSEI.DOMAIN;
 using SENSEI.SignalR.Interface;
@@ -25,33 +27,44 @@ namespace SENSEI.BLL.AdminPortalService
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<UserNotification>> GetUserNotificationForUser(long userId)
+        public async Task<IEnumerable<UserNotification>> GetUserNotificationForUser(long userId)
         {
-            IEnumerable<UserNotification> n = new List<UserNotification>();
-            return Task.FromResult(n);
+            DataTransactionManager dataTransactionManager = new DataTransactionManager(_databaseService.GetConnectionString());
+            var notifications = await dataTransactionManager.UserNotificationDataManager.RetrieveData("GetUserNotificationForUser", [
+                new Microsoft.Data.SqlClient.SqlParameter("@UserId", userId)
+                ]);
+            return notifications;
         }
 
-        public Task<IEnumerable<UserNotificationRead>> UpdateReadability(long userNotificationId, long userId)
+        public async Task<bool> UpdateReadability(long userNotificationId, long userId)
         {
-            throw new NotImplementedException();
+            var userNotificationRead = new UserNotificationRead()
+            {
+                UserNotificationId = userNotificationId,
+                UserId = userId
+            };
+
+            string userJsonString = JsonConvert.SerializeObject(userNotificationRead);
+            DataTransactionManager dataTransactionManager = new DataTransactionManager(_databaseService.GetConnectionString());
+            var (status, primaryKey) = await dataTransactionManager.UserNotificationDataManager.UpdateDataReturnPrimaryKey("UpdateUserNotificationReadability", userJsonString);
+
+            return status;
         }
 
         public async Task<(bool, long)> UpdateUserNotification(UserNotification userNotification)
         {
 
-            foreach(var user in userNotification.UserNotificationReads)
+            string userJsonString = JsonConvert.SerializeObject(userNotification);
+            DataTransactionManager dataTransactionManager = new DataTransactionManager(_databaseService.GetConnectionString());
+            var (status, primaryKey) = await dataTransactionManager.UserNotificationDataManager.UpdateDataReturnPrimaryKey("UpdateUserNotification", userJsonString);
+
+            if (userNotification.UserTypeEnum == UserTypeEnum.Admin)
             {
-                await _realtimeNotifier.NotifyUser(user.UserId, new
-                {
-                    id = userNotification.UserNotificationId,
-                    title = userNotification.NotificationType,
-                    message = userNotification.Message,
-                    icon = userNotification.Icon,
-                    createdAt = userNotification.CreatedAt
-                });
+                userNotification.CreatedAt = DateTime.UtcNow;
+                await _realtimeNotifier.NotifyUsers(new List<long> { 4, 5, 6 }, userNotification);
             }
 
-            throw new NotImplementedException();
+            return (status, primaryKey);
         }
     }
 }

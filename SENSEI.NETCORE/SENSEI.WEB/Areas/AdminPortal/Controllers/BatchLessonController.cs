@@ -5,6 +5,7 @@ using SENSEI.BLL.AdminPortalService.Interface;
 using SENSEI.BLL.SystemService;
 using SENSEI.BLL.SystemService.Interfaces;
 using SENSEI.DOMAIN;
+using SENSEI.WEB.Helpers;
 
 namespace SENSEI.WEB.Areas.AdminPortal.Controllers
 {
@@ -18,6 +19,8 @@ namespace SENSEI.WEB.Areas.AdminPortal.Controllers
         private readonly IDataProtector _protector;
         private readonly IViewRenderService _viewRenderService;
         private readonly IMailService _mailService;
+        private readonly IUserNotificationService _userNotificationService;
+        private readonly ICourseService _courseService;
 
         public BatchLessonController(
             IBatchLessonService batchLessonService,
@@ -25,7 +28,9 @@ namespace SENSEI.WEB.Areas.AdminPortal.Controllers
             ILessonService lessonService,
             IDataProtectionProvider provider,
             IViewRenderService viewRenderService,
-            IMailService mailService
+            IMailService mailService,
+            IUserNotificationService userNotificationService,
+            ICourseService courseService
         )
         {
             _batchLessonService = batchLessonService;
@@ -34,6 +39,8 @@ namespace SENSEI.WEB.Areas.AdminPortal.Controllers
             _protector = provider.CreateProtector("BatchLessonProtector");
             _viewRenderService = viewRenderService;
             _mailService = mailService;
+            _userNotificationService = userNotificationService;
+            _courseService = courseService;
         }
 
         public async Task<IActionResult> Index()
@@ -78,6 +85,21 @@ namespace SENSEI.WEB.Areas.AdminPortal.Controllers
 
             if (status)
             {
+                var batch = await _batchService.GetBatch(batchLesson.BatchId);
+
+                var userNotification = new UserNotification
+                {
+                    UserId = null,
+                    UserTypeEnum = UserTypeEnum.Student,
+                    NotificationType = "New Recording",
+                    Message = "New Recording for " + batch.Course.CourseName.ToString() + " Course on " + batchLesson.LessonDateTime.ToString("yyyy-MM-dd") + " has been uploaded.",
+                    Icon = GlobalHelpers.GetEnumDisplayName(FeatherIconEnum.MessageCircle),
+                    BatchId = batchLesson.BatchId,
+                    CourseId = batch.CourseId,
+                };
+
+                await _userNotificationService.UpdateUserNotification(userNotification);
+
                 return Json(new { success = status, message = "Batch lesson saved successfully" });
             }
             else
@@ -100,10 +122,27 @@ namespace SENSEI.WEB.Areas.AdminPortal.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(BatchLesson batchLesson)
         {
+            var batchLesson2 = await _batchLessonService.GetBatchLesson(batchLesson.BatchLessonId);
+
             var (status, batchLessonId) = await _batchLessonService.UpdateBatchLesson(batchLesson);
 
             if (status)
             {
+                var batch = await _batchService.GetBatch(batchLesson.BatchId);
+
+                var userNotification = new UserNotification
+                {
+                    UserId = null,
+                    UserTypeEnum = UserTypeEnum.Student,
+                    NotificationType = "Recording Updated",
+                    Message = "The Recording for " + batch.Course.CourseName.ToString() + " Course on " + batchLesson2.LessonDateTime.ToString("yyyy-MM-dd") + " has been updated.",
+                    Icon = GlobalHelpers.GetEnumDisplayName(FeatherIconEnum.MessageCircle),
+                    BatchId = batchLesson.BatchId,
+                    CourseId = batch.CourseId,
+                };
+
+                await _userNotificationService.UpdateUserNotification(userNotification);
+
                 return Json(new { success = status, message = "Batch lesson updated successfully" });
             }
             else
@@ -158,6 +197,22 @@ namespace SENSEI.WEB.Areas.AdminPortal.Controllers
 
             if (status)
             {
+
+                var batchLesson = await _batchLessonService.GetBatchLesson(batchLessonReference.BatchLessonId);
+
+                var userNotification = new UserNotification
+                {
+                    UserId = null,
+                    UserTypeEnum = UserTypeEnum.Student,
+                    NotificationType = "New Reference Added",
+                    Message = "A new reference has been added for " + batchLesson.Batch.Course.CourseName.ToString() + " Course on " + batchLessonReference.BatchLesson.LessonDateTime.ToString("yyyy-MM-dd") + ".",
+                    Icon = GlobalHelpers.GetEnumDisplayName(FeatherIconEnum.MessageCircle),
+                    BatchId = batchLesson.BatchId,
+                    CourseId = batchLesson.Batch.CourseId,
+                };
+
+                await _userNotificationService.UpdateUserNotification(userNotification);
+
                 return Json(new { success = status, message = "Batch lesson reference updated successfully" });
             }
             else

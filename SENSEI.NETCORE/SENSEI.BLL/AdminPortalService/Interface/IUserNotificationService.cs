@@ -10,6 +10,6 @@ namespace SENSEI.BLL.AdminPortalService.Interface
         Task<(bool, long)> UpdateUserNotification(UserNotification userNotification);
         Task<UserNotification> GetUserNotification(long userNotificationId);
         Task<IEnumerable<UserNotification>> GetUserNotificationForUser(long userId);
-        Task<IEnumerable<UserNotificationRead>> UpdateReadability(long userNotificationId, long userId);
+        Task<bool> UpdateReadability(long userNotificationId, long userId);
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Mvc;
 using SENSEI.BLL.AdminPortalService.Interface;
 using SENSEI.DOMAIN;
 using SENSEI.WEB.Models;
@@ -9,10 +10,12 @@ namespace SENSEI.WEB.Controllers
     public class LayoutController : Controller
     {
         private IUserNotificationService _userNotificationService;
+        private readonly IDataProtector _protector;
 
-        public LayoutController(IUserNotificationService userNotificationService)
+        public LayoutController(IUserNotificationService userNotificationService, IDataProtectionProvider provider)
         {
             _userNotificationService = userNotificationService;
+            _protector = provider.CreateProtector("CourseProtector");
         }
         public async Task<IActionResult> AdminSidebar()
         {
@@ -75,13 +78,25 @@ namespace SENSEI.WEB.Controllers
             //    }
             //};
 
+            notifications.ToList().ForEach(e =>
+            {
+                e.EncryptedKey = _protector.Protect(e.UserNotificationId.ToString());
+            });
 
             return View(notifications);
         }
 
         public async Task<IActionResult> StudentPortalNotification()
         {
-            return View();
+            var userId = Convert.ToInt64(HttpContext.Session.GetString("UserId"));
+            var notifications = await _userNotificationService.GetUserNotificationForUser(userId);
+
+            notifications.ToList().ForEach(e =>
+            {
+                e.EncryptedKey = _protector.Protect(e.UserNotificationId.ToString());
+            });
+
+            return View(notifications);
         }
 
         public async Task<IActionResult> AdminPortalMessages()
@@ -122,6 +137,22 @@ namespace SENSEI.WEB.Controllers
         public async Task<IActionResult> StudentPortalFooter()
         {
             return View();
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> UpdateUserNotificationReadability(string q)
+        {
+            if(q is null)
+            {
+                return Json(new { success = false, message = "Updated as read" });
+            }
+
+            long userNotificationId = Convert.ToInt64(_protector.Unprotect(q));
+            var userId = Convert.ToInt64(HttpContext.Session.GetString("UserId"));
+
+            var notifications = await _userNotificationService.UpdateReadability(userNotificationId, userId);
+
+            return Json(new { success = notifications, message = "Updated as read" });
         }
     }
 }
