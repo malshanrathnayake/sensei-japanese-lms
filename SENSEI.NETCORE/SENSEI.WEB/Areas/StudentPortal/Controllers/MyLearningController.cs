@@ -40,13 +40,39 @@ namespace SENSEI.WEB.Areas.StudentPortal.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> LessonSummaryView(int start, int length, string searchValue)
+        public async Task<IActionResult> LessonListView(int start, int length, string searchValue)
         {
             var studentId = Convert.ToInt64(HttpContext.Session.GetString("StudentId"));
             var userId = Convert.ToInt64(HttpContext.Session.GetString("UserId"));
             var student = await _studentService.GetStudentProfile(userId);
             var (lessons, count) = await _studentService.SearchStudentBatchLessons(studentId, student.StudentBatches.FirstOrDefault().BatchId, start, length, searchValue);
-            lessons.ToList().ForEach(e => e.EncryptedKey = _protector.Protect(e.BatchLessonId.ToString()));
+            lessons.ToList().ForEach(e =>
+                    {
+                        e.EncryptedKey = _protector.Protect(e.BatchLessonId.ToString());
+                        e.LessonEncryptedKey = _protector.Protect(e.LessonId.ToString());
+                    });
+            return View(lessons);
+        }
+
+        public async Task<IActionResult> IndexLesson(string q, string lessonName)
+        {
+            ViewBag.EncryptedKey = q;
+            ViewBag.LessonName = lessonName;
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> LessonSummaryView(int start = 0, int length = 10, string searchValue = "", string lessonEncryptedKey = "")
+        {
+            var studentId = Convert.ToInt64(HttpContext.Session.GetString("StudentId"));
+            var userId = Convert.ToInt64(HttpContext.Session.GetString("UserId"));
+            var lessonId = Convert.ToInt64(_protector.Unprotect(lessonEncryptedKey));
+
+            var student = await _studentService.GetStudentProfile(userId);
+            var (lessons, count) = await _studentService.SearchStudentBatchLessons(studentId, student.StudentBatches.FirstOrDefault().BatchId, start, length, searchValue);
+
+            lessons.Where(e => e.LessonId == lessonId).ToList().ForEach(e => e.EncryptedKey = _protector.Protect(e.BatchLessonId.ToString()));
+
             return View(lessons);
         }
 
@@ -55,8 +81,26 @@ namespace SENSEI.WEB.Areas.StudentPortal.Controllers
         {
             long batchLessonId = Convert.ToInt64(_protector.Unprotect(q));
 
-            var lesson = await _studentService.GetBatchLesson(batchLessonId);
-            return View(lesson);
+            var batchLesson = await _studentService.GetBatchLesson(batchLessonId);
+            batchLesson.EncryptedKey = q;
+            return View(batchLesson);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> MarkBatchLessonComplete(string q)
+        {
+            long batchLessonId = Convert.ToInt64(_protector.Unprotect(q));
+            var studentId = Convert.ToInt64(HttpContext.Session.GetString("StudentId"));
+            var status = await _studentService.UpdateStudentProgress(studentId, batchLessonId);
+
+            if (status)
+            {
+                return Json(new { success = status, message = "Lesson marked as complete" });
+            }
+            else
+            {
+                return Json(new { success = status, message = "Lesson mot marked as complete" });
+            }
         }
     }
 }

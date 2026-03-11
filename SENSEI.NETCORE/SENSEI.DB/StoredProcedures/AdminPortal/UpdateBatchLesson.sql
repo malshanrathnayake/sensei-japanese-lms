@@ -21,9 +21,9 @@ BEGIN
         IF (ISNULL(@batchLessonId, 0) = 0)
         BEGIN
             INSERT INTO [dbo].[BatchLesson]
-                ([LessonId], [BatchId], [LessonDateTime], [RecordingUrl], [RecordingExpireDate], [IsDeleted])
+                ([LessonId], [BatchId], [LessonDateTime], [RecordingUrl], [RecordingExpireDate], [IsDeleted], [Description])
             SELECT
-                [LessonId], [BatchId], [LessonDateTime], [RecordingUrl], [RecordingExpireDate], ISNULL([IsDeleted], 0)
+                [LessonId], [BatchId], [LessonDateTime], [RecordingUrl], [RecordingExpireDate], ISNULL([IsDeleted], 0), [Description]
             FROM OPENJSON(@jsonString, '$')
             WITH (
                 [LessonId] BIGINT,
@@ -31,7 +31,8 @@ BEGIN
                 [LessonDateTime] DATETIME,
                 [RecordingUrl] NVARCHAR(200),
                 [RecordingExpireDate] DATETIME,
-                [IsDeleted] BIT
+                [IsDeleted] BIT,
+                [Description] NVARCHAR(200)
             );
 
             SET @primaryKey = SCOPE_IDENTITY();
@@ -45,7 +46,8 @@ BEGIN
                 bl.[LessonDateTime] = j.[LessonDateTime],
                 bl.[RecordingUrl] = j.[RecordingUrl],
                 bl.[RecordingExpireDate] = j.[RecordingExpireDate],
-                bl.[IsDeleted] = ISNULL(j.[IsDeleted], bl.[IsDeleted])
+                bl.[IsDeleted] = ISNULL(j.[IsDeleted], bl.[IsDeleted]),
+                bl.[Description] = j.[Description]
             FROM [dbo].[BatchLesson] bl
             INNER JOIN OPENJSON(@jsonString, '$')
             WITH (
@@ -55,7 +57,8 @@ BEGIN
                 [LessonDateTime] DATETIME,
                 [RecordingUrl] NVARCHAR(200),
                 [RecordingExpireDate] DATETIME,
-                [IsDeleted] BIT
+                [IsDeleted] BIT,
+                [Description] NVARCHAR(200)
             ) AS j ON bl.[BatchLessonId] = j.[BatchLessonId]
             WHERE bl.[BatchLessonId] = @batchLessonId;
 

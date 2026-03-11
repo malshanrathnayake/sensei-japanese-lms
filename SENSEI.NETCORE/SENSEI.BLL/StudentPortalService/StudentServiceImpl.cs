@@ -150,5 +150,21 @@ namespace SENSEI.BLL.StudentPortalService
             });
             return lessons.FirstOrDefault();
         }
+
+        public async Task<bool> UpdateStudentProgress(long batchLessonId, long studentId)
+        {
+
+            var studentBatchLessonView = new StudentBatchLessonView()
+            {
+                StudentId = studentId,
+                BatchLessonId = batchLessonId
+            };
+
+            string jsonString = JsonConvert.SerializeObject(studentBatchLessonView);
+            DataTransactionManager dataTransactionManager = new DataTransactionManager(_databaseService.GetConnectionString());
+            var (status, primaryKey) = await dataTransactionManager.StudentBatchLessonViewDataManager.UpdateDataReturnPrimaryKey("UpdateStudentBatchLessonView", jsonString);
+
+            return status;
+        }
     }
 }

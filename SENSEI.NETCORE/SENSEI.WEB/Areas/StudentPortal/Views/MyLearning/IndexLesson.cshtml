@@ -1,5 +1,7 @@
-@{
+﻿@{
     ViewData["Title"] = "My Learning";
+    var lessonEncryptedKey = ViewBag.EncryptedKey;
+    var lessonName = ViewBag.LessonName;
 }
 
 <style>
@@ -14,10 +16,10 @@
         position: relative;
     }
 
-    .lesson-card:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-    }
+        .lesson-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
 
     .lesson-image-wrapper {
         position: relative;
@@ -70,9 +72,9 @@
         gap: 15px;
     }
 
-    .lesson-meta i {
-        color: var(--bs-primary);
-    }
+        .lesson-meta i {
+            color: var(--bs-primary);
+        }
 
     .progress-wrapper {
         margin-top: 1rem;
@@ -103,11 +105,11 @@
         transition: all 0.3s ease;
     }
 
-    .btn-continue:hover {
-        background-color: var(--bs-primary);
-        color: white;
-        transform: scale(1.05);
-    }
+        .btn-continue:hover {
+            background-color: var(--bs-primary);
+            color: white;
+            transform: scale(1.05);
+        }
 
     /* Sakura Theme Accents */
     .sakura-bg {
@@ -120,48 +122,29 @@
         margin-bottom: 2rem;
     }
 
-    .section-title::after {
-        content: "";
-        position: absolute;
-        bottom: -10px;
-        left: 0;
-        width: 50px;
-        height: 3px;
-        background: var(--bs-primary);
-        border-radius: 3px;
-    }
+        .section-title::after {
+            content: "";
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: var(--bs-primary);
+            border-radius: 3px;
+        }
 </style>
 
 <div class="container-fluid p-0 sakura-bg">
+
     <div class="row mb-4">
         <div class="col-12">
-            <h1 class="h3 mb-3 section-title">My Learning Journey</h1>
+            <h1 class="h3 mb-3 section-title">@lessonName</h1>
             <p class="text-muted">Pick up where you left off and master Japanese step by step.</p>
-        </div>
-    </div>
-
-    <!-- Filters/Search -->
-    <div class="row mb-4">
-        <div class="col-md-8 col-xl-9">
-            <div class="d-flex gap-2">
-                <button class="btn btn-primary active" id="btnAll">All Courses</button>
-                <button class="btn btn-outline-primary" id="btnInProgress">In Progress</button>
-                <button class="btn btn-outline-primary" id="btnCompleted">Completed</button>
-            </div>
-        </div>
-        <div class="col-md-4 col-xl-3">
-            <div class="input-group">
-                <input id="searchValue" type="text" class="form-control" placeholder="Search lessons..." aria-label="Search">
-                <button class="btn btn-primary" type="button"><i class="align-middle" data-feather="search"></i></button>
-            </div>
         </div>
     </div>
 
     <!-- Lesson Cards Grid -->
     <div class="row" id="lessonSummary">
-
-
-        
     </div>
 
 
@@ -178,23 +161,19 @@
         });
 
         $(document).ready(function() {
-           loadLessons(0,10,$("#searchValue").val());
-
-           $("#btnAll").on("click", function() {
-                loadLessons(0,-1,$("#searchValue").val());
-           });
-
+           loadLessons();
         });
 
         function loadLessons(start = 0, length = 10, searchValue = "") {
             $.ajax({
-                url: "@Url.Action("LessonListView", "MyLearning")",
+                url: "@Url.Action("LessonSummaryView", "MyLearning")",
                 type: "GET",
                 dataType: "html",
                 data: {
                     start: start,
                     length: length,
-                    searchValue: searchValue
+                    searchValue: searchValue,
+                    lessonEncryptedKey: '@lessonEncryptedKey'
                 },
                 success: function (data) {
 

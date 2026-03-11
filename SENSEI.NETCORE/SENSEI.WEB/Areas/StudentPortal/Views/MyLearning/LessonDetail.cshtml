@@ -5,7 +5,7 @@
 @{
     ViewData["Title"] = $"Lesson {Model?.Lesson?.LessonName}";
     var videoId = Model.RecordingUrl?.Split("v=").LastOrDefault();
-    var name = "malsh";
+    var studentId = Convert.ToInt64(Context.Session.GetString("StudentId") ?? "0");
 }
 
 <style>
@@ -45,6 +45,19 @@
 
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h1 class="h3 mb-0">@Model?.Lesson?.LessonName</h1>
+
+        @if (Model.StudentBatchLessonViews.Where(e => e.BatchLessonId == Model.BatchLessonId && e.StudentId == studentId && e.IsCompleted).Any())
+        {
+            <button type="button" class="btn btn-primary" disabled>
+                <i class="fas fa-plus"></i> Completed
+            </button>
+        }
+        else
+        {
+            <button type="button" class="btn btn-primary" id="btnComplete" data-action-url="/StudentPortal/MyLearning/MarkBatchLessonComplete?q=@Model.EncryptedKey">
+                <i class="fas fa-plus"></i> Mark as Complete
+            </button>
+        }
 
     </div>
 
@@ -88,7 +101,9 @@
                                     var headingId = $"refHeading{i}";
                                     var collapseId = $"refCollapse{i}";
                                     var isFirst = i == 0;
-                                    var viewerUrl = Uri.EscapeDataString(r.ReferenceUrl);
+                                    var viewerUrl = r.ReferenceUrl
+                                        .Replace("/view?usp=sharing", "/preview")
+                                        .Replace("/view", "/preview");
 
                                     <div class="accordion-item">
                                         <h2 class="accordion-header" id="@headingId">
@@ -148,8 +163,7 @@
 
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('player', {
-                height: '390',
-                width: '640',
+                width: '100%',
                 videoId: '@videoId',
                 playerVars: {
                     controls: 1,
@@ -183,6 +197,24 @@
 
         document.querySelector('.top-blocker').addEventListener('contextmenu', function(e){
             e.preventDefault();
+        });
+
+        $(document).ready(function () {
+
+            $('#btnComplete').click(function () {
+                var url = $(this).data('action-url');
+                $.post(url, function (response) {
+                    if (response.success) {
+
+                        popUpNotification('success', response.message);
+
+                    } else {
+                        popUpNotification('error', response.message);
+                    }
+                }).fail(function () {
+                    popUpNotification('error', 'An error occurred while marking the lesson as complete.');
+                });
+            });
         });
 
     </script>

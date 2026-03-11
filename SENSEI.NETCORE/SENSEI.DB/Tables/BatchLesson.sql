@@ -7,5 +7,6 @@ CREATE TABLE [dbo].[BatchLesson]
     [RecordingUrl] NVARCHAR(200) NOT NULL,
     [RecordingExpireDate] DATETIME NOT NULL,
     [IsDeleted] BIT NOT NULL,
+    [Description] NVARCHAR(200) NULL,
     CONSTRAINT [PK_BatchLesson] PRIMARY KEY CLUSTERED ([BatchLessonId])
 );

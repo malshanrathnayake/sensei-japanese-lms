@@ -33,6 +33,10 @@ namespace SENSEI.DOMAIN
 
         [DisplayName("Encrypted Key")]
         public string EncryptedKey { get; set; }
+        public string LessonEncryptedKey { get; set; }
+
+        [DisplayName("Description")]
+        public string Description { get; set; }
 
         // Navigation
         public Lesson Lesson { get; set; }

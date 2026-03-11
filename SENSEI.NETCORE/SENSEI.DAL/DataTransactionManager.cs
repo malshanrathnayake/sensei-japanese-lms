@@ -354,6 +354,20 @@ namespace devspark_core_data_access_layer
             }
         }
 
+        private DataManager<StudentBatchLessonView> _studentBatchLessonViewDataManager;
+        public DataManager<StudentBatchLessonView> StudentBatchLessonViewDataManager
+        {
+            get
+            {
+                if (this._studentBatchLessonViewDataManager == null)
+                {
+                    this._studentBatchLessonViewDataManager = new DataManager<StudentBatchLessonView>(_connectionString);
+                }
+
+                return this._studentBatchLessonViewDataManager;
+            }
+        }
+
         #endregion
 
         private bool _disposed = false;

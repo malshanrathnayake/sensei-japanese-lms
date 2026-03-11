@@ -29,6 +29,11 @@
         </div>
 
         <div class="mb-3" id="create-batch-wrapper">
+            <label class="form-label">@Html.DisplayNameFor(m => m.BatchLesson.Description)</label>
+            @Html.TextBoxFor(m => m.BatchLesson.Description, new { @class = "form-control", @readonly = "readonly" })
+        </div>
+
+        <div class="mb-3" id="create-batch-wrapper">
             <label class="form-label">@Html.DisplayNameFor(m => m.BatchLesson.BatchId)</label>
             @Html.TextBoxFor(m => m.BatchLesson.LessonDateTime, "{0:yyyy-MM-dd}", new { @class = "form-control", @readonly = "readonly" })
         </div>
