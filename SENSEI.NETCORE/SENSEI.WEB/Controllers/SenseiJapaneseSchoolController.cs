@@ -213,16 +213,16 @@ namespace SENSEI.WEB.Controllers
 
             if (user.UserTypeEnum == UserTypeEnum.Admin)
             {
-                return RedirectToAction("Index", "Home", new { Area = "Adminportal" });
+                return RedirectToAction("Index", "Home", new { Area = "AdminPortal" });
 
             }
             else if (user.UserTypeEnum == UserTypeEnum.Manager)
             {
-                return RedirectToAction("Index", "Home", new { Area = "Adminportal" });
+                return RedirectToAction("Index", "Home", new { Area = "AdminPortal" });
             }
             else if (user.UserTypeEnum == UserTypeEnum.Student)
             {
-                return RedirectToAction("Index", "Home", new { Area = "Studentportal" });
+                return RedirectToAction("Index", "Home", new { Area = "StudentPortal" });
             }
             else
             {
@@ -406,16 +406,16 @@ namespace SENSEI.WEB.Controllers
 
             if (user.UserTypeEnum == UserTypeEnum.Admin)
             {
-                return RedirectToAction("Index", "Home", new { Area = "Adminportal" });
+                return RedirectToAction("Index", "Home", new { Area = "AdminPortal" });
 
             }
             else if (user.UserTypeEnum == UserTypeEnum.Manager)
             {
-                return RedirectToAction("Index", "Home", new { Area = "Adminportal" });
+                return RedirectToAction("Index", "Home", new { Area = "AdminPortal" });
             }
             else if (user.UserTypeEnum == UserTypeEnum.Student)
             {
-                return RedirectToAction("Index", "Home", new { Area = "Studentportal" });
+                return RedirectToAction("Index", "Home", new { Area = "StudentPortal" });
             }
             else
             {

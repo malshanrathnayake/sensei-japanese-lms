@@ -113,7 +113,7 @@ namespace SENSEI.BLL.StudentPortalService
         public async Task<bool> DeleteStudentBatchPayment(long paymentId)
         {
             DataTransactionManager dataTransactionManager = new DataTransactionManager(_databaseService.GetConnectionString());
-            return await dataTransactionManager.StudentBatchPaymentDataManager.ExecuteNonQuery("DeleteStudentBatchPayment", new SqlParameter[] {
+            return await dataTransactionManager.StudentBatchPaymentDataManager.DeleteData("DeleteStudentBatchPayment", new SqlParameter[] {
                 new SqlParameter("@paymentId", paymentId)
             });
         }
