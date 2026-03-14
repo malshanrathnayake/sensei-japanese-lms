@@ -105,6 +105,12 @@
         });
 
         function loadPaymentTable() {
+
+            if ($.fn.DataTable.isDataTable('#paymentTable')) {
+                $('#paymentTable').DataTable().destroy();
+                $('#paymentTable').empty();
+            }
+
             paymentTable = $('#paymentTable').DataTable({
                 "processing": true,
                 "serverSide": true,
@@ -157,9 +163,9 @@
                         }
                     },
                     { 
-                        "data": "IsApproved",
+                        "data": null,
                         "render": function(data) {
-                            return data ? 
+                            return data.isApproved ?
                                 '<div class="d-inline-flex align-items-center badge rounded-pill fw-800 p-2 px-3" style="background: rgba(40, 167, 69, 0.1); color: #28a745;"><i data-feather="check-circle" class="me-1" style="width: 14px; height: 14px;"></i> Verified</div>' : 
                                 '<div class="d-inline-flex align-items-center badge rounded-pill fw-800 p-2 px-3" style="background: rgba(255, 193, 7, 0.1); color: #B08D00;"><i data-feather="clock" class="me-1" style="width: 14px; height: 14px;"></i> Pending</div>';
                         }
