@@ -41,6 +41,14 @@
                                 @* <span asp-validation-for="CourseId" class="text-danger"></span> *@
                             </div>
                         </div>
+
+                        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xm-12">
+                            <div class="mb-3" id="search-course-wrapper">
+                                <label class="form-label">@Html.DisplayNameFor(m => m.StudentBatch.Student.IndexNumber)</label>
+                                <input type="text" id="SearchIndexNumber" class="form-control" name="SearchIndexNumber" />
+                                @* <span asp-validation-for="CourseId" class="text-danger"></span> *@
+                            </div>
+                        </div>
                     </div>
 
                 </div>
@@ -111,6 +119,9 @@
                 loadStudentPayments();
             });
 
+            $("#SearchIndexNumber").change(function () {
+                loadStudentPayments();
+            });
 
             $.getJSON('/AdminPortal/StudentPayments/GetCourseListJsonResult', function (data) {
 
@@ -187,6 +198,7 @@
                     data: function (d) {
                         d.courseId = $('#SearchCourseId').val() || 0;
                         d.batchId = $('#SearchBatchId').val() || 0;
+                        d.indexNumber = $("#SearchIndexNumber").val();
                     }
                 },
                 columns: [
@@ -232,7 +244,7 @@
                     },
                     { data: 'studentBatch.batch.course.courseName', name:'studentBatch.batch.course.courseName' },
                     { data: 'studentBatch.batch.batchName', name:'studentBatch.batch.batchName' },
-                    { data: 'paymentMonth', name:'paymentMonth', render: function (data) { return renderDateOnly(data); } },
+                    { data: 'paymentMonth', name:'paymentMonth', render: function (data) { return renderDateTime(data); } },
                     { data: 'paymentDate', name:'paymentDate', render: function (data) { return renderDateTime(data); } },
                     { data: 'amount', name:'amount' },
                     { data: 'slipUrl', name:'slipUrl', render: function (data) { return renderSlipUrl(data); } },

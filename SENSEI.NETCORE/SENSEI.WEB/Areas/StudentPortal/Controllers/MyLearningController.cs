@@ -34,18 +34,24 @@ namespace SENSEI.WEB.Areas.StudentPortal.Controllers
             if (lessons != null && lessons.Any())
             {
                 var groupedLessons = lessons.GroupBy(e => e.LessonId);
-                double totalProgress = 0;
+                List<double> totalProgress = new List<double>();
                 foreach (var group in groupedLessons)
                 {
                     var totalUnits = group.Count();
                     var completedUnits = group.SelectMany(e => e.StudentBatchLessonViews).Count(v => v.StudentId == studentId && v.IsCompleted);
-                    totalProgress += totalUnits > 0 ? (completedUnits / (double)totalUnits) * 100 : 0;
+                    var groupedLessonsProgress = totalUnits > 0 ? (completedUnits / (double)totalUnits) * 100 : 0;
+
+                    if(groupedLessonsProgress != 0)
+                    {
+                        totalProgress.Add(groupedLessonsProgress);
+                    }
+                    
                 }
-                averageProgress = totalProgress / groupedLessons.Count();
+                averageProgress = totalProgress.Average();
             }
 
             ViewBag.AverageProgress = Math.Round(averageProgress);
-            ViewBag.CourseCount = lessons?.GroupBy(e => e.LessonId).Count() ?? 0;
+            ViewBag.CourseCount = lessons?.GroupBy(e => e.Lesson.CourseId).Count() ?? 0;
 
             return View();
         }

@@ -1,6 +1,7 @@
 CREATE PROCEDURE [dbo].[SearchStudentPayments]
 	@courseId BIGINT = 0,
 	@batchId BIGINT = 0,
+	@indexNumber NVARCHAR(500) = '',
 	@start INT = 0,
 	@length INT = 10,
 	@searchValue NVARCHAR(MAX),
@@ -22,12 +23,14 @@ BEGIN
 		JSON_QUERY(ISNULL((SELECT Staff.* FROM Staff WHERE Staff.IsDeleted = 0 AND Staff.EmployeeId = SBP.ApprovedById FOR JSON PATH, WITHOUT_ARRAY_WRAPPER), null)) AS 'ApprovedBy'
 	FROM StudentBatchPayment SBP
 	INNER JOIN StudentBatch ON StudentBatch.StudentBatchId = SBP.StudentBatchId
+	INNER JOIN Student ON Student.StudentId = StudentBatch.StudentId
 	INNER JOIN Batch ON Batch.BatchId = StudentBatch.BatchId
 	INNER JOIN Course ON Course.CourseId = Batch.CourseId
 	LEFT JOIN Staff ON Staff.EmployeeId = SBP.ApprovedById
 	WHERE SBP.IsDeleted = 0
 		AND (@courseId = 0 OR Batch.CourseId = @courseId)
 		AND (@batchId = 0 OR StudentBatch.BatchId = @batchId)
+		AND (@indexNumber = '' OR Student.IndexNumber LIKE '%' + @indexNumber + '%')
 		AND (@searchValue = '' OR Course.CourseName LIKE '%' + @searchValue + '%' OR Batch.BatchName LIKE '%' + @searchValue + '%' OR CAST(SBP.PaymentMonth AS DATE) LIKE '%' + @searchValue + '%' OR SBP.Amount LIKE '%' + @searchValue + '%' OR Staff.FirstName LIKE '%' + @searchValue + '%' OR Staff.LastName LIKE '%' + @searchValue + '%')
 	ORDER BY 
 		CASE WHEN @sortColumn = 'studentBatch.batch.course.courseName' AND @sortDirection = 'ASC' THEN Course.CourseName END ASC,CASE WHEN @sortColumn = 'studentBatch.batch.course.courseName' AND @sortDirection = 'DESC' THEN Course.CourseName END DESC,

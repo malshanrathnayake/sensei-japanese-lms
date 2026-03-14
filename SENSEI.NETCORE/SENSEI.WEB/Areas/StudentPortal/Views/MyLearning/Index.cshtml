@@ -368,22 +368,10 @@
                     filter: currentFilter
                 },
                 success: function (data) {
+
                     $("#lessonSummary").html(data);
                     if (window.feather) feather.replace();
                     
-                    // Update stat counts and progress based on visible cards
-                    var visibleCards = $("#lessonSummary .lesson-card");
-                    var count = visibleCards.length;
-                    $("#statCourseCount").text(count);
-
-                    // Recalculate average progress for visible cards
-                    var totalProg = 0;
-                    visibleCards.each(function() {
-                        var progText = $(this).find('.fw-800.text-dark.small').text().replace('%', '');
-                        totalProg += parseFloat(progText) || 0;
-                    });
-                    var avg = count > 0 ? Math.round(totalProg / count) : 0;
-                    $("#statAvgProgress").text(avg + '%');
                 },
                 error: function (xhr) {
                     console.error("Failed to load lessons", xhr);

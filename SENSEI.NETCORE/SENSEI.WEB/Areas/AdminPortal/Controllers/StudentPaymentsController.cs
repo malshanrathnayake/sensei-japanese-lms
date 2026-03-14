@@ -49,7 +49,7 @@ namespace SENSEI.WEB.Areas.AdminPortal.Controllers
             return View(studentBatchPayment);
         }
 
-        public async Task<IActionResult> ListOfStudentPayments(long courseId = 0, long batchId = 0)
+        public async Task<IActionResult> ListOfStudentPayments(long courseId = 0, long batchId = 0, string indexNumber = "")
         {
             int draw = int.Parse(Request.Form["draw"]);
             int start = int.Parse(Request.Form["start"]);
@@ -62,7 +62,7 @@ namespace SENSEI.WEB.Areas.AdminPortal.Controllers
 
             IQueryable<StudentBatchPayment> studentBatchPayments = new List<StudentBatchPayment>().AsQueryable();
 
-            var (studentBatchPaymentList, count) = await _studentPaymentService.SearchStudentBatchPayment(courseId, batchId, start, length, searchValue, sortColumn, sortDirection);
+            var (studentBatchPaymentList, count) = await _studentPaymentService.SearchStudentBatchPayment(courseId, batchId, indexNumber, start, length, searchValue, sortColumn, sortDirection);
             studentBatchPayments = studentBatchPaymentList.AsQueryable();
 
             studentBatchPayments.ToList().ForEach(e =>

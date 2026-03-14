@@ -32,13 +32,14 @@ namespace SENSEI.BLL.AdminPortalService
             return (status, primaryKey);
         }
 
-        public async Task<(IEnumerable<StudentBatchPayment>, long)> SearchStudentBatchPayment(long courseId = 0, long batchId = 0, int start = 0, int length = 10, string searchValue = "", string sortColumn = "", string sortDirection = "")
+        public async Task<(IEnumerable<StudentBatchPayment>, long)> SearchStudentBatchPayment(long courseId = 0, long batchId = 0, string indexNumber = "", int start = 0, int length = 10, string searchValue = "", string sortColumn = "", string sortDirection = "")
         {
             DataTransactionManager dataTransactionManager = new DataTransactionManager(_databaseService.GetConnectionString());
             var (registrations, count) = await dataTransactionManager.StudentBatchPaymentDataManager.RetrieveDataWithCount("SearchStudentPayments", new[]
             {
                 new SqlParameter("@courseId", courseId),
                 new SqlParameter("@batchId", batchId),
+                new SqlParameter("@indexNumber", indexNumber),
                 new SqlParameter("@start", start),
                 new SqlParameter("@length", length),
                 new SqlParameter("@searchValue", searchValue),

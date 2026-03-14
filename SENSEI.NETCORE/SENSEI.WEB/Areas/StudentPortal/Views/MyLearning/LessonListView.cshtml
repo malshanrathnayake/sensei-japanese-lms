@@ -11,10 +11,16 @@
     {
         foreach (var lesson in Model.GroupBy(e => e.LessonId))
         {
-            var completedBatchLessons = lesson.First().StudentBatchLessonViews.Count(e => e.StudentId == studentId && e.LessonId == lesson.First().Lesson.LessonId && e.IsCompleted);
+            var completedBatchLessons = 0;
+            foreach (var batchLesson in lesson)
+            {
+                completedBatchLessons += batchLesson.StudentBatchLessonViews.Count(e => e.StudentId == studentId && e.LessonId == lesson.First().Lesson.LessonId && e.IsCompleted);
+            }
+
             var totalBatchLessons = (double)Model.Count(e => e.LessonId == lesson.First().Lesson.LessonId);
 
             var progressPercent = completedBatchLessons / totalBatchLessons * 100;
+            progressPercent = Math.Round(progressPercent);
 
             var currentLessonName = lesson.Where(e => !e.StudentBatchLessonViews.Any(v => v.BatchLessonId == e.BatchLessonId))
                     .OrderBy(e => e.BatchLessonId)
@@ -32,6 +38,7 @@
                         <h3 class="lesson-title">@lesson.First().Lesson.LessonName</h3>
                         <div class="lesson-meta">
                             <span><i class="align-middle me-1" data-feather="book-open"></i>@Model.Count(e => e.LessonId == lesson.First().Lesson.LessonId)</span>
+                            <span><i class="align-middle me-1" data-feather="check"></i>@completedBatchLessons</span>
                         </div>
                         <p class="text-muted small">@lesson.First().Lesson.Description</p>
                         <div class="progress-wrapper">
