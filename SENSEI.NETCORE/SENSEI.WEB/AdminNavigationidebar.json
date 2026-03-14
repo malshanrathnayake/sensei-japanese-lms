@@ -10,6 +10,11 @@
     "Url": "/AdminPortal/Course/Index"
   },
   {
+    "Title": "Lesson",
+    "Icon": "file-text",
+    "Url": "/AdminPortal/Lesson/Index"
+  },
+  {
     "Title": "Batch",
     "Icon": "layers",
     "Url": "/AdminPortal/Batch/Index"
@@ -20,9 +25,9 @@
     "Url": "/AdminPortal/BatchLesson/Index"
   },
   {
-    "Title": "Lesson",
-    "Icon": "file-text",
-    "Url": "/AdminPortal/Lesson/Index"
+    "Title": "Student",
+    "Icon": "user",
+    "Url": "/AdminPortal/Student/Index"
   },
   {
     "Title": "Student Registration",

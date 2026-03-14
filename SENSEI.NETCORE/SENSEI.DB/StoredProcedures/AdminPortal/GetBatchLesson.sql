@@ -13,7 +13,8 @@ BEGIN
 				JSON_QUERY(ISNULL((SELECT * FROM Course WHERE Course.CourseId = Batch.CourseId FOR JSON PATH, WITHOUT_ARRAY_WRAPPER), null)) AS 'Course'
 			FROM Batch WHERE Batch.BatchId = BatchLesson.BatchId FOR JSON PATH, WITHOUT_ARRAY_WRAPPER), null)) AS 'Batch',
 			JSON_QUERY(ISNULL((SELECT * FROM Lesson WHERE Lesson.LessonId = BatchLesson.LessonId FOR JSON PATH, WITHOUT_ARRAY_WRAPPER), null)) AS 'Lesson',
-			JSON_QUERY(ISNULL((SELECT * FROM BatchLessonReference WHERE BatchLessonReference.BatchLessonId = BatchLesson.BatchLessonId FOR JSON PATH), '[]')) AS 'BatchLessonReferences'
+			JSON_QUERY(ISNULL((SELECT * FROM BatchLessonReference WHERE BatchLessonReference.BatchLessonId = BatchLesson.BatchLessonId FOR JSON PATH), '[]')) AS 'BatchLessonReferences',
+			JSON_QUERY(ISNULL((SELECT * FROM StudentBatchLessonView WHERE StudentBatchLessonView.BatchLessonId = BatchLesson.BatchLessonId FOR JSON PATH), '[]')) AS 'StudentBatchLessonViews'
 		FROM BatchLesson WHERE BatchLesson.IsDeleted = 0 AND BatchLessonId = @batchLessonId FOR JSON PATH;
 	END
 	ELSE IF(@batchId != 0)
@@ -23,7 +24,8 @@ BEGIN
 				JSON_QUERY(ISNULL((SELECT * FROM Course WHERE Course.CourseId = Batch.CourseId FOR JSON PATH, WITHOUT_ARRAY_WRAPPER), null)) AS 'Course'
 			FROM Batch WHERE Batch.BatchId = BatchLesson.BatchId FOR JSON PATH, WITHOUT_ARRAY_WRAPPER), null)) AS 'Batch',
 			JSON_QUERY(ISNULL((SELECT * FROM Lesson WHERE Lesson.LessonId = BatchLesson.LessonId FOR JSON PATH, WITHOUT_ARRAY_WRAPPER), null)) AS 'Lesson',
-			JSON_QUERY(ISNULL((SELECT * FROM BatchLessonReference WHERE BatchLessonReference.BatchLessonId = BatchLesson.BatchLessonId FOR JSON PATH), '[]')) AS 'BatchLessonReferences'
+			JSON_QUERY(ISNULL((SELECT * FROM BatchLessonReference WHERE BatchLessonReference.BatchLessonId = BatchLesson.BatchLessonId FOR JSON PATH), '[]')) AS 'BatchLessonReferences',
+			JSON_QUERY(ISNULL((SELECT * FROM StudentBatchLessonView WHERE StudentBatchLessonView.BatchLessonId = BatchLesson.BatchLessonId FOR JSON PATH), '[]')) AS 'StudentBatchLessonViews'
 		FROM BatchLesson WHERE BatchLesson.IsDeleted = 0 AND BatchLesson.BatchId = @batchId FOR JSON PATH;
 	END
 	ELSE
@@ -33,7 +35,8 @@ BEGIN
 				JSON_QUERY(ISNULL((SELECT * FROM Course WHERE Course.CourseId = Batch.CourseId FOR JSON PATH, WITHOUT_ARRAY_WRAPPER), null)) AS 'Course'
 			FROM Batch WHERE Batch.BatchId = BatchLesson.BatchId FOR JSON PATH, WITHOUT_ARRAY_WRAPPER), null)) AS 'Batch',
 			JSON_QUERY(ISNULL((SELECT * FROM Lesson WHERE Lesson.LessonId = BatchLesson.LessonId FOR JSON PATH, WITHOUT_ARRAY_WRAPPER), null)) AS 'Lesson',
-			JSON_QUERY(ISNULL((SELECT * FROM BatchLessonReference WHERE BatchLessonReference.BatchLessonId = BatchLesson.BatchLessonId FOR JSON PATH), '[]')) AS 'BatchLessonReferences'
+			JSON_QUERY(ISNULL((SELECT * FROM BatchLessonReference WHERE BatchLessonReference.BatchLessonId = BatchLesson.BatchLessonId FOR JSON PATH), '[]')) AS 'BatchLessonReferences',
+			JSON_QUERY(ISNULL((SELECT * FROM StudentBatchLessonView WHERE StudentBatchLessonView.BatchLessonId = BatchLesson.BatchLessonId FOR JSON PATH), '[]')) AS 'StudentBatchLessonViews'
 		FROM BatchLesson WHERE BatchLesson.IsDeleted = 0 FOR JSON PATH;
 	END
 

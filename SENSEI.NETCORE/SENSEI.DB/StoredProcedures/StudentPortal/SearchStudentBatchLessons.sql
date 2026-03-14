@@ -20,7 +20,9 @@ BEGIN
 			JSON_QUERY(ISNULL((SELECT Lesson.*,
 				JSON_QUERY(ISNULL((SELECT Course.* FROM Course WHERE Course.CourseId = Lesson.CourseId FOR JSON PATH, WITHOUT_ARRAY_WRAPPER), null)) AS 'Course'
 			FROM Lesson WHERE Lesson.LessonId = BL.LessonId FOR JSON PATH, WITHOUT_ARRAY_WRAPPER), null)) AS 'Lesson',
-			JSON_QUERY(ISNULL((SELECT BatchStudentLessonAccess.* FROM BatchStudentLessonAccess WHERE BatchStudentLessonAccess.BatchLessonId = BL.BatchLessonId FOR JSON PATH), '[]')) AS 'BatchStudentLessonAccesses'
+			JSON_QUERY(ISNULL((SELECT BatchStudentLessonAccess.* FROM BatchStudentLessonAccess WHERE BatchStudentLessonAccess.BatchLessonId = BL.BatchLessonId FOR JSON PATH), '[]')) AS 'BatchStudentLessonAccesses',
+			JSON_QUERY(ISNULL((SELECT BatchLessonReference.* FROM BatchLessonReference WHERE BatchLessonReference.BatchLessonId = BL.BatchLessonId FOR JSON PATH), '[]')) AS 'BatchLessonReferences',
+			JSON_QUERY(ISNULL((SELECT StudentBatchLessonView.* FROM StudentBatchLessonView WHERE StudentBatchLessonView.BatchLessonId = BL.BatchLessonId FOR JSON PATH), '[]')) AS 'StudentBatchLessonViews'
 		FROM BatchLesson BL
 		INNER JOIN Batch B ON B.BatchId = BL.BatchId
 		INNER JOIN Lesson LES ON LES.LessonId = BL.LessonId
@@ -47,7 +49,9 @@ BEGIN
 			JSON_QUERY(ISNULL((SELECT Lesson.*,
 				JSON_QUERY(ISNULL((SELECT Course.* FROM Course WHERE Course.CourseId = Lesson.CourseId FOR JSON PATH, WITHOUT_ARRAY_WRAPPER), null)) AS 'Course'
 			FROM Lesson WHERE Lesson.LessonId = BL.LessonId FOR JSON PATH, WITHOUT_ARRAY_WRAPPER), null)) AS 'Lesson',
-			JSON_QUERY(ISNULL((SELECT BatchStudentLessonAccess.* FROM BatchStudentLessonAccess WHERE BatchStudentLessonAccess.BatchLessonId = BL.BatchLessonId FOR JSON PATH), '[]')) AS 'BatchStudentLessonAccesses'
+			JSON_QUERY(ISNULL((SELECT BatchStudentLessonAccess.* FROM BatchStudentLessonAccess WHERE BatchStudentLessonAccess.BatchLessonId = BL.BatchLessonId FOR JSON PATH), '[]')) AS 'BatchStudentLessonAccesses',
+			JSON_QUERY(ISNULL((SELECT BatchLessonReference.* FROM BatchLessonReference WHERE BatchLessonReference.BatchLessonId = BL.BatchLessonId FOR JSON PATH), '[]')) AS 'BatchLessonReferences',
+			JSON_QUERY(ISNULL((SELECT StudentBatchLessonView.* FROM StudentBatchLessonView WHERE StudentBatchLessonView.BatchLessonId = BL.BatchLessonId FOR JSON PATH), '[]')) AS 'StudentBatchLessonViews'
 		FROM BatchLesson BL
 		INNER JOIN Batch B ON B.BatchId = BL.BatchId
 		INNER JOIN Lesson LES ON LES.LessonId = BL.LessonId

@@ -137,5 +137,6 @@
     <Build Include="StoredProcedures\AdminPortal\UpdateUserNotificationReadability.sql" />
     <Build Include="Tables\StudentBatchLessonView.sql" />
     <Build Include="StoredProcedures\StudentPortal\UpdateStudentBatchLessonView.sql" />
+    <Build Include="StoredProcedures\AdminPortal\SearchStudent.sql" />
   </ItemGroup>
 </Project>

@@ -15,11 +15,11 @@ namespace SENSEI.WEB.Areas.StudentPortal.Controllers
     [Area("StudentPortal")]
     public class StudentBatchPaymentController : Controller
     {
-        private readonly IStudentService _studentService;
+        private readonly SENSEI.BLL.StudentPortalService.Interfaces.IStudentService _studentService;
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IUserNotificationService _userNotificationService;
 
-        public StudentBatchPaymentController(IStudentService studentService, IWebHostEnvironment webHostEnvironment, IUserNotificationService userNotificationService)
+        public StudentBatchPaymentController(SENSEI.BLL.StudentPortalService.Interfaces.IStudentService studentService, IWebHostEnvironment webHostEnvironment, IUserNotificationService userNotificationService)
         {
             _studentService = studentService;
             _webHostEnvironment = webHostEnvironment;

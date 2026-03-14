@@ -31,10 +31,11 @@ builder.Services.AddSingleton<ILocationService, LocationServiceImpl>();
 builder.Services.AddSingleton<IStudentRegistrationService, StudentRegistrationServiceImpl>();
 builder.Services.AddSingleton<IUserService, UserServiceImpl>();
 builder.Services.AddSingleton<IStudentPaymentService, StudentPaymentServiceImpl>();
+builder.Services.AddSingleton<SENSEI.BLL.AdminPortalService.Interface.IStudentService, SENSEI.BLL.AdminPortalService.StudentServiceImpl>();
 #endregion
 
 #region StudentPortalServices
-builder.Services.AddSingleton<IStudentService, StudentServiceImpl>();
+builder.Services.AddSingleton<SENSEI.BLL.StudentPortalService.Interfaces.IStudentService, SENSEI.BLL.StudentPortalService.StudentServiceImpl>();
 #endregion
 
 #region Login with Google

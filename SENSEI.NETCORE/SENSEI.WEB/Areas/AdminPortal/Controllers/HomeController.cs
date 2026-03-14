@@ -7,6 +7,12 @@ namespace SENSEI.WEB.Areas.AdminPortal.Controllers
     [Authorize(Roles = "Admin,Manager")]
     public class HomeController : Controller
     {
+
+        public HomeController()
+        {
+
+        }
+
         public async Task<IActionResult> Index()
         {
             return View();

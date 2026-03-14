@@ -91,6 +91,8 @@ namespace SENSEI.DOMAIN
             }
         }
 
+        public string EncryptedKey { get; set; }
+
         #region NAVIGATIONAL PROPERTIES
 
         public User User { get; set; }
