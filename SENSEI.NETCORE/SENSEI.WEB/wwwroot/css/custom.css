@@ -24,7 +24,24 @@
     height: 1.8rem;
     width: auto;
     object-fit: contain;
-    transition: transform 0.3s ease;
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.brand-name-img:hover {
+    transform: scale(1.1) rotate(2deg);
+    filter: drop-shadow(0 5px 15px rgba(216, 50, 54, 0.2));
+}
+
+/* Interactive Stat Pulse */
+.stat {
+    transition: all 0.3s ease !important;
+}
+
+.card:hover .stat {
+    transform: scale(1.15) rotate(-5deg);
+    background: var(--primary) !important;
+    color: #ffffff !important;
+    box-shadow: 0 8px 16px rgba(216, 50, 54, 0.25);
 }
 
 .header-logo-res {
@@ -49,27 +66,137 @@
     letter-spacing: 0.08em;
     border-radius: 99px;
     border: 1px solid rgba(216, 50, 54, 0.1);
+    transition: all 0.3s ease;
+}
+
+.admin-badge:hover {
+    background: var(--primary);
+    color: #fff;
+    transform: translateY(-1px);
 }
 
 /* ================================
-   GLOBAL BACKGROUND OVERRIDE
+   GLOBAL SCROLLING FIX
    ================================ */
-.wrapper,
-.main,
-.content {
-    background-color: transparent !important;
+html, body {
+    height: auto !important;
+    min-height: 100vh !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important; /* Force standard body scroll */
+}
+
+.wrapper {
+    display: flex;
+    width: 100%;
+    align-items: stretch;
+    min-height: 100vh;
+    height: auto !important;
     overflow: visible !important;
+    background: var(--bg-main) !important; /* Fix: Remove black background */
+}
+
+.main {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    height: auto !important;
+    flex: 1 !important;
+    min-width: 0;
+    width: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+    background: transparent !important;
 }
 
 body {
     color: var(--text-main) !important;
     background-color: var(--bg-main) !important;
     position: relative;
-    overflow-x: hidden;
+    padding: 0 !important;
+    margin: 0 !important;
 
     /* Firefox */
     scrollbar-width: thin;
     scrollbar-color: var(--primary) var(--bg-main);
+}
+
+/* =====================================================
+   CALENDAR PREMIUM STYLING
+   ===================================================== */
+.fc {
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+}
+
+.fc .fc-toolbar-title {
+    font-size: 1.1rem !important;
+    font-weight: 800 !important;
+    color: var(--text-main) !important;
+}
+
+.fc .fc-button-primary {
+    background-color: transparent !important;
+    border-color: #fdeaea !important;
+    color: var(--text-muted) !important;
+    font-weight: 600 !important;
+    text-transform: capitalize !important;
+    padding: 0.4rem 0.8rem !important;
+    border-radius: 8px !important;
+}
+
+.fc .fc-button-primary:hover {
+    background-color: var(--accent-sakura) !important;
+    color: var(--primary) !important;
+    border-color: var(--primary) !important;
+}
+
+.fc .fc-button-primary:disabled {
+    opacity: 0.3 !important;
+}
+
+.fc .fc-daygrid-day-number {
+    font-weight: 700 !important;
+    font-size: 0.85rem !important;
+    padding: 8px !important;
+    color: var(--text-main) !important;
+}
+
+.fc .fc-col-header-cell-cushion {
+    font-weight: 800 !important;
+    font-size: 0.75rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+    color: var(--text-muted) !important;
+    padding: 10px 0 !important;
+}
+
+.fc-theme-standard td, .fc-theme-standard th {
+    border-color: #fdeaea !important;
+}
+
+.fc .fc-day-today {
+    background: rgba(216, 50, 54, 0.03) !important;
+}
+
+.fc .fc-day-today .fc-daygrid-day-number {
+    color: var(--primary) !important;
+    background: var(--accent-sakura) !important;
+    border-radius: 50% !important;
+    display: inline-block !important;
+    width: 25px !important;
+    height: 25px !important;
+    line-height: 25px !important;
+    text-align: center !important;
+    padding: 0 !important;
+    margin: 5px !important;
+}
+
+.fc-event {
+    border-radius: 6px !important;
+    border: none !important;
+    padding: 2px 6px !important;
+    font-size: 0.75rem !important;
+    font-weight: 600 !important;
 }
 
 /* Webkit (Chrome, Edge, Safari, Opera) */
@@ -778,7 +905,7 @@ body::before {
    ===================================================== */
 @media (max-width: 768px) {
     .content {
-        padding: 1.5rem 1rem 1rem !important;
+        padding: 1.25rem 0.75rem 1rem !important;
     }
 
     .card-header {
@@ -802,7 +929,7 @@ body::before {
     }
 
     .jp-watermark {
-        font-size: 8rem !important;
+        font-size: 5rem !important; /* Smaller on mobile */
     }
 
     .navbar {
@@ -846,6 +973,51 @@ body::before {
     .nav-icon {
         padding: 0.4rem 0.6rem !important;
     }
+
+    /* Learning Hero Mobile Optimizations */
+    .learning-hero {
+        padding: 1.5rem !important;
+        text-align: center;
+    }
+    
+    .learning-hero::before {
+        top: 0 !important;
+        bottom: auto !important;
+        left: 20% !important;
+        right: 20% !important;
+        width: auto !important;
+        height: 4px !important;
+        border-radius: 0 0 10px 10px !important;
+    }
+
+    .learning-hero .d-flex.gap-3 {
+        justify-content: center !important;
+        margin-top: 1rem;
+    }
+
+    .hero-stat-box {
+        flex: 1;
+        min-width: 0 !important;
+        padding: 0.75rem !important;
+    }
+
+    .hero-stat-box .h3 {
+        font-size: 1.5rem !important;
+    }
+
+    /* Student Profile Mobile Fixes */
+    .profile-card-premium {
+        margin-bottom: 1.5rem;
+    }
+
+    .profile-header-accent {
+        height: 80px !important;
+    }
+
+    .profile-avatar {
+        width: 100px !important;
+        height: 100px !important;
+    }
 }
 
 /* Very Small Devices */
@@ -873,4 +1045,42 @@ body::before {
 :root {
     --bg-main: #fffafa;
     --accent-sakura: #fff2f2;
+}
+
+.sakura-bg {
+    background-color: #fffafb;
+    background-image: radial-gradient(#ffeef1 1px, transparent 1px);
+    background-size: 40px 40px;
+}
+
+/* 🌟 LAYOUT NORMALIZATION - SENSEI STUDENT PORTAL 🌟 */
+.wrapper {
+    display: flex !important;
+    width: 100% !important;
+}
+
+.sidebar {
+    min-width: 260px !important;
+    max-width: 260px !important;
+}
+
+.main {
+    flex: 1 !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+.navbar {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 1rem 1.5rem !important;
+}
+
+.content {
+    padding: 1.5rem !important;
+    width: 100% !important;
 }

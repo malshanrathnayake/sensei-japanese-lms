@@ -23,18 +23,29 @@ namespace SENSEI.WEB.Areas.StudentPortal.Controllers
 
         public async Task<IActionResult> Index()
         {
-            //var start = Request.Form["start"].FirstOrDefault();
-            //var length = Request.Form["length"].FirstOrDefault();
+            var studentId = Convert.ToInt64(HttpContext.Session.GetString("StudentId"));
+            var userId = Convert.ToInt64(HttpContext.Session.GetString("UserId"));
+            var student = await _studentService.GetStudentProfile(userId);
+            
+            var batchId = student.StudentBatches.FirstOrDefault()?.BatchId ?? 0;
+            var (lessons, count) = await _studentService.SearchStudentBatchLessons(studentId, batchId, 0, -1, "");
+            
+            double averageProgress = 0;
+            if (lessons != null && lessons.Any())
+            {
+                var groupedLessons = lessons.GroupBy(e => e.LessonId);
+                double totalProgress = 0;
+                foreach (var group in groupedLessons)
+                {
+                    var totalUnits = group.Count();
+                    var completedUnits = group.SelectMany(e => e.StudentBatchLessonViews).Count(v => v.StudentId == studentId && v.IsCompleted);
+                    totalProgress += totalUnits > 0 ? (completedUnits / (double)totalUnits) * 100 : 0;
+                }
+                averageProgress = totalProgress / groupedLessons.Count();
+            }
 
-            //int skip = start != null ? Convert.ToInt32(start) : 0;
-            //int pageSize = length != null ? Convert.ToInt32(length) : 10;
-            //string searchValue = "";
-
-            //var studentId = Convert.ToInt64(HttpContext.Session.GetString("StudentId"));
-            //var userId = Convert.ToInt64(HttpContext.Session.GetString("UserId"));
-            //var student = await _studentService.GetStudentProfile(userId);
-
-            //var lessons = await _studentService.SearchStudentBatchLessons(studentId, student.StudentBatches.FirstOrDefault().BatchId, skip, pageSize, searchValue);
+            ViewBag.AverageProgress = Math.Round(averageProgress);
+            ViewBag.CourseCount = lessons?.GroupBy(e => e.LessonId).Count() ?? 0;
 
             return View();
         }

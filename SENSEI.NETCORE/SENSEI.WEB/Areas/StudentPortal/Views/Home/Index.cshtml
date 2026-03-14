@@ -8,7 +8,7 @@
     <div class="row mb-3 mb-xl-4 align-items-center">
         <div class="col-auto d-none d-sm-block">
             <h3 class="fw-800 text-dark mb-0"><span style="color: var(--sensei-red);">Student</span> Dashboard</h3>
-            <p class="text-muted small mb-0">Welcome back! Here's your current study progress.</p>
+            <p class="text-muted small mb-0">Welcome back! Follow your Japanese learning journey.</p>
         </div>
 
         <div class="col-auto ms-auto text-end mt-n1">
@@ -21,24 +21,47 @@
         </div>
     </div>
 
+    <!-- Stat Cards Row -->
     <div class="row mb-4">
-        <div class="col-12 col-sm-6 col-xl-4 d-flex">
+        <!-- Enrolled Courses -->
+        <div class="col-12 col-md-6 d-flex">
             <div class="card flex-fill shadow-sm border-0 w-100">
                 <div class="card-body p-4">
                     <div class="row align-items-center">
                         <div class="col mt-0">
-                            <h5 class="card-title text-uppercase small fw-800 mb-0" style="color: var(--sensei-red) !important; letter-spacing: 0.05em;">Enrolled Courses</h5>
+                            <h5 class="card-title text-uppercase small fw-800 mb-0" style="color: var(--sensei-red) !important; letter-spacing: 0.1em;">Enrolled Courses</h5>
                         </div>
-
                         <div class="col-auto">
                             <div class="stat d-flex align-items-center justify-content-center rounded-circle" style="width: 48px; height: 48px; background: rgba(216, 50, 54, 0.08); color: var(--sensei-red) !important;">
                                 <i class="align-middle" data-feather="book-open" style="width: 24px; height: 24px;"></i>
                             </div>
                         </div>
                     </div>
-                    <h1 class="mt-3 mb-3 fw-900" style="font-size: 2.5rem;">@totalCourses</h1>
+                    <h1 class="mt-3 mb-1 fw-900" style="font-size: 2.5rem;">@totalCourses</h1>
                     <div class="mb-0">
-                        <span class="text-muted small fw-600">Active enrollments</span>
+                        <span class="text-muted small fw-600">Active enrollments across all batches</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Lessons -->
+        <div class="col-12 col-md-6 d-flex">
+            <div class="card flex-fill shadow-sm border-0 w-100">
+                <div class="card-body p-4">
+                    <div class="row align-items-center">
+                        <div class="col mt-0">
+                            <h5 class="card-title text-uppercase small fw-800 mb-0" style="color: #2c3e50 !important; letter-spacing: 0.1em;">Total Lessons</h5>
+                        </div>
+                        <div class="col-auto">
+                            <div class="stat d-flex align-items-center justify-content-center rounded-circle" style="width: 48px; height: 48px; background: rgba(44, 62, 80, 0.08); color: #2c3e50 !important;">
+                                <i class="align-middle" data-feather="video" style="width: 24px; height: 24px;"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <h1 class="mt-3 mb-1 fw-900" style="font-size: 2.5rem;">@(ViewBag.TotalLessons ?? 0)</h1>
+                    <div class="mb-0">
+                        <span class="text-muted small fw-600">Available learning materials</span>
                     </div>
                 </div>
             </div>
@@ -46,17 +69,19 @@
     </div>
 
     <div class="row">
-        <div class="col-12 col-xl-7 d-flex">
+        <div class="col-12 col-xl-8 d-flex">
             <div class="card flex-fill w-100 shadow-sm border-0">
-                <div class="card-header bg-transparent border-0 pt-4 pb-2 px-4">
-                    <h5 class="card-title fw-800 text-dark mb-0">Upcoming Lessons</h5>
+                <div class="card-header bg-transparent border-0 pt-4 pb-2 px-4 d-flex justify-content-between align-items-center">
+                    <h5 class="card-title fw-800 text-dark mb-0">My Lessons</h5>
+                    <a href="@Url.Action("Index", "MyLearning")" class="btn btn-sm btn-outline-primary border-0 fw-700">View All <i data-feather="chevron-right" class="ms-1" style="width: 14px; height: 14px;"></i></a>
                 </div>
                 <div class="card-body px-4 pb-4 px-0 pt-0">
                     <div class="table-responsive">
                         <table class="table mb-0 table-hover align-middle">
                             <thead class="bg-light">
                                 <tr>
-                                    <th class="border-0 rounded-start text-muted text-uppercase small fw-bold">Lesson & Batch</th>
+                                    <th class="border-0 rounded-start text-muted text-uppercase small fw-bold">Lesson Details</th>
+                                    <th class="border-0 text-muted text-uppercase small fw-bold">Batch</th>
                                     <th class="border-0 rounded-end text-end text-muted text-uppercase small fw-bold">Schedule</th>
                                 </tr>
                             </thead>
@@ -67,14 +92,22 @@
                                     {
                                         <tr>
                                             <td class="py-3">
-                                                <div class="fw-700 text-dark">@(lesson.Lesson?.LessonName ?? "Unknown Lesson")</div>
-                                                <div class="text-muted small fw-600 mt-1">@(lesson.Batch?.BatchName ?? "Unknown Batch")</div>
+                                                <div class="d-flex align-items-center">
+                                                    <div class="stat d-flex align-items-center justify-content-center rounded bg-light me-3" style="width: 40px; height: 40px;">
+                                                        <i class="text-primary" data-feather="play-circle" style="width: 20px; height: 20px;"></i>
+                                                    </div>
+                                                    <div>
+                                                        <div class="fw-700 text-dark">@(lesson.Lesson?.LessonName ?? "Unknown Lesson")</div>
+                                                        <div class="text-muted small fw-600">@(lesson.Lesson?.Description?.Length > 30 ? lesson.Lesson.Description.Substring(0, 30) + "..." : lesson.Lesson?.Description ?? "Learning session")</div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="py-3">
+                                                <span class="badge bg-soft-primary text-primary fw-600">@(lesson.Batch?.BatchName ?? "Unknown Batch")</span>
                                             </td>
                                             <td class="text-end py-3">
-                                                <div class="d-inline-flex align-items-center badge rounded-pill fw-600 p-2 px-3 bg-light text-dark border shadow-sm">
-                                                    <i data-feather="clock" class="me-2 text-muted" style="width: 14px; height: 14px;"></i>
-                                                    @lesson.LessonDateTime.ToString("MMM dd, yyyy h:mm tt")
-                                                </div>
+                                                <div class="fw-700 text-dark">@lesson.LessonDateTime.ToString("MMM dd, yyyy")</div>
+                                                <div class="text-muted small fw-600">@lesson.LessonDateTime.ToString("h:mm tt")</div>
                                             </td>
                                         </tr>
                                     }
@@ -82,12 +115,12 @@
                                 else
                                 {
                                     <tr>
-                                        <td colspan="2" class="text-center text-muted p-5">
+                                        <td colspan="3" class="text-center text-muted p-5">
                                             <div class="mb-3">
                                                 <i data-feather="calendar" style="width: 48px; height: 48px; opacity: 0.5;"></i>
                                             </div>
-                                            <div class="fw-bold">No upcoming lessons scheduled.</div>
-                                            <div class="small mt-1">Check back later for updates.</div>
+                                            <div class="fw-bold">No lessons found.</div>
+                                            <div class="small mt-1">Visit My Learning area to enroll.</div>
                                         </td>
                                     </tr>
                                 }
@@ -98,15 +131,13 @@
             </div>
         </div>
 
-        <div class="col-12 col-xl-5 d-flex">
+        <div class="col-12 col-xl-4 d-flex">
             <div class="card flex-fill shadow-sm border-0 w-100">
                 <div class="card-header bg-transparent border-0 pt-4 pb-2 px-4">
                     <h5 class="card-title fw-800 text-dark mb-0">Calendar</h5>
                 </div>
-                <div class="card-body d-flex justify-content-center p-4 pt-2">
-                    <div class="w-100 d-flex justify-content-center" style="max-width: 400px;">
-                        <input type="text" id="datetimepicker-dashboard" class="d-none" />
-                    </div>
+                <div class="card-body p-4 pt-2">
+                    <div id="calendar-dashboard" style="min-height: 400px;"></div>
                 </div>
             </div>
         </div>
@@ -117,14 +148,31 @@
 @section Scripts {
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            var date = new Date();
-            var defaultDate = date.getUTCFullYear() + "-" + (date.getUTCMonth() + 1) + "-" + date.getUTCDate();
-            document.getElementById("datetimepicker-dashboard").flatpickr({
-                inline: true,
-                prevArrow: "<span title=\"Previous month\">&laquo;</span>",
-                nextArrow: "<span title=\"Next month\">&raquo;</span>",
-                defaultDate: defaultDate
+            var calendarEl = document.getElementById('calendar-dashboard');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                headerToolbar: {
+                    left: 'prev,next',
+                    center: 'title',
+                    right: ''
+                },
+                height: 'auto',
+                events: [
+                    @foreach (var lesson in upcomingLessons)
+                    {
+                        <text>
+                        {
+                            title: '@(lesson.Lesson?.LessonName ?? "Lesson")',
+                            start: '@lesson.LessonDateTime.ToString("yyyy-MM-ddTHH:mm:ss")',
+                            backgroundColor: 'rgba(216, 50, 54, 0.1)',
+                            textColor: '#D83236',
+                            borderColor: 'transparent'
+                        },
+                        </text>
+                    }
+                ]
             });
+            calendar.render();
         });
     </script>
 }

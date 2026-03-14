@@ -64,6 +64,7 @@ namespace SENSEI.WEB.Areas.StudentPortal.Controllers
 
             StudentBatchPayment studentBatchPayment = new StudentBatchPayment();
             studentBatchPayment.StudentBatchId = student.StudentBatches.FirstOrDefault()?.StudentBatchId ?? 0;
+            studentBatchPayment.PaymentMonth = DateTime.Today;
 
             return View(studentBatchPayment);
         }

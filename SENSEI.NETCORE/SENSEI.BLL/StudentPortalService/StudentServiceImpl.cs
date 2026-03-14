@@ -28,6 +28,14 @@ namespace SENSEI.BLL.StudentPortalService
             return student.FirstOrDefault();
         }
 
+        public async Task<bool> UpdateStudentProfile(Student student)
+        {
+            string jsonString = JsonConvert.SerializeObject(student);
+            DataTransactionManager dataTransactionManager = new DataTransactionManager(_databaseService.GetConnectionString());
+            var (status, primaryKey) = await dataTransactionManager.StudentDataManager.UpdateDataReturnPrimaryKey("UpdateStudentProfile", jsonString);
+            return status;
+        }
+
         public async Task<(IEnumerable<Batch>, long)> SearchStudentBatches(long studentId, int start = 0, int length = 10, string searchValue = "", string sortColumn = "batchName", string sortDirection = "ASC")
         {
             DataTransactionManager dataTransactionManager = new DataTransactionManager(_databaseService.GetConnectionString());

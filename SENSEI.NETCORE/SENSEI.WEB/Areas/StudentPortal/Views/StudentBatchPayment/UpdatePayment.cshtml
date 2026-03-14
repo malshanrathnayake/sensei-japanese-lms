@@ -1,21 +1,162 @@
-﻿@using SENSEI.DOMAIN
+@using SENSEI.DOMAIN
 @model StudentBatchPayment
 
 @{
     Layout = null;
 }
 
-<div class="offcanvas-header bg-light border-bottom p-4">
+<style>
+    /* Premium Offcanvas Refinements */
+    #studentbatchpaymentOffcanvas {
+        background: rgba(255, 255, 255, 0.98);
+        backdrop-filter: blur(15px);
+        border-left: 1px solid rgba(216, 50, 54, 0.1);
+        box-shadow: -15px 0 50px rgba(0, 0, 0, 0.08) !important;
+        top: 15px !important;
+        bottom: 15px !important;
+        right: 15px !important;
+        height: calc(100vh - 30px) !important;
+        border-radius: 30px 0 0 30px !important;
+        transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1) !important;
+    }
+
+    .payment-upload-card {
+        background: #ffffff;
+        border: 2px dashed rgba(216, 50, 54, 0.15);
+        border-radius: 20px;
+        padding: 40px 20px;
+        text-align: center;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .payment-upload-card:hover {
+        border-color: var(--sensei-red);
+        background: #fffafa;
+        transform: translateY(-4px);
+        box-shadow: 0 10px 30px rgba(216, 50, 54, 0.08);
+    }
+
+    .payment-upload-card.has-file {
+        border-style: solid;
+        border-color: #27ae60;
+        background: #f8fff9;
+    }
+
+    .upload-icon-circle {
+        width: 70px;
+        height: 70px;
+        background: #fff;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+        box-shadow: 0 10px 20px rgba(216, 50, 54, 0.12);
+        color: var(--sensei-red);
+        transition: all 0.3s ease;
+    }
+
+    .payment-upload-card:hover .upload-icon-circle {
+        transform: scale(1.1) rotate(5deg);
+        background: var(--sensei-red);
+        color: #fff;
+    }
+
+    .slip-preview-container {
+        display: none;
+        margin-top: 20px;
+        position: relative;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        border: 4px solid #fff;
+    }
+
+    .slip-preview-container img {
+        width: 100%;
+        max-height: 250px;
+        object-fit: contain;
+        background: #f8f9fa;
+    }
+
+    .remove-slip-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: rgba(255, 255, 255, 0.9);
+        border: none;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #e74c3c;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        cursor: pointer;
+        z-index: 5;
+    }
+
+    .form-label-premium {
+        font-weight: 800;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: #495057;
+        margin-bottom: 0.6rem;
+        display: block;
+    }
+
+    .input-premium {
+        border-radius: 15px !important;
+        padding: 0.9rem 1.25rem !important;
+        border: 1px solid rgba(0,0,0,0.08) !important;
+        font-weight: 700 !important;
+        background: #fdfdfd !important;
+        transition: all 0.3s ease !important;
+    }
+
+    .input-premium:focus {
+        border-color: var(--sensei-red) !important;
+        background: #fff !important;
+        box-shadow: 0 0 0 5px rgba(216, 50, 54, 0.08) !important;
+    }
+
+    .btn-action-submit {
+        background: linear-gradient(135deg, var(--sensei-red) 0%, #a11d21 100%) !important;
+        color: #fff !important;
+        border: none !important;
+        padding: 1.1rem !important;
+        border-radius: 18px !important;
+        font-weight: 800 !important;
+        width: 100%;
+        box-shadow: 0 12px 30px rgba(216, 50, 54, 0.3) !important;
+        transition: all 0.3s ease !important;
+    }
+
+    .btn-action-submit:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 18px 45px rgba(216, 50, 54, 0.45) !important;
+    }
+</style>
+
+<div class="offcanvas-header p-4 pb-2 border-0">
     <div class="d-flex align-items-center">
-        <div class="bg-white rounded-circle d-flex align-items-center justify-content-center shadow-sm me-3" style="width: 42px; height: 42px; color: var(--sensei-red);">
-            <i data-feather="dollar-sign" style="width: 20px; height: 20px;"></i>
+        <div class="bg-soft-primary rounded-circle d-flex align-items-center justify-content-center me-3 shadow-sm" style="width: 52px; height: 52px; color: var(--sensei-red);">
+            <i data-feather="plus-circle" style="width: 24px; height: 24px;"></i>
         </div>
-        <h5 class="offcanvas-title fw-800 text-dark mb-0">Add New Payment</h5>
+        <div>
+            <h5 class="offcanvas-title fw-900 text-dark mb-0" style="font-size: 1.25rem;">New Payment</h5>
+            <p class="text-muted small mb-0 fw-600">Register your learning fee slip</p>
+        </div>
     </div>
     <button type="button" class="btn-close shadow-none" data-bs-dismiss="offcanvas" aria-label="Close"></button>
 </div>
 
-<div class="offcanvas-body p-4 bg-white">
+<div class="offcanvas-body p-4 pt-1">
 
     <form id="studentbatchpayment-create-form" asp-area="StudentPortal" asp-controller="StudentBatchPayment" asp-action="UpdatePayment"
           data-ajax="true" data-ajax-method="POST" enctype="multipart/form-data"
@@ -23,54 +164,113 @@
 
         <input type="hidden" id="StudentBatchId" name="StudentBatchId" value="@Model.StudentBatchId" />
 
-        <div class="alert alert-soft-primary bg-light border-0 rounded-4 p-3 mb-4 d-flex align-items-start">
-            <i data-feather="info" class="me-2 text-muted mt-1" style="width: 18px; height: 18px;"></i>
-            <div class="small text-muted">Please ensure your payment amount and selected month are accurate before submitting the payment slip for verification.</div>
+        <div class="alert alert-soft-primary border-0 rounded-4 p-4 mb-4 d-flex align-items-center animate-fade-in" style="background: rgba(216, 50, 54, 0.03);">
+            <div class="rounded-circle bg-white d-flex align-items-center justify-content-center me-3 shadow-sm" style="width: 36px; height: 36px; flex-shrink: 0;">
+                <i data-feather="shield" style="width: 18px; height: 18px; color: var(--sensei-red);"></i>
+            </div>
+            <div class="small fw-700 text-muted" style="line-height: 1.4;">
+                Payment verification takes <span class="text-dark">24h</span>. Ensure all details are clear.
+            </div>
         </div>
 
         <div class="mb-4">
-            <label class="form-label fw-700 text-dark small text-uppercase letter-spacing-05">Amount Paid (Rs.) <span class="text-danger">*</span></label>
-            <div class="input-group input-group-lg shadow-sm">
-                <span class="input-group-text bg-white border-end-0 text-muted"><i data-feather="hash" style="width: 16px; height: 16px;"></i></span>
-                <input type="number" step="0.01" class="form-control border-start-0 ps-0 fw-600" asp-for="Amount" placeholder="e.g. 5000.00" />
+            <label class="form-label-premium">Amount Paid (LKR)</label>
+            <div class="input-group">
+                <span class="input-group-text bg-white border-end-0 text-muted rounded-start-4 ps-3 pe-0" style="border: 1px solid rgba(0,0,0,0.08); border-right: 0;"><i data-feather="dollar-sign" style="width: 16px;"></i></span>
+                <input type="number" step="0.01" class="form-control input-premium border-start-0" asp-for="Amount" placeholder="e.g. 5,000.00" />
             </div>
             <span asp-validation-for="Amount" class="text-danger small mt-1 d-block fw-600"></span>
         </div>
 
         <div class="mb-4">
-            <label class="form-label fw-700 text-dark small text-uppercase letter-spacing-05">Payment Month <span class="text-danger">*</span></label>
-            <div class="input-group input-group-lg shadow-sm">
-                <span class="input-group-text bg-white border-end-0 text-muted"><i data-feather="calendar" style="width: 16px; height: 16px;"></i></span>
-                <input type="text" class="form-control datepicker border-start-0 ps-0 fw-600" asp-for="PaymentMonth" autocomplete="off" placeholder="Select month"/>
+            <label class="form-label-premium">Payment Month</label>
+            <div class="input-group">
+                <span class="input-group-text bg-white border-end-0 text-muted rounded-start-4 ps-3 pe-0" style="border: 1px solid rgba(0,0,0,0.08); border-right: 0;"><i data-feather="calendar" style="width: 16px;"></i></span>
+                <input type="text" class="form-control input-premium datepicker border-start-0" id="PaymentMonth" name="PaymentMonth" value="@Model.PaymentMonth.ToString("yyyy-MM")" autocomplete="off" placeholder="Select Period"/>
             </div>
             <span asp-validation-for="PaymentMonth" class="text-danger small mt-1 d-block fw-600"></span>
         </div>
 
-        <div class="mb-4 p-4 border rounded-4 bg-light bg-opacity-50">
-            <label class="form-label fw-700 small text-uppercase d-flex align-items-center mb-3" style="color: var(--sensei-red-dark)">
-                <i data-feather="image" class="me-2" style="width: 16px; height: 16px;"></i> Payment Slip <span class="text-danger ms-1">*</span>
-            </label>
-            <div class="position-relative">
-                <input type="file" class="form-control form-control-lg shadow-sm bg-white"
-                       id="SlipImage" name="SlipImage" accept="image/*" required />
+        <div class="mb-0">
+            <label class="form-label-premium">Upload Payment Slip</label>
+            
+            <div class="payment-upload-card" id="drop-zone" onclick="document.getElementById('SlipImage').click()">
+                <div id="upload-prompt">
+                    <div class="upload-icon-circle">
+                        <i data-feather="image" style="width: 28px; height: 28px;"></i>
+                    </div>
+                    <h6 class="fw-900 text-dark mb-1">Upload Your Slip</h6>
+                    <p class="text-muted small mb-0 px-3 fw-600">Tap here to select an image from your device</p>
+                </div>
+
+                <div class="slip-preview-container" id="preview-box">
+                    <button type="button" class="remove-slip-btn" onclick="clearSelectedFile(event)">
+                        <i data-feather="x" style="width: 16px; height: 16px;"></i>
+                    </button>
+                    <img id="image-preview" src="#" alt="Preview" />
+                    <div class="bg-white p-2">
+                        <span class="badge bg-soft-success text-success rounded-pill px-3 py-1 fw-700" id="file-name-badge">
+                            <i data-feather="check" class="me-1" style="width: 12px;"></i> Ready
+                        </span>
+                    </div>
+                </div>
+
+                <input type="file" id="SlipImage" name="SlipImage" accept="image/*" class="d-none" onchange="handleFileUpload(this)" required />
             </div>
-            <div class="form-text mt-2 small text-muted d-flex align-items-center">
-                <i data-feather="check-circle" class="me-1 text-success" style="width: 12px; height: 12px;"></i> Upload clear JPG/PNG/WebP image (max 5MB).
-            </div>
+            
+            <span asp-validation-for="SlipImage" class="text-danger small mt-2 d-block fw-600 text-center"></span>
         </div>
 
-        <div class="d-flex justify-content-end gap-3 mt-5 pt-3 border-top">
-            <button type="button" class="btn btn-light border fw-600 px-4 shadow-sm" data-bs-dismiss="offcanvas">
-                Cancel
+        <div class="mt-5">
+            <button type="submit" class="btn btn-action-submit d-flex align-items-center justify-content-center" id="btnSavePayment">
+                <span>Submit My Payment</span>
+                <i class="ms-2" data-feather="send" style="width: 18px;"></i>
             </button>
-
-            <button type="submit" class="btn btn-primary fw-700 px-4 shadow-sm d-flex align-items-center" id="btnSavePayment">
-                <i class="me-2" data-feather="upload-cloud" style="width: 18px; height: 18px;"></i> Submit Payment
+            <button type="button" class="btn btn-link w-100 text-muted small fw-800 mt-2 text-decoration-none" data-bs-dismiss="offcanvas">
+                Not now, go back
             </button>
         </div>
 
     </form>
 
 </div>
+
+<script>
+    function handleFileUpload(input) {
+        const prompt = document.getElementById('upload-prompt');
+        const previewBox = document.getElementById('preview-box');
+        const previewImg = document.getElementById('image-preview');
+        const fileNameBadge = document.getElementById('file-name-badge');
+        const dropZone = document.getElementById('drop-zone');
+
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                previewImg.src = e.target.result;
+                prompt.style.display = 'none';
+                previewBox.style.display = 'block';
+                dropZone.classList.add('has-file');
+                fileNameBadge.innerHTML = `<i data-feather=\"check\" class=\"me-1\" style=\"width: 12px;\"></i> ${input.files[0].name.substring(0, 15)}...`;
+                if (window.feather) { feather.replace(); }
+            }
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    function clearSelectedFile(e) {
+        e.stopPropagation();
+        const input = document.getElementById('SlipImage');
+        const prompt = document.getElementById('upload-prompt');
+        const previewBox = document.getElementById('preview-box');
+        const dropZone = document.getElementById('drop-zone');
+        
+        input.value = '';
+        prompt.style.display = 'block';
+        previewBox.style.display = 'none';
+        dropZone.classList.remove('has-file');
+    }
+</script>
 
 

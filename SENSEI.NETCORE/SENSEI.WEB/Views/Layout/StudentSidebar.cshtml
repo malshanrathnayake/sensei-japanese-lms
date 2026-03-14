@@ -1,4 +1,4 @@
-﻿@model List<SENSEI.WEB.Models.SidebarItem>
+@model List<SENSEI.WEB.Models.SidebarItem>
 @{
 	Layout = null;
     var currentUrl = Context.Request.Path.ToString().ToLower();
@@ -19,15 +19,35 @@
         box-shadow: 0 4px 10px rgba(216, 50, 54, 0.2);
     }
     .sidebar-cta-premium {
-        background: rgba(34, 46, 60, 0.05);
-        border: 1px solid rgba(216, 50, 54, 0.1);
-        border-radius: 12px;
+        background: linear-gradient(135deg, rgba(216, 50, 54, 0.1) 0%, rgba(216, 50, 54, 0.02) 100%);
+        border: 1px solid rgba(216, 50, 54, 0.15);
+        border-radius: 16px;
         margin: 20px;
-        padding: 20px;
+        padding: 24px 20px;
+        position: relative;
+        overflow: hidden;
+    }
+    .sidebar-cta-premium::before {
+        content: "";
+        position: absolute;
+        top: -20px;
+        right: -20px;
+        width: 60px;
+        height: 60px;
+        background: var(--sensei-red);
+        opacity: 0.05;
+        border-radius: 50%;
     }
     .sidebar-item.active .sidebar-link {
         border-left: 3px solid var(--sensei-red);
         background: linear-gradient(90deg, rgba(216, 50, 54, 0.05), transparent) !important;
+    }
+    .sidebar-cta-content .text-muted {
+        color: rgba(255, 255, 255, 0.7) !important; /* Making it visible on dark sidebar */
+    }
+    .sidebar-cta-content strong {
+        color: #fff !important; /* Making title stand out */
+        text-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
 </style>
 
@@ -44,7 +64,7 @@
 		</a>
 
 		<ul class="sidebar-nav">
-			<li class="sidebar-header" style="font-weight: 800; color: var(--sensei-red); opacity: 0.7; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em;">
+			<li class="sidebar-header" style="font-weight: 800; color: var(--sensei-red); opacity: 0.7; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.15em; padding: 1.5rem 1.5rem 0.5rem !important;">
 				Main Menu
 			</li>
 
@@ -60,14 +80,14 @@
 			}
 		</ul>
 
-        <div class="sidebar-cta-premium">
-            <div class="sidebar-cta-content">
-                <strong class="d-inline-block mb-2 fw-800" style="color: var(--sensei-red);">Study Hard!</strong>
-                <div class="mb-3 text-muted small fw-600">
-                    Success in Japanese comes with consistent practice. Ganbatte!
+        <div class="sidebar-cta-premium" style="margin: 15px; padding: 15px;">
+            <div class="sidebar-cta-content text-center">
+                <strong class="d-inline-block mb-2 fw-900" style="font-size: 1rem; letter-spacing: 0.02em;">Study Hard!</strong>
+                <div class="mb-3 text-muted small fw-600" style="line-height: 1.4; font-size: 0.7rem;">
+                    Success comes with consistent practice. <span style="color: var(--sensei-red);">Ganbatte!</span>
                 </div>
-                <div class="d-grid">
-                    <a href="/StudentPortal/MyLearning/Index" class="btn btn-primary rounded-pill fw-700">Go to Lessons</a>
+                <div class="d-grid px-1">
+                    <a href="/StudentPortal/MyLearning/Index" class="btn btn-primary rounded-pill fw-800 py-1 shadow-sm small" style="font-size: 0.75rem;">Go to Lessons</a>
                 </div>
             </div>
         </div>

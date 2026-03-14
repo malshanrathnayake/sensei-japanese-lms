@@ -23,6 +23,7 @@ namespace SENSEI.WEB.Areas.StudentPortal.Controllers
             var (lessons, totalLessons) = await _studentService.SearchStudentBatchLessons(studentId, 0, 0, 5, "", "lessonDateTime", "DESC"); 
 
             ViewBag.TotalCourses = totalCourses;
+            ViewBag.TotalLessons = totalLessons;
             ViewBag.UpcomingLessons = lessons;
 
             return View();

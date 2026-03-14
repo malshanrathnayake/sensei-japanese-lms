@@ -1,4 +1,4 @@
-﻿﻿@using SENSEI.DOMAIN
+﻿@using SENSEI.DOMAIN
 @model StudentBatchPayment
 
 @{
@@ -44,7 +44,7 @@
 
         <div class="mb-3">
             <label class="form-label">@Html.DisplayNameFor(m => m.PaymentDate)</label>
-            <input class="form-control" value="@Model.PaymentDate?.ToString("yyyy-MM-dd")" readonly />
+            <input class="form-control" value="@Model.PaymentDate?.ToString("yyyy-MM-dd HH:mm:ss")" readonly />
         </div>
 
         <div class="mb-3">

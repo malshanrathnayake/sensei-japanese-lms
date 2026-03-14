@@ -3,7 +3,7 @@
 	Layout = null;
 }
 
-<nav class="navbar navbar-expand navbar-light navbar-bg py-3 px-4 shadow-none" style="z-index:1 !important">
+<nav class="navbar navbar-expand navbar-light navbar-bg py-3 px-4 shadow-sm">
 	<div class="d-flex align-items-center">
 		<a class="sidebar-toggle js-sidebar-toggle">
 			<i class="hamburger align-self-center"></i>
@@ -18,13 +18,13 @@
 	<div class="navbar-collapse collapse">
 		<ul class="navbar-nav navbar-align">
 			<!-- notification -->
-			@Html.RenderAction("AdminPortalNotification", "Layout", new { area = "" })
+			@Html.RenderAction("StudentPortalNotification", "Layout", new { area = "" })
 
 			<!-- message -->
-			@Html.RenderAction("AdminPortalMessages", "Layout", new { area = "" })
+			@Html.RenderAction("StudentPortalMessages", "Layout", new { area = "" })
 
 			<!-- profile -->
-			@Html.RenderAction("AdminPortalProfile", "Layout", new { area = "" })
+			@Html.RenderAction("StudentPortalProfile", "Layout", new { area = "" })
 		</ul>
 	</div>
 </nav>

@@ -16,70 +16,160 @@
         border-color: var(--sensei-red) !important;
         box-shadow: 0 0 0 0.25rem rgba(216, 50, 54, 0.1) !important;
     }
+    
+    /* Premium Table Styling */
     .table thead th {
-        background: rgba(216, 50, 54, 0.02);
-        color: var(--sensei-red-dark);
-        font-weight: 800;
+        background: #fff8f8 !important;
+        color: #888;
+        font-weight: 700;
         text-transform: uppercase;
+        font-size: 0.7rem;
+        letter-spacing: 0.1em;
+        padding: 1.2rem 1rem !important;
+        border: none !important;
+    }
+
+    .table tbody td {
+        padding: 1.2rem 1rem !important;
+        border-bottom: 1px solid rgba(0,0,0,0.03) !important;
+        vertical-align: middle;
+    }
+
+    /* Summary Card Styling */
+    .payment-summary-card {
+        border: none !important;
+        border-radius: 20px !important;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        overflow: hidden;
+        background: #fff !important;
+    }
+
+    .payment-summary-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 40px rgba(216, 50, 54, 0.08) !important;
+    }
+
+    .card-accent-pill {
+        width: 4px;
+        height: 40px;
+        background: var(--sensei-red);
+        border-radius: 10px;
+        margin-right: 15px;
+    }
+
+    .amount-display {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+    }
+
+    .btn-new-payment {
+        padding: 10px 24px;
+        border-radius: 12px;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        background: linear-gradient(135deg, var(--sensei-red) 0%, var(--sensei-red-dark) 100%);
+        border: none;
+        box-shadow: 0 8px 20px rgba(216, 50, 54, 0.25);
+    }
+
+    .btn-new-payment:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 28px rgba(216, 50, 54, 0.35);
+    }
+
+    .status-pill {
         font-size: 0.75rem;
+        font-weight: 800;
+        padding: 6px 16px;
+        border-radius: 50px;
+        text-transform: uppercase;
         letter-spacing: 0.05em;
-        border-bottom: 2px solid rgba(216, 50, 54, 0.1);
     }
-    .card.hover-elevate:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.08) !important;
-    }
+
+    .bg-soft-success { background: rgba(39, 174, 96, 0.1); color: #27ae60; }
+    .bg-soft-warning { background: rgba(243, 156, 18, 0.1); color: #f39c12; }
+    .bg-soft-primary { background: rgba(216, 50, 54, 0.08); color: var(--sensei-red); }
 </style>
 
-<div class="container-fluid p-0">
+<div class="container-fluid p-0 sakura-bg">
 
-    <div class="row mb-3 mb-xl-4 align-items-center">
-        <div class="col-auto d-none d-sm-block">
-            <h3 class="fw-800 text-dark mb-0"><span style="color: var(--sensei-red);">My</span> Payments</h3>
-            <p class="text-muted small mb-0">Student: <span class="fw-700">@Model?.StudentPopulatedName</span> (@Model?.IndexNumber)</p>
+    <div class="row mb-5 align-items-center bg-white rounded-4 p-4 shadow-sm mx-0 animate-fade-in" style="border-left: 5px solid var(--sensei-red); position: relative; z-index: 2;">
+        <div class="col-12 col-md-7 mb-3 mb-md-0">
+            <h3 class="fw-900 text-dark mb-1">My <span style="color: var(--sensei-red);">Payments</span> Center</h3>
+            <p class="text-muted mb-0 fw-600">こんにちは, @(Model?.FirstName ?? "Student")! Keep track of your learning investment here. 📚✨</p>
         </div>
 
-        <div class="col-auto ms-auto text-end mt-n1">
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb bg-transparent p-0 mt-1 mb-0">
-                    <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home", new { area = "StudentPortal" })" class="text-muted">LMS</a></li>
-                    <li class="breadcrumb-item active" aria-current="page" style="color: var(--sensei-red)">Payments</li>
-                </ol>
-            </nav>
-            <button class="btn btn-primary mt-2 shadow-sm" id="new-payment" data-action-url="@Url.Action("UpdatePayment", "StudentBatchPayment", new { area = "StudentPortal" })">
-                <i class="align-middle me-1" data-feather="plus-circle"></i> New Payment
-            </button>
+        <div class="col-12 col-md-5 text-md-end">
+            <div class="d-inline-flex gap-3 align-items-center">
+                <div class="text-end d-none d-sm-block">
+                    <div class="text-muted small fw-700">Student Index</div>
+                    <div class="fw-800 text-dark">#@Model?.IndexNumber</div>
+                </div>
+                <button class="btn btn-primary btn-new-payment" id="new-payment" data-action-url="@Url.Action("UpdatePayment", "StudentBatchPayment", new { area = "StudentPortal" })">
+                    <i class="align-middle me-2" data-feather="plus-circle" style="width: 18px; height: 18px;"></i> Upload Slip
+                </button>
+            </div>
         </div>
     </div>
 
-    <!-- Summary Section -->
-    <div class="row mb-4" id="summaryContainer">
+    <!-- Summary Section Heading -->
+    <div class="row mb-3">
+        <div class="col-12">
+            <h5 class="fw-800 text-dark opacity-50 small text-uppercase" style="letter-spacing: 0.15em;">Active Batch Summaries</h5>
+        </div>
+    </div>
+
+    <!-- Summary Section Grid -->
+    <div class="row mb-5" id="summaryContainer">
         <!-- Summaries will be injected here via AJAX -->
+        <div class="col-12 text-center py-5" id="summaryLoader">
+            <div class="spinner-border text-primary" role="status"></div>
+            <p class="mt-2 text-muted small">Loading summaries...</p>
+        </div>
+    </div>
+
+    <!-- History Section Heading -->
+    <div class="row mb-3">
+        <div class="col-12">
+            <h5 class="fw-800 text-dark opacity-75 small text-uppercase" style="letter-spacing: 0.1em;">Payment History</h5>
+        </div>
     </div>
 
     <div class="row">
         <div class="col-12">
             <div class="card shadow-sm border-0 rounded-4 overflow-hidden">
-                <div class="card-header bg-transparent border-0 pt-4 pb-2 px-4 d-flex justify-content-between align-items-center">
-                    <h5 class="card-title fw-800 text-dark mb-0 d-flex align-items-center">
-                        <i data-feather="list" class="me-2" style="color: var(--sensei-red);"></i> 
-                        Payment History
-                    </h5>
-                </div>
-                <div class="card-body px-4 pb-4">
+                <div class="card-body p-0">
                     <div class="table-responsive">
-                        <table id="paymentTable" class="table table-hover align-middle w-100 mb-0" style="border-collapse: separate; border-spacing: 0 8px;">
-                            <thead class="bg-light">
+                        <table id="paymentTable" class="table table-hover align-middle w-100 mb-0">
+                            <thead>
                                 <tr>
-                                    <th class="border-0 rounded-start">Course / Batch</th>
-                                    <th class="border-0">Month</th>
-                                    <th class="border-0">Amount</th>
-                                    <th class="border-0">Date Paid</th>
-                                    <th class="border-0 rounded-end">Status</th>
+                                    <th class="ps-4">Batch Details</th>
+                                    <th>Month</th>
+                                    <th>Amount</th>
+                                    <th>Submission Date</th>
+                                    <th class="text-end pe-4">Status</th>
                                 </tr>
                             </thead>
                             <tbody></tbody>
                         </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Friendly Info Card Moved to Bottom -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="card border-0 rounded-4 overflow-hidden shadow-none" style="background: linear-gradient(90deg, #fff5f7 0%, #fff 100%); border: 1px dashed rgba(216, 50, 54, 0.2) !important;">
+                <div class="card-body p-4 d-flex align-items-center">
+                    <div class="bg-white rounded-circle d-flex align-items-center justify-content-center shadow-sm me-4 flex-shrink-0" style="width: 54px; height: 54px; color: var(--sensei-red);">
+                        <i data-feather="heart"></i>
+                    </div>
+                    <div>
+                        <h6 class="fw-800 text-dark mb-1">Friendly Reminder</h6>
+                        <p class="mb-0 text-muted small fw-600">Please make sure to upload clear photos of your bank slips. We verify payments within 24 hours of submission (Monday to Friday).</p>
                     </div>
                 </div>
             </div>
@@ -109,25 +199,25 @@
                 "processing": true,
                 "serverSide": true,
                 "responsive": true,
+                "dom": '<"row p-4 pb-0"<"col-sm-6"l><"col-sm-6 text-end"f>>rt<"row p-4"<"col-sm-6"i><"col-sm-6 text-end"p>>',
                 "ajax": {
                     "url": "@Url.Action("SearchPayments", "StudentBatchPayment")",
                     "type": "POST"
                 },
                 "language": {
-                    "processing": `<div class="d-flex justify-content-center"><div class="spinner-border" style="color: var(--sensei-red);" role="status"><span class="visually-hidden">Loading...</span></div></div>`
+                    "processing": `<div class="d-flex justify-content-center p-5"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div></div>`
                 },
                 "columns": [
                     { 
                         "data": null,
-                        title: "Course / Batch",
                         "render": function(data) {
-                            return `<div class="d-flex align-items-center">
-                                        <div class="bg-light rounded-3 d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px; color: var(--sensei-red);">
-                                            <i data-feather="book"></i>
+                            return `<div class="d-flex align-items-center ps-2">
+                                        <div class="bg-soft-primary rounded-3 d-flex align-items-center justify-content-center me-3" style="width: 42px; height: 42px;">
+                                            <i data-feather="bookmark" style="width: 20px; height: 20px;"></i>
                                         </div>
                                         <div>
-                                            <span class="fw-800 text-dark d-block mb-1" style="font-size: 0.9rem;">${data.studentBatch.batch.course.courseName}</span>
-                                            <span class="badge bg-light text-dark border fw-600">${data.studentBatch.batch.batchName}</span>
+                                            <span class="fw-800 text-dark d-block mb-1" style="font-size: 0.95rem;">${data.studentBatch.batch.course.courseName}</span>
+                                            <span class="text-muted small fw-600">${data.studentBatch.batch.batchName}</span>
                                         </div>
                                     </div>`;
                         }
@@ -135,33 +225,34 @@
                     { 
                         "data": "PaymentMonth",
                         "render": function(data) {
-                            return `<div class="d-flex align-items-center">
+                            return `<div class="fw-700 text-dark d-flex align-items-center">
                                         <i data-feather="calendar" class="me-2 text-muted" style="width: 14px; height: 14px;"></i>
-                                        <span class="fw-700 text-dark">${moment(data).format('MMMM YYYY')}</span>
+                                        ${moment(data).format('MMMM YYYY')}
                                     </div>`;
                         }
                     },
                     { 
                         "data": null,
                         "render": function(data) {
-                            return `<div class="fw-800" style="color: var(--sensei-red); font-size: 0.95rem;">Rs. ${parseFloat(data.amount).toLocaleString(undefined, {minimumFractionDigits: 2})}</div>`;
+                            return `<div class="amount-display text-dark" style="font-size: 1.05rem;">LKR ${parseFloat(data.amount).toLocaleString(undefined, {minimumFractionDigits: 2})}</div>`;
                         }
                     },
                     { 
                         "data": "PaymentDate",
                         "render": function(data) {
                             return `<div class="text-muted fw-600 small">
-                                        <i data-feather="clock" class="me-1" style="width: 12px; height: 12px;"></i>
                                         ${moment(data).format('MMM DD, YYYY')}
+                                        <div class="opacity-50">${moment(data).format('h:mm A')}</div>
                                     </div>`;
                         }
                     },
                     { 
                         "data": "IsApproved",
+                        "className": "text-end pe-4",
                         "render": function(data) {
                             return data ? 
-                                '<div class="d-inline-flex align-items-center badge rounded-pill fw-800 p-2 px-3" style="background: rgba(40, 167, 69, 0.1); color: #28a745;"><i data-feather="check-circle" class="me-1" style="width: 14px; height: 14px;"></i> Verified</div>' : 
-                                '<div class="d-inline-flex align-items-center badge rounded-pill fw-800 p-2 px-3" style="background: rgba(255, 193, 7, 0.1); color: #B08D00;"><i data-feather="clock" class="me-1" style="width: 14px; height: 14px;"></i> Pending</div>';
+                                '<span class="status-pill bg-soft-success"><i data-feather="check-circle" class="me-1" style="width: 14px; height: 14px;"></i> Verified</span>' : 
+                                '<span class="status-pill bg-soft-warning"><i data-feather="clock" class="me-1" style="width: 14px; height: 14px;"></i> In Review</span>';
                         }
                     }
                 ],
@@ -178,42 +269,35 @@
                     data.forEach(item => {
                         html += `
                             <div class="col-md-6 col-xl-4 mb-4">
-                                <div class="card h-100 shadow-sm hover-elevate border-0 rounded-4 overflow-hidden position-relative" style="transition: transform 0.2s, boxShadow 0.2s;">
-                                    <div class="position-absolute top-0 start-0 w-100 h-100" style="background: linear-gradient(135deg, rgba(216, 50, 54, 0.03) 0%, rgba(216, 50, 54, 0) 100%); pointer-events: none;"></div>
-                                    <div class="card-body p-4 position-relative z-1">
-                                        <div class="d-flex justify-content-between align-items-start mb-4">
+                                <div class="card payment-summary-card shadow-sm h-100">
+                                    <div class="card-body p-4">
+                                        <div class="d-flex align-items-center mb-4">
+                                            <div class="card-accent-pill"></div>
                                             <div>
-                                                <div class="text-uppercase text-muted fw-bold small mb-1" style="letter-spacing: 0.05em; font-size: 0.75rem;">${item.courseName}</div>
-                                                <h4 class="fw-900 mb-0 text-dark" style="font-size: 1.15rem;">${item.batchName}</h4>
-                                            </div>
-                                            <div class="flex-shrink-0 ms-3">
-                                                <div class="d-flex align-items-center justify-content-center bg-light rounded-circle" style="width: 48px; height: 48px; color: var(--sensei-red);">
-                                                    <i data-feather="book-open" style="width: 20px; height: 20px;"></i>
-                                                </div>
+                                                <div class="text-muted small fw-800 text-uppercase mb-1" style="letter-spacing: 0.1em; opacity: 0.6;">${item.courseName}</div>
+                                                <h5 class="fw-900 mb-0 text-dark">${item.batchName}</h5>
                                             </div>
                                         </div>
                                         
-                                        <div class="pt-3 border-top" style="border-color: rgba(0,0,0,0.05) !important;">
-                                            <div class="row g-0 align-items-center mb-3">
-                                                <div class="col">
-                                                    <div class="text-muted small fw-bold text-uppercase mb-1" style="font-size: 0.7rem;">Total Submitted</div>
-                                                    <div class="fw-800 text-dark">Rs. ${parseFloat(item.totalPaid).toLocaleString(undefined, {minimumFractionDigits: 2})}</div>
-                                                </div>
-                                                <div class="col-auto">
-                                                    <i data-feather="arrow-up-right" class="text-muted opacity-50"></i>
-                                                </div>
+                                        <div class="row g-3">
+                                            <div class="col-6 border-end" style="border-right-style: dashed !important;">
+                                                <div class="text-muted small fw-700 mb-1">Submitted</div>
+                                                <div class="amount-display text-dark" style="font-size: 1rem;">Rs. ${parseFloat(item.totalPaid).toLocaleString(undefined, {minimumFractionDigits: 0})}</div>
                                             </div>
-                                            <div class="row g-0 align-items-center bg-light rounded-3 p-3">
-                                                <div class="col">
-                                                    <div class="text-success small fw-bold text-uppercase mb-1" style="font-size: 0.7rem;">Total Verified</div>
-                                                    <div class="fw-900 text-success mb-0" style="font-size: 1.1rem;">Rs. ${parseFloat(item.totalApproved).toLocaleString(undefined, {minimumFractionDigits: 2})}</div>
-                                                </div>
-                                                <div class="col-auto">
-                                                    <div class="d-flex align-items-center justify-content-center bg-success rounded-circle bg-opacity-10 text-success" style="width: 32px; height: 32px;">
-                                                        <i data-feather="check" style="width: 16px; height: 16px;"></i>
-                                                    </div>
-                                                </div>
+                                            <div class="col-6 ps-4">
+                                                <div class="text-success small fw-700 mb-1">Verified</div>
+                                                <div class="amount-display text-success" style="font-size: 1.1rem;">Rs. ${parseFloat(item.totalApproved).toLocaleString(undefined, {minimumFractionDigits: 0})}</div>
                                             </div>
+                                        </div>
+
+                                        <div class="mt-4 pt-3 border-top d-flex justify-content-between align-items-center">
+                                            <div class="d-flex align-items-center">
+                                                <div class="rounded-circle bg-soft-success d-flex align-items-center justify-content-center me-2" style="width: 24px; height: 24px;">
+                                                    <i data-feather="refresh-cw" style="width: 12px; height: 12px;"></i>
+                                                </div>
+                                                <span class="text-muted small fw-600">Sync completed</span>
+                                            </div>
+                                            <i data-feather="shield" class="text-success opacity-25" style="width: 24px; height: 24px;"></i>
                                         </div>
                                     </div>
                                 </div>
@@ -223,14 +307,13 @@
                 } else {
                     html = `
                         <div class="col-12">
-                            <div class="alert alert-light border-0 shadow-sm d-flex align-items-center p-4 rounded-4" role="alert">
-                                <div class="bg-white rounded-circle d-flex align-items-center justify-content-center shadow-sm me-4 flex-shrink-0" style="width: 48px; height: 48px; color: var(--sensei-red);">
-                                    <i data-feather="info"></i>
+                            <div class="bg-white rounded-4 p-5 text-center shadow-sm">
+                                <div class="mb-4 d-inline-flex align-items-center justify-content-center bg-soft-primary rounded-circle" style="width: 80px; height: 80px;">
+                                    <i data-feather="credit-card" style="width: 40px; height: 40px; color: var(--sensei-red);"></i>
                                 </div>
-                                <div>
-                                    <h6 class="alert-heading fw-800 mb-1 text-dark">No Payment Summaries Found</h6>
-                                    <p class="mb-0 text-muted small">You don't have any payment history yet. New payments will appear here.</p>
-                                </div>
+                                <h5 class="fw-800 text-dark">No payments recorded</h5>
+                                <p class="text-muted mx-auto" style="max-width: 350px;">You haven't uploaded any payment slips for your active batches yet.</p>
+                                <button class="btn btn-primary rounded-pill px-4" onclick="$('#new-payment').click()">Upload Your First Slip</button>
                             </div>
                         </div>
                     `;

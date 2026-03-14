@@ -26,8 +26,17 @@ namespace SENSEI.WEB.Areas.StudentPortal.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateProfile(Student student)
         {
-            // Update logic can be implemented here in the future
-            return View("Index", student);
+            var success = await _studentService.UpdateStudentProfile(student);
+            if (success)
+            {
+                TempData["Success"] = "Profile updated successfully!";
+            }
+            else
+            {
+                TempData["Error"] = "Failed to update profile. Please try again.";
+            }
+
+            return RedirectToAction("Index");
         }
     }
 }

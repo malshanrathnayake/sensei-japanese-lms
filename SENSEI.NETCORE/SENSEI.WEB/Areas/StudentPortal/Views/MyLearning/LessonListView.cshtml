@@ -1,4 +1,4 @@
-﻿@using SENSEI.DOMAIN
+@using SENSEI.DOMAIN
 @model IEnumerable<BatchLesson>
 @{
     Layout = null;
@@ -6,50 +6,61 @@
     long studentId = Convert.ToInt64(studentIdStr);
 }
 
-@{
-    if (Model != null && Model.Any())
+@if (Model != null && Model.Any())
+{
+    foreach (var group in Model.GroupBy(e => e.LessonId))
     {
-        foreach (var lesson in Model.GroupBy(e => e.LessonId))
-        {
-            var progressPercent = lesson.First().StudentBatchLessonViews.Count(e => e.StudentId == studentId && e.LessonId == lesson.First().Lesson.LessonId && e.IsCompleted) / (double)Model.Count(e => e.LessonId == lesson.First().Lesson.LessonId) * 100;
+        var firstLesson = group.First();
+        var totalUnits = group.Count();
+        var completedUnits = group.SelectMany(e => e.StudentBatchLessonViews).Count(v => v.StudentId == studentId && v.IsCompleted);
+        var progressPercent = totalUnits > 0 ? (completedUnits / (double)totalUnits) * 100 : 0;
+        
+        var lessonEncryptedKey = firstLesson.LessonEncryptedKey;
 
-            var currentLessonName = lesson.Where(e => !e.StudentBatchLessonViews.Any(v => v.BatchLessonId == e.BatchLessonId))
-                    .OrderBy(e => e.BatchLessonId)
-                    .Select(e => e.Description)
-                    .FirstOrDefault();
-
-            var lessonEncryptedKey = lesson.First().LessonEncryptedKey;
-
-            <div class="col-12 col-md-6 col-xl-4 mb-4">
-                <div class="card lesson-card">
-                    <div class="lesson-image-wrapper">
-                        <span class="lesson-badge">@lesson.First().Lesson.Course.CourseName</span>
+        <div class="col-12 col-md-6 col-xl-4">
+            <div class="card lesson-card h-100">
+                <div class="lesson-image-wrapper">
+                    <span class="lesson-badge">@firstLesson.Lesson.Course.CourseName</span>
+                    <i data-feather="book-open" class="text-primary opacity-25" style="width: 80px; height: 80px;"></i>
+                </div>
+                <div class="lesson-content">
+                    <h3 class="lesson-title">@firstLesson.Lesson.LessonName</h3>
+                    
+                    <div class="lesson-meta">
+                        <span class="d-flex align-items-center"><i data-feather="layers" class="me-1" style="width: 14px;"></i> @totalUnits Sections</span>
+                        <span class="d-flex align-items-center"><i data-feather="check-circle" class="me-1" style="width: 14px;"></i> @completedUnits Completed</span>
                     </div>
-                    <div class="lesson-content">
-                        <h3 class="lesson-title">@lesson.First().Lesson.LessonName</h3>
-                        <div class="lesson-meta">
-                            <span><i class="align-middle me-1" data-feather="book-open"></i>@Model.Count(e => e.LessonId == lesson.First().Lesson.LessonId)</span>
+
+                    <div class="mt-auto">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <span class="progress-label">Course Progress</span>
+                            <span class="fw-800 text-dark small">@Math.Round(progressPercent)%</span>
                         </div>
-                        <p class="text-muted small">@lesson.First().Lesson.Description</p>
-                        <div class="progress-wrapper">
-                            <div class="d-flex justify-content-between mb-1 small text-muted">
-                                <span>Progress</span>
-                                <span>@progressPercent %</span>
-                            </div>
-                            <div class="progress">
-                                <div class="progress-bar" role="progressbar" style="width: @progressPercent"
-                                     aria-valuenow="@progressPercent"
-                                     aria-valuemin="0" aria-valuemax="100"></div>
-                            </div>
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" style="width: @progressPercent%"
+                                 aria-valuenow="@progressPercent"
+                                 aria-valuemin="0" aria-valuemax="100"></div>
                         </div>
-                        <div class="lesson-footer">
-                            <span class="text-primary fw-bold small">Current: currentLessonName</span>
-                            <a href="@Url.Action("IndexLesson", "MyLearning", new { q = lessonEncryptedKey })" class="btn btn-primary btn-continue">Go to Lesson <i class="align-middle ms-1" data-feather="arrow-right"></i></a>
-                        </div>
+
+                        <a href="@Url.Action("IndexLesson", "MyLearning", new { q = lessonEncryptedKey })" class="btn btn-continue">
+                            <span>Continue Learning</span>
+                            <i data-feather="arrow-right" style="width: 18px;"></i>
+                        </a>
                     </div>
                 </div>
             </div>
-
-        }
+        </div>
     }
 }
+else
+{
+    <div class="col-12">
+        <div class="text-center py-5 bg-white rounded-4 shadow-sm">
+            <div class="bg-soft-primary rounded-circle d-inline-flex align-items-center justify-content-center mb-4" style="width: 80px; height: 80px;">
+                <i data-feather="book" style="width: 40px; height: 40px; color: var(--learning-primary);"></i>
+            </div>
+            <h4 class="fw-800 text-dark">No lessons found</h4>
+            <p class="text-muted small mx-auto" style="max-width: 300px;">We couldn't find any lessons matching your current filters or search query.</p>
+        </div>
+    </div>
+}
