@@ -1,10 +1,23 @@
-﻿@using SENSEI.DOMAIN
+@using SENSEI.DOMAIN
 @using core_web.Helpers
 @model BatchLesson
 
 @{
     ViewData["Title"] = $"Lesson {Model?.Lesson?.LessonName}";
-    var videoId = Model.RecordingUrl?.Split("v=").LastOrDefault();
+    
+    // Improved Video ID Extraction for youtu.be and youtube.com/watch?v=
+    string videoId = "";
+    if (!string.IsNullOrEmpty(Model.RecordingUrl))
+    {
+        if (Model.RecordingUrl.Contains("v="))
+        {
+            videoId = Model.RecordingUrl.Split("v=").LastOrDefault()?.Split('&').FirstOrDefault();
+        }
+        else if (Model.RecordingUrl.Contains("youtu.be/"))
+        {
+            videoId = Model.RecordingUrl.Split("youtu.be/").LastOrDefault()?.Split('?').FirstOrDefault();
+        }
+    }
     var studentId = Convert.ToInt64(Context.Session.GetString("StudentId") ?? "0");
 }
 
@@ -183,16 +196,8 @@
         }
 
 
-        var done = false;
         function onPlayerStateChange(event) {
-            if (event.data == YT.PlayerState.PLAYING && !done) {
-                setTimeout(stopVideo, 6000);
-                done = true;
-            }
-        }
-
-        function stopVideo() {
-            player.stopVideo();
+            // Video state changed (playing, paused, etc)
         }
 
         document.querySelector('.top-blocker').addEventListener('contextmenu', function(e){
@@ -205,9 +210,8 @@
                 var url = $(this).data('action-url');
                 $.post(url, function (response) {
                     if (response.success) {
-
                         popUpNotification('success', response.message);
-
+                        setTimeout(function(){ location.reload(); }, 1500);
                     } else {
                         popUpNotification('error', response.message);
                     }

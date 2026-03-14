@@ -51,18 +51,46 @@ namespace SENSEI.WEB.Areas.StudentPortal.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> LessonListView(int start, int length, string searchValue)
+        public async Task<IActionResult> LessonListView(int start, int length, string searchValue, string filter = "all")
         {
             var studentId = Convert.ToInt64(HttpContext.Session.GetString("StudentId"));
             var userId = Convert.ToInt64(HttpContext.Session.GetString("UserId"));
             var student = await _studentService.GetStudentProfile(userId);
             var (lessons, count) = await _studentService.SearchStudentBatchLessons(studentId, student.StudentBatches.FirstOrDefault().BatchId, start, length, searchValue);
-            lessons.ToList().ForEach(e =>
+            
+            var lessonsList = lessons.ToList();
+            var resultList = lessonsList;
+
+            if (filter != "all")
+            {
+                var grouped = lessonsList.GroupBy(e => e.LessonId);
+                var validLessonIds = new List<long>();
+
+                foreach (var group in grouped)
+                {
+                    var totalUnits = group.Count();
+                    var completedUnits = group.SelectMany(e => e.StudentBatchLessonViews).Count(v => v.StudentId == studentId && v.IsCompleted);
+                    var progress = totalUnits > 0 ? (completedUnits / (double)totalUnits) * 100 : 0;
+
+                    if (filter == "completed" && progress == 100)
                     {
-                        e.EncryptedKey = _protector.Protect(e.BatchLessonId.ToString());
-                        e.LessonEncryptedKey = _protector.Protect(e.LessonId.ToString());
-                    });
-            return View(lessons);
+                        validLessonIds.Add(group.Key);
+                    }
+                    else if (filter == "inprogress" && progress < 100) // "In Progress" includes everything not finished
+                    {
+                        validLessonIds.Add(group.Key);
+                    }
+                }
+                resultList = lessonsList.Where(e => validLessonIds.Contains(e.LessonId)).ToList();
+            }
+
+            resultList.ForEach(e =>
+            {
+                e.EncryptedKey = _protector.Protect(e.BatchLessonId.ToString());
+                e.LessonEncryptedKey = _protector.Protect(e.LessonId.ToString());
+            });
+
+            return View(resultList);
         }
 
         public async Task<IActionResult> IndexLesson(string q, string lessonName)
@@ -81,10 +109,10 @@ namespace SENSEI.WEB.Areas.StudentPortal.Controllers
 
             var student = await _studentService.GetStudentProfile(userId);
             var (lessons, count) = await _studentService.SearchStudentBatchLessons(studentId, student.StudentBatches.FirstOrDefault().BatchId, start, length, searchValue);
+            var filteredLessons = lessons.Where(e => e.LessonId == lessonId).ToList();
+            filteredLessons.ForEach(e => e.EncryptedKey = _protector.Protect(e.BatchLessonId.ToString()));
 
-            lessons.Where(e => e.LessonId == lessonId).ToList().ForEach(e => e.EncryptedKey = _protector.Protect(e.BatchLessonId.ToString()));
-
-            return View(lessons);
+            return View(filteredLessons);
         }
 
         [HttpGet]
@@ -102,7 +130,7 @@ namespace SENSEI.WEB.Areas.StudentPortal.Controllers
         {
             long batchLessonId = Convert.ToInt64(_protector.Unprotect(q));
             var studentId = Convert.ToInt64(HttpContext.Session.GetString("StudentId"));
-            var status = await _studentService.UpdateStudentProgress(studentId, batchLessonId);
+            var status = await _studentService.UpdateStudentProgress(batchLessonId, studentId);
 
             if (status)
             {

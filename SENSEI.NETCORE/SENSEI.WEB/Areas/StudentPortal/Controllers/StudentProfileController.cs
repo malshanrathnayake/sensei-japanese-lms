@@ -26,14 +26,23 @@ namespace SENSEI.WEB.Areas.StudentPortal.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateProfile(Student student)
         {
-            var success = await _studentService.UpdateStudentProfile(student);
-            if (success)
+            try
             {
-                TempData["Success"] = "Profile updated successfully!";
+                var success = await _studentService.UpdateStudentProfile(student);
+                if (success)
+                {
+                    // Refresh DisplayName in session so the header/sidebar name updates immediately
+                    HttpContext.Session.SetString("DisplayName", student.StudentPopulatedName);
+                    TempData["Success"] = "Profile updated successfully!";
+                }
+                else
+                {
+                    TempData["Error"] = "Failed to update profile. Server rejected the change.";
+                }
             }
-            else
+            catch (Exception ex)
             {
-                TempData["Error"] = "Failed to update profile. Please try again.";
+                TempData["Error"] = "An error occurred: " + ex.Message;
             }
 
             return RedirectToAction("Index");

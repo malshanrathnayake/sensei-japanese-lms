@@ -161,11 +161,15 @@ namespace SENSEI.BLL.StudentPortalService
 
         public async Task<bool> UpdateStudentProgress(long batchLessonId, long studentId)
         {
+            var batchLesson = await GetBatchLesson(batchLessonId);
+            if (batchLesson == null) return false;
 
             var studentBatchLessonView = new StudentBatchLessonView()
             {
                 StudentId = studentId,
-                BatchLessonId = batchLessonId
+                BatchLessonId = batchLessonId,
+                LessonId = batchLesson.LessonId,
+                IsCompleted = true
             };
 
             string jsonString = JsonConvert.SerializeObject(studentBatchLessonView);

@@ -147,6 +147,14 @@
                 <div class="card-body p-4">
                     <form id="profileForm" asp-action="UpdateProfile" method="post">
                         <input type="hidden" asp-for="StudentId" />
+                        <input type="hidden" asp-for="UserId" />
+                        <input type="hidden" asp-for="IndexNumber" />
+                        <input type="hidden" asp-for="DateOfBirth" />
+                        <input type="hidden" asp-for="CountryId" />
+                        <input type="hidden" asp-for="BranchId" />
+                        <input type="hidden" asp-for="StudentLearningModeId" />
+                        <input type="hidden" asp-for="City" />
+
                         <div class="row">
                             <div class="col-md-6 form-group-spaced">
                                 <label class="form-label-premium">First Name</label>
@@ -188,7 +196,7 @@
                         </div>
                         
                         <div class="text-end pt-4 mt-2">
-                             <button type="submit" class="btn btn-primary btn-update-profile px-5">
+                             <button type="submit" class="btn btn-primary btn-update-profile px-5" id="btnSaveProfile">
                                  <i class="align-middle me-2" data-feather="check-circle" style="width: 18px; height: 18px;"></i> Save Changes
                              </button>
                         </div>
@@ -231,6 +239,10 @@
             @if (TempData["Success"] != null)
             {
                 <text>popUpNotification('success', "@TempData["Success"]");</text>
+            }
+            @if (TempData["Error"] != null)
+            {
+                <text>popUpNotification('error', "@TempData["Error"]");</text>
             }
         });
     </script>

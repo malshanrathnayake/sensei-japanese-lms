@@ -42,7 +42,7 @@
                                  aria-valuemin="0" aria-valuemax="100"></div>
                         </div>
 
-                        <a href="@Url.Action("IndexLesson", "MyLearning", new { q = lessonEncryptedKey })" class="btn btn-continue">
+                        <a href="@Url.Action("IndexLesson", "MyLearning", new { q = lessonEncryptedKey, lessonName = firstLesson.Lesson.LessonName })" class="btn btn-continue">
                             <span>Continue Learning</span>
                             <i data-feather="arrow-right" style="width: 18px;"></i>
                         </a>
