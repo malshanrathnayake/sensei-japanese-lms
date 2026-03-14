@@ -25,6 +25,11 @@
     "Url": "/AdminPortal/BatchLesson/Index"
   },
   {
+    "Title": "Student",
+    "Icon": "user",
+    "Url": "/AdminPortal/Student/Index"
+  },
+  {
     "Title": "Student Registration",
     "Icon": "user-check",
     "Url": "/AdminPortal/StudentRegistration/Index"
