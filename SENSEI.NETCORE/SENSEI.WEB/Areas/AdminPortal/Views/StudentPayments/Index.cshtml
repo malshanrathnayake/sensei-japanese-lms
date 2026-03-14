@@ -167,8 +167,6 @@
                     });
             }
 
-            loadStudentPayments();
-
         });
 
         function loadStudentPayments() {
@@ -244,7 +242,7 @@
                     },
                     { data: 'studentBatch.batch.course.courseName', name:'studentBatch.batch.course.courseName' },
                     { data: 'studentBatch.batch.batchName', name:'studentBatch.batch.batchName' },
-                    { data: 'paymentMonth', name:'paymentMonth', render: function (data) { return renderDateTime(data); } },
+                    { data: 'paymentMonth', name:'paymentMonth', render: function (data) { return renderDateOnly(data); } },
                     { data: 'paymentDate', name:'paymentDate', render: function (data) { return renderDateTime(data); } },
                     { data: 'amount', name:'amount' },
                     { data: 'slipUrl', name:'slipUrl', render: function (data) { return renderSlipUrl(data); } },
@@ -283,6 +281,13 @@
             var date = data.split('T')[0];
             var time = data.split('T')[1].split('.')[0];
             return `<div class="fw-600">${date}</div><div class="small text-muted">${time}</div>`;
+        }
+
+        function renderDateOnly(data) {
+            if (!data) return '';
+
+            var date = data.split('T')[0];
+            return `<div class="fw-600">${date}</div>`;
         }
 
         function renderSlipUrl(data) {

@@ -49,6 +49,7 @@ namespace SENSEI.WEB.Areas.AdminPortal.Controllers
             return View(studentBatchPayment);
         }
 
+        [HttpPost]
         public async Task<IActionResult> ListOfStudentPayments(long courseId = 0, long batchId = 0, string indexNumber = "")
         {
             int draw = int.Parse(Request.Form["draw"]);
