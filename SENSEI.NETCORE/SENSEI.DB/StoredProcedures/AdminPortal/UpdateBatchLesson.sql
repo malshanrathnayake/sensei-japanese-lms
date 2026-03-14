@@ -10,12 +10,13 @@ BEGIN
 
     BEGIN TRY
 
-        DECLARE @batchLessonId BIGINT;
+        DECLARE @batchLessonId BIGINT, @batchId BIGINT;
 
-        SELECT @batchLessonId = [BatchLessonId]
+        SELECT @batchLessonId = [BatchLessonId], @batchId = [BatchId]
         FROM OPENJSON(@jsonString, '$')
         WITH (
-            [BatchLessonId] BIGINT
+            [BatchLessonId] BIGINT,
+            [BatchId] BIGINT
         );
 
         IF (ISNULL(@batchLessonId, 0) = 0)
@@ -36,6 +37,14 @@ BEGIN
             );
 
             SET @primaryKey = SCOPE_IDENTITY();
+
+            -- will insert access for all students of the batch, who has paid the fee for the batch
+            INSERT INTO BatchStudentLessonAccess([BatchLessonId], StudentId, [HasAccess])
+            SELECT  @primaryKey, sb.StudentId, 1
+            FROM StudentBatch sb
+            WHERE sb.BatchId = @batchId
+            AND sb.StudentBatchId IN (SELECT StudentBatchId FROM StudentBatchPayment WHERE StudentBatchId = sb.StudentBatchId )
+
         END
         ELSE
         BEGIN

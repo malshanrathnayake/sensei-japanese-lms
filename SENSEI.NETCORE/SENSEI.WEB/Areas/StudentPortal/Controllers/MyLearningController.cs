@@ -71,9 +71,11 @@ namespace SENSEI.WEB.Areas.StudentPortal.Controllers
             var student = await _studentService.GetStudentProfile(userId);
             var (lessons, count) = await _studentService.SearchStudentBatchLessons(studentId, student.StudentBatches.FirstOrDefault().BatchId, start, length, searchValue);
 
-            lessons.Where(e => e.LessonId == lessonId).ToList().ForEach(e => e.EncryptedKey = _protector.Protect(e.BatchLessonId.ToString()));
+            lessons.ToList().ForEach(e => e.EncryptedKey = _protector.Protect(e.BatchLessonId.ToString()));
 
-            return View(lessons);
+            var lessonRelatedbatchLessons = lessons.Where(e => e.LessonId == lessonId).ToList();
+
+            return View(lessonRelatedbatchLessons);
         }
 
         [HttpGet]
@@ -91,7 +93,7 @@ namespace SENSEI.WEB.Areas.StudentPortal.Controllers
         {
             long batchLessonId = Convert.ToInt64(_protector.Unprotect(q));
             var studentId = Convert.ToInt64(HttpContext.Session.GetString("StudentId"));
-            var status = await _studentService.UpdateStudentProgress(studentId, batchLessonId);
+            var status = await _studentService.UpdateStudentProgress(batchLessonId, studentId);
 
             if (status)
             {
