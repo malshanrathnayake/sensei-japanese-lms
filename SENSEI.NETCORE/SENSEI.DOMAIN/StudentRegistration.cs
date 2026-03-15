@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -32,10 +32,10 @@ namespace SENSEI.DOMAIN
         public string LastName { get; set; }
 
         [DisplayName("Initials")]
-        public string Initials { get; set; }
+        public string? Initials { get; set; }
 
         [DisplayName("Calling Name")]
-        public string CallingName { get; set; }
+        public string? CallingName { get; set; }
 
         [Required(ErrorMessage = "NIC is required.")]
         [DisplayName("NIC *")]
@@ -56,13 +56,13 @@ namespace SENSEI.DOMAIN
         public string AddressLineOne { get; set; }
 
         [DisplayName("Address Line Two")]
-        public string AddressLineTwo { get; set; }
+        public string? AddressLineTwo { get; set; }
 
         [DisplayName("Postal Code")]
-        public string PostalCode { get; set; }
+        public string? PostalCode { get; set; }
 
         [DisplayName("State / Province / Region")]
-        public string State { get; set; }
+        public string? State { get; set; }
 
         [Required(ErrorMessage = "City is required.")]
         [DisplayName("City *")]

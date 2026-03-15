@@ -1,4 +1,4 @@
-﻿@using SENSEI.DOMAIN
+@using SENSEI.DOMAIN
 @model StudentRegistration
 
 @{
@@ -29,6 +29,7 @@
     </div>
 
     <form asp-action="Create" asp-controller="StudentRegistration" asp-area="AdminPortal" method="post" id="student-create-form">
+        <div asp-validation-summary="All" class="text-danger mb-3"></div>
 
         <div class="row">
             <!-- Personal Information -->
@@ -50,15 +51,15 @@
                                 <span asp-validation-for="LastName" class="text-danger"></span>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label" asp-for="MiddleName"></label>
+                                <label class="form-label" asp-for="MiddleName">Middle Name (Optional)</label>
                                 @Html.TextBoxFor(m => m.MiddleName, new { @class = "form-control", placeholder = "Middle Name" })
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label" asp-for="Initials"></label>
+                                <label class="form-label" asp-for="Initials">Initials (Optional)</label>
                                 @Html.TextBoxFor(m => m.Initials, new { @class = "form-control", placeholder = "Initials (e.g. A.B.C.)" })
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label" asp-for="CallingName"></label>
+                                <label class="form-label" asp-for="CallingName">Calling Name (Optional)</label>
                                 @Html.TextBoxFor(m => m.CallingName, new { @class = "form-control", placeholder = "Calling Name" })
                             </div>
                             <div class="col-md-6 mb-3">
@@ -99,7 +100,7 @@
                                 <span asp-validation-for="AddressLineOne" class="text-danger"></span>
                             </div>
                             <div class="col-12 mb-3">
-                                <label class="form-label" asp-for="AddressLineTwo"></label>
+                                <label class="form-label" asp-for="AddressLineTwo">Address Line Two (Optional)</label>
                                 @Html.TextBoxFor(m => m.AddressLineTwo, new { @class = "form-control", placeholder = "Address Line 2 (Optional)" })
                             </div>
 
@@ -117,11 +118,11 @@
                                 <span asp-validation-for="City" class="text-danger"></span>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label" asp-for="State"></label>
+                                <label class="form-label" asp-for="State">State / Region (Optional)</label>
                                 @Html.TextBoxFor(m => m.State, new { @class = "form-control", placeholder = "State / Province" })
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label" asp-for="PostalCode"></label>
+                                <label class="form-label" asp-for="PostalCode">Postal Code (Optional)</label>
                                 @Html.TextBoxFor(m => m.PostalCode, new { @class = "form-control", placeholder = "Postal Code" })
                             </div>
                         </div>
