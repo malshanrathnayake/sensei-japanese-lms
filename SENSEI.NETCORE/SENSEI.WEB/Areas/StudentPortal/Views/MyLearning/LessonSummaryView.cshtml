@@ -11,27 +11,51 @@
     {
         foreach(var batchLesson in Model)
         {
+            var courseName = (batchLesson.Lesson?.Course?.CourseName ?? "").ToUpper();
+            var courseCode = (batchLesson.Lesson?.Course?.CourseCode ?? "").ToUpper();
+            var batchName = (batchLesson.Batch?.BatchName ?? "").ToUpper();
+            var firstLessonName = (batchLesson.Lesson?.LessonName ?? "").ToUpper();
+            var currentUnitName = (batchLesson.Description ?? "").ToUpper();
+            
+            string coverImage = "/theme/v1/img/photos/study_cover.png"; // New educational default
+            
+            // Priority matching (checking Course, Code, Batch, Lesson, and Unit Description)
+            if (courseName.Contains("N5") || courseCode.Contains("N5") || batchName.Contains("N5") || firstLessonName.Contains("N5") || firstLessonName.Contains("KANJI") || currentUnitName.Contains("N5")) 
+                coverImage = "/theme/v1/img/photos/n5_cover.png";
+            else if (courseName.Contains("N4") || courseCode.Contains("N4") || batchName.Contains("N4") || firstLessonName.Contains("N4") || currentUnitName.Contains("N4")) 
+                coverImage = "/theme/v1/img/photos/n4_cover.png";
+            else if (courseName.Contains("SSW") || courseCode.Contains("SSW") || batchName.Contains("SSW") || firstLessonName.Contains("SSW") || currentUnitName.Contains("SSW")) 
+                coverImage = "/theme/v1/img/photos/ssw_cover.png";
+            else if (courseName.Contains("AL") || courseCode.Contains("AL") || batchName.Contains("AL") || firstLessonName.Contains("AL") || currentUnitName.Contains("AL")) 
+                coverImage = "/theme/v1/img/photos/al_cover.png";
+            else if (firstLessonName.Contains("WRAPUP") || firstLessonName.Contains("SESSION") || currentUnitName.Contains("WRAPUP") || currentUnitName.Contains("SESSION"))
+                coverImage = "/theme/v1/img/photos/japanese_cover.png"; // Use the 'sunset' one for sessions
 
             if (batchLesson.BatchStudentLessonAccesses.Any(e => e.StudentId == studentId && e.BatchLessonId == batchLesson.BatchLessonId && e.HasAccess))
             {
                 <div class="col-12 col-md-6 col-xl-4 mb-4">
-                    <div class="card lesson-card">
-                        <div class="lesson-image-wrapper" style="height: 180px; position: relative; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);">
-                            <img src="~/theme/v1/img/photos/unsplash-1.jpg" alt="@batchLesson.Description" class="lesson-image" style="width: 100%; height: 100%; object-fit: cover; opacity: 0.6;">
-                            <span class="lesson-badge" style="position: absolute; top: 15px; right: 15px; background: rgba(0,0,0,0.5); color: #fff; padding: 4px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: 700; backdrop-filter: blur(4px);">@batchLesson.Lesson.LessonName</span>
+                    <div class="card lesson-card h-100 shadow-sm border-0">
+                        <div class="lesson-image-wrapper" style="height: 180px; position: relative; background: url('@coverImage') center/cover no-repeat;">
+                            <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.1) 100%);"></div>
+                            <span class="lesson-badge" style="position: absolute; top: 15px; right: 15px; background: rgba(216, 50, 54, 0.9); color: #fff; padding: 4px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: 800; backdrop-filter: blur(4px); box-shadow: 0 4px 10px rgba(0,0,0,0.2);">@batchLesson.Lesson.LessonName</span>
                         </div>
                         <div class="lesson-content" style="padding: 1.5rem; display: flex; flex-direction: column; flex-grow: 1;">
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <h3 class="lesson-title" style="font-size: 1.1rem; font-weight: 800; margin-bottom: 0; color: #334155;">@batchLesson.Description</h3>
-                                <span class="badge @(batchLesson.StudentBatchLessonViews.Any(e => e.IsCompleted) ? "bg-success" : "bg-outline-primary") rounded-pill" style="font-size: 0.7rem;">
-                                    @(batchLesson.StudentBatchLessonViews.Any(e => e.IsCompleted) ? "Completed" : "In Progress")
-                                </span>
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <h3 class="lesson-title" style="font-size: 1.15rem; font-weight: 800; margin-bottom: 0; color: #1e293b; line-height:1.4;">@batchLesson.Description</h3>
+                            </div>
+                            
+                            <div class="d-flex align-items-center mb-4">
+                                @if(batchLesson.StudentBatchLessonViews.Any(e => e.IsCompleted)) {
+                                    <span class="badge bg-success rounded-pill px-3 py-1" style="font-size: 0.7rem; font-weight:700;">Completed</span>
+                                } else {
+                                    <span class="badge bg-soft-primary text-primary rounded-pill px-3 py-1" style="font-size: 0.7rem; font-weight:700;">In Progress</span>
+                                }
                             </div>
                             
                             <div class="lesson-footer mt-auto pt-3 border-top d-flex justify-content-between align-items-center">
-                                <span class="text-muted small"><i class="align-middle me-1" data-feather="clock" style="width: 14px;"></i> Available Now</span>
-                                <a href="@Url.Action("LessonDetail", "MyLearning", new { q = batchLesson.EncryptedKey })" class="btn btn-primary btn-sm rounded-pill px-4 py-2" style="font-weight: 700; background: #D83236; border: none; box-shadow: 0 4px 12px rgba(216, 50, 54, 0.2);">
-                                    Study <i class="align-middle ms-1" data-feather="arrow-right" style="width: 14px;"></i>
+                                <span class="text-muted small fw-600"><i class="align-middle me-1 text-danger" data-feather="video" style="width: 14px;"></i> Video Lesson</span>
+                                <a href="@Url.Action("LessonDetail", "MyLearning", new { q = batchLesson.EncryptedKey })" class="btn btn-primary btn-sm rounded-pill px-4 py-2" style="font-weight: 800; background: #D83236; border: none; box-shadow: 0 8px 20px rgba(216, 50, 54, 0.25); transition: all 0.3s ease;">
+                                    Study <i class="align-middle ms-1" data-feather="play" style="width: 14px;"></i>
                                 </a>
                             </div>
                         </div>
@@ -40,28 +64,28 @@
             }
             else
             {
-                <div class="col-12 col-md-6 col-xl-4 mb-4" style="opacity:0.7;">
-                    <div class="card lesson-card" style="filter: grayscale(80%);">
-                        <div class="lesson-image-wrapper" style="height: 180px; position: relative; background: #f8f9fa;">
-                            <div class="d-flex align-items-center justify-content-center h-100">
-                                <i data-feather="lock" style="width: 48px; height: 48px; color: #cbd5e1;"></i>
+                <div class="col-12 col-md-6 col-xl-4 mb-4" style="opacity:0.8;">
+                    <div class="card lesson-card h-100 shadow-sm border-0" style="filter: grayscale(100%);">
+                        <div class="lesson-image-wrapper" style="height: 180px; position: relative; background: url('@coverImage') center/cover no-repeat;">
+                            <div class="d-flex align-items-center justify-content-center h-100" style="background: rgba(0,0,0,0.2);">
+                                <div class="bg-white rounded-circle p-3 shadow-lg">
+                                    <i data-feather="lock" style="width: 32px; height: 32px; color: #D83236;"></i>
+                                </div>
                             </div>
-                            <span class="lesson-badge" style="position: absolute; top: 15px; right: 15px; background: rgba(0,0,0,0.5); color: #fff; padding: 4px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: 700; backdrop-filter: blur(4px);">@batchLesson.Lesson.LessonName</span>
+                            <span class="lesson-badge" style="position: absolute; top: 15px; right: 15px; background: rgba(0,0,0,0.6); color: #fff; padding: 4px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: 700;">@batchLesson.Lesson.LessonName</span>
                         </div>
                         <div class="lesson-content" style="padding: 1.5rem;">
-                            <h3 class="lesson-title" style="font-size: 1.1rem; font-weight: 800; color: #94a3b8;">@batchLesson.Description</h3>
+                            <h3 class="lesson-title" style="font-size: 1.15rem; font-weight: 800; color: #64748b; line-height:1.4;">@batchLesson.Description</h3>
                             <div class="lesson-footer mt-auto pt-3 border-top d-flex justify-content-between align-items-center">
-                                <span class="badge bg-soft-secondary text-secondary rounded-pill" style="font-size: 0.7rem;">Payment Required</span>
-                                <button class="btn btn-secondary btn-sm disabled rounded-pill px-4 py-2" style="font-weight: 700;">
-                                    Locked <i class="align-middle ms-1" data-feather="lock" style="width: 14px;"></i>
+                                <span class="badge bg-soft-secondary text-secondary rounded-pill fw-700" style="font-size: 0.7rem;">Access Locked</span>
+                                <button class="btn btn-secondary btn-sm disabled rounded-pill px-4 py-2" style="font-weight: 800; opacity: 0.5;">
+                                    Enroll Link <i class="align-middle ms-1" data-feather="lock" style="width: 14px;"></i>
                                 </button>
                             </div>
                         </div>
                     </div>
                 </div>
             }
-
-            
         }
     }
-}
+}
