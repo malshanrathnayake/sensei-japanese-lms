@@ -332,18 +332,32 @@
 	<script>
 
 		window.notyf = new Notyf({
-			 position: {
+			duration: 5000,
+			dismissible: true,
+			position: {
 				x: 'right',
 				y: 'top'
 			},
 			types: [
 				{
 					type: 'info',
-					background: '#0dcaf0'
+					background: '#0dcaf0',
+					icon: false
 				},
 				{
 					type: 'warning',
-					background: '#ffc107'
+					background: '#ffc107',
+					icon: false
+				},
+				{
+					type: 'success',
+					background: '#2e7d32',
+					icon: false
+				},
+				{
+					type: 'error',
+					background: '#D83236',
+					icon: false
 				}
 			]
 		});

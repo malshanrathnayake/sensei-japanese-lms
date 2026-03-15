@@ -1084,3 +1084,41 @@ body::before {
     padding: 1.5rem !important;
     width: 100% !important;
 }
+
+/* =====================================================
+   NOTYF TOAST NOTIFICATIONS (PREMIUM VISIBILITY)
+   ===================================================== */
+.notyf {
+    z-index: 100000 !important; /* Above everything */
+}
+
+.notyf__toast {
+    border-radius: 16px !important;
+    padding: 15px 22px !important;
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2) !important;
+    font-weight: 700 !important;
+    font-size: 0.95rem !important;
+    max-width: 400px !important;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,0.1) !important;
+}
+
+.notyf__message {
+    padding-left: 8px !important;
+}
+
+.notyf__toast--success {
+    background: linear-gradient(135deg, #1b5e20 0%, #2e7d32 100%) !important;
+    border-left: 8px solid #4caf50 !important;
+}
+
+.notyf__toast--error {
+    background: linear-gradient(135deg, #D83236 0%, #a11d21 100%) !important;
+    border-left: 8px solid #ff5a5f !important;
+}
+
+.notyf__ripple {
+    height: 600px !important;
+    width: 600px !important;
+}
