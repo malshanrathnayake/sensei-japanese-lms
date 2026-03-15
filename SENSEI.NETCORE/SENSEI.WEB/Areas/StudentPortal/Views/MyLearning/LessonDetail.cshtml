@@ -22,33 +22,138 @@
 }
 
 <style>
+    .player-container {
+        position: relative;
+        width: 100%;
+        border-radius: 16px;
+        overflow: hidden;
+        background: #000;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+    }
+
     .player-wrapper {
         position: relative;
         width: 100%;
+        padding-top: 56.25%; /* 16:9 Aspect Ratio */
     }
 
     #player {
-        width: 100%;
-    }
-
-    .top-blocker {
         position: absolute;
         top: 0;
         left: 0;
         width: 100%;
-        height: 80%; 
+        height: 100%;
+        border: none;
+    }
+
+    /* Blockers to prevent interaction with specific YT UI elements */
+    .yt-title-blocker {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 80px; /* Increased to cover 'Watch Later' and 'Share' */
+        z-index: 110;
+        background: transparent;
+    }
+
+    .yt-logo-blocker {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 120px;
+        height: 60px;
         z-index: 10;
         background: transparent;
     }
 
-    .bottom-right-blocker {
+    .yt-logo-blocker {
         position: absolute;
-        top: 90%;
-        left: 65%;
-        width: 170px; 
-        height: 40px;
-        z-index: 20;
+        bottom: 0;
+        right: 0;
+        width: 120px;
+        height: 48px;
+        z-index: 110;
         background: transparent;
+    }
+
+    /* Cinema Mode */
+    .cinema-mode-active #videoColumn {
+        width: 100%;
+        max-width: 100%;
+        flex: 0 0 100%;
+    }
+
+    .cinema-mode-active #referenceColumn {
+        display: none;
+    }
+
+    #btnEnlarge {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border-radius: 50px;
+        padding: 5px 15px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    #btnEnlarge:hover {
+        background: var(--bs-primary);
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(216, 50, 54, 0.2);
+    }
+
+    #btnEnlarge.active {
+        background: #D83236;
+        color: white;
+        border-color: #D83236;
+    }
+
+    /* Target the container in fullscreen */
+    #playerContainer:fullscreen {
+        border-radius: 0;
+        background: #000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    #playerContainer:-webkit-full-screen {
+        border-radius: 0;
+        background: #000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .pause-blocker {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: calc(100% - 40px); /* Leave bottom bar visible */
+        background: rgba(0,0,0,0.7);
+        z-index: 105;
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        cursor: pointer;
+        backdrop-filter: blur(4px);
+    }
+
+    .pause-blocker h4 {
+        font-family: 'Noto Serif JP', serif;
+        margin-top: 15px;
+        font-weight: 700;
+        letter-spacing: 1px;
+    }
+
+    .player-container.is-paused .pause-blocker {
+        display: flex;
     }
 </style>
 
@@ -72,20 +177,29 @@
 
     </div>
 
-    <div class="row">
-        <div class="col-lg-8 col-md-12 col-sm-12">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">@Model.Lesson.LessonName</h5>
+    <div class="row" id="playerMainRow">
+        <div class="col-lg-8 col-md-12 col-sm-12" id="videoColumn">
+            <div class="card h-100">
+                <div class="card-header d-flex justify-content-between align-items-center bg-white py-3">
+                    <h5 class="card-title mb-0 fw-800" style="color: #334155;">@Model.Lesson.LessonName</h5>
+                    <button class="btn btn-sm btn-outline-primary" id="btnEnlarge" title="Full Screen View">
+                        <i data-feather="maximize" id="enlargeIcon"></i> <span>Expand Player</span>
+                    </button>
                 </div>
                 <div class="card-body">
 
-                    <div class="row">
+                    <div class="player-container" id="playerContainer">
                         <div class="player-wrapper">
                             <div id="player"></div>
-
-                            <div class="top-blocker"></div>
-                            <div class="bottom-right-blocker"></div>
+                            <!-- Pause blocker to hide YouTube suggestions -->
+                            <div class="pause-blocker" id="pauseBlocker">
+                                <i data-feather="play-circle" style="width: 64px; height: 64px; color: #D83236;"></i>
+                                <h4>RESUME LESSON</h4>
+                            </div>
+                            <!-- Title blocker (hides share and other top bar items) -->
+                            <div class="yt-title-blocker"></div>
+                            <!-- Logo blocker (hides bottom right Watch on YT link) -->
+                            <div class="yt-logo-blocker"></div>
                         </div>
                     </div>
 
@@ -93,7 +207,7 @@
             </div>
         </div>
 
-        <div class="col-lg-4 col-md-12 col-sm-12">
+        <div class="col-lg-4 col-md-12 col-sm-12" id="referenceColumn">
             <div class="card">
                 <div class="card-header">
                     <h5 class="card-title mb-0">Lesson References</h5>
@@ -177,32 +291,100 @@
                 width: '100%',
                 videoId: '@videoId',
                 playerVars: {
-                    controls: 1,
-                    playsinline: 1,
-                    rel: 0
+                    'controls': 1,           // Show native controls
+                    'modestbranding': 1,      // Minimal YT logo
+                    'rel': 0,                // No related videos from other channels
+                    'showinfo': 0,           // Hide video title/info
+                    'fs': 1,                 // Allow native fullscreen
+                    'iv_load_policy': 3,     // Hide annotations
+                    'autohide': 1,           // Auto-hide controls
+                    'disablekb': 1,          // Disable keyboard shortcuts to prevent 'G' or 'watch on YT'
+                    'cc_load_policy': 0      // Disable captions by default
                 },
                 events: {
-                    onReady: onPlayerReady,
-                    onStateChange: onPlayerStateChange
+                    'onReady': onPlayerReady,
+                    'onStateChange': onPlayerStateChange
                 }
             });
         }
 
 
         function onPlayerReady(event) {
-          event.target.playVideo();
+            // event.target.playVideo(); // Auto-play is often blocked by browsers
         }
 
 
         function onPlayerStateChange(event) {
-            // Video state changed (playing, paused, etc)
+            var container = document.getElementById('playerContainer');
+            var blockerText = document.querySelector('#pauseBlocker h4');
+            
+            if (event.data == YT.PlayerState.PAUSED) {
+                container.classList.add('is-paused');
+                blockerText.innerText = "RESUME LESSON";
+            } else if (event.data == YT.PlayerState.ENDED) {
+                container.classList.add('is-paused');
+                blockerText.innerText = "REPLAY LESSON";
+            } else {
+                container.classList.remove('is-paused');
+            }
         }
 
-        document.querySelector('.top-blocker').addEventListener('contextmenu', function(e){
+        // Resume or Replay on blocker click
+        document.getElementById('pauseBlocker').addEventListener('click', function() {
+            var state = player.getPlayerState();
+            if (state == YT.PlayerState.ENDED) {
+                player.seekTo(0);
+                player.playVideo();
+            } else {
+                player.playVideo();
+            }
+        });
+
+        // Block right click on regulators
+        $('.yt-title-blocker, .yt-logo-blocker, .pause-blocker').on('contextmenu', function(e) {
             e.preventDefault();
         });
 
         $(document).ready(function () {
+            $('#btnEnlarge').click(function () {
+                var container = document.getElementById('playerContainer');
+                
+                if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+                    // Enter Fullscreen
+                    if (container.requestFullscreen) {
+                        container.requestFullscreen();
+                    } else if (container.webkitRequestFullscreen) {
+                        container.webkitRequestFullscreen();
+                    } else if (container.msRequestFullscreen) {
+                        container.msRequestFullscreen();
+                    }
+                } else {
+                    // Exit Fullscreen
+                    if (document.exitFullscreen) {
+                        document.exitFullscreen();
+                    } else if (document.webkitExitFullscreen) {
+                        document.webkitExitFullscreen();
+                    } else if (document.msExitFullscreen) {
+                        document.msExitFullscreen();
+                    }
+                }
+            });
+
+            // Sync button UI with fullscreen state
+            document.addEventListener('fullscreenchange', handleFullscreenChange);
+            document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+
+            function handleFullscreenChange() {
+                var isFS = document.fullscreenElement || document.webkitFullscreenElement;
+                if (isFS) {
+                    $('#enlargeIcon').attr('data-feather', 'minimize');
+                    $('#btnEnlarge').html('<i data-feather="minimize"></i> Shrink').addClass('active');
+                } else {
+                    $('#enlargeIcon').attr('data-feather', 'maximize');
+                    $('#btnEnlarge').html('<i data-feather="maximize"></i> Enlarge').removeClass('active');
+                }
+                if (window.feather) feather.replace();
+            }
 
             $('#btnComplete').click(function () {
                 var url = $(this).data('action-url');
