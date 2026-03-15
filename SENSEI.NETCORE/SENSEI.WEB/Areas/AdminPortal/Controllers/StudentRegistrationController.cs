@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Mvc;
 using SENSEI.BLL.AdminPortalService.Interface;
@@ -120,10 +120,10 @@ namespace SENSEI.WEB.Areas.AdminPortal.Controllers
             ViewBag.BatchId = batchId;
             ViewBag.IndexNumber = indexNumber;
 
-            //if (!ModelState.IsValid)
-            //{
-            //    return View(studentRegistration);
-            //}
+            if (!ModelState.IsValid)
+            {
+                return View(studentRegistration);
+            }
 
             var userId = Convert.ToInt64(HttpContext.Session.GetString("UserId") ?? "0");
 

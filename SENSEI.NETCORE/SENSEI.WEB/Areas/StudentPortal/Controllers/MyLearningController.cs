@@ -47,7 +47,7 @@ namespace SENSEI.WEB.Areas.StudentPortal.Controllers
                     }
                     
                 }
-                averageProgress = totalProgress.Average();
+                averageProgress = totalProgress.Any() ? totalProgress.Average() : 0;
             }
 
             ViewBag.AverageProgress = Math.Round(averageProgress);

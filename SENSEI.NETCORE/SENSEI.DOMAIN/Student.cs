@@ -30,17 +30,17 @@ namespace SENSEI.DOMAIN
         public string FirstName { get; set; }
 
         [DisplayName("Middle Name")]
-        public string MiddleName { get; set; }
+        public string? MiddleName { get; set; }
 
         [Required(ErrorMessage = "Last Name is required.")]
         [DisplayName("Last Name *")]
         public string LastName { get; set; }
 
         [DisplayName("Initials")]
-        public string Initials { get; set; }
+        public string? Initials { get; set; }
 
         [DisplayName("Calling Name")]
-        public string CallingName { get; set; }
+        public string? CallingName { get; set; }
 
         [DisplayName("NIC")]
         public string NIC { get; set; }
@@ -60,7 +60,7 @@ namespace SENSEI.DOMAIN
         public int CountryId { get; set; }
 
         [DisplayName("State / Province / Region")]
-        public string State { get; set; }
+        public string? State { get; set; }
 
         [Required(ErrorMessage = "City is required.")]
         [DisplayName("City *")]

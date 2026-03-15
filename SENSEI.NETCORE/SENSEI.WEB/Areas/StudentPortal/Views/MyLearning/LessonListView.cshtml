@@ -28,33 +28,76 @@
                     .FirstOrDefault();
 
             var lessonEncryptedKey = lesson.First().LessonEncryptedKey;
+            var courseName = (lesson.First().Lesson.Course?.CourseName ?? "").ToUpper();
+            var courseCode = (lesson.First().Lesson.Course?.CourseCode ?? "").ToUpper();
+            var batchName = (lesson.First().Batch?.BatchName ?? "").ToUpper();
+            var firstLessonName = (lesson.First().Lesson?.LessonName ?? "").ToUpper();
+            
+            string coverImage = "/theme/v1/img/photos/study_cover.png"; // New educational default
+            
+            // Priority matching (checking Course, Code, Batch, and Lesson)
+            if (courseName.Contains("N5") || courseCode.Contains("N5") || batchName.Contains("N5") || firstLessonName.Contains("N5") || firstLessonName.Contains("KANJI")) 
+                coverImage = "/theme/v1/img/photos/n5_cover.png";
+            else if (courseName.Contains("N4") || courseCode.Contains("N4") || batchName.Contains("N4") || firstLessonName.Contains("N4")) 
+                coverImage = "/theme/v1/img/photos/n4_cover.png";
+            else if (courseName.Contains("SSW") || courseCode.Contains("SSW") || batchName.Contains("SSW") || firstLessonName.Contains("SSW")) 
+                coverImage = "/theme/v1/img/photos/ssw_cover.png";
+            else if (courseName.Contains("AL") || courseCode.Contains("AL") || batchName.Contains("AL") || firstLessonName.Contains("AL")) 
+                coverImage = "/theme/v1/img/photos/al_cover.png";
+            else if (firstLessonName.Contains("WRAPUP") || firstLessonName.Contains("SESSION"))
+                coverImage = "/theme/v1/img/photos/japanese_cover.png"; // Use the 'sunset' one for sessions as it looks like a "wrap up"
 
             <div class="col-12 col-md-6 col-xl-4 mb-4">
                 <div class="card lesson-card">
-                    <div class="lesson-image-wrapper">
+                    <div class="lesson-image-wrapper" style="background-image: url('@coverImage'); background-size: cover; background-position: center;">
                         <span class="lesson-badge">@lesson.First().Lesson.Course.CourseName</span>
+                        <div class="lesson-overlay-icon">
+                             <i class="align-middle" data-feather="book-open" style="width: 48px; height: 48px; color: rgba(255, 255, 255, 0.4);"></i>
+                        </div>
                     </div>
-                    <div class="lesson-content">
-                        <h3 class="lesson-title">@lesson.First().Lesson.LessonName</h3>
-                        <div class="lesson-meta">
-                            <span><i class="align-middle me-1" data-feather="book-open"></i>@Model.Count(e => e.LessonId == lesson.First().Lesson.LessonId)</span>
-                            <span><i class="align-middle me-1" data-feather="check"></i>@completedBatchLessons</span>
+                    <div class="lesson-content" style="padding: 1.5rem 1.75rem; flex-grow: 1; display: flex; flex-direction: column;">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                             <h3 class="lesson-title mb-0" style="font-size: 1.25rem; font-weight: 800; color: #1e293b; letter-spacing: -0.01em;">@lesson.First().Lesson.LessonName</h3>
+                             <span class="badge @(progressPercent == 100 ? "bg-success" : "bg-soft-primary text-primary") rounded-pill px-3 py-1" style="font-size: 0.65rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em;">@(progressPercent == 100 ? "Completed" : "Active Now")</span>
                         </div>
-                        <p class="text-muted small">@lesson.First().Lesson.Description</p>
-                        <div class="progress-wrapper">
-                            <div class="d-flex justify-content-between mb-1 small text-muted">
-                                <span>Progress</span>
-                                <span>@progressPercent %</span>
+                        
+                        <div class="lesson-meta-premium d-flex gap-3 mb-4">
+                            <div class="d-flex align-items-center">
+                                <div class="bg-light rounded p-1 me-2 d-flex align-items-center justify-content-center" style="width: 24px; height: 24px;">
+                                    <i class="text-muted" data-feather="layers" style="width: 14px; height: 14px;"></i>
+                                </div>
+                                <span class="text-muted small fw-700">@(lesson.Count()) Units</span>
                             </div>
-                            <div class="progress">
-                                <div class="progress-bar" role="progressbar" style="width: @progressPercent%"
+                            <div class="d-flex align-items-center">
+                                <div class="bg-light rounded p-1 me-2 d-flex align-items-center justify-content-center" style="width: 24px; height: 24px;">
+                                    <i class="@(progressPercent == 100 ? "text-success" : "text-muted")" data-feather="check-circle" style="width: 14px; height: 14px;"></i>
+                                </div>
+                                <span class="text-muted small fw-700">@completedBatchLessons Done</span>
+                            </div>
+                        </div>
+
+                        <div class="progress-container-premium mb-4" style="background: rgba(0,0,0,0.02); padding: 12px 15px; border-radius: 14px; border: 1px solid rgba(0,0,0,0.03);">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="text-uppercase small fw-800 text-muted" style="font-size: 0.6rem; letter-spacing: 0.1em;">Course Mastery</span>
+                                <span class="@(progressPercent == 100 ? "text-success" : "text-danger") fw-900" style="font-size: 0.85rem;">@progressPercent%</span>
+                            </div>
+                            <div class="progress" style="height: 8px; border-radius: 50px; background: #eaedf2; overflow: visible;">
+                                <div class="progress-bar" role="progressbar" style="width: @progressPercent%; border-radius: 50px; background: linear-gradient(90deg, var(--sensei-red) 0%, #ff5252 100%); box-shadow: 0 2px 8px rgba(216, 50, 54, 0.3); position: relative;"
                                      aria-valuenow="@progressPercent"
-                                     aria-valuemin="0" aria-valuemax="100"></div>
+                                     aria-valuemin="0" aria-valuemax="100">
+                                     <div style="position: absolute; right: -4px; top: -3px; width: 14px; height: 14px; background: white; border: 3px solid var(--sensei-red); border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.1); display: @(progressPercent > 0 ? "block" : "none")"></div>
+                                </div>
                             </div>
                         </div>
-                        <div class="lesson-footer">
-                            <span class="text-primary fw-bold small">Current: @currentLessonName</span>
-                            <a href="@Url.Action("IndexLesson", "MyLearning", new { q = lessonEncryptedKey })" class="btn btn-primary btn-continue">Go to Lesson <i class="align-middle ms-1" data-feather="arrow-right"></i></a>
+
+                        <div class="lesson-footer mt-auto pt-3 border-top d-flex align-items-center justify-content-between">
+                            <div class="next-up">
+                                <span class="d-block text-muted x-small text-uppercase fw-800" style="font-size: 0.6rem;">Next Up</span>
+                                <span class="text-dark fw-bold small text-truncate d-inline-block" style="max-width: 150px;">@(currentLessonName ?? "All Done!")</span>
+                            </div>
+                            <a href="@Url.Action("IndexLesson", "MyLearning", new { q = lessonEncryptedKey })" class="btn btn-primary btn-sm rounded-pill px-4 py-2">
+                                Continue <i class="align-middle ms-1" data-feather="chevron-right"></i>
+                            </a>
                         </div>
                     </div>
                 </div>

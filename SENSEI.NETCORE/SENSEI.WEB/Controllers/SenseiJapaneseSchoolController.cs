@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Mvc;
@@ -249,10 +249,10 @@ namespace SENSEI.WEB.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(StudentRegistration studentRegistration)
         {
-            //if (!ModelState.IsValid)
-            //{
-            //    return View(studentRegistration);
-            //}
+            if (!ModelState.IsValid)
+            {
+                return View(studentRegistration);
+            }
 
             var isEmailUnique = await _userService.GetUserByEmail(studentRegistration.Email);
             

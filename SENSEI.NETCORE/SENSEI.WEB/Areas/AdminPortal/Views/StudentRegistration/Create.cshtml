@@ -1,4 +1,4 @@
-﻿@using SENSEI.DOMAIN
+@using SENSEI.DOMAIN
 @model StudentRegistration
 
 @{
@@ -14,9 +14,17 @@
     .iti input#PhoneNo { padding-left: 95px !important; }
     .iti--separate-dial-code .iti__selected-dial-code { margin-left: 8px; font-weight: 700; color: #ff5a5f; }
     .form-control.is-invalid { border-color: #dc3545 !important; }
-    .card { border-radius: 12px; border: none; box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075); }
-    .card-header { background-color: transparent; border-bottom: 1px solid rgba(0,0,0,.05); padding: 1.25rem; }
-    .card-title { color: #334155; font-weight: 700; margin-bottom: 0; }
+    .card { border-radius: 16px; border: none; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05); transition: all 0.3s ease; }
+    .card:hover { transform: translateY(-2px); box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08); }
+    .card-header { background-color: #fff; border-bottom: 1px solid rgba(0,0,0,.05); padding: 1.5rem; border-radius: 16px 16px 0 0 !important; }
+    .card-title { color: #1e293b; font-weight: 800; margin-bottom: 0; font-size: 1.1rem; }
+    .form-label { font-weight: 700; color: #475569; font-size: 0.85rem; margin-bottom: 0.5rem; }
+    .form-control { border-radius: 10px; border: 1.5px solid #e2e8f0; padding: 0.6rem 1rem; transition: all 0.2s; }
+    .form-control:focus { border-color: #ff5a5f; box-shadow: 0 0 0 4px rgba(255, 90, 95, 0.1); }
+    .btn-primary { background: linear-gradient(135deg, #ff5a5f 0%, #d83236 100%); border: none; border-radius: 12px; font-weight: 700; padding: 0.8rem 2rem; box-shadow: 0 10px 20px rgba(216, 50, 54, 0.2); }
+    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 12px 25px rgba(216, 50, 54, 0.3); }
+    .input-group-text { border-radius: 10px 0 0 10px; border: 1.5px solid #e2e8f0; border-right: none; background-color: #f8fafc; color: #64748b; }
+    .alert-soft-primary { background-color: #f0f7ff; border: 1px solid #e0efff; color: #007bff; border-radius: 12px; }
 </style>
 
 <div class="container-fluid p-0">
@@ -29,6 +37,7 @@
     </div>
 
     <form asp-action="Create" asp-controller="StudentRegistration" asp-area="AdminPortal" method="post" id="student-create-form">
+        <div asp-validation-summary="All" class="text-danger mb-3"></div>
 
         <div class="row">
             <!-- Personal Information -->
@@ -40,33 +49,33 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label class="form-label" asp-for="FirstName"></label>
-                                @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control", placeholder = "First Name" })
+                                <label class="form-label" asp-for="FirstName"><i class="fas fa-signature me-1"></i> First Name *</label>
+                                @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control", placeholder = "e.g. John" })
                                 <span asp-validation-for="FirstName" class="text-danger"></span>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label" asp-for="LastName"></label>
-                                @Html.TextBoxFor(m => m.LastName, new { @class = "form-control", placeholder = "Last Name" })
+                                <label class="form-label" asp-for="LastName"><i class="fas fa-signature me-1"></i> Last Name *</label>
+                                @Html.TextBoxFor(m => m.LastName, new { @class = "form-control", placeholder = "e.g. Doe" })
                                 <span asp-validation-for="LastName" class="text-danger"></span>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label" asp-for="MiddleName"></label>
+                                <label class="form-label" asp-for="MiddleName"><i class="fas fa-signature me-1"></i> Middle Name (Optional)</label>
                                 @Html.TextBoxFor(m => m.MiddleName, new { @class = "form-control", placeholder = "Middle Name" })
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label" asp-for="Initials"></label>
-                                @Html.TextBoxFor(m => m.Initials, new { @class = "form-control", placeholder = "Initials (e.g. A.B.C.)" })
+                                <label class="form-label" asp-for="Initials"><i class="fas fa-id-card me-1"></i> Initials (Optional)</label>
+                                @Html.TextBoxFor(m => m.Initials, new { @class = "form-control", placeholder = "e.g. A.B.C." })
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label" asp-for="CallingName"></label>
-                                @Html.TextBoxFor(m => m.CallingName, new { @class = "form-control", placeholder = "Calling Name" })
+                                <label class="form-label" asp-for="CallingName"><i class="fas fa-comment-dots me-1"></i> Calling Name (Optional)</label>
+                                @Html.TextBoxFor(m => m.CallingName, new { @class = "form-control", placeholder = "Nickname" })
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label" asp-for="NIC"></label>
+                                <label class="form-label" asp-for="NIC"><i class="fas fa-fingerprint me-1"></i> NIC Number *</label>
                                 @Html.TextBoxFor(m => m.NIC, new { @class = "form-control", placeholder = "NIC Number" })
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label" asp-for="DateOfBirth"></label>
+                                <label class="form-label" asp-for="DateOfBirth"><i class="fas fa-calendar-alt me-1"></i> Date Of Birth *</label>
                                 @Html.TextBoxFor(m => m.DateOfBirth, "{0:yyyy-MM-dd}", new { @class = "form-control datepicker", placeholder = "YYYY-MM-DD" })
                                 <span asp-validation-for="DateOfBirth" class="text-danger"></span>
                             </div>
@@ -84,44 +93,44 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label class="form-label" asp-for="Email"></label>
-                                @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "Email Address", type = "email" })
+                                <label class="form-label" asp-for="Email"><i class="fas fa-envelope me-1"></i> Email Address *</label>
+                                @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "email@example.com", type = "email" })
                                 <span asp-validation-for="Email" class="text-danger"></span>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label" asp-for="PhoneNo"></label>
+                                <label class="form-label" asp-for="PhoneNo"><i class="fas fa-phone me-1"></i> Phone Number *</label>
                                 @Html.TextBoxFor(m => m.PhoneNo, new { @class = "form-control", id = "PhoneNo", type = "tel" })
                                 <span asp-validation-for="PhoneNo" class="text-danger"></span>
                             </div>
                             <div class="col-12 mb-3">
-                                <label class="form-label" asp-for="AddressLineOne"></label>
-                                @Html.TextBoxFor(m => m.AddressLineOne, new { @class = "form-control", placeholder = "Address Line 1" })
+                                <label class="form-label" asp-for="AddressLineOne"><i class="fas fa-map-marker-alt me-1"></i> Address Line One *</label>
+                                @Html.TextBoxFor(m => m.AddressLineOne, new { @class = "form-control", placeholder = "Street Address" })
                                 <span asp-validation-for="AddressLineOne" class="text-danger"></span>
                             </div>
                             <div class="col-12 mb-3">
-                                <label class="form-label" asp-for="AddressLineTwo"></label>
-                                @Html.TextBoxFor(m => m.AddressLineTwo, new { @class = "form-control", placeholder = "Address Line 2 (Optional)" })
+                                <label class="form-label" asp-for="AddressLineTwo">Address Line Two (Optional)</label>
+                                @Html.TextBoxFor(m => m.AddressLineTwo, new { @class = "form-control", placeholder = "Apartment, suite, etc." })
                             </div>
 
                             <div class="col-6 mb-3">
                                 <div class="mb-3" id="country-wrapper">
-                                    <label class="form-label">@Html.DisplayNameFor(m => m.CountryId)</label>
+                                    <label class="form-label"><i class="fas fa-globe me-1"></i> Country *</label>
                                     <select id="CountryId" class="form-control country-select" name="CountryId" asp-for="CountryId"></select>
                                     <span asp-validation-for="CountryId" class="text-danger"></span>
                                 </div>
                             </div>
                             
                             <div class="col-md-6 mb-3">
-                                <label class="form-label" asp-for="City"></label>
+                                <label class="form-label" asp-for="City"><i class="fas fa-city me-1"></i> City *</label>
                                 @Html.TextBoxFor(m => m.City, new { @class = "form-control", placeholder = "City" })
                                 <span asp-validation-for="City" class="text-danger"></span>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label" asp-for="State"></label>
+                                <label class="form-label" asp-for="State">State / Region (Optional)</label>
                                 @Html.TextBoxFor(m => m.State, new { @class = "form-control", placeholder = "State / Province" })
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label" asp-for="PostalCode"></label>
+                                <label class="form-label" asp-for="PostalCode">Postal Code (Optional)</label>
                                 @Html.TextBoxFor(m => m.PostalCode, new { @class = "form-control", placeholder = "Postal Code" })
                             </div>
                         </div>
