@@ -1,145 +1,70 @@
-﻿@{
+@{
     ViewData["Title"] = "My Learning";
     var lessonEncryptedKey = ViewBag.EncryptedKey;
     var lessonName = ViewBag.LessonName;
 }
 
 <style>
-    .lesson-card {
-        border: none;
-        border-radius: 15px;
-        overflow: hidden;
-        transition: all 0.3s ease;
-        background: rgba(255, 255, 255, 0.9);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-        height: 100%;
-        position: relative;
+    :root {
+        --learning-primary: #D83236;
     }
 
-        .lesson-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-        }
-
-    .lesson-image-wrapper {
-        position: relative;
-        height: 200px;
-        overflow: hidden;
-    }
-
-    .lesson-image {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: transform 0.5s ease;
-    }
-
-    .lesson-card:hover .lesson-image {
-        transform: scale(1.1);
-    }
-
-    .lesson-badge {
-        position: absolute;
-        top: 15px;
-        right: 15px;
-        padding: 5px 15px;
-        border-radius: 20px;
-        font-size: 0.8rem;
-        font-weight: 700;
-        backdrop-filter: blur(5px);
-        background: rgba(255, 255, 255, 0.2);
-        color: white;
-        border: 1px solid rgba(255, 255, 255, 0.3);
-    }
-
-    .lesson-content {
-        padding: 1.5rem;
-    }
-
-    .lesson-title {
-        font-size: 1.25rem;
-        font-weight: 800;
-        margin-bottom: 0.5rem;
-        color: #333;
-    }
-
-    .lesson-meta {
-        font-size: 0.85rem;
-        color: #777;
-        margin-bottom: 1rem;
-        display: flex;
-        align-items: center;
-        gap: 15px;
-    }
-
-        .lesson-meta i {
-            color: var(--bs-primary);
-        }
-
-    .progress-wrapper {
-        margin-top: 1rem;
-    }
-
-    .progress {
-        height: 8px;
-        border-radius: 4px;
-        background-color: #eee;
-    }
-
-    .progress-bar {
-        background: linear-gradient(90deg, var(--bs-primary), #ff6b6b);
-        border-radius: 4px;
-    }
-
-    .lesson-footer {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-top: 1.5rem;
-    }
-
-    .btn-continue {
-        padding: 8px 20px;
-        border-radius: 10px;
-        font-weight: 700;
-        transition: all 0.3s ease;
-    }
-
-        .btn-continue:hover {
-            background-color: var(--bs-primary);
-            color: white;
-            transform: scale(1.05);
-        }
-
-    /* Sakura Theme Accents */
-    .sakura-bg {
-        background: linear-gradient(135deg, #fff5f7 0%, #ffffff 100%);
+    .section-header {
+        padding: 2rem 0;
+        border-bottom: 1px solid rgba(0,0,0,0.05);
+        margin-bottom: 3rem;
     }
 
     .section-title {
+        font-family: 'Noto Serif JP', serif;
+        font-weight: 900;
+        font-size: 2rem;
+        color: #1e293b;
+        margin-bottom: 0.5rem;
         position: relative;
         display: inline-block;
-        margin-bottom: 2rem;
     }
 
-        .section-title::after {
-            content: "";
-            position: absolute;
-            bottom: -10px;
-            left: 0;
-            width: 50px;
-            height: 3px;
-            background: var(--bs-primary);
-            border-radius: 3px;
-        }
+    .section-title::after {
+        content: "";
+        position: absolute;
+        bottom: -8px;
+        left: 0;
+        width: 40px;
+        height: 3px;
+        background: var(--learning-primary);
+        border-radius: 2px;
+    }
+
+    .sakura-bg {
+        background-color: #fffcfc;
+        background-image: radial-gradient(#ffeef1 1px, transparent 1px);
+        background-size: 40px 40px;
+        min-height: 100vh;
+        padding-top: 1rem;
+        padding-bottom: 3rem;
+    }
+
+    .lesson-card {
+        border: none;
+        border-radius: 20px;
+        overflow: hidden;
+        transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        background: #fff;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+        height: 100%;
+    }
 </style>
 
 <div class="container-fluid p-0 sakura-bg">
 
+    <!-- Restored Clean Header -->
     <div class="row mb-4">
-        <div class="col-12">
-            <h1 class="h3 mb-3 section-title">@lessonName</h1>
-            <p class="text-muted">Pick up where you left off and master Japanese step by step.</p>
+        <div class="col-12 col-xl-11 mx-auto">
+            <div class="section-header">
+                <h1 class="section-title">@lessonName</h1>
+                <p class="text-muted fw-600">Pick up where you left off and master Japanese step by step. 🌸</p>
+            </div>
         </div>
     </div>
 

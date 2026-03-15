@@ -33,28 +33,41 @@
                 <div class="card lesson-card">
                     <div class="lesson-image-wrapper">
                         <span class="lesson-badge">@lesson.First().Lesson.Course.CourseName</span>
+                        <div class="lesson-overlay-icon">
+                             <i class="align-middle" data-feather="book-open" style="width: 48px; height: 48px; color: rgba(216,50,54,0.15);"></i>
+                        </div>
                     </div>
                     <div class="lesson-content">
-                        <h3 class="lesson-title">@lesson.First().Lesson.LessonName</h3>
-                        <div class="lesson-meta">
-                            <span><i class="align-middle me-1" data-feather="book-open"></i>@Model.Count(e => e.LessonId == lesson.First().Lesson.LessonId)</span>
-                            <span><i class="align-middle me-1" data-feather="check"></i>@completedBatchLessons</span>
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                             <h3 class="lesson-title mb-0">@lesson.First().Lesson.LessonName</h3>
+                             <span class="badge @(progressPercent == 100 ? "bg-success" : "bg-soft-primary text-primary") rounded-pill px-3">@(progressPercent == 100 ? "Completed" : "Active")</span>
                         </div>
-                        <p class="text-muted small">@lesson.First().Lesson.Description</p>
-                        <div class="progress-wrapper">
-                            <div class="d-flex justify-content-between mb-1 small text-muted">
-                                <span>Progress</span>
-                                <span>@progressPercent %</span>
+                        
+                        <div class="lesson-meta mb-3">
+                            <span title="Total Units"><i class="align-middle me-1" data-feather="layers"></i>@(lesson.Count()) Units</span>
+                            <span title="Completed Units"><i class="align-middle me-1" data-feather="check-circle"></i>@completedBatchLessons Done</span>
+                        </div>
+
+                        <div class="progress-wrapper mb-4">
+                            <div class="d-flex justify-content-between mb-2 small fw-bold">
+                                <span class="text-muted">Mastery</span>
+                                <span class="text-primary">@progressPercent%</span>
                             </div>
-                            <div class="progress">
+                            <div class="progress" style="height: 6px;">
                                 <div class="progress-bar" role="progressbar" style="width: @progressPercent%"
                                      aria-valuenow="@progressPercent"
                                      aria-valuemin="0" aria-valuemax="100"></div>
                             </div>
                         </div>
-                        <div class="lesson-footer">
-                            <span class="text-primary fw-bold small">Current: @currentLessonName</span>
-                            <a href="@Url.Action("IndexLesson", "MyLearning", new { q = lessonEncryptedKey })" class="btn btn-primary btn-continue">Go to Lesson <i class="align-middle ms-1" data-feather="arrow-right"></i></a>
+
+                        <div class="lesson-footer mt-auto pt-3 border-top d-flex align-items-center justify-content-between">
+                            <div class="next-up">
+                                <span class="d-block text-muted x-small text-uppercase fw-800" style="font-size: 0.6rem;">Next Up</span>
+                                <span class="text-dark fw-bold small text-truncate d-inline-block" style="max-width: 150px;">@(currentLessonName ?? "All Done!")</span>
+                            </div>
+                            <a href="@Url.Action("IndexLesson", "MyLearning", new { q = lessonEncryptedKey })" class="btn btn-primary btn-sm rounded-pill px-4 py-2">
+                                Continue <i class="align-middle ms-1" data-feather="chevron-right"></i>
+                            </a>
                         </div>
                     </div>
                 </div>
