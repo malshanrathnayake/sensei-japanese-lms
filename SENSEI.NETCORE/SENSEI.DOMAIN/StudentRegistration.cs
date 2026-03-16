@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace SENSEI.DOMAIN
 {
@@ -97,9 +98,11 @@ namespace SENSEI.DOMAIN
             }
         }
 
+        [ValidateNever]
         public string EncryptedKey { get; set; }
         public DateTime CreatedDateTime { get; set; }
         public bool IsRejected { get; set; }
+        [ValidateNever]
         public string RejectionComment { get; set; }
 
         [Required(ErrorMessage = "Country is required.")]
@@ -107,10 +110,15 @@ namespace SENSEI.DOMAIN
         public int CountryId { get; set; }
 
         #region NAVIGATIONAL PROPERTIES
+        [ValidateNever]
         public Staff ApprovedBy { get; set; }
+        [ValidateNever]
         public City CityNav { get; set; }
+        [ValidateNever]
         public Branch Branch { get; set; }
+        [ValidateNever]
         public StudentLearningMode StudentLearningMode { get; set; }
+        [ValidateNever]
         public Course Course { get; set; }
         #endregion
     }
