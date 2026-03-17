@@ -251,11 +251,14 @@ namespace SENSEI.WEB.Areas.AdminPortal.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetLessonListJsonResult()
+        public async Task<JsonResult> GetLessonListJsonResult(long batchId = 0)
         {
             var lessons = await _lessonService.GetLessons();
 
+            var batch = await _batchService.GetBatch(batchId);
+
             var result = lessons
+                .Where(e => e.CourseId == batch.CourseId)
                 .OrderBy(e => e.LessonName)
                 .Select(e => new { id = e.LessonId, text = e.LessonName })
                 .ToList();

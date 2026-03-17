@@ -22,7 +22,9 @@ function loadBatchDropdown(batchSelectClass, wrapperId, hdnBatchIdSelector) {
 }
 
 function loadLessonDropdown(lessonSelectClass, wrapperId, hdnLessonIdSelector) {
-    $.getJSON('/AdminPortal/BatchLesson/GetLessonListJsonResult', function (data) {
+    $.getJSON('/AdminPortal/BatchLesson/GetLessonListJsonResult', {
+        batchId: $('#BatchId').val()
+    }, function (data) {
 
         var $select = $('.' + lessonSelectClass).first();
         $select.empty();
