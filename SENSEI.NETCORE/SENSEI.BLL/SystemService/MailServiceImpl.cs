@@ -10,6 +10,8 @@ using System.Net;
 using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
+using SendGrid;
+using SendGrid.Helpers.Mail;
 
 namespace SENSEI.BLL.SystemService
 {
@@ -17,6 +19,12 @@ namespace SENSEI.BLL.SystemService
     {
         private readonly GraphServiceClient _graphClient;
         private readonly string _sender;
+
+        #region SendGrid
+        private readonly string _apiKey;
+        private readonly string _senderEmail;
+        private readonly string _senderName;
+        #endregion
 
         public MailServiceImpl(IConfiguration configuration)
         {
@@ -34,6 +42,10 @@ namespace SENSEI.BLL.SystemService
             var scopes = new[] { "https://graph.microsoft.com/.default" };
 
             _graphClient = new GraphServiceClient(credential, scopes);
+
+            _apiKey = configuration["SendGrid:ApiKey"];
+            _senderEmail = configuration["SendGrid:SenderEmail"];
+            _senderName = configuration["SendGrid:SenderName"];
         }
 
         #region Google Mail
@@ -131,7 +143,7 @@ namespace SENSEI.BLL.SystemService
                 {
                     new Recipient
                     {
-                        EmailAddress = new EmailAddress
+                        EmailAddress = new Microsoft.Graph.Models.EmailAddress
                         {
                             Address = receiver
                         }
@@ -157,8 +169,6 @@ namespace SENSEI.BLL.SystemService
 
             return true;
         }
-
-        #endregion
 
         public async Task<bool> SendOutlookMail(string receiverMail, string subject, string body)
         {
@@ -195,5 +205,39 @@ namespace SENSEI.BLL.SystemService
                 return false;
             }
         }
+
+        #endregion
+
+        #region SendGrid Mail
+
+        public async Task<bool> SendEmailSendGrid(string toEmail, string subject, string htmlContent)
+        {
+            try
+            {
+                var client = new SendGridClient(_apiKey);
+
+                var from = new SendGrid.Helpers.Mail.EmailAddress(_senderEmail, _senderName);
+                var to = new SendGrid.Helpers.Mail.EmailAddress(toEmail);
+
+                var msg = MailHelper.CreateSingleEmail(
+                    from,
+                    to,
+                    subject,
+                    plainTextContent: "",
+                    htmlContent: htmlContent
+                );
+
+                var response = await client.SendEmailAsync(msg);
+
+                return response.IsSuccessStatusCode;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return false;
+            }
+        }
+
+        #endregion
     }
 }
