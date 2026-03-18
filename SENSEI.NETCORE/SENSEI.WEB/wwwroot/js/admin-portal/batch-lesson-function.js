@@ -17,13 +17,19 @@ function loadBatchDropdown(batchSelectClass, wrapperId, hdnBatchIdSelector) {
         var batchId = $(hdnBatchIdSelector).val();
         if (batchId) {
             $select.val(batchId).trigger('change');
+            loadLessonDropdown('edit-lesson-select', 'edit-lesson-wrapper', '#hdnLessonId');
+        } else {
+            loadLessonDropdown('lesson-select', 'create-lesson-wrapper', '#hdnLessonId');
         }
+
+        
+
     });
 }
 
 function loadLessonDropdown(lessonSelectClass, wrapperId, hdnLessonIdSelector) {
     $.getJSON('/AdminPortal/BatchLesson/GetLessonListJsonResult', {
-        batchId: $('#BatchId').val()
+        batchId: $('#BatchId').val() || $('#EditBatchId').val()
     }, function (data) {
 
         var $select = $('.' + lessonSelectClass).first();
@@ -41,6 +47,17 @@ function loadLessonDropdown(lessonSelectClass, wrapperId, hdnLessonIdSelector) {
         if (lessonId) {
             $select.val(lessonId).trigger('change');
         }
+
+        setTimeout(function () {
+
+            if (wrapperId == 'edit-lesson-wrapper') {
+                $("#edit-lesson-wrapper").find(".select2-container").css("width", "100%");
+            }else{
+                $("#create-lesson-wrapper").find(".select2-container").css("width", "100%");
+            }
+            
+        }, 100);
+
     });
 }
 
@@ -80,8 +97,13 @@ $("#btnNewBatchLesson").on("click", function () {
             todayHighlight: true,
         });
 
+        $("#BatchId").change(function () {
+
+            loadLessonDropdown('lesson-select', 'create-lesson-wrapper', '#hdnLessonId');
+
+        });
+
         loadBatchDropdown('batch-select', 'create-batch-wrapper', '#hdnBatchId');
-        loadLessonDropdown('lesson-select', 'create-lesson-wrapper', '#hdnLessonId');
 
     });
 
@@ -160,8 +182,14 @@ function editBatchLessonButton() {
                 todayHighlight: true,
             });
 
+            $("#EditBatchId").change(function () {
+
+                loadLessonDropdown('edit-lesson-select', 'edit-lesson-wrapper', '#hdnLessonId');
+
+            });
+
             loadBatchDropdown('edit-batch-select', 'edit-batch-wrapper', '#hdnBatchId');
-            loadLessonDropdown('edit-lesson-select', 'edit-lesson-wrapper', '#hdnLessonId');
+            
 
         });
 

@@ -255,13 +255,20 @@ namespace SENSEI.WEB.Areas.AdminPortal.Controllers
         {
             var lessons = await _lessonService.GetLessons();
 
-            var batch = await _batchService.GetBatch(batchId);
+            var batch = batchId != 0
+                ? await _batchService.GetBatch(batchId)
+                : null;
 
             var result = lessons
-                .Where(e => e.CourseId == batch.CourseId)
+                .Where(e => batchId == 0 || e.CourseId == batch.CourseId)
                 .OrderBy(e => e.LessonName)
                 .Select(e => new { id = e.LessonId, text = e.LessonName })
                 .ToList();
+
+            if(batchId == 0)
+            {
+                result.Clear();
+            }
 
             return Json(result);
         }

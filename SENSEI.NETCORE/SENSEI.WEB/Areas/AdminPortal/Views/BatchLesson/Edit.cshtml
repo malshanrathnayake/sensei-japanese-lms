@@ -17,18 +17,18 @@
           data-ajax-begin="onBatchLessonEditBegin" data-ajax-success="onBatchLessonEditSuccess" data-ajax-failure="onBatchLessonEditFailure" data-ajax-complete="onBatchLessonEditComplete">
 
         <input type="hidden" id="BatchLessonId" name="BatchLessonId" value="@Model.BatchLessonId" />
-        <input type="hidden" id="hdnBatchId" name="BatchId" value="@Model.BatchId" />
-        <input type="hidden" id="hdnLessonId" name="LessonId" value="@Model.LessonId" />
+        <input type="hidden" id="hdnBatchId" name="hdnBatchId" value="@Model.BatchId" />
+        <input type="hidden" id="hdnLessonId" name="hdnLessonId" value="@Model.LessonId" />
 
         <div class="mb-3" id="edit-batch-wrapper">
             <label class="form-label">@Html.DisplayNameFor(m => m.BatchId)</label>
-            <select id="EditBatchId" class="form-control edit-batch-select" asp-for="BatchId"></select>
+            <select id="EditBatchId" class="form-control edit-batch-select" asp-for="BatchId" name="BatchId"></select>
             <span asp-validation-for="BatchId" class="text-danger"></span>
         </div>
 
         <div class="mb-3" id="edit-lesson-wrapper">
             <label class="form-label">@Html.DisplayNameFor(m => m.LessonId)</label>
-            <select id="EditLessonId" class="form-control edit-lesson-select" asp-for="LessonId"></select>
+            <select id="EditLessonId" class="form-control edit-lesson-select" asp-for="LessonId" name="LessonId"></select>
             <span asp-validation-for="LessonId" class="text-danger"></span>
         </div>
 
