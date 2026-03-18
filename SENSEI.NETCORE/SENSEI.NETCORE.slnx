@@ -1,6 +1,7 @@
 <Solution>
   <Folder Name="/References/">
-    <File Path="../../documents/Sensei japanese Center/sample queries.sql" />
+    <File Path="handfire_samples.sql" />
+    <File Path="post_deployment.sql" />
   </Folder>
   <Project Path="SENSEI.BLL/SENSEI.BLL.csproj" Id="21b80dfb-3210-49b0-bc47-e7c57fd60642" />
   <Project Path="SENSEI.DAL/SENSEI.DAL.csproj" Id="51dd0053-7d10-433b-a4e3-8e641607924e" />
@@ -9,6 +10,7 @@
     <Deploy />
   </Project>
   <Project Path="SENSEI.DOMAIN/SENSEI.DOMAIN.csproj" />
+  <Project Path="SENSEI.HANGFIRE/SENSEI.HANGFIRE.csproj" Id="41793785-db18-4331-a76f-5001ad976289" />
   <Project Path="SENSEI.SignalR/SENSEI.SignalR.csproj" Id="b3006af3-0575-4d98-806c-1041e98bf185" />
   <Project Path="SENSEI.WEB/SENSEI.WEB.csproj" />
 </Solution>

@@ -61,6 +61,7 @@
     <Folder Include="StoredProcedures\AdminPortal" />
     <Folder Include="StoredProcedures\DatabseConfigurations" />
     <Folder Include="StoredProcedures\StudentPortal" />
+    <Folder Include="StoredProcedures\ApiPortal" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="Tables\User.sql" />
@@ -138,5 +139,6 @@
     <Build Include="Tables\StudentBatchLessonView.sql" />
     <Build Include="StoredProcedures\StudentPortal\UpdateStudentBatchLessonView.sql" />
     <Build Include="StoredProcedures\AdminPortal\SearchStudent.sql" />
+    <Build Include="StoredProcedures\ApiPortal\UpdateLessonOnExpiration.sql" />
   </ItemGroup>
 </Project>

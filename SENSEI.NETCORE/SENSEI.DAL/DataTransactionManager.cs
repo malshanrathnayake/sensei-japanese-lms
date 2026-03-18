@@ -368,6 +368,19 @@ namespace devspark_core_data_access_layer
             }
         }
 
+        private DataManager<DbCommon> _dbCommonDataManager;
+        public DataManager<DbCommon> DbCommonDataManager
+        {
+            get
+            {
+                if (this._dbCommonDataManager == null)
+                {
+                    this._dbCommonDataManager = new DataManager<DbCommon>(_connectionString);
+                }
+
+                return this._dbCommonDataManager;
+            }
+        }
         #endregion
 
         private bool _disposed = false;

@@ -5,6 +5,7 @@ BEGIN
     SET XACT_ABORT ON;
 
     BEGIN TRY
+
         BEGIN TRAN;
 
         DECLARE @UserId BIGINT, @EmployeeId BIGINT;
@@ -63,8 +64,15 @@ BEGIN
             VALUES(@EmployeeId, N'No 13/1,Medagoda, Matara', N'Matara', 1, 0, N'Southern', N'Matara', N'80081');
         END
 
+        COMMIT TRAN;
+
     END TRY
     BEGIN CATCH
         
+        IF @@TRANCOUNT > 0
+            ROLLBACK TRAN;
+
+        THROW;
+
     END CATCH
 END

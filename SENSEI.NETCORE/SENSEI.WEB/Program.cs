@@ -1,16 +1,19 @@
+using Hangfire;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.SignalR;
 using SENSEI.BLL.AdminPortalService;
 using SENSEI.BLL.AdminPortalService.Interface;
+using SENSEI.BLL.ApiPortalservices;
+using SENSEI.BLL.ApiPortalservices.Interfaces;
 using SENSEI.BLL.SystemService;
 using SENSEI.BLL.SystemService.Interfaces;
+using SENSEI.HANGFIRE;
 using SENSEI.SignalR;
 using SENSEI.SignalR.Interface;
+using SENSEI.WEB.SchedulerJobs;
 using SENSEI.WEB.SignalR;
-using SENSEI.BLL.StudentPortalService;
-using SENSEI.BLL.StudentPortalService.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,6 +39,10 @@ builder.Services.AddSingleton<SENSEI.BLL.AdminPortalService.Interface.IStudentSe
 
 #region StudentPortalServices
 builder.Services.AddSingleton<SENSEI.BLL.StudentPortalService.Interfaces.IStudentService, SENSEI.BLL.StudentPortalService.StudentServiceImpl>();
+#endregion
+
+#region ApiPortal
+builder.Services.AddSingleton<IExpirationService, ExpirationServiceImpl>();
 #endregion
 
 #region Login with Google
@@ -66,7 +73,7 @@ builder.Services.AddAuthentication(options =>
 
 #region System Services
 
-var connectionString = configuration.GetConnectionString("dev");
+var connectionString = configuration.GetConnectionString("qa");
 
 builder.Services.AddSingleton<IDatabaseService>(provider =>
 {
@@ -104,7 +111,24 @@ builder.Services.AddSingleton<IUserIdProvider, CustomUserIdProvider>();
 builder.Services.AddSingleton<IRealtimeNotifier, RealtimeNotifierImpl>();
 #endregion
 
+#region Hangfire Services
+builder.Services.AddScoped<HangfireJobs>();
+
+builder.Services.AddHangfire(x =>
+    x.UseSqlServerStorage(connectionString));
+
+builder.Services.AddHangfireServer();
+#endregion
+
 var app = builder.Build();
+
+#region Hangfire Jobs
+using (var scope = app.Services.CreateScope())
+{
+    var jobs = scope.ServiceProvider.GetRequiredService<HangfireJobs>();
+    jobs.RegisterJobs();
+}
+#endregion
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
