@@ -30,7 +30,7 @@
     <ProjectReference Include="..\SENSEI.BLL\SENSEI.BLL.csproj" />
     <ProjectReference Include="..\SENSEI.DOMAIN\SENSEI.DOMAIN.csproj" />
     <ProjectReference Include="..\SENSEI.HANGFIRE\SENSEI.HANGFIRE.csproj" />
-    <ProjectReference Include="..\SENSEI.SignalR\SENSEI.SignalR.csproj" />
+    <ProjectReference Include="..\SENSEI.SIGNALR\SENSEI.SIGNALR.csproj" />
   </ItemGroup>
 
 </Project>
