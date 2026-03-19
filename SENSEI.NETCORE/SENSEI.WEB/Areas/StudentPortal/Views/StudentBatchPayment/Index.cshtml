@@ -148,7 +148,7 @@
                                     <th>Month</th>
                                     <th>Amount</th>
                                     <th>Submission Date</th>
-                                    <th class="text-end pe-4">Status</th>
+                                    <th class="pe-4">Status</th>
                                 </tr>
                             </thead>
                             <tbody></tbody>
@@ -229,11 +229,14 @@
                         }
                     },
                     { 
-                        "data": "PaymentMonth",
+                        "data": null,
                         "render": function(data) {
+
+                            var month = moment.utc(data.paymentMonth).format('MMMM YYYY');
+
                             return `<div class="fw-700 text-dark d-flex align-items-center">
                                         <i data-feather="calendar" class="me-2 text-muted" style="width: 14px; height: 14px;"></i>
-                                        ${moment(data).format('MMMM YYYY')}
+                                        ${month}
                                     </div>`;
                         }
                     },
