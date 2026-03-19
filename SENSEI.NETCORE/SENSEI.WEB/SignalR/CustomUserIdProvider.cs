@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 
-namespace SENSEI.WEB.SignalR
+namespace SENSEI.WEB.SIGNALR
 {
     public class CustomUserIdProvider : IUserIdProvider
     {

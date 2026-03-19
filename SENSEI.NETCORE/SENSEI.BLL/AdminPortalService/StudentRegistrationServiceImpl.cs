@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 using SENSEI.BLL.AdminPortalService.Interface;
 using SENSEI.BLL.SystemService.Interfaces;
 using SENSEI.DOMAIN;
-using SENSEI.SignalR.Interface;
+using SENSEI.SIGNALR.Interface;
 using System;
 using System.Collections.Generic;
 using System.Text;

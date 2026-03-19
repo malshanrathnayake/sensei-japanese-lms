@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 using SENSEI.BLL.AdminPortalService.Interface;
 using SENSEI.BLL.SystemService.Interfaces;
 using SENSEI.DOMAIN;
-using SENSEI.SignalR.Interface;
+using SENSEI.SIGNALR.Interface;
 using SENSEI.WEB.Helpers;
 using System.Net.Http.Headers;
 using System.Runtime.InteropServices.JavaScript;

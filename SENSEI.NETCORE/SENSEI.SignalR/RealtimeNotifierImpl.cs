@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.SignalR;
-using SENSEI.SignalR.Interface;
+using SENSEI.SIGNALR.Interface;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace SENSEI.SignalR
+namespace SENSEI.SIGNALR
 {
     public class RealtimeNotifierImpl : IRealtimeNotifier
     {

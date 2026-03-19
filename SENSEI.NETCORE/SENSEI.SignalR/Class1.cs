@@ -1,4 +1,4 @@
-﻿namespace SENSEI.SignalR
+﻿namespace SENSEI.SIGNALR
 {
     public class Class1
     {

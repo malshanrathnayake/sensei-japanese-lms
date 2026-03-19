@@ -10,10 +10,10 @@ using SENSEI.BLL.ApiPortalservices.Interfaces;
 using SENSEI.BLL.SystemService;
 using SENSEI.BLL.SystemService.Interfaces;
 using SENSEI.HANGFIRE;
-using SENSEI.SignalR;
-using SENSEI.SignalR.Interface;
+using SENSEI.SIGNALR;
+using SENSEI.SIGNALR.Interface;
 using SENSEI.WEB.SchedulerJobs;
-using SENSEI.WEB.SignalR;
+using SENSEI.WEB.SIGNALR;
 
 var builder = WebApplication.CreateBuilder(args);
 

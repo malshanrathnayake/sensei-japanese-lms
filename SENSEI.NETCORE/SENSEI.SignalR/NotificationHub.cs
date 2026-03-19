@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace SENSEI.SignalR
+namespace SENSEI.SIGNALR
 {
     public class NotificationHub : Hub
     {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SENSEI.SignalR.Interface
+namespace SENSEI.SIGNALR.Interface
 {
     public interface IRealtimeNotifier
     {
