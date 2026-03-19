@@ -32,7 +32,7 @@ BEGIN
 		SELECT U.*,
 			JSON_QUERY(ISNULL((SELECT Student.* FROM Student WHERE Student.UserId = U.UserId FOR JSON PATH, WITHOUT_ARRAY_WRAPPER), null)) AS 'Student',
 			JSON_QUERY(ISNULL((SELECT Staff.* FROM Staff WHERE Staff.UserId = U.UserId FOR JSON PATH, WITHOUT_ARRAY_WRAPPER), null)) AS 'Staff'
-		FROM [User] U WHERE U.UserGlobalIdentity = @userGlobalIdentity FOR JSON PATH
+		FROM [User] U WHERE U.UserGlobalidentity = @userGlobalIdentity FOR JSON PATH
 	END
 
 END
