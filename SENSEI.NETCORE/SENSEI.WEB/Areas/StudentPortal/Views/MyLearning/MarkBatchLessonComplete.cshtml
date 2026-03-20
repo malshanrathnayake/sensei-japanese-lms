@@ -1,0 +1,80 @@
+﻿@using SENSEI.DOMAIN
+@model BatchStudentLessonAccess
+
+@{
+    Layout = null;
+}
+
+<style>
+    .rating-stars {
+        display: flex;
+        gap: 6px;
+        font-size: 32px;
+        cursor: pointer;
+        user-select: none;
+    }
+
+        .rating-stars .star {
+            color: #ccc;
+            transition: color 0.2s ease;
+        }
+
+            .rating-stars .star.active {
+                color: #f5b301;
+            }
+</style>
+
+<div class="offcanvas-header">
+    <h5 class="offcanvas-title">New Batch</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+</div>
+
+<div class="offcanvas-body">
+
+    <form id="batchlessoncomplete-create-form" asp-area="StudentPortal" asp-controller="MyLearning" asp-action="MarkBatchLessonComplete"
+          data-ajax="true" data-ajax-method="POST"
+          data-ajax-begin="onBatchlessoncompleteCreateBegin" data-ajax-success="onBatchlessoncompleteCreateSuccess" data-ajax-failure="onBatchlessoncompleteCreateFailure" data-ajax-complete="onBatchlessoncompleteCreateComplete">
+
+        @Html.HiddenFor(m => m.BatchStudentLessonAccessId)
+        @Html.HiddenFor(m => m.StudentId)
+        @Html.HiddenFor(m => m.BatchLessonId)
+
+        <div class="mb-3">
+            <label class="form-label">@Html.DisplayNameFor(m => m.Rating)</label>
+
+            <div id="rating-stars" class="rating-stars">
+                <i class="star" data-value="1">&#9733;</i>
+                <i class="star" data-value="2">&#9733;</i>
+                <i class="star" data-value="3">&#9733;</i>
+                <i class="star" data-value="4">&#9733;</i>
+                <i class="star" data-value="5">&#9733;</i>
+            </div>
+
+            <input type="hidden" asp-for="Rating" />
+            <span asp-validation-for="Rating" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">@Html.DisplayNameFor(m => m.Feedback)</label>
+            <input class="form-control" asp-for="Feedback" />
+            <span asp-validation-for="Feedback" class="text-danger"></span>
+        </div>
+
+
+        <div class="d-flex justify-content-end gap-2">
+
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="offcanvas">
+                Cancel
+            </button>
+
+            <button type="submit" id="btnCompleteBatchLesson" class="btn btn-success ladda-button" data-style="zoom-in">
+                <span class="ladda-label">Save</span>
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+

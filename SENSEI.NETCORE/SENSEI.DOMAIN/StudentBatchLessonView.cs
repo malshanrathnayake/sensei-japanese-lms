@@ -15,6 +15,7 @@ namespace SENSEI.DOMAIN
         public Student Student { get; set; }
         public BatchLesson BatchLesson { get; set; }
         public Lesson Lesson { get; set; }
+        public BatchStudentLessonAccess BatchStudentLessonAccess { get; set; }
         #endregion
     }
 }

@@ -1,10 +1,17 @@
 ﻿@using SENSEI.DOMAIN
 @using core_web.Helpers
+@using System.Web
 @model BatchLesson
 
 @{
     ViewData["Title"] = $"Lesson {Model?.Lesson?.LessonName}";
-    var videoId = Model.RecordingUrl?.Split("v=").LastOrDefault();
+    string videoId = null;
+
+    if (!string.IsNullOrWhiteSpace(Model.RecordingUrl))
+    {
+        var uri = new Uri(Model.RecordingUrl);
+        videoId = HttpUtility.ParseQueryString(uri.Query).Get("v");
+    }
 }
 
 <div class="container-fluid p-0">
@@ -15,22 +22,90 @@
     </div>
 
     <div class="row">
+
         <div class="col-lg-8 col-md-12 col-sm-12">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">@Model.Lesson.LessonName</h5>
-                </div>
-                <div class="card-body">
-
-                    <div class="row">
-                        <div class="player-wrapper">
-                            <div id="player"></div>
-
-                            <div class="top-blocker"></div>
-                            <div class="bottom-right-blocker"></div>
-                        </div>
+            <div class="row">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">@Model.Description</h5>
                     </div>
+                    <div class="card-body">
 
+                        <div class="row">
+                            <div class="player-wrapper">
+                                <div id="player"></div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Student Ratings</h5>
+                    </div>
+                    <div class="card-body">
+
+                        <div id="ratingContent" class="table-responsive">
+
+                            <table id="ratingDataTable" class="table table-hover align-middle mb-0 w-100">
+                                <thead>
+                                    <tr>
+                                        <th>@Html.DisplayNameFor(m => m.BatchStudentLessonAccesses.FirstOrDefault().Student.IndexNumber)</th>
+                                        <th>@Html.DisplayNameFor(m => m.BatchStudentLessonAccesses.FirstOrDefault().Student.StudentPopulatedName)</th>
+                                        <th>@Html.DisplayNameFor(m => m.BatchStudentLessonAccesses.FirstOrDefault().Rating)</th>
+                                        <th>@Html.DisplayNameFor(m => m.BatchStudentLessonAccesses.FirstOrDefault().Feedback)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    @{
+                                        var index = 1;
+                                    }
+
+                                    @foreach (var lessonAccess in Model.BatchStudentLessonAccesses.Where(e => !string.IsNullOrWhiteSpace(e.Feedback)))
+                                    {
+                                        <tr>
+                                            <td>@lessonAccess.Student?.IndexNumber</td>
+                                            <td>@lessonAccess.Student?.StudentPopulatedName</td>
+                                            <td>
+                                                @if (lessonAccess.Rating.HasValue)
+                                                {
+                                                    <div class="d-inline-flex align-items-center gap-1">
+                                                        @for (int i = 1; i <= 5; i++)
+                                                        {
+                                                            if (i <= lessonAccess.Rating.Value)
+                                                            {
+                                                                <span style="color:#f5b301; font-size:18px;">&#9733;</span>
+                                                            }
+                                                            else
+                                                            {
+                                                                <span style="color:#d6d6d6; font-size:18px;">&#9733;</span>
+                                                            }
+                                                        }
+                                                        <span class="ms-1 text-muted">(@lessonAccess.Rating/5)</span>
+                                                    </div>
+                                                }
+                                                else
+                                                {
+                                                    <span>Not Yet Rated</span>
+                                                }
+                                            </td>
+                                            <td>@lessonAccess.Feedback</td>
+                                        </tr>
+
+                                        index++;
+                                    }
+
+
+                                </tbody>
+                            </table>
+
+                        </div>
+
+                    </div>
                 </div>
             </div>
         </div>
@@ -106,6 +181,10 @@
 
     <script>
 
+        $(document).ready(function () {
+            initializeRatingDataTable();
+        });
+
         var tag = document.createElement('script');
         tag.src = "https://www.youtube.com/iframe_api";
         var firstScriptTag = document.getElementsByTagName('script')[0];
@@ -148,9 +227,31 @@
             player.stopVideo();
         }
 
-        document.querySelector('.top-blocker').addEventListener('contextmenu', function(e){
-            e.preventDefault();
-        });
+
+        function initializeRatingDataTable() {
+            if ($.fn.DataTable.isDataTable('#ratingDataTable')) {
+                $('#ratingDataTable').DataTable().destroy();
+            }
+
+            $('#ratingDataTable').DataTable({
+                processing: false,
+                serverSide: false,
+                paging: true,
+                pageLength: 10,
+                lengthChange: false,
+                searching: true,
+                ordering: true,
+                info: true,
+                autoWidth: false,
+                responsive: true,
+                language: {
+                    emptyTable: "No ratings available"
+                },
+                columnDefs: [
+                    { orderable: false, targets: 0 }
+                ]
+            });
+        }
 
     </script>
 

@@ -274,7 +274,11 @@
 
 </div>
 
+@Html.RenderAction("MyLearningOffCanvas", "MyLearning", new { area = "StudentPortal" })
+
 @section Scripts {
+
+    <script src="~/js/student-portal/my-learning-functions.js"></script>
 
     <script>
 
@@ -386,19 +390,19 @@
                 if (window.feather) feather.replace();
             }
 
-            $('#btnComplete').click(function () {
-                var url = $(this).data('action-url');
-                $.post(url, function (response) {
-                    if (response.success) {
-                        popUpNotification('success', response.message);
-                        setTimeout(function(){ location.reload(); }, 1500);
-                    } else {
-                        popUpNotification('error', response.message);
-                    }
-                }).fail(function () {
-                    popUpNotification('error', 'An error occurred while marking the lesson as complete.');
-                });
-            });
+            // $('#btnComplete').click(function () {
+            //     var url = $(this).data('action-url');
+            //     $.post(url, function (response) {
+            //         if (response.success) {
+            //             popUpNotification('success', response.message);
+            //             setTimeout(function(){ location.reload(); }, 1500);
+            //         } else {
+            //             popUpNotification('error', response.message);
+            //         }
+            //     }).fail(function () {
+            //         popUpNotification('error', 'An error occurred while marking the lesson as complete.');
+            //     });
+            // });
         });
 
     </script>

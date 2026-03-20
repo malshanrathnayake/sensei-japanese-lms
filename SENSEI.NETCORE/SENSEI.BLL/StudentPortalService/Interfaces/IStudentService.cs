@@ -20,6 +20,6 @@ namespace SENSEI.BLL.StudentPortalService.Interfaces
         Task<IEnumerable<StudentPaymentSummary>> GetStudentPaymentSummary(long studentId);
         Task<IEnumerable<StudentBatch>> GetStudentBatchById(long studentBatchId);
         Task<BatchLesson> GetBatchLesson(long batchLessonId);
-        Task<bool> UpdateStudentProgress(long batchLessonId, long studentId);
+        Task<bool> UpdateStudentProgress(StudentBatchLessonView studentBatchLessonView);
     }
 }

@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Mvc;
 using SENSEI.BLL.StudentPortalService.Interfaces;
+using SENSEI.DOMAIN;
 using System.Threading.Tasks;
 
 namespace SENSEI.WEB.Areas.StudentPortal.Controllers
@@ -131,12 +132,56 @@ namespace SENSEI.WEB.Areas.StudentPortal.Controllers
             return View(batchLesson);
         }
 
-        [HttpPost]
+        [HttpGet]
         public async Task<IActionResult> MarkBatchLessonComplete(string q)
         {
             long batchLessonId = Convert.ToInt64(_protector.Unprotect(q));
             var studentId = Convert.ToInt64(HttpContext.Session.GetString("StudentId"));
-            var status = await _studentService.UpdateStudentProgress(batchLessonId, studentId);
+            //var status = await _studentService.UpdateStudentProgress(batchLessonId, studentId);
+
+            //if (status)
+            //{
+            //    return Json(new { success = status, message = "Lesson marked as complete" });
+            //}
+            //else
+            //{
+            //    return Json(new { success = status, message = "Lesson mot marked as complete" });
+            //}
+
+            var batchLesson = await _studentService.GetBatchLesson(batchLessonId);
+
+            var batchStudentLessonAccessesId = batchLesson.BatchStudentLessonAccesses.Where(e => e.BatchLessonId == batchLessonId && e.StudentId == studentId).Select(e => e.BatchStudentLessonAccessId).FirstOrDefault();
+
+
+            var batchStudentLessonAccess = new BatchStudentLessonAccess
+            {
+                BatchStudentLessonAccessId = batchStudentLessonAccessesId,
+                BatchLessonId = batchLessonId,
+                StudentId = studentId,
+            };
+
+            return View(batchStudentLessonAccess);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> MarkBatchLessonComplete(BatchStudentLessonAccess batchStudentLessonAccess)
+        {
+            long batchLessonId = batchStudentLessonAccess.BatchLessonId;
+            var studentId = batchStudentLessonAccess.StudentId;
+
+            var batchLesson = await _studentService.GetBatchLesson(batchLessonId);
+            if (batchLesson == null) return Json(new { success = false, message = "Lesson not marked as complete" });
+
+            var studentBatchLessonView = new StudentBatchLessonView()
+            {
+                StudentId = studentId,
+                BatchLessonId = batchLessonId,
+                LessonId = batchLesson.LessonId,
+                IsCompleted = true,
+                BatchStudentLessonAccess = batchStudentLessonAccess
+            };
+
+            var status = await _studentService.UpdateStudentProgress(studentBatchLessonView);
 
             if (status)
             {
@@ -144,8 +189,13 @@ namespace SENSEI.WEB.Areas.StudentPortal.Controllers
             }
             else
             {
-                return Json(new { success = status, message = "Lesson mot marked as complete" });
+                return Json(new { success = status, message = "Lesson not marked as complete" });
             }
+        }
+
+        public async Task<IActionResult> MyLearningOffCanvas()
+        {
+            return View();
         }
     }
 }

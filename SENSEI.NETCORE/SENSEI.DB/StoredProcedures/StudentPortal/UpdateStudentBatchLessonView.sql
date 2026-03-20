@@ -18,6 +18,20 @@ BEGIN
 			IsCompleted BIT
 		);
 
+		UPDATE BSLA
+        SET
+            BSLA.Feedback = SBLV.Feedback,
+            BSLA.Rating = SBLV.Rating
+        FROM BatchStudentLessonAccess BSLA
+        INNER JOIN OPENJSON(@jsonString, '$.BatchStudentLessonAccess')
+        WITH
+        (
+            BatchStudentLessonAccessId BIGINT,
+            Feedback NVARCHAR(MAX),
+            Rating INT
+        ) AS SBLV ON BSLA.BatchStudentLessonAccessId = SBLV.BatchStudentLessonAccessId;
+
+
 		COMMIT TRANSACTION;
 		SET @executionStatus = 1;
 
