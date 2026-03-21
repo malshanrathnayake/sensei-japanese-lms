@@ -1,0 +1,272 @@
+﻿@using SENSEI.DOMAIN
+@using core_web.Helpers
+@model BatchStudentLessonAccessRequest
+
+@{
+    ViewData["Title"] = "Student Payments";
+}
+
+<div class="container-fluid p-0">
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="h3 mb-0">Student Payments</h1>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Search By</h5>
+                </div>
+                <div class="card-body">
+
+                    <div class="row">
+                        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xm-12">
+                            <div class="mb-3" id="search-course-wrapper">
+                                <label class="form-label">Course</label>
+                                <select id="SearchCourseId" class="form-control search-course-select" name="SearchCourseId"></select>
+                                @* <span asp-validation-for="CourseId" class="text-danger"></span> *@
+                            </div>
+                        </div>
+
+                        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xm-12">
+                            <div class="mb-3" id="search-course-wrapper">
+                                <label class="form-label">@Html.DisplayNameFor(m => m.BatchStudentLessonAccess.BatchLesson.BatchId)</label>
+                                <select id="SearchBatchId" class="form-control search-batch-select" name="SearchBatchId"></select>
+                                @* <span asp-validation-for="CourseId" class="text-danger"></span> *@
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">List of Student Payments</h5>
+                </div>
+                <div class="card-body">
+
+                    <div id="LessonRequestTableContent" class="table-responsive">
+
+                        <table id="LessonRequestDataTable" class="table table-hover align-middle mb-0 w-100">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>@Html.DisplayNameFor(m => m.BatchStudentLessonAccess.BatchLesson.BatchId)</th>
+                                    <th>@Html.DisplayNameFor(m => m.BatchStudentLessonAccess.BatchLesson.Lesson.LessonName)</th>
+                                    <th>@Html.DisplayNameFor(m => m.BatchStudentLessonAccess.BatchLesson.Description)</th>
+                                    <th>@Html.DisplayNameFor(m => m.BatchStudentLessonAccess.Student.IndexNumber)</th>
+                                    <th>@Html.DisplayNameFor(m => m.BatchStudentLessonAccess.Student.StudentPopulatedName)</th>
+                                    <th>@Html.DisplayNameFor(m => m.RequestedDate)</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@Html.RenderAction("BatchStudentLessonOffCanvas", "BatchStudentLessonRequest", new { area = "AdminPortal" })
+
+@section Scripts {
+
+    <script src="~/js/admin-portal/BatchStudentLessonRequest-function.js"></script>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            $('#SearchCourseId').change(function () {
+                var courseId = $(this).val();
+
+                console.log(courseId);
+
+                loadBatchStudentLessonRequests();
+            });
+
+            $('#SearchBatchId').change(function () {
+                var batchId = $(this).val();
+
+                loadBatchStudentLessonRequests();
+            });
+
+            $.getJSON('/AdminPortal/BatchStudentLessonRequest/GetCourseListJsonResult', function (data) {
+
+                $('#SearchCourseId').empty();
+                $('#SearchCourseId').append('<option value="0">All Courses</option>')
+
+                loadSelectBox({
+                    data: data,
+                    className: 'search-course-select',
+                    title: 'Select Course'
+                });
+
+                var courseId = $('#SearchCourseId').val();
+
+                if (courseId) {
+                    $('#SearchCourseId').val(courseId).trigger('change');
+                }
+
+                loadBatches();
+            });
+
+            function loadBatches(){
+                $.getJSON('/AdminPortal/BatchStudentLessonRequest/GetBatchListJsonResult',
+                    {
+                        courseId: $('#SearchCourseId').val() || 0
+                    },
+                    function (data) {
+
+                        $('#SearchBatchId').empty();
+                        $('#SearchBatchId').append('<option value="0">All Batches</option>')
+
+                        loadSelectBox({
+                            data: data,
+                            className: 'search-batch-select',
+                            title: 'Select Batch'
+                        });
+
+                        var courseId = $('#SearchBatchId').val();
+
+                        if (courseId) {
+                            $('#SearchBatchId').val(courseId).trigger('change');
+                        }
+                    });
+            }
+
+        });
+
+        function loadBatchStudentLessonRequests() {
+
+            if ($.fn.DataTable.isDataTable('#LessonRequestDataTable')) {
+                $('#LessonRequestDataTable').DataTable().clear().destroy();
+                $('#LessonRequestDataTable tbody').empty();
+            }
+
+            $('#LessonRequestDataTable').DataTable({
+                processing: true,
+                serverSide: true,
+                autoWidth: false,
+                lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
+                pageLength: 25,
+                columnDefs: [
+                    { targets: 0, className: 'noVis' },
+                    { width: 25, targets: 0, orderable: false },
+                ],
+                dom:
+                    "<'row mb-3'<'col-sm-6'l><'col-sm-6 text-end'f>>" +
+                    "<'row'<'col-sm-12'tr>>" +
+                    "<'row mt-3'<'col-sm-5'i><'col-sm-7'p>>",
+                ajax: {
+                    url: '/AdminPortal/BatchStudentLessonRequest/ListOfBatchStudentLessonRequests',
+                    type: 'POST',
+                    data: function (d) {
+                        d.courseId = $('#SearchCourseId').val() || 0;
+                        d.batchId = $('#SearchBatchId').val() || 0;
+                    }
+                },
+                columns: [
+                    {
+                        data: null,
+                        orderable: false,
+                        searchable: false,
+                        width: "25px",
+                        className: "text-end",
+                        render: function (data, type, row) {
+
+                            var approveUrl = `/AdminPortal/BatchStudentLessonRequest/Approve/?q=${row.encryptedKey}`;
+
+                            var approveBtn = '';
+
+                            if(row.approveStatusEnum != 1 && row.approveStatusEnum != 2){
+
+                                approveBtn = `<li><a class="dropdown-item d-flex align-items-center gap-2 approve-request" href="javascript:void(0)" data-action-url="${approveUrl}"> <i data-feather="check-circle"></i><span>Approve</span></a></li>`;
+
+                            }else if(row.approveStatusEnum != 0 && row.approveStatusEnum != 2){
+                                approveBtn = `<li><a class="dropdown-item d-flex align-items-center gap-2 disabled text-muted" href="javascript:void(0)" data-action-url="${approveUrl}"> <i data-feather="check-circle"></i><span>Approve</span></a></li>`;
+                            }
+
+                            return `
+                                <div class="dropdown">
+                                    <button class="btn btn-sm btn-light p-1" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i data-feather="more-vertical"></i>
+                                    </button>
+
+                                    <ul class="dropdown-menu dropdown-menu-end">
+                                        ${approveBtn}
+                                    </ul>
+                                </div>
+
+                            `;
+                        }
+                    },
+                    { data: 'batchStudentLessonAccess.batchLesson.batch.batchName', name:'batchName' },
+                    { data: 'batchStudentLessonAccess.batchLesson.lesson.lessonName', name:'lessonName' },
+                    { data: 'batchStudentLessonAccess.batchLesson.description', name:'description' },
+                    { data: 'batchStudentLessonAccess.student.indexNumber', name:'indexNumber' },
+                    { data: 'batchStudentLessonAccess.student.studentPopulatedName', name:'studentPopulatedName' },
+                    { data: 'requestedDate', name:'requestedDate', render: function (data) { return renderDateTime(data); } },
+                    { data: null, name: 'status', orderable: false, searchable: false,
+                        render: function (data, type, row) {
+
+                            if (row.approveStatusEnum === 0) {
+                                return `<span class="badge bg-warning text-dark">Pending</span>`;
+                            }
+
+                            if (row.approveStatusEnum === 1) {
+                                return `<span class="badge bg-success">Approved</span>`;
+                            }
+
+                            if (row.approveStatusEnum === 2) {
+                                return `<span class="badge bg-danger">Rejected</span>`;
+                            }
+
+                           
+                        }
+                    }
+
+                ],
+                drawCallback: function () {
+
+                    if (window.feather) {
+                        feather.replace();
+                    }
+
+                    approveButton();                }
+            });
+
+        }
+
+        function renderDateTime(data) {
+            if (!data) return '';
+
+            var date = data.split('T')[0];
+            var time = data.split('T')[1].split('.')[0];
+            return `<div class="fw-600">${date}</div><div class="small text-muted">${time}</div>`;
+        }
+
+        function renderDateOnly(data) {
+            if (!data) return '';
+
+            var date = data.split('T')[0];
+            return `<div class="fw-600">${date}</div>`;
+        }
+
+    </script>
+
+}

@@ -22,10 +22,18 @@ namespace SENSEI.DOMAIN
         public DateTime RequestEndDate { get; set; }
 
         [DisplayName("Admin Approved")]
-        public bool AdminApproved { get; set; }
+        public ApproveStatusEnum ApproveStatusEnum { get; set; }
 
         [DisplayName("Is Deleted")]
         public bool IsDeleted { get; set; }
+
+        [DisplayName("Changed By")]
+        public long? ChangeById { get; set; }
+
+        [DisplayName("Changed Date")]
+        public DateTime? ChangedDate { get; set; }
+
+        public string EncryptedKey { get; set; }
 
         // Navigation
         public BatchStudentLessonAccess BatchStudentLessonAccess { get; set; }

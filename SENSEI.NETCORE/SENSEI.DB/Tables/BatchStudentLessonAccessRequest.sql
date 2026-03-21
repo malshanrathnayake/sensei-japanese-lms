@@ -4,7 +4,11 @@ CREATE TABLE [dbo].[BatchStudentLessonAccessRequest]
     [BatchStudentLessonAccessId] BIGINT NOT NULL,
     [RequestedDate] DATETIME NOT NULL,
     [RequestEndDate] DATETIME NOT NULL,
-    [AdminApproved] BIT NOT NULL,
-    [IsDeleted] BIT NOT NULL,
+    [ApproveStatusEnum] BIT NOT NULL DEFAULT 0, -- 0 for pending, 1 for approved, 2 for rejected
+    [IsDeleted] BIT NOT NULL DEFAULT 0,
+
+    [ChangeById] BIGINT NULL,
+    [ChangeDate] DATETIME NULL,
+
     CONSTRAINT [PK_BatchStudentLessonAccessRequest] PRIMARY KEY CLUSTERED ([BatchStudentLessonAccessRequestId])
 );

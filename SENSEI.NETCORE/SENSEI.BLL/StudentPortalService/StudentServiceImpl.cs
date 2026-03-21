@@ -168,5 +168,22 @@ namespace SENSEI.BLL.StudentPortalService
 
             return status;
         }
+
+        public async Task<bool> UpdateBatchLessonAccess(long batchLessonAccessId)
+        {
+
+            var batchStudentLessonAccessRequest = new BatchStudentLessonAccessRequest
+            {
+                BatchStudentLessonAccessId = batchLessonAccessId,
+                RequestedDate = DateTime.UtcNow,
+                RequestEndDate = DateTime.UtcNow.AddDays(7), //access is for 7 days
+            };
+
+            string jsonString = JsonConvert.SerializeObject(batchStudentLessonAccessRequest);
+            DataTransactionManager dataTransactionManager = new DataTransactionManager(_databaseService.GetConnectionString());
+            var (status, primaryKey) = await dataTransactionManager.BatchStudentLessonAccessRequestDataManager.UpdateDataReturnPrimaryKey("UpdateBatchLessonAccess", jsonString);
+
+            return status;
+        }
     }
 }

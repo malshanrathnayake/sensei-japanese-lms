@@ -84,7 +84,7 @@
                             </div>
                             
                             <div class="lesson-footer mt-auto pt-3 border-top d-flex justify-content-between align-items-center">
-                                <span class="text-muted small fw-600"><i class="align-middle me-1 text-danger" data-feather="video" style="width: 14px;"></i> Video Lesson</span>
+                                <span class="text-muted small fw-600"><i class="align-middle me-1 text-danger" data-feather="video" style="width: 14px;"></i> Video Lesson & Expire on @batchLesson.RecordingExpireDate.ToString("yyyy-MMM-dd")</span>
                                 <a href="@Url.Action("LessonDetail", "MyLearning", new { q = batchLesson.EncryptedKey })" class="btn btn-primary btn-sm rounded-pill px-4 py-2" style="font-weight: 800; background: #D83236; border: none; box-shadow: 0 8px 20px rgba(216, 50, 54, 0.25); transition: all 0.3s ease;">
                                     Study <i class="align-middle ms-1" data-feather="play" style="width: 14px;"></i>
                                 </a>
@@ -96,8 +96,8 @@
             //lesson expired && (lesson has not access OR Lesson not in access list)
             else if ((batchLesson.RecordingExpireDate < DateTime.Now) && ((batchLesson.BatchStudentLessonAccesses.Any(e => e.StudentId == studentId && e.BatchLessonId == batchLesson.BatchLessonId && !e.HasAccess) || (!batchLesson.BatchStudentLessonAccesses.Any(e => e.StudentId == studentId && e.BatchLessonId == batchLesson.BatchLessonId)))))
             {
-                <div class="col-12 col-md-6 col-xl-4 mb-4" style="opacity:0.8;">
-                    <div class="card lesson-card h-100 shadow-sm border-0" style="filter: grayscale(100%);">
+                <div class="col-12 col-md-6 col-xl-4 mb-4">
+                    <div class="card lesson-card h-100 shadow-sm border-0">
                         <div class="lesson-image-wrapper" style="height: 180px; position: relative; background: url('@coverImage') center/cover no-repeat;">
                             <div class="d-flex align-items-center justify-content-center h-100" style="background: rgba(0,0,0,0.2);">
                                 <div class="bg-white rounded-circle p-3 shadow-lg">
@@ -141,10 +141,27 @@
                             </div>
 
                             <div class="lesson-footer mt-auto pt-3 border-top d-flex justify-content-between align-items-center">
-                                <span class="badge bg-soft-secondary text-secondary rounded-pill fw-700" style="font-size: 0.7rem;">Lesson Expired</span>
-                                <button class="btn btn-secondary btn-sm disabled rounded-pill px-4 py-2" style="font-weight: 800; opacity: 0.5;">
-                                    Request Acces <i class="align-middle ms-1" data-feather="lock" style="width: 14px;"></i>
-                                </button>
+                                <span class="badge bg-soft-secondary text-secondary rounded-pill fw-700" style="font-size: 0.7rem;">Lesson Expired : @batchLesson.RecordingExpireDate.ToString("yyyy-MMM-dd")</span>
+
+                                @{
+                                    var batchLessonAccessId = batchLesson.BatchStudentLessonAccesses.FirstOrDefault(e => e.StudentId == studentId && e.BatchLessonId == batchLesson.BatchLessonId)?.BatchStudentLessonAccessId;
+                                    var batchLessonAccessEncryptedId = batchLesson.BatchStudentLessonAccesses.FirstOrDefault(e => e.StudentId == studentId && e.BatchLessonId == batchLesson.BatchLessonId)?.EncryptedKey;
+                                }
+
+
+                                @if (batchLesson.BatchStudentLessonAccesses.FirstOrDefault(e => e.StudentId == studentId && e.BatchLessonId == batchLesson.BatchLessonId).BatchStudentLessonAccessRequests.Any(e => e.BatchStudentLessonAccessId == batchLessonAccessId))
+                                {
+                                    <button class="btn btn-secondary btn-sm disabled rounded-pill px-4 py-2" style="font-weight: 800;">
+                                        Access Pending <i class="align-middle ms-1" data-feather="clock" style="width: 14px;"></i>
+                                    </button>
+                                }
+                                else
+                                {
+                                    <button class="btn btn-secondary btn-sm rounded-pill px-4 py-2 request-access" style="font-weight: 800;" data-action-url="@Url.Action("LessonRequestAccess", "MyLearning", new { q = batchLessonAccessEncryptedId })">
+                                        Request Access <i class="align-middle ms-1" data-feather="arrow-right" style="width: 14px;"></i>
+                                    </button>
+                                }
+                                
                             </div>
                         </div>
                     </div>
@@ -199,7 +216,7 @@
                             <div class="lesson-footer mt-auto pt-3 border-top d-flex justify-content-between align-items-center">
                                 <span class="badge bg-soft-secondary text-secondary rounded-pill fw-700" style="font-size: 0.7rem;">Access Locked</span>
                                 <button class="btn btn-secondary btn-sm disabled rounded-pill px-4 py-2" style="font-weight: 800; opacity: 0.5;">
-                                    Enroll Link <i class="align-middle ms-1" data-feather="lock" style="width: 14px;"></i>
+                                    Settle Payment <i class="align-middle ms-1" data-feather="lock" style="width: 14px;"></i>
                                 </button>
                             </div>
                         </div>

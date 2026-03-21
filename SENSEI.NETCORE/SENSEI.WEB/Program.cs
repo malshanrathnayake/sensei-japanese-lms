@@ -35,6 +35,7 @@ builder.Services.AddSingleton<IStudentRegistrationService, StudentRegistrationSe
 builder.Services.AddSingleton<IUserService, UserServiceImpl>();
 builder.Services.AddSingleton<IStudentPaymentService, StudentPaymentServiceImpl>();
 builder.Services.AddSingleton<SENSEI.BLL.AdminPortalService.Interface.IStudentService, SENSEI.BLL.AdminPortalService.StudentServiceImpl>();
+builder.Services.AddSingleton<IBatchStudentLessonService, BatchStudentLessonServiceImpl>();
 #endregion
 
 #region StudentPortalServices

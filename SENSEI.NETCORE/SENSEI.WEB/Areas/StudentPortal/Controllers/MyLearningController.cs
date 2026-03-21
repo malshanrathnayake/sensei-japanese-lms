@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Mvc;
 using SENSEI.BLL.StudentPortalService.Interfaces;
 using SENSEI.DOMAIN;
+using SENSEI.WEB.Helpers;
 using System.Threading.Tasks;
 
 namespace SENSEI.WEB.Areas.StudentPortal.Controllers
@@ -11,15 +12,18 @@ namespace SENSEI.WEB.Areas.StudentPortal.Controllers
     {
         private readonly IStudentService _studentService;
         private readonly IDataProtector _protector;
+        private readonly SENSEI.BLL.AdminPortalService.Interface.IUserNotificationService _userNotificationService;
 
         public MyLearningController
         (
             IStudentService studentService,
-            IDataProtectionProvider provider
+            IDataProtectionProvider provider,
+            SENSEI.BLL.AdminPortalService.Interface.IUserNotificationService userNotificationService
         )
         {
             _studentService = studentService;
             _protector = provider.CreateProtector("CourseProtector");
+            _userNotificationService = userNotificationService;
         }
 
         public async Task<IActionResult> Index()
@@ -118,6 +122,7 @@ namespace SENSEI.WEB.Areas.StudentPortal.Controllers
             var (lessons, count) = await _studentService.SearchStudentBatchLessons(studentId, student.StudentBatches.FirstOrDefault().BatchId, start, length, searchValue);
             var filteredLessons = lessons.Where(e => e.LessonId == lessonId).ToList();
             filteredLessons.ForEach(e => e.EncryptedKey = _protector.Protect(e.BatchLessonId.ToString()));
+            filteredLessons.ForEach(e => e.BatchStudentLessonAccesses.ToList().ForEach(a => a.EncryptedKey = _protector.Protect(a.BatchStudentLessonAccessId.ToString())));
 
             return View(filteredLessons);
         }
@@ -196,6 +201,37 @@ namespace SENSEI.WEB.Areas.StudentPortal.Controllers
         public async Task<IActionResult> MyLearningOffCanvas()
         {
             return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> LessonRequestAccess(string q)
+        {
+            long batchLessonAccessId = Convert.ToInt64(_protector.Unprotect(q));
+            var studentId = Convert.ToInt64(HttpContext.Session.GetString("StudentId"));
+
+            var status = await _studentService.UpdateBatchLessonAccess(batchLessonAccessId);
+
+            var userNotification = new UserNotification
+            {
+                UserId = null,
+                UserTypeEnum = UserTypeEnum.Admin,
+                NotificationType = "Lesson Reuqsted",
+                Message = "New Lesson Request was initiated by a student",
+                Icon = GlobalHelpers.GetEnumDisplayName(FeatherIconEnum.AlertCircle),
+                BatchId = null,
+                CourseId = null,
+            };
+
+            await _userNotificationService.UpdateUserNotification(userNotification);
+
+            if (status)
+            {
+                return Json(new { success = status, message = "Lesson Access Requested" });
+            }
+            else
+            {
+                return Json(new { success = status, message = "Lesson Access Request Failed" });
+            }
         }
     }
 }

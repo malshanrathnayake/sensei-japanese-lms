@@ -381,6 +381,7 @@ namespace devspark_core_data_access_layer
                 return this._dbCommonDataManager;
             }
         }
+
         #endregion
 
         private bool _disposed = false;

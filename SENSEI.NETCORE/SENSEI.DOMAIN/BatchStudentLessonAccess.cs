@@ -31,9 +31,11 @@ namespace SENSEI.DOMAIN
         [Range(1, 5, ErrorMessage = "Rating must be between 1 and 5")]
         public int? Rating { get; set; }
 
+        public string EncryptedKey { get; set; }
+
         // Navigation
         public BatchLesson BatchLesson { get; set; }
         public Student Student { get; set; }
-        public ICollection<BatchStudentLessonAccessRequest> Requests { get; set; } = new List<BatchStudentLessonAccessRequest>();
+        public ICollection<BatchStudentLessonAccessRequest> BatchStudentLessonAccessRequests { get; set; } = new List<BatchStudentLessonAccessRequest>();
     }
 }

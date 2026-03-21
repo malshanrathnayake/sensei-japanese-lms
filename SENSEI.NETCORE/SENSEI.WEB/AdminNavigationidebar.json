@@ -10,14 +10,14 @@
     "Url": "/AdminPortal/Course/Index"
   },
   {
-    "Title": "Lesson",
-    "Icon": "file-text",
-    "Url": "/AdminPortal/Lesson/Index"
-  },
-  {
     "Title": "Batch",
     "Icon": "layers",
     "Url": "/AdminPortal/Batch/Index"
+  },
+  {
+    "Title": "Lesson",
+    "Icon": "file-text",
+    "Url": "/AdminPortal/Lesson/Index"
   },
   {
     "Title": "Batch Lesson",
@@ -28,6 +28,11 @@
     "Title": "Student",
     "Icon": "user",
     "Url": "/AdminPortal/Student/Index"
+  },
+  {
+    "Title": "Student Lesson Requests",
+    "Icon": "inbox",
+    "Url": "/AdminPortal/BatchStudentLessonRequest/Index"
   },
   {
     "Title": "Student Registration",

@@ -105,11 +105,42 @@
                     $("#lessonSummary").html(data);
 
                     if (window.feather) feather.replace();
+
+                    bindLessonAccessButton();
                 },
                 error: function (xhr) {
                     console.error("Failed to load lessons", xhr);
                 }
             });
+        }
+
+        function bindLessonAccessButton(){
+
+            $('.request-access').click(function () {
+
+                var url = $(this).data('action-url');
+
+                $.post(url, function (response) {
+
+                    if (response.success) {
+
+                        popUpNotification('success', response.message);
+                        setTimeout(function(){ location.reload(); }, 1500);
+
+                    } else {
+
+                        popUpNotification('error', response.message);
+
+                    }
+
+                }).fail(function () {
+
+                    popUpNotification('error', 'An error occurred while requesting lesson access.');
+
+                });
+
+            });
+
         }
 
     </script>
