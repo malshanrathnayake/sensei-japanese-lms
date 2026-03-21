@@ -56,6 +56,7 @@
 
                                 @{
                                     var overallRating = batchLesson.BatchStudentLessonAccesses.Average(e => e.Rating);
+                                    overallRating = (int)Math.Round(overallRating ?? 0);
 
                                     if (overallRating.HasValue)
                                     {
@@ -205,4 +206,4 @@
             }
         }
     }
-}
+}
