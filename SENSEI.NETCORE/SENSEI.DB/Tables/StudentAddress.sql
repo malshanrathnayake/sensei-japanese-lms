@@ -3,7 +3,7 @@ CREATE TABLE [dbo].[StudentAddress]
     [StudentAddressId] BIGINT NOT NULL IDENTITY,
     [StudentId] BIGINT NOT NULL,
     [AddressLineOne] NVARCHAR(200) NOT NULL,
-    [AddressLineTwo] NVARCHAR(200) NOT NULL,
+    [AddressLineTwo] NVARCHAR(200) NULL,
     [CountryId] INT NOT NULL,
     [IsDeleted] BIT NOT NULL DEFAULT 0,
     [State] NVARCHAR(100) NULL,

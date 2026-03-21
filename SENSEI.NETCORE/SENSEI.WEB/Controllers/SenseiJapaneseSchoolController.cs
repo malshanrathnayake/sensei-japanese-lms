@@ -247,12 +247,14 @@ namespace SENSEI.WEB.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Register(StudentRegistration studentRegistration)
+        public async Task<IActionResult> Register(StudentRegistration studentRegistration, string IntelPhoneNO)
         {
             if (!ModelState.IsValid)
             {
                 return View(studentRegistration);
             }
+
+            studentRegistration.PhoneNo = IntelPhoneNO;
 
             var isEmailUnique = await _userService.GetUserByEmail(studentRegistration.Email);
             
@@ -277,7 +279,7 @@ namespace SENSEI.WEB.Controllers
                 var messageStatus = await _smsService.SendSingleAsync(phone, message);
 
                 var mailbody = await _viewRenderService.RenderViewToString("~/Views/EmailTemplate/StudentRegistrationTemplate.cshtml", studentRegistration);
-                var mailStatus = await _mailService.SendEmailSendGrid(studentRegistration.Email, "Registration Successful", mailbody);
+                var mailStatus = await _mailService.SendGraphMail(studentRegistration.Email, "Registration Successful", mailbody);
 
                 var course = await _courseService.GetCourse(studentRegistration.CourseId);
 

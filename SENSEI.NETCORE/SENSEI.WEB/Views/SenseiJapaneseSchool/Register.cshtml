@@ -561,7 +561,9 @@
                             <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 mb-4">
                                 <label class="form-label d-block" asp-for="PhoneNo"><i class="fas fa-phone-alt"></i> Phone Number *</label>
                                 @Html.TextBoxFor(m => m.PhoneNo, new { @class = "form-control w-100", id = "PhoneNo", type = "tel" })
-                                <span id="phone-error" class="text-danger d-none mt-1 small">Please enter exactly 9 digits (no leading 0).</span>
+                                <input type="hidden" name="IntelPhoneNO" id="IntelPhoneNO"/>
+                                @* <span id="phone-error" class="text-danger d-none mt-1 small">Please enter exactly 9 digits (no leading 0).</span> *@
+                                <span id="phone-error" class="text-danger d-none mt-1 small">Invalid Phone Number</span>
                             </div>
 
                             <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 mb-4">
@@ -619,7 +621,7 @@
         </div>
 
         <div class="text-center mt-4 mb-5">
-            <button type="submit" class="btn-primary" style="min-width: 250px;" id="btnRegister">
+            <button class="btn-primary" style="min-width: 250px;" id="btnRegister">
                 <i class="fas fa-paper-plane me-2"></i> Complete Registration Now
             </button>
         </div>
@@ -656,7 +658,8 @@
                 separateDialCode: true,
                 autoPlaceholder: "aggressive",
                 formatOnDisplay: false, // Changed to false to avoid interference with manual stripping
-                dropdownContainer: document.body 
+                dropdownContainer: document.body ,
+                nationalMode: true
             });
 
             // Rule: Automatically remove leading zero and limit to 9 digits
@@ -667,8 +670,8 @@
                 }
                 
                 // Limit to 9 digits
-                if (val.length > 9) {
-                    val = val.substring(0, 9);
+                if (val.length > 11) {
+                    val = val.substring(0, 11);
                 }
                 
                 this.value = val;
@@ -688,7 +691,7 @@
             const validatePhone = () => {
                 const val = phoneInputField.value.trim();
                 // Ensure exactly 9 digits
-                if (val.length === 9) {
+                if (val.length >= 9) {
                     if (iti.isValidNumber()) {
                         phoneError.classList.add("d-none");
                         phoneInputField.classList.remove("is-invalid");
@@ -780,6 +783,17 @@
                 $(this).valid(); 
             });
 
+            $("#student-register").validate({
+                invalidHandler: function (event, validator) {
+                    console.log("form invalid");
+                    console.log(validator.errorList);
+                },
+                submitHandler: function (form) {
+                    console.log("submitHandler fired");
+                    return false;
+                }
+            });
+
             // Form Validation Configuration
             $("#student-register").validate({
                 rules: {
@@ -843,6 +857,18 @@
                         return false;
                     }
                 }
+            });
+
+            $("#student-register").on("submit", function (e) {
+                const raw = phoneInputField.value.trim();
+
+                if (raw.length > 0 && !iti.isValidNumber()) {
+                    e.preventDefault();
+                    window.notyf.error("Please enter a valid phone number.");
+                    return false;
+                }
+
+                $("#IntelPhoneNO").val(iti.getNumber());
             });
 
         });

@@ -15,7 +15,7 @@
 	[AddressLineOne] NVARCHAR(200) NOT NULL,
 	[AddressLineTwo] NVARCHAR(200) NULL,
 	[City] NVARCHAR(20) NULL,
-	[PostalCode] NVARCHAR(20) NOT NULL,
+	[PostalCode] NVARCHAR(20) NULL,
 	[BranchId] BIGINT NULL,
 	[StudentLearningModeId] INT NOT NULL,
 	[CourseId] BIGINT NOT NULL,
