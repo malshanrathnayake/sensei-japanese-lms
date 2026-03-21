@@ -144,7 +144,7 @@ namespace SENSEI.WEB.Controllers
         {
             if(q is null)
             {
-                return Json(new { success = false, message = "Updated as read" });
+                return Json(new { success = false, message = "Not Updated" });
             }
 
             long userNotificationId = Convert.ToInt64(_protector.Unprotect(q));
@@ -153,6 +153,34 @@ namespace SENSEI.WEB.Controllers
             var notifications = await _userNotificationService.UpdateReadability(userNotificationId, userId);
 
             return Json(new { success = notifications, message = "Updated as read" });
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> UpdateUserNotificationReadabilityMultiple(List<string> q)
+        {
+            if (q is null)
+            {
+                return Json(new { success = false, message = "Not Updated" });
+            }
+
+            var userId = Convert.ToInt64(HttpContext.Session.GetString("UserId"));
+
+            foreach (var query in q)
+            {
+                try
+                {
+                    long userNotificationId = Convert.ToInt64(_protector.Unprotect(query));
+                    var notifications = await _userNotificationService.UpdateReadability(userNotificationId, userId);
+                }
+                catch (Exception ex)
+                {
+                    return Json(new { success = false, message = ex .Message.ToString()});
+                }
+                
+            }
+            
+
+            return Json(new { success = true, message = "Updated all as read" });
         }
     }
 }

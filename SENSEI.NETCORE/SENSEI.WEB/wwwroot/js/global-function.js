@@ -133,6 +133,49 @@ function updateUserNotification() {
 
     });
 
+    $("#markAllAsRead").on("click", function (e) {
+        e.preventDefault();
+
+        var notificationKeys = [];
+
+        $(".usernotification-item").each(function () {
+            var actionParameter = $(this).data("action-parameter");
+
+            if (actionParameter) {
+                notificationKeys.push(actionParameter);
+            }
+        });
+
+        if (notificationKeys.length === 0) {
+            popUpNotification('error', 'No notifications to mark as read.');
+            return;
+        }
+
+        $.ajax({
+            url: '/Layout/UpdateUserNotificationReadabilityMultiple',
+            type: 'POST',
+            traditional: true,
+            data: { q: notificationKeys },
+            success: function (response) {
+                if (response.success) {
+
+                    $("#userNotificationlist").empty();
+                    updateUserNotificationCount();
+                    popUpNotification('success', "All Notifications marked as read");
+
+                    feather.replace();
+                } else {
+                    popUpNotification('error', response.message || "Failed to update notifications.");
+                }
+            },
+            error: function () {
+                popUpNotification('error', "Something went wrong while updating notifications.");
+            }
+        });
+    });
+
+    feather.replace();
+
 }
 
 function updateUserNotificationCount() {
