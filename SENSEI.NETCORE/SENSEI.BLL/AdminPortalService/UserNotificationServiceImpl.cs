@@ -1,4 +1,4 @@
-﻿using devspark_core_data_access_layer;
+using devspark_core_data_access_layer;
 using Newtonsoft.Json;
 using SENSEI.BLL.AdminPortalService.Interface;
 using SENSEI.BLL.SystemService.Interfaces;

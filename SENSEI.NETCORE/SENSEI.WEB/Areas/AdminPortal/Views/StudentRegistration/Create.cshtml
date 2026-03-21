@@ -229,7 +229,22 @@
                 utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@23.0.1/build/js/utils.js",
                 separateDialCode: true,
                 autoPlaceholder: "aggressive",
-                formatOnDisplay: true
+                formatOnDisplay: false
+            });
+
+            // Rule: Automatically remove leading zero and limit to 9 digits
+            phoneInputField.addEventListener('input', function() {
+                let val = this.value.replace(/\D/g, ''); // Keep only digits
+                if (val.startsWith('0')) {
+                    val = val.substring(1);
+                }
+                
+                // Limit to 9 digits
+                if (val.length > 9) {
+                    val = val.substring(0, 9);
+                }
+                
+                this.value = val;
             });
 
             // Datepicker
@@ -332,7 +347,8 @@
                     return false;
                 }
 
-                if (iti.isValidNumber()) {
+                const val = phoneInputField.value.trim();
+                if (val.length === 9 && iti.isValidNumber()) {
                     phoneInputField.value = iti.getNumber();
                     
                     // Start Loading
@@ -342,7 +358,7 @@
                     return true;
                 } else {
                     $(phoneInputField).addClass("is-invalid");
-                    popUpNotification('warning', 'Please enter a valid phone number');
+                    popUpNotification('warning', 'Please enter exactly 9 digits (no leading 0)');
                     return false;
                 }
             });

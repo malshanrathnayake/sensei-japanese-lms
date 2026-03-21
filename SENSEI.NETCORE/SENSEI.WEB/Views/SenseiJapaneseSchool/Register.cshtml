@@ -561,7 +561,7 @@
                             <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 mb-4">
                                 <label class="form-label d-block" asp-for="PhoneNo"><i class="fas fa-phone-alt"></i> Phone Number *</label>
                                 @Html.TextBoxFor(m => m.PhoneNo, new { @class = "form-control w-100", id = "PhoneNo", type = "tel" })
-                                <span id="phone-error" class="text-danger d-none mt-1 small">Invalid international phone number.</span>
+                                <span id="phone-error" class="text-danger d-none mt-1 small">Please enter exactly 9 digits (no leading 0).</span>
                             </div>
 
                             <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 mb-4">
@@ -651,18 +651,28 @@
             const phoneError = document.querySelector("#phone-error");
             
             const iti = window.intlTelInput(phoneInputField, {
-                initialCountry: "auto",
-                geoIpLookup: callback => {
-                    fetch("https://ipapi.co/json")
-                        .then(res => res.json())
-                        .then(data => callback(data.country_code.toLowerCase()))
-                        .catch(() => callback("lk"));
-                },
+                initialCountry: "lk",
                 utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@23.0.1/build/js/utils.js",
                 separateDialCode: true,
                 autoPlaceholder: "aggressive",
-                formatOnDisplay: true,
-                dropdownContainer: document.body // Fixes visibility/clipping issues
+                formatOnDisplay: false, // Changed to false to avoid interference with manual stripping
+                dropdownContainer: document.body 
+            });
+
+            // Rule: Automatically remove leading zero and limit to 9 digits
+            phoneInputField.addEventListener('input', function() {
+                let val = this.value.replace(/\D/g, ''); // Keep only digits
+                if (val.startsWith('0')) {
+                    val = val.substring(1);
+                }
+                
+                // Limit to 9 digits
+                if (val.length > 9) {
+                    val = val.substring(0, 9);
+                }
+                
+                this.value = val;
+                validatePhone();
             });
 
             // Help Select2 data load
@@ -676,18 +686,25 @@
             };
 
             const validatePhone = () => {
-                if (phoneInputField.value.trim()) {
+                const val = phoneInputField.value.trim();
+                // Ensure exactly 9 digits
+                if (val.length === 9) {
                     if (iti.isValidNumber()) {
                         phoneError.classList.add("d-none");
                         phoneInputField.classList.remove("is-invalid");
                         return true;
-                    } else {
-                        phoneError.classList.remove("d-none");
-                        phoneInputField.classList.add("is-invalid");
-                        return false;
                     }
                 }
-                return true; // Optional field bypass if empty, but here it's usually required
+                
+                if (val.length > 0) {
+                    phoneError.classList.remove("d-none");
+                    phoneInputField.classList.add("is-invalid");
+                    return false;
+                }
+                
+                phoneError.classList.add("d-none");
+                phoneInputField.classList.remove("is-invalid");
+                return true; 
             };
 
             phoneInputField.addEventListener('blur', validatePhone);

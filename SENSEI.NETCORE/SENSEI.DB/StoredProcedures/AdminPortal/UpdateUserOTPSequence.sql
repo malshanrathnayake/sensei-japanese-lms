@@ -1,7 +1,9 @@
-﻿CREATE PROCEDURE [dbo].[UpdateUserOTPSequence]
+CREATE PROCEDURE [dbo].[UpdateUserOTPSequence]
+(
 	@jsonString NVARCHAR(MAX) = '',
 	@executionStatus BIT OUT,
 	@primaryKey BIGINT OUT
+)
 AS
 BEGIN
 

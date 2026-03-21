@@ -1,7 +1,9 @@
-﻿CREATE PROCEDURE [dbo].[UpdateUserNotificationReadability]
+CREATE PROCEDURE [dbo].[UpdateUserNotificationReadability]
+(
     @jsonString NVARCHAR(MAX) = '',
     @executionStatus BIT OUT,
     @primaryKey BIGINT OUT
+)
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -17,7 +19,7 @@ BEGIN
         WITH (
             UserNotificationId BIGINT,
             UserId BIGINT
-        );
+        ) AS JSONData;
 
         --UPDATE UserNotification SET IsRead = 1, ReadAt = GETDATE()
         --WHERE UserNotificationId = @userNotificationId;

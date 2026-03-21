@@ -1,7 +1,9 @@
-﻿CREATE PROCEDURE [dbo].[UpdateUserNotification]
+CREATE PROCEDURE [dbo].[UpdateUserNotification]
+(
     @jsonString NVARCHAR(MAX) = '',
     @executionStatus BIT OUT,
     @primaryKey BIGINT OUT
+)
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -21,7 +23,7 @@ BEGIN
             [Icon] NVARCHAR(100),
             [BatchId] BIGINT,
             [CourseId] BIGINT
-        );
+        ) AS JSONData;
 
         COMMIT TRANSACTION;
         SET @executionStatus = 1;

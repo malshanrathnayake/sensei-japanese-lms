@@ -229,7 +229,7 @@ namespace SENSEI.WEB.Areas.AdminPortal.Controllers
             var batchLesson = await _batchLessonService.GetBatchLesson(batchLessonId);
             batchLesson.EncryptedKey = q;
 
-            batchLesson.BatchLessonReferences.ToList().ForEach(e => e.EncryptedKey = _protector.Protect(e.BatchLessonReferenceId.ToString())
+            batchLesson.BatchLessonReferences.ToList().ForEach(e => e.EncryptedKey = _protector.Protect(e.BatchLessonReferenceId.ToString()));
 
             return View(batchLesson);
         }
