@@ -135,6 +135,14 @@
 
                                     <div class="accordion-item">
                                         <h2 class="accordion-header" id="@headingId">
+
+                                            <button type="button"
+                                                    class="btn btn-sm btn-link text-danger me-2"
+                                                    title="Delete"
+                                                    onclick="deleteReference(@r.EncryptedKey)">
+                                                <i class="bi bi-trash"></i> Delete
+                                            </button>
+
                                             <button class="accordion-button @(isFirst ? "" : "collapsed")" type="button"
                                                     data-bs-toggle="collapse"
                                                     data-bs-target="#@collapseId"
@@ -251,6 +259,10 @@
                     { orderable: false, targets: 0 }
                 ]
             });
+        }
+
+        function deleteReference(encryptedKey){
+
         }
 
     </script>

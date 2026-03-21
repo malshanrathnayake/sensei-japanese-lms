@@ -9,7 +9,7 @@
 @{
     if (Model != null && Model.Any())
     {
-        foreach (var lesson in Model.GroupBy(e => e.LessonId))
+        foreach (var lesson in Model.GroupBy(e => e.LessonId).OrderBy(e => e.Key))
         {
             var completedBatchLessons = 0;
             foreach (var batchLesson in lesson)

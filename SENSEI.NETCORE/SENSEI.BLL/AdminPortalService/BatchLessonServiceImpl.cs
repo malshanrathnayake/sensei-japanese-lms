@@ -76,5 +76,14 @@ namespace SENSEI.BLL.AdminPortalService
             var (status, primaryKey) = await dataTransactionManager.BatchLessonReferenceDataManager.UpdateDataReturnPrimaryKey("UpdateBatchLessonReference", jsonString);
             return (status, primaryKey);
         }
+
+        public async Task<bool> DeleteBatchLessonReference(long batchLessonReferenceId)
+        {
+            DataTransactionManager dataTransactionManager = new DataTransactionManager(_databaseService.GetConnectionString());
+            var status = await dataTransactionManager.BatchLessonDataManager.DeleteData("DeleteBatchLessonReference", [
+                new SqlParameter("@batchLessonReferenceId", batchLessonReferenceId),
+            ]);
+            return status;
+        }
     }
 }

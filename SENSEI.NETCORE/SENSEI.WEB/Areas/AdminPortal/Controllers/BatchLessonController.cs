@@ -229,7 +229,26 @@ namespace SENSEI.WEB.Areas.AdminPortal.Controllers
             var batchLesson = await _batchLessonService.GetBatchLesson(batchLessonId);
             batchLesson.EncryptedKey = q;
 
+            batchLesson.BatchLessonReferences.ToList().ForEach(e => e.EncryptedKey = _protector.Protect(e.BatchLessonReferenceId.ToString())
+
             return View(batchLesson);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteBatchLessonReference(string q)
+        {
+            long batchLessonReferenceId = Convert.ToInt64(_protector.Unprotect(q));
+
+            var status = await _batchLessonService.DeleteBatchLessonReference(batchLessonReferenceId);
+
+            if (status)
+            {
+                return Json(new { success = status, message = "Batch lesson reference deleted successfully" });
+            }
+            else
+            {
+                return Json(new { success = status, message = "Failed to delete batch reference" });
+            }
         }
 
         public async Task<IActionResult> BatchLessonOffCanvas()

@@ -13,5 +13,6 @@ namespace SENSEI.BLL.AdminPortalService.Interface
         Task<bool> DeleteBatchLesson(long batchLessonId);
         Task<IEnumerable<BatchLesson>> GetBatchLessons(long batchId = 0);
         Task<(bool, long)> UpdateBatchLessonReference(BatchLessonReference batchLessonReference);
+        Task<bool> DeleteBatchLessonReference(long batchLessonReferenceId);
     }
 }

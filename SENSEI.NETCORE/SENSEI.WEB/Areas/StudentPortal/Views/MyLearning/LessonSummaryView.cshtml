@@ -9,7 +9,7 @@
 @{
     if(Model != null && Model.Any())
     {
-        foreach(var batchLesson in Model)
+        foreach(var batchLesson in Model.OrderBy(e => e.BatchLessonId))
         {
             var courseName = (batchLesson.Lesson?.Course?.CourseName ?? "").ToUpper();
             var courseCode = (batchLesson.Lesson?.Course?.CourseCode ?? "").ToUpper();

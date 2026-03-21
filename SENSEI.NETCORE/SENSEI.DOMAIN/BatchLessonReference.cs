@@ -11,7 +11,7 @@ namespace SENSEI.DOMAIN
         public string ReferenceUrl { get; set; }
         public string Description { get; set; }
         public bool IsDeleted { get; set; }
-
+        public string EncryptedKey { get; set; }
         #region navigation properties
         public BatchLesson BatchLesson { get; set; }
         #endregion

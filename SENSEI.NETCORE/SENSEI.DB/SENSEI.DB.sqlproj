@@ -144,5 +144,6 @@
     <Build Include="StoredProcedures\AdminPortal\SearchBatchStudentLesson.sql" />
     <Build Include="StoredProcedures\AdminPortal\GetBatchStudentLessonRequest.sql" />
     <Build Include="StoredProcedures\AdminPortal\ApproveBatchStudentLessonRequest.sql" />
+    <Build Include="StoredProcedures\AdminPortal\DeleteBatchLessonReference.sql" />
   </ItemGroup>
 </Project>
