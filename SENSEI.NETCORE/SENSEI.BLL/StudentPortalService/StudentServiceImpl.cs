@@ -50,7 +50,7 @@ namespace SENSEI.BLL.StudentPortalService
             return (batches, count);
         }
 
-        public async Task<(IEnumerable<BatchLesson>, long)> SearchStudentBatchLessons(long studentId, long batchId = 0, int start = 0, int length = 10, string searchValue = "", string sortColumn = "lessonDateTime", string sortDirection = "DESC")
+        public async Task<(IEnumerable<BatchLesson>, long)> SearchStudentBatchLessons(long studentId, long batchId = 0, int start = 0, int length = 2147483647, string searchValue = "", string sortColumn = "lessonDateTime", string sortDirection = "DESC")
         {
             DataTransactionManager dataTransactionManager = new DataTransactionManager(_databaseService.GetConnectionString());
             var (lessons, count) = await dataTransactionManager.BatchLessonDataManager.RetrieveDataWithCount("SearchStudentBatchLessons", new SqlParameter[] {

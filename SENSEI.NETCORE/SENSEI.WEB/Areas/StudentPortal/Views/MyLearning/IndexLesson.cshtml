@@ -89,7 +89,7 @@
            loadLessons();
         });
 
-        function loadLessons(start = 0, length = 10, searchValue = "") {
+        function loadLessons(start = 0, length = -1, searchValue = "") {
             $.ajax({
                 url: "@Url.Action("LessonSummaryView", "MyLearning")",
                 type: "GET",

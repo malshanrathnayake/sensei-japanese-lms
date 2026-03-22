@@ -112,7 +112,7 @@ namespace SENSEI.WEB.Areas.StudentPortal.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> LessonSummaryView(int start = 0, int length = 10, string searchValue = "", string lessonEncryptedKey = "")
+        public async Task<IActionResult> LessonSummaryView(int start = 0, int length = 2147483647, string searchValue = "", string lessonEncryptedKey = "")
         {
             var studentId = Convert.ToInt64(HttpContext.Session.GetString("StudentId"));
             var userId = Convert.ToInt64(HttpContext.Session.GetString("UserId"));

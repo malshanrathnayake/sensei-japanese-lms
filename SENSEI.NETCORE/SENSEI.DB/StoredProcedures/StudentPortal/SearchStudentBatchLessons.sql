@@ -2,7 +2,7 @@ CREATE PROCEDURE [dbo].[SearchStudentBatchLessons]
 	@studentId BIGINT,
 	@batchId BIGINT = 0,
 	@start INT = 0,
-	@length INT = 10,
+	@length INT = 2147483647 ,
 	@searchValue NVARCHAR(MAX) = '',
 	@sortColumn NVARCHAR(MAX) = 'lessonDateTime',
 	@sortDirection NVARCHAR(MAX) = 'DESC',
