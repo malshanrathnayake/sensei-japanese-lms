@@ -1,4 +1,4 @@
-﻿using SENSEI.DOMAIN;
+using SENSEI.DOMAIN;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -12,6 +12,7 @@ namespace SENSEI.BLL.AdminPortalService.Interface
         Task<StudentBatchPayment> GetStudentBatchPayment(long studentBatchPaymentId);
         Task<bool> ApproveStudentBatchPayment(long studentBatchPaymentId, long approvedById);
         Task<bool> RejectStudentBatchPayment(long studentBatchPaymentId, long rejectedById);
+        Task<IEnumerable<dynamic>> GetStudentBatches(long studentId);
 
     }
 }

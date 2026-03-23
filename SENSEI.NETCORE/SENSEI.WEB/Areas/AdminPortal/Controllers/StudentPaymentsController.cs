@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Mvc;
 using SENSEI.BLL.AdminPortalService.Interface;
@@ -15,6 +15,7 @@ namespace SENSEI.WEB.Areas.AdminPortal.Controllers
         private readonly IStudentPaymentService _studentPaymentService;
         private IBatchService _batchService;
         private readonly ICourseService _courseService;
+        private readonly IStudentService _studentService;
         private readonly IDataProtector _protector;
         private readonly ISmsService _smsService;
 
@@ -23,6 +24,7 @@ namespace SENSEI.WEB.Areas.AdminPortal.Controllers
             IStudentPaymentService studentPaymentService,
             IBatchService batchService,
             ICourseService courseService,
+            IStudentService studentService,
             IDataProtectionProvider provider,
             ISmsService smsService
         )
@@ -30,6 +32,7 @@ namespace SENSEI.WEB.Areas.AdminPortal.Controllers
             _studentPaymentService = studentPaymentService;
             _batchService = batchService;
             _courseService = courseService;
+            _studentService = studentService;
             _protector = provider.CreateProtector("CourseProtector");
             _smsService = smsService;
         }
@@ -144,6 +147,51 @@ namespace SENSEI.WEB.Areas.AdminPortal.Controllers
         public async Task<IActionResult> StudentPaymentOffCanvas()
         {
             return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Create()
+        {
+            StudentBatchPayment studentBatchPayment = new StudentBatchPayment();
+            studentBatchPayment.PaymentMonth = DateTime.Today;
+            return View(studentBatchPayment);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create(StudentBatchPayment studentBatchPayment)
+        {
+            var userId = Convert.ToInt64(HttpContext.Session.GetString("UserId") ?? "0");
+
+            studentBatchPayment.PaymentDate = DateTime.UtcNow;
+            studentBatchPayment.IsApproved = true; // Admin created payments are auto-approved
+            studentBatchPayment.ApprovedById = userId;
+
+            var (status, paymentId) = await _studentPaymentService.UpdateStudentBatchPayment(studentBatchPayment);
+
+            if (status)
+            {
+                return Json(new { success = status, message = "Student payment recorded successfully" });
+            }
+            else
+            {
+                return Json(new { success = status, message = "Failed to record student payment" });
+            }
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetStudentListJsonResult(string searchTerm)
+        {
+            var (students, count) = await _studentService.SearchStudent(searchValue: searchTerm, length: 20);
+            var result = students.Select(e => new { id = e.StudentId, text = $"{e.StudentPopulatedName} ({e.IndexNumber})" }).ToList();
+            return Json(result);
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetStudentBatchListJsonResult(long studentId)
+        {
+            var batches = await _studentPaymentService.GetStudentBatches(studentId);
+            var result = batches.Select(e => new { id = (long)e["StudentBatchId"], text = $"{e["CourseName"]} - {e["BatchName"]}" }).ToList();
+            return Json(result);
         }
 
         [HttpGet]
