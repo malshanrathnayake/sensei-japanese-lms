@@ -188,7 +188,13 @@ function updateUserNotificationCount() {
 
     if (count > 0) {
         $("#notification-list").html(count + " <span>New Notifications</span>");
+        $("#notification-list-title").text(count + " New alerts");
+        $("#notification-indicator").removeClass('d-none').show();
+        $("#notification-count").removeClass('d-none').show();
     } else {
         $("#notification-list").html("<span>No Notifications</span>");
+        $("#notification-list-title").text("You're all caught up!");
+        $("#notification-indicator").addClass('d-none').hide();
+        $("#notification-count").addClass('d-none').hide();
     }
 }

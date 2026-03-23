@@ -5,101 +5,89 @@
 	Layout = null;
 }
 
-<li class="nav-item dropdown">
-	<a class="nav-icon dropdown-toggle" href="#" id="alertsDropdown" data-bs-toggle="dropdown">
-		<div class="position-relative">
-			<i class="align-middle" data-feather="bell"></i>
-			<span class="indicator" id="notification-count">@Model.Count()</span>
-		</div>
+<li class="nav-item dropdown px-2">
+	<a class="nav-icon dropdown-toggle position-relative d-flex align-items-center justify-content-center p-2 rounded-circle hover-bg-light" href="#" id="alertsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+		<i class="feather-lg text-dark" data-feather="bell" style="width: 20px; height: 20px;"></i>
+		@if (Model.Any())
+		{
+			<span class="position-absolute top-1 start-1 px-1 bg-danger border border-white rounded-circle" style="width: 10px; height: 10px; padding: 0 !important; right: 8px; top: 8px;" id="notification-indicator"></span>
+			<span class="badge bg-danger rounded-circle position-absolute" style="top: -2px; right: -2px; font-size: 0.65rem; min-width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; border: 2px solid white;" id="notification-count">
+				@Model.Count()
+			</span>
+		}
+		else
+		{
+			<span class="badge bg-secondary rounded-circle position-absolute d-none" style="top: -2px; right: -2px; font-size: 0.65rem; min-width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; border: 2px solid white;" id="notification-count">0</span>
+		}
 	</a>
-	<div class="dropdown-menu dropdown-menu-lg dropdown-menu-end py-0" aria-labelledby="alertsDropdown">
-		<div class="dropdown-menu-header" id="notification-list">
-
-			@if (@Model.Count() > 0)
+	<div class="dropdown-menu dropdown-menu-lg dropdown-menu-end py-0 shadow-lg border-0 animated fadeIn" aria-labelledby="alertsDropdown" style="width: 350px; border-radius: 1.25rem; overflow: hidden; margin-top: 15px;">
+		<!-- Header -->
+		<div class="p-3 bg-white border-bottom d-flex align-items-center justify-content-between">
+			<div>
+				<h6 class="mb-0 fw-900 text-dark">Notifications</h6>
+				<small class="text-muted fw-600" id="notification-list-title">
+					@if (Model.Any())
+					{
+						@Model.Count() @:New alerts
+					}
+					else
+					{
+						@:You're all caught up!
+					}
+				</small>
+			</div>
+			@if (Model.Any())
 			{
-				@Model.Count() <span>New Notifications</span>
+				<button type="button" id="markAllAsRead" class="btn btn-sm btn-light rounded-pill px-3 fw-800 text-primary border-0" style="font-size: 0.75rem;">
+					<i class="me-1" data-feather="check" style="width: 14px; height: 14px;"></i>
+					Mark all read
+				</button>
+			}
+		</div>
+
+		<!-- Body -->
+		<div class="list-group list-group-flush" id="userNotificationlist" style="max-height: 400px; overflow-y: auto;">
+			@if (Model.Any())
+			{
+				foreach(var userNotification in Model)
+				{
+					<a href="#" class="list-group-item list-group-item-action border-0 py-3 px-4 usernotification-item" data-action-parameter="@userNotification.EncryptedKey" style="transition: all 0.2s ease;">
+						<div class="row g-0 align-items-center">
+							<div class="col-2">
+								<div class="bg-soft-warning p-2 rounded-3 text-warning d-flex align-items-center justify-content-center" style="width: 38px; height: 38px;">
+									<i data-feather="@(string.IsNullOrEmpty(userNotification.Icon) ? "bell" : userNotification.Icon)" style="width: 18px; height: 18px;"></i>
+								</div>
+							</div>
+							<div class="col-10 ps-3">
+								<div class="d-flex justify-content-between align-items-center mb-1">
+									<span class="text-dark fw-800 small text-uppercase" style="letter-spacing: 0.02em;">@userNotification.NotificationType</span>
+									<span class="text-muted smaller fw-600" style="font-size: 0.65rem;">@userNotification.CreatedAt.ToString("HH:mm")</span>
+								</div>
+								<div class="text-muted small fw-600 lh-sm">@userNotification.Message</div>
+								<div class="mt-1 text-muted smaller" style="font-size: 0.68rem; opacity: 0.7;">
+									<i class="me-1" data-feather="calendar" style="width: 10px; height: 10px;"></i>
+									@userNotification.CreatedAt.ToString("dd MMM yyyy")
+								</div>
+							</div>
+						</div>
+					</a>
+				}
 			}
 			else
 			{
-				<span>No Notifications</span>
+				<div class="p-5 text-center">
+					<div class="bg-light rounded-circle p-3 d-inline-block mb-3">
+						<i data-feather="coffee" class="text-muted" style="width: 32px; height: 32px;"></i>
+					</div>
+					<h6 class="text-dark fw-800">Clear!</h6>
+					<p class="text-muted small mb-0 px-4">No new notifications to show right now.</p>
+				</div>
 			}
-			
 		</div>
 
-		<div class="dropdown-menu-header d-flex flex-column align-items-center justify-content-center text-center gap-2">
-
-			<button type="button" id="markAllAsRead" class="btn btn-sm btn-light d-flex align-items-center gap-1">
-				<i data-feather="check"></i>
-				<span>Mark all as read</span>
-			</button>
-
+		<!-- Footer -->
+		<div class="p-2 border-top bg-light text-center">
+			<span class="text-muted smaller fw-600" style="font-size: 0.7rem;">Click on a notification to dismiss it</span>
 		</div>
-
-		<div class="list-group" id="userNotificationlist">
-
-			@{
-				@if (@Model.Count() > 0)
-				{
-					foreach(var userNotification in Model)
-					{
-						<a href="#" class="list-group-item usernotification-item" data-action-parameter="@userNotification.EncryptedKey">
-							<div class="row g-0 align-items-center">
-								<div class="col-2">
-									<i class="text-warning" data-feather="@userNotification.Icon"></i>
-								</div>
-								<div class="col-10">
-									<div class="text-dark">@userNotification.NotificationType</div>
-									<div class="text-muted small mt-1">@userNotification.Message</div>
-									<div class="text-muted small mt-1">@userNotification.CreatedAt.ToString("dd/MM/yyyy HH:mm")</div>
-								</div>
-							</div>
-						</a>
-					}
-				}
-			}
-
-			
-			@* <a href="#" class="list-group-item">
-				<div class="row g-0 align-items-center">
-					<div class="col-2">
-						<i class="text-warning" data-feather="bell"></i>
-					</div>
-					<div class="col-10">
-						<div class="text-dark">Lorem ipsum</div>
-						<div class="text-muted small mt-1">Aliquam ex eros, imperdiet vulputate hendrerit et.</div>
-						<div class="text-muted small mt-1">2h ago</div>
-					</div>
-				</div>
-			</a>
-			<a href="#" class="list-group-item">
-				<div class="row g-0 align-items-center">
-					<div class="col-2">
-						<i class="text-primary" data-feather="home"></i>
-					</div>
-					<div class="col-10">
-						<div class="text-dark">Login from 192.186.1.8</div>
-						<div class="text-muted small mt-1">5h ago</div>
-					</div>
-				</div>
-			</a>
-			<a href="#" class="list-group-item">
-				<div class="row g-0 align-items-center">
-					<div class="col-2">
-						<i class="text-success" data-feather="user-plus"></i>
-					</div>
-					<div class="col-10">
-						<div class="text-dark">New connection</div>
-						<div class="text-muted small mt-1">Christina accepted your request.</div>
-						<div class="text-muted small mt-1">14h ago</div>
-					</div>
-				</div>
-			</a> *@
-
-		</div>
-
-		<div class="dropdown-menu-footer">
-			<a href="#" class="text-muted">Click on notification to remove</a>
-		</div>
-
 	</div>
 </li>

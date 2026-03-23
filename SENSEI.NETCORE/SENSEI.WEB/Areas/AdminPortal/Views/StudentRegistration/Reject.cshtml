@@ -1,4 +1,4 @@
-﻿﻿@using SENSEI.DOMAIN
+﻿@using SENSEI.DOMAIN
 @model StudentRegistration
 
 @{
@@ -57,16 +57,14 @@
             @Html.TextBoxFor(m => m.RejectionComment, new { @class = "form-control", placeholder = "Reject Comment" })
         </div>
 
-        <div class="d-flex justify-content-end gap-2">
-
-            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="offcanvas">
+        <div class="d-flex justify-content-end gap-2 mt-4 pt-3 border-top">
+            <button type="button" class="btn btn-light px-4 fw-600 rounded-pill" data-bs-dismiss="offcanvas">
                 Cancel
             </button>
 
-            <button type="submit" id="btnReject" class="btn btn-danger ladda-button" data-style="zoom-in">
-                <span class="ladda-label">Reject</span>
+            <button type="submit" id="btnReject" class="btn btn-danger px-4 fw-bold rounded-pill ladda-button shadow-sm" data-style="zoom-in">
+                <span class="ladda-label"><i class="fas fa-times-circle me-1"></i> Reject Registration</span>
             </button>
-
         </div>
 
     </form>

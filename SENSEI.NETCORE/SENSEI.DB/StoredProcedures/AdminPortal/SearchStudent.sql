@@ -13,6 +13,7 @@ BEGIN
 	SET NOCOUNT ON;
 
 	SELECT ST.*,
+        U.IsActive AS IsActive,
 		JSON_QUERY(ISNULL((SELECT StudentLearningMode.* FROM StudentLearningMode WHERE StudentLearningMode.StudentLearningModeId = ST.StudentLearningModeId FOR JSON PATH, WITHOUT_ARRAY_WRAPPER), null)) AS 'StudentLearningMode',
 		JSON_QUERY(ISNULL((SELECT StudentBatch.*,
 			JSON_QUERY(ISNULL((SELECT Batch.*,
@@ -20,6 +21,7 @@ BEGIN
 			FROM Batch WHERE Batch.BatchId = StudentBatch.BatchId FOR JSON PATH, WITHOUT_ARRAY_WRAPPER), null)) AS 'Batch'
 		FROM StudentBatch WHERE StudentBatch.StudentId = ST.StudentId FOR JSON PATH), '[]')) AS 'StudentBatches'
 	FROM Student ST
+    INNER JOIN [User] U ON U.UserId = ST.UserId
 	INNER JOIN StudentBatch STB ON STB.StudentId = ST.StudentId
 	INNER JOIN Batch B ON B.BatchId = STB.BatchId
 	INNER JOIN Course C ON C.CourseId = B.CourseId
@@ -42,8 +44,9 @@ BEGIN
 	FETCH NEXT (CASE WHEN @length = -1 THEN 2147483647 ELSE @length END) ROWS ONLY
 	FOR JSON PATH;
 
-	SELECT @count = COUNT(*)
+	SELECT @count = COUNT(DISTINCT ST.StudentId)
 	FROM Student ST
+    INNER JOIN [User] U ON U.UserId = ST.UserId
 	INNER JOIN StudentBatch STB ON STB.StudentId = ST.StudentId
 	INNER JOIN Batch B ON B.BatchId = STB.BatchId
 	INNER JOIN Course C ON C.CourseId = B.CourseId

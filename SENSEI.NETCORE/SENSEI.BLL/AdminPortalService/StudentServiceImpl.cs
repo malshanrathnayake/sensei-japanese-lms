@@ -1,5 +1,6 @@
-﻿using devspark_core_data_access_layer;
+using devspark_core_data_access_layer;
 using Microsoft.Data.SqlClient;
+using Newtonsoft.Json;
 using SENSEI.BLL.AdminPortalService.Interface;
 using SENSEI.BLL.SystemService.Interfaces;
 using SENSEI.DOMAIN;
@@ -21,7 +22,7 @@ namespace SENSEI.BLL.AdminPortalService
         public async Task<(IEnumerable<Student>, long)> SearchStudent(long courseId = 0, long batchId = 0, int start = 0, int length = 10, string searchValue = "", string sortColumn = "", string sortDirection = "")
         {
             DataTransactionManager dataTransactionManager = new DataTransactionManager(_databaseService.GetConnectionString());
-            var (registrations, count) = await dataTransactionManager.StudentDataManager.RetrieveDataWithCount("SearchStudent", [
+            var (registrations, count) = await dataTransactionManager.StudentDataManager.RetrieveDataWithCount("SearchStudent", new SqlParameter[] {
                 new SqlParameter("@courseId", courseId),
                 new SqlParameter("@batchId", batchId),
                 new SqlParameter("@start", start),
@@ -29,7 +30,7 @@ namespace SENSEI.BLL.AdminPortalService
                 new SqlParameter("@searchValue", searchValue),
                 new SqlParameter("@sortColumn", sortColumn),
                 new SqlParameter("@sortDirection", sortDirection)
-            ]);
+            });
             return (registrations, count);
         }
     }

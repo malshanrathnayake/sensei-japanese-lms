@@ -1,4 +1,4 @@
-﻿﻿@using SENSEI.DOMAIN
+﻿@using SENSEI.DOMAIN
 @model StudentRegistration
 
 @{
@@ -62,16 +62,14 @@
             <input id="indexNumber" class="form-control" name="indexNumber" />
         </div>
 
-        <div class="d-flex justify-content-end gap-2">
-
-            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="offcanvas">
+        <div class="d-flex justify-content-end gap-2 mt-4 pt-3 border-top">
+            <button type="button" class="btn btn-light px-4 fw-600 rounded-pill" data-bs-dismiss="offcanvas">
                 Cancel
             </button>
 
-            <button type="submit" id="btnApprove" class="btn btn-success ladda-button" data-style="zoom-in">
-                <span class="ladda-label">Approve</span>
+            <button type="submit" id="btnApprove" class="btn btn-primary px-4 fw-bold rounded-pill ladda-button shadow-sm" data-style="zoom-in">
+                <span class="ladda-label"><i class="fas fa-check-circle me-1"></i> Confirm Approval</span>
             </button>
-
         </div>
 
     </form>

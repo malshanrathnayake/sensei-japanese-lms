@@ -1,4 +1,4 @@
-﻿using devspark_core_data_access_layer;
+using devspark_core_data_access_layer;
 using Microsoft.Data.SqlClient;
 using Newtonsoft.Json;
 using SENSEI.BLL.AdminPortalService.Interface;
@@ -34,27 +34,22 @@ namespace SENSEI.BLL.AdminPortalService
         public async Task<Course> GetCourse(long courseId)
         {
             DataTransactionManager dataTransactionManager = new DataTransactionManager(_databaseService.GetConnectionString());
-            var course = await dataTransactionManager.CourseDataManager.RetrieveData("GetCourse", [
+            var course = await dataTransactionManager.CourseDataManager.RetrieveData("GetCourse", new SqlParameter[] {
                 new SqlParameter("@CourseId", courseId)
-                ]);
+                });
             return course.FirstOrDefault();
         }
 
         public async Task<(IEnumerable<Course>, long)> SearchCourses(int start = 0, int length = 10, string searchValue = "", string sortColumn = "", string sortDirection = "", long userId = 0)
         {
             DataTransactionManager dataTransactionManager = new DataTransactionManager(_databaseService.GetConnectionString());
-            var (courses, count) = await dataTransactionManager.CourseDataManager.RetrieveDataWithCount("SearchCourses", [
+            var (courses, count) = await dataTransactionManager.CourseDataManager.RetrieveDataWithCount("SearchCourses", new SqlParameter[] {
                 new SqlParameter("@start", start),
                 new SqlParameter("@length", length),
                 new SqlParameter("@searchValue", searchValue),
                 new SqlParameter("@sortColumn", sortColumn),
                 new SqlParameter("@sortDirection", sortDirection)
-            ]);
-
-            //await _realtimeNotifier.NotifyAll(new
-            //{
-            //    message = "Hello from server"
-            //});
+            });
 
             return (courses, count);
         }
@@ -69,9 +64,9 @@ namespace SENSEI.BLL.AdminPortalService
         public async Task<bool> DeleteCourse(long courseId)
         {
             DataTransactionManager dataTransactionManager = new DataTransactionManager(_databaseService.GetConnectionString());
-            var status = await dataTransactionManager.CourseDataManager.DeleteData("DeleteCourse", [
+            var status = await dataTransactionManager.CourseDataManager.DeleteData("DeleteCourse", new SqlParameter[] {
                 new SqlParameter("@courseId", courseId),
-            ]);
+            });
             return status;
         }
     }

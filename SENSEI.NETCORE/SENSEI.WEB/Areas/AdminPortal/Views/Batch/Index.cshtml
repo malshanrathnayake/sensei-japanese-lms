@@ -3,75 +3,61 @@
 @model Batch
 
 @{
-    ViewData["Title"] = "Batch";
+    ViewData["Title"] = "Batch Management";
 }
 
 <div class="container-fluid p-0">
 
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h1 class="h3 mb-0">Batch</h1>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-1 fw-bold">Batches</h1>
+            <p class="text-muted small mb-0">Organize and manage student learning groups.</p>
+        </div>
 
-        <button type="button" class="btn btn-primary" id="btnNewBatch" data-action-url="/AdminPortal/Batch/Create">
-            <i class="fas fa-plus"></i> New
+        <button type="button" class="btn btn-primary px-4 rounded-pill shadow-sm" id="btnNewBatch" data-action-url="/AdminPortal/Batch/Create">
+            <i class="fas fa-plus me-2"></i> New Batch
         </button>
-
     </div>
 
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">Search By</h5>
-                </div>
-                <div class="card-body">
-
-                    <div class="row">
-                        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xm-12">
-                            <div class="mb-3" id="search-course-wrapper">
-                                <label class="form-label">@Html.DisplayNameFor(m => m.CourseId)</label>
-                                <div class="d-flex gap-2">
-                                    <select id="SearchCourseId" class="form-control search-course-select" name="SearchCourseId"></select>
-                                    <button type="button" class="btn btn-light border-0 px-3" id="btnClearFilters" title="Show All Courses">
-                                        <i class="fas fa-undo"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
+    <!-- Filter Section -->
+    <div class="card border-0 shadow-sm mb-4" style="border-radius: 1rem;">
+        <div class="card-header bg-white py-3">
+            <h5 class="card-title mb-0 fw-800"><i class="fas fa-filter me-2 text-primary"></i> Filter by Course</h5>
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <div class="d-flex gap-2">
+                        <select id="SearchCourseId" class="form-control select2 search-course-select shadow-none border-light-subtle bg-light"></select>
+                        <button type="button" class="btn btn-light border-0 px-3 rounded-3" id="btnClearFilters" title="Reset Filters">
+                            <i class="fas fa-undo text-muted"></i>
+                        </button>
                     </div>
-
                 </div>
             </div>
         </div>
     </div>
 
-
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">List of Batches</h5>
-                </div>
-                <div class="card-body">
-
-                    <div id="BatchTableContent" class="table-responsive">
-
-                        <table id="BatchDataTable" class="table table-hover align-middle mb-0 w-100">
-                            <thead>
-                                <tr>
-                                    <th></th>
-                                    <th>@Html.DisplayNameFor(m => m.CourseId)</th>
-                                    <th>@Html.DisplayNameFor(m => m.BatchName)</th>
-                                    <th>@Html.DisplayNameFor(m => m.BatchStartDate)</th>
-                                    <th>@Html.DisplayNameFor(m => m.BatchEndDate)</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
-
-                    </div>
-
-                </div>
+    <!-- Table Section -->
+    <div class="card border-0 shadow-sm" style="border-radius: 1rem;">
+        <div class="card-header bg-white py-3 border-bottom">
+            <h5 class="card-title mb-0 fw-800">Available Batches</h5>
+        </div>
+        <div class="card-body p-0">
+            <div id="BatchTableContent" class="table-responsive">
+                <table id="BatchDataTable" class="table table-hover align-middle mb-0 w-100">
+                    <thead class="bg-light">
+                        <tr>
+                            <th class="ps-4" style="width: 40px;"></th>
+                            <th>Course Name</th>
+                            <th>Batch Name</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -89,8 +75,6 @@
         $(document).ready(function () {
 
             $('#SearchCourseId').change(function () {
-                var courseId = $(this).val();
-                console.log(courseId);
                 loadBatches();
             });
 
@@ -101,9 +85,7 @@
                 }
             });
 
-
             $.getJSON('/AdminPortal/Batch/GetCourseListJsonResult', function (data) {
-
                 $('#SearchCourseId').empty();
                 $('#SearchCourseId').append('<option value="0">All Courses</option>')
 
@@ -114,7 +96,6 @@
                 });
 
                 var courseId = $('#SearchCourseId').val();
-
                 if (courseId) {
                     $('#SearchCourseId').val(courseId).trigger('change');
                 }
@@ -138,13 +119,13 @@
                 lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
                 pageLength: 25,
                 columnDefs: [
-                    { targets: 0, className: 'noVis' },
-                    { width: 25, targets: 0, orderable: false },
+                    { targets: 0, className: 'noVis ps-3' },
+                    { width: 40, targets: 0, orderable: false },
                 ],
                 dom:
-                    "<'row mb-3'<'col-sm-6'l><'col-sm-6 text-end'f>>" +
+                    "<'row p-3 mb-0'<'col-sm-6'l><'col-sm-6 text-end'f>>" +
                     "<'row'<'col-sm-12'tr>>" +
-                    "<'row mt-3'<'col-sm-5'i><'col-sm-7'p>>",
+                    "<'row p-3 mt-0'<'col-sm-5'i><'col-sm-7'p>>",
                 ajax: {
                     url: '/AdminPortal/Batch/ListOfBatches',
                     type: 'POST',
@@ -156,56 +137,48 @@
                     {
                         data: null,
                         orderable: false,
-                        searchable: false,
-                        width: "25px",
-                        className: "text-end",
                         render: function (data, type, row) {
 
                             var editUrl = `/AdminPortal/Batch/Edit/?q=${row.encryptedKey}`;
                             var deleteUrl = `/AdminPortal/Batch/Delete/?q=${row.encryptedKey}`;
 
-                            var editBtn = `<li><a class="dropdown-item d-flex align-items-center gap-2 edit-batch" href="javascript:void(0)" data-action-url="${editUrl}"> <i data-feather="edit"></i><span>Edit</span></a></li>`;
-                            var deleteBtn = `<li><a class="dropdown-item d-flex align-items-center gap-2 text-danger delete-batch" href="javascript:void(0)" data-action-url="${deleteUrl}" data-action-parameter="${row.batchName}"><i data-feather="trash-2"></i><span>Delete</span></a></li>`;
+                            var editBtn = `<li><a class="dropdown-item d-flex align-items-center gap-2 edit-batch" href="javascript:void(0)" data-action-url="${editUrl}"> <i data-feather="edit" style="width: 14px; height: 14px;"></i><span>Edit details</span></a></li>`;
+                            var deleteBtn = `<li><a class="dropdown-item d-flex align-items-center gap-2 text-danger delete-batch" href="javascript:void(0)" data-action-url="${deleteUrl}" data-action-parameter="${row.batchName}"><i data-feather="trash-2" style="width: 14px; height: 14px;"></i><span>Delete batch</span></a></li>`;
 
                             return `
                                 <div class="dropdown">
-                                    <button class="btn btn-sm btn-light p-1" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                        <i data-feather="more-vertical"></i>
+                                    <button class="btn btn-sm btn-light border-0 p-1 rounded-circle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="width: 32px; height: 32px;">
+                                        <i data-feather="more-vertical" style="width: 16px; height: 16px;"></i>
                                     </button>
-
-                                    <ul class="dropdown-menu dropdown-menu-end">
+                                    <ul class="dropdown-menu dropdown-menu-end shadow border-0 p-2" style="border-radius: 0.75rem; min-width: 160px;">
+                                        <li><h6 class="dropdown-header smaller text-muted fw-bold">BATCH ACTIONS</h6></li>
                                         ${editBtn}
                                         ${deleteBtn}
                                     </ul>
-                                </div>
-
-                            `;
+                                </div>`;
                         }
                     },
-                    { data: 'course.courseName', name:'course.courseName' },
-                    { data: 'batchName', name:'batchName' },
-                    { data: 'batchStartDate', name:'batchStartDate', render: function (data) { return renderDateOnly(data); } },
-                    { data: 'batchEndDate', name:'batchEndDate', render: function (data) { return renderDateOnly(data); } },
+                    { 
+                        data: 'course.courseName', 
+                        name:'course.courseName',
+                        render: function(data) { return `<div class="fw-bold text-dark">${data}</div>`; }
+                    },
+                    { data: 'batchName', name:'batchName', render: function(data) { return `<span class="badge bg-light text-dark fw-bold border" style="font-size: 0.75rem;">${data}</span>`; } },
+                    { data: 'batchStartDate', name:'batchStartDate', render: function (data) { return `<div class="text-muted small"><i class="far fa-calendar-alt me-1"></i> ${renderDateOnly(data)}</div>`; } },
+                    { data: 'batchEndDate', name:'batchEndDate', render: function (data) { return `<div class="text-muted small"><i class="far fa-calendar-check me-1"></i> ${renderDateOnly(data)}</div>`; } },
                 ],
                 drawCallback: function () {
-
-                    if (window.feather) {
-                        feather.replace();
-                    }
-
+                    if (window.feather) { feather.replace(); }
                     editBatchButton();
                     deleteBatchButton();
                 }
             });
-
         }
 
         function renderDateOnly(data) {
-            if (!data) return '';
-
+            if (!data) return '—';
             return data.split('T')[0];
         }
-
 
     </script>
 

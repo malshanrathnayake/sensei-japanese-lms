@@ -1,4 +1,4 @@
-﻿using devspark_core_data_access_layer;
+using devspark_core_data_access_layer;
 using Microsoft.Data.SqlClient;
 using Newtonsoft.Json;
 using SENSEI.BLL.AdminPortalService.Interface;
@@ -32,23 +32,23 @@ namespace SENSEI.BLL.AdminPortalService
         public async Task<(IEnumerable<StudentRegistration>, long)> SearchStudentRegistraion(long courseId = 0, int start = 0, int length = 10, string searchValue = "", string sortColumn = "", string sortDirection = "")
         {
             DataTransactionManager dataTransactionManager = new DataTransactionManager(_databaseService.GetConnectionString());
-            var (registrations, count) = await dataTransactionManager.StudentRegistrationDataManager.RetrieveDataWithCount("SearchStudentRegistrations", [
+            var (registrations, count) = await dataTransactionManager.StudentRegistrationDataManager.RetrieveDataWithCount("SearchStudentRegistrations", new SqlParameter[] {
                 new SqlParameter("@courseId", courseId),
                 new SqlParameter("@start", start),
                 new SqlParameter("@length", length),
                 new SqlParameter("@searchValue", searchValue),
                 new SqlParameter("@sortColumn", sortColumn),
                 new SqlParameter("@sortDirection", sortDirection)
-            ]);
+            });
             return (registrations, count);
         }
 
         public async Task<StudentRegistration> GetStudentRegistraion(long studentRegistrationId)
         {
             DataTransactionManager dataTransactionManager = new DataTransactionManager(_databaseService.GetConnectionString());
-            var studentRegistration = await dataTransactionManager.StudentRegistrationDataManager.RetrieveData("GetStudentRegistration", [
+            var studentRegistration = await dataTransactionManager.StudentRegistrationDataManager.RetrieveData("GetStudentRegistration", new SqlParameter[] {
                 new SqlParameter("@studentRegistrationId", studentRegistrationId)
-            ]);
+            });
             return studentRegistration.FirstOrDefault();
         }
 

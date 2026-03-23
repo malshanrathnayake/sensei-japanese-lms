@@ -1241,8 +1241,33 @@ body::before {
     font-size: 1.2rem !important;
 }
 
-.select2-container--default .select2-selection--single .select2-selection__placeholder {
-    color: #adb5bd !important;
-    font-weight: 600 !important;
+/* Logout Item Enhancements */
+.logout-item {
+    transition: all 0.2s ease;
+}
+
+.logout-item:hover {
+    background-color: rgba(216, 50, 54, 0.05) !important;
+}
+
+/* Notification Utility Classes */
+.bg-soft-success {
+    background-color: rgba(46, 125, 50, 0.1) !important;
+}
+
+.bg-soft-warning {
+    background-color: rgba(255, 193, 7, 0.1) !important;
+}
+
+.bg-soft-danger {
+    background-color: rgba(216, 50, 54, 0.1) !important;
+}
+
+.smaller {
+    font-size: 0.8rem;
+}
+
+.hover-bg-light:hover {
+    background-color: #f8f9fa;
 }
 

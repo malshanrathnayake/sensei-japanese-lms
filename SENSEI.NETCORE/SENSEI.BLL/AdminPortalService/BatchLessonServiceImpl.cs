@@ -30,16 +30,16 @@ namespace SENSEI.BLL.AdminPortalService
         public async Task<BatchLesson> GetBatchLesson(long batchLessonId)
         {
             DataTransactionManager dataTransactionManager = new DataTransactionManager(_databaseService.GetConnectionString());
-            var batchLesson = await dataTransactionManager.BatchLessonDataManager.RetrieveData("GetBatchLesson", [
+            var batchLesson = await dataTransactionManager.BatchLessonDataManager.RetrieveData("GetBatchLesson", new SqlParameter[] {
                 new SqlParameter("@batchLessonId", batchLessonId)
-            ]);
+            });
             return batchLesson.FirstOrDefault();
         }
 
         public async Task<(IEnumerable<BatchLesson>, long)> SearchBatchLessons(long courseId = 0, long batchId = 0, int start = 0, int length = 10, string searchValue = "", string sortColumn = "", string sortDirection = "")
         {
             DataTransactionManager dataTransactionManager = new DataTransactionManager(_databaseService.GetConnectionString());
-            var (batchLessons, count) = await dataTransactionManager.BatchLessonDataManager.RetrieveDataWithCount("SearchBatchLessons", [
+            var (batchLessons, count) = await dataTransactionManager.BatchLessonDataManager.RetrieveDataWithCount("SearchBatchLessons", new SqlParameter[] {
                 new SqlParameter("@courseId", courseId),
                 new SqlParameter("@batchId", batchId),
                 new SqlParameter("@start", start),
@@ -47,25 +47,25 @@ namespace SENSEI.BLL.AdminPortalService
                 new SqlParameter("@searchValue", searchValue),
                 new SqlParameter("@sortColumn", sortColumn),
                 new SqlParameter("@sortDirection", sortDirection)
-            ]);
+            });
             return (batchLessons, count);
         }
 
         public async Task<IEnumerable<BatchLesson>> GetBatchLessons(long batchId = 0)
         {
             DataTransactionManager dataTransactionManager = new DataTransactionManager(_databaseService.GetConnectionString());
-            var batchLessons = await dataTransactionManager.BatchLessonDataManager.RetrieveData("GetBatchLesson", [
+            var batchLessons = await dataTransactionManager.BatchLessonDataManager.RetrieveData("GetBatchLesson", new SqlParameter[] {
                 new SqlParameter("@batchId", batchId),
-            ]);
+            });
             return batchLessons;
         }
 
         public async Task<bool> DeleteBatchLesson(long batchLessonId)
         {
             DataTransactionManager dataTransactionManager = new DataTransactionManager(_databaseService.GetConnectionString());
-            var status = await dataTransactionManager.BatchLessonDataManager.DeleteData("DeleteBatchLesson", [
+            var status = await dataTransactionManager.BatchLessonDataManager.DeleteData("DeleteBatchLesson", new SqlParameter[] {
                 new SqlParameter("@batchLessonId", batchLessonId),
-            ]);
+            });
             return status;
         }
 
@@ -80,9 +80,9 @@ namespace SENSEI.BLL.AdminPortalService
         public async Task<bool> DeleteBatchLessonReference(long batchLessonReferenceId)
         {
             DataTransactionManager dataTransactionManager = new DataTransactionManager(_databaseService.GetConnectionString());
-            var status = await dataTransactionManager.BatchLessonDataManager.DeleteData("DeleteBatchLessonReference", [
+            var status = await dataTransactionManager.BatchLessonDataManager.DeleteData("DeleteBatchLessonReference", new SqlParameter[] {
                 new SqlParameter("@batchLessonReferenceId", batchLessonReferenceId),
-            ]);
+            });
             return status;
         }
     }

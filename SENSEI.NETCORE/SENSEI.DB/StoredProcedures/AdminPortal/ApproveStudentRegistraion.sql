@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [dbo].[ApproveStudentRegistraion]
+CREATE PROCEDURE [dbo].[ApproveStudentRegistraion]
 	@jsonString NVARCHAR(MAX) = '',
 	@executionStatus BIT OUT,
 	@primaryKey BIGINT OUT
@@ -14,6 +14,7 @@ BEGIN
 
 		DECLARE @studentRegistrationId BIGINT, @indexNumber NVARCHAR(100), @batchId BIGINT, @approvedById BIGINT;
 		DECLARE @userId BIGINT;
+        DECLARE @email NVARCHAR(256), @phoneNo NVARCHAR(50);
 		
 		SELECT @studentRegistrationId = [StudentRegistrationId], @indexNumber = [IndexNumber], @batchId = [BatchId], @approvedById = [ApprovedById]
 		FROM OPENJSON(@jsonString, '$')
@@ -25,16 +26,25 @@ BEGIN
 			[ApprovedById] BIGINT
 		);
 
+        SELECT @email = Email, @phoneNo = PhoneNo FROM StudentRegistration WHERE StudentRegistrationId = @studentRegistrationId;
+
 		UPDATE [StudentRegistration]
 		SET [IsApproved] = 1, [ApprovedById] = @approvedById, [UpdatedDateTime] = GETUTCDATE()
 		WHERE [StudentRegistrationId] = @studentRegistrationId;
 
-		INSERT INTO [User]([UserName], [UserGlobalidentity], [CreatedDateTiime], [UserTypeEnum], [IsActive], PhoneNo)
-		SELECT Email, NEWID(), GETUTCDATE(), 1, 1, [PhoneNo]
-		FROM [StudentRegistration]
-		WHERE [StudentRegistrationId] = @studentRegistrationId;
+        -- Check if user exists
+        SELECT @userId = UserId FROM [User] WHERE UserName = @email;
 
-		SET @userId = SCOPE_IDENTITY();
+        IF (@userId IS NULL)
+        BEGIN
+		    INSERT INTO [User]([UserName], [UserGlobalidentity], [CreatedDateTiime], [UserTypeEnum], [IsActive], PhoneNo)
+		    SELECT @email, NEWID(), GETUTCDATE(), 1, 1, @phoneNo;
+		    SET @userId = SCOPE_IDENTITY();
+        END
+        ELSE
+        BEGIN
+            UPDATE [User] SET IsActive = 1, PhoneNo = @phoneNo WHERE UserId = @userId;
+        END
 
 		INSERT INTO [Student]([UserId], [IndexNumber], [Email], [PhoneNo], [FirstName], [MiddleName], [LastName], [Initials], [CallingName], [NIC], [DateOfBirth], [BranchId], [StudentLearningModeId], [CountryId])
 		SELECT @userId, @indexNumber, [Email], [PhoneNo], [FirstName], [MiddleName], [LastName], [Initials], [CallingName], [NIC], [DateOfBirth], [BranchId], [StudentLearningModeId], [CountryId]

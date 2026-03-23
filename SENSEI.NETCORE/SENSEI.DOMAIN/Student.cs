@@ -92,6 +92,9 @@ namespace SENSEI.DOMAIN
             }
         }
 
+        [DisplayName("Is Active")]
+        public bool IsActive { get; set; }
+
         public string EncryptedKey { get; set; }
 
         #region NAVIGATIONAL PROPERTIES

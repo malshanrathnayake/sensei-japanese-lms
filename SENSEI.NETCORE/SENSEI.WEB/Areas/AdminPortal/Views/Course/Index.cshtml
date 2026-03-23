@@ -1,48 +1,43 @@
 @using core_web.Helpers
 @{
-	ViewData["Title"] = "Course";
+    ViewData["Title"] = "Course Management";
 }
 
 <div class="container-fluid p-0">
 
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h1 class="h3 mb-0">Course</h1>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-1 fw-bold">Courses</h1>
+            <p class="text-muted small mb-0">Manage educational programs and curriculum.</p>
+        </div>
 
-        <button type="button" class="btn btn-primary" id="btnNewCourse" data-action-url="/AdminPortal/Course/Create">
-            <i class="fas fa-plus"></i> New
+        <button type="button" class="btn btn-primary px-4 rounded-pill shadow-sm" id="btnNewCourse" data-action-url="/AdminPortal/Course/Create">
+            <i class="fas fa-plus me-2"></i> New Course
         </button>
-
     </div>
 
-	<div class="row">
-		<div class="col-12">
-			<div class="card">
-				<div class="card-header">
-					<h5 class="card-title mb-0">List of Courses</h5>
-				</div>
-				<div class="card-body">
-
-					<div id="CourseTableContent" class="table-responsive">
-
-                        <table id="CourseDataTable" class="table table-hover align-middle mb-0 w-100">
-                            <thead>
-                                <tr>
-                                    <th></th>
-                                    <th>Course Name</th>
-                                    <th>Course Code</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                
-                            </tbody>
-                        </table>
-
-                    </div>
-
-				</div>
-			</div>
-		</div>
-	</div>
+    <!-- Table Section -->
+    <div class="card border-0 shadow-sm" style="border-radius: 1rem;">
+        <div class="card-header bg-white py-3 border-bottom">
+            <h5 class="card-title mb-0 fw-800">Available Courses</h5>
+        </div>
+        <div class="card-body p-0">
+            <div id="CourseTableContent" class="table-responsive">
+                <table id="CourseDataTable" class="table table-hover align-middle mb-0 w-100">
+                    <thead class="bg-light">
+                        <tr>
+                            <th class="ps-4" style="width: 40px;"></th>
+                            <th>Course Name</th>
+                            <th>Course Code</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 
 </div>
 
@@ -55,10 +50,7 @@
     <script type="text/javascript">
 
         $(document).ready(function () {
-
             loadCourses();
-
-
         });
 
         function loadCourses() {
@@ -75,13 +67,13 @@
                 lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
                 pageLength: 25,
                 columnDefs: [
-                    { targets: 0, className: 'noVis' },
-                    { width: 25, targets: 0, orderable: false },
+                    { targets: 0, className: 'noVis ps-3' },
+                    { width: 40, targets: 0, orderable: false },
                 ],
                 dom:
-                    "<'row mb-3'<'col-sm-6'l><'col-sm-6 text-end'f>>" +
+                    "<'row p-3 mb-0'<'col-sm-6'l><'col-sm-6 text-end'f>>" +
                     "<'row'<'col-sm-12'tr>>" +
-                    "<'row mt-3'<'col-sm-5'i><'col-sm-7'p>>",
+                    "<'row p-3 mt-0'<'col-sm-5'i><'col-sm-7'p>>",
                 ajax: {
                     url: '/AdminPortal/Course/ListOfCourses',
                     type: 'POST'
@@ -90,45 +82,38 @@
                     {
                         data: null,
                         orderable: false,
-                        searchable: false,
-                        width: "25px",
-                        className: "text-end",
                         render: function (data, type, row) {
 
                             var editUrl = `/AdminPortal/Course/Edit/?q=${row.encryptedKey}`;
                             var deleteUrl = `/AdminPortal/Course/Delete/?q=${row.encryptedKey}`;
 
-                            var editBtn = `<li><a class="dropdown-item d-flex align-items-center gap-2 edit-course" href="javascript:void(0)" data-action-url="${editUrl}"> <i data-feather="edit"></i><span>Edit</span></a></li>`;
-                            var deleteBtn = `<li><a class="dropdown-item d-flex align-items-center gap-2 text-danger delete-course" href="javascript:void(0)" data-action-url="${deleteUrl}" data-action-parameter="${row.courseName}"><i data-feather="trash-2"></i><span>Delete</span></a></li>`;
+                            var editBtn = `<li><a class="dropdown-item d-flex align-items-center gap-2 edit-course" href="javascript:void(0)" data-action-url="${editUrl}"> <i data-feather="edit" style="width: 14px; height: 14px;"></i><span>Edit details</span></a></li>`;
+                            var deleteBtn = `<li><a class="dropdown-item d-flex align-items-center gap-2 text-danger delete-course" href="javascript:void(0)" data-action-url="${deleteUrl}" data-action-parameter="${row.courseName}"><i data-feather="trash-2" style="width: 14px; height: 14px;"></i><span>Delete course</span></a></li>`;
 
                             return `
                                 <div class="dropdown">
-                                    <button class="btn btn-sm btn-light p-1" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                        <i data-feather="more-vertical"></i>
+                                    <button class="btn btn-sm btn-light border-0 p-1 rounded-circle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="width: 32px; height: 32px;">
+                                        <i data-feather="more-vertical" style="width: 16px; height: 16px;"></i>
                                     </button>
-
-                                    <ul class="dropdown-menu dropdown-menu-end">
+                                    <ul class="dropdown-menu dropdown-menu-end shadow border-0 p-2" style="border-radius: 0.75rem; min-width: 160px;">
+                                        <li><h6 class="dropdown-header smaller text-muted fw-bold">COURSE ACTIONS</h6></li>
                                         ${editBtn}
+                                        <div class="dropdown-divider"></div>
                                         ${deleteBtn}
                                     </ul>
-                                </div>
-
-                            `;
+                                </div>`;
                         }
                     },
-                    { data: 'courseName', name:'courseName' },
-                    { data: 'courseCode', name:'courseCode' }
+                    { data: 'courseName', name:'courseName', render: function(d) { return `<div class="fw-bold text-dark">${d}</div>`; } },
+                    { data: 'courseCode', name:'courseCode', render: function(d) { return `<code class="bg-light px-2 py-1 rounded small text-primary fw-bold">${d}</code>`; } },
+                    { data: null, render: function() { return `<span class="badge bg-soft-success text-success rounded-pill fw-bold" style="font-size: 0.65rem;">ACTIVE</span>`; } }
                 ],
                 drawCallback: function () {
-                    if (window.feather) {
-                        feather.replace();
-                    }
-
+                    if (window.feather) { feather.replace(); }
                     editCourseButton();
                     deleteCourseButton();
                 }
             });
-
         }
 
     </script>

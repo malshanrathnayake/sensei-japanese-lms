@@ -3,71 +3,57 @@
 @model BatchLesson
 
 @{
-    ViewData["Title"] = "Batch Lesson";
+    ViewData["Title"] = "Batch Lessons";
 }
 
 <div class="container-fluid p-0">
 
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h1 class="h3 mb-0">Batch Lesson</h1>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-1 fw-bold">Batch Lessons</h1>
+            <p class="text-muted small mb-0">Manage and schedule lessons for specific batches.</p>
+        </div>
 
-        <button type="button" class="btn btn-primary" id="btnNewBatchLesson" data-action-url="/AdminPortal/BatchLesson/Create">
-            <i class="fas fa-plus"></i> New
+        <button type="button" class="btn btn-primary px-4 rounded-pill shadow-sm" id="btnNewBatchLesson" data-action-url="/AdminPortal/BatchLesson/Create">
+            <i class="fas fa-plus me-2"></i> New Lesson
         </button>
-
     </div>
 
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">Search By</h5>
-                </div>
-                <div class="card-body">
-
-                    <div class="row">
-                        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xm-12">
-                            <div class="mb-3" id="search-batch-wrapper">
-                                <label class="form-label">@Html.DisplayNameFor(m => m.BatchId)</label>
-                                <select id="SearchBatchId" class="form-control search-batch-select" name="SearchBatchId"></select>
-                            </div>
-                        </div>
-                    </div>
-
+    <!-- Filter Section -->
+    <div class="card border-0 shadow-sm mb-4" style="border-radius: 1rem;">
+        <div class="card-header bg-white py-3">
+            <h5 class="card-title mb-0 fw-800"><i class="fas fa-filter me-2 text-primary"></i> Filter by Batch</h5>
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <select id="SearchBatchId" class="form-control select2 search-batch-select shadow-none border-light-subtle bg-light"></select>
                 </div>
             </div>
         </div>
     </div>
 
-
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">List of Batch Lessons</h5>
-                </div>
-                <div class="card-body">
-
-                    <div id="BatchLessonTableContent" class="table-responsive">
-
-                        <table id="BatchLessonDataTable" class="table table-hover align-middle mb-0 w-100">
-                            <thead>
-                                <tr>
-                                    <th></th>
-                                    <th>@Html.DisplayNameFor(m => m.BatchId)</th>
-                                    <th>@Html.DisplayNameFor(m => m.LessonId)</th>
-                                    <th>@Html.DisplayNameFor(m => m.Description)</th>
-                                    <th>@Html.DisplayNameFor(m => m.LessonDateTime)</th>
-                                    <th>@Html.DisplayNameFor(m => m.RecordingUrl)</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
-
-                    </div>
-
-                </div>
+    <!-- Table Section -->
+    <div class="card border-0 shadow-sm" style="border-radius: 1rem;">
+        <div class="card-header bg-white py-3 border-bottom">
+            <h5 class="card-title mb-0 fw-800">Assigned Lessons</h5>
+        </div>
+        <div class="card-body p-0">
+            <div id="BatchLessonTableContent" class="table-responsive">
+                <table id="BatchLessonDataTable" class="table table-hover align-middle mb-0 w-100">
+                    <thead class="bg-light">
+                        <tr>
+                            <th class="ps-4" style="width: 40px;"></th>
+                            <th>Batch</th>
+                            <th>Lesson Title</th>
+                            <th>Description</th>
+                            <th>Date</th>
+                            <th>Recording</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -86,16 +72,10 @@
         $(document).ready(function () {
 
             $('#SearchBatchId').change(function () {
-                var batchId = $(this).val();
-
-                console.log(batchId);
-
                 loadBatchLessons();
             });
 
-
             $.getJSON('/AdminPortal/BatchLesson/GetBatchListJsonResult', function (data) {
-
                 $('#SearchBatchId').empty();
                 $('#SearchBatchId').append('<option value="0">All Batches</option>')
 
@@ -106,7 +86,6 @@
                 });
 
                 var batchId = $('#SearchBatchId').val();
-
                 if (batchId) {
                     $('#SearchBatchId').val(batchId).trigger('change');
                 }
@@ -130,13 +109,13 @@
                 lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
                 pageLength: 25,
                 columnDefs: [
-                    { targets: 0, className: 'noVis' },
-                    { width: 25, targets: 0, orderable: false },
+                    { targets: 0, className: 'noVis ps-3' },
+                    { width: 40, targets: 0, orderable: false },
                 ],
                 dom:
-                    "<'row mb-3'<'col-sm-6'l><'col-sm-6 text-end'f>>" +
+                    "<'row p-3 mb-0'<'col-sm-6'l><'col-sm-6 text-end'f>>" +
                     "<'row'<'col-sm-12'tr>>" +
-                    "<'row mt-3'<'col-sm-5'i><'col-sm-7'p>>",
+                    "<'row p-3 mt-0'<'col-sm-5'i><'col-sm-7'p>>",
                 ajax: {
                     url: '/AdminPortal/BatchLesson/ListOfBatchLessons',
                     type: 'POST',
@@ -148,9 +127,6 @@
                     {
                         data: null,
                         orderable: false,
-                        searchable: false,
-                        width: "25px",
-                        className: "text-end",
                         render: function (data, type, row) {
 
                             var editUrl = `/AdminPortal/BatchLesson/Edit/?q=${row.encryptedKey}`;
@@ -158,54 +134,46 @@
                             var addReferenceUrl = `/AdminPortal/BatchLesson/AddReference/?q=${row.encryptedKey}`;
                             var viewUrl = `/AdminPortal/BatchLesson/View/?q=${row.encryptedKey}`;
 
-                            var editBtn = `<li><a class="dropdown-item d-flex align-items-center gap-2 edit-batch-lesson" href="javascript:void(0)" data-action-url="${editUrl}"> <i data-feather="edit"></i><span>Edit</span></a></li>`;
-                            var deleteBtn = `<li><a class="dropdown-item d-flex align-items-center gap-2 text-danger delete-batch-lesson" href="javascript:void(0)" data-action-url="${deleteUrl}" data-action-parameter="${row.batch ? row.batch.batchName + ' - ' + (row.lesson ? row.lesson.lessonName : '') : ''}"><i data-feather="trash-2"></i><span>Delete</span></a></li>`;
-                            var addReferenceBtn = `<li><a class="dropdown-item d-flex align-items-center gap-2 add-batch-lesson-reference" href="javascript:void(0)" data-action-url="${addReferenceUrl}"> <i data-feather="link"></i><span>Add Reference</span></a></li>`;
-                            var viewBtn = `<li><a class="dropdown-item d-flex align-items-center gap-2" href="${viewUrl}"> <i data-feather="eye"></i><span>View</span></a></li>`;
+                            var editBtn = `<li><a class="dropdown-item d-flex align-items-center gap-2 edit-batch-lesson" href="javascript:void(0)" data-action-url="${editUrl}"> <i data-feather="edit" style="width: 14px; height: 14px;"></i><span>Edit details</span></a></li>`;
+                            var deleteBtn = `<li><a class="dropdown-item d-flex align-items-center gap-2 text-danger delete-batch-lesson" href="javascript:void(0)" data-action-url="${deleteUrl}" data-action-parameter="${row.batch ? row.batch.batchName + ' - ' + (row.lesson ? row.lesson.lessonName : '') : ''}"><i data-feather="trash-2" style="width: 14px; height: 14px;"></i><span>Delete lesson</span></a></li>`;
+                            var addReferenceBtn = `<li><a class="dropdown-item d-flex align-items-center gap-2 add-batch-lesson-reference" href="javascript:void(0)" data-action-url="${addReferenceUrl}"> <i data-feather="link" style="width: 14px; height: 14px;"></i><span>References</span></a></li>`;
+                            var viewBtn = `<li><a class="dropdown-item d-flex align-items-center gap-2" href="${viewUrl}"> <i data-feather="eye" style="width: 14px; height: 14px;"></i><span>Overview</span></a></li>`;
 
                             return `
                                 <div class="dropdown action-dropdown">
-                                    <button class="btn btn-sm btn-light p-1" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                        <i data-feather="more-vertical"></i>
+                                    <button class="btn btn-sm btn-light border-0 p-1 rounded-circle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="width: 32px; height: 32px;">
+                                        <i data-feather="more-vertical" style="width: 16px; height: 16px;"></i>
                                     </button>
-
-                                    <ul class="dropdown-menu dropdown-menu-end action-dropdown-menu">
-                                        ${addReferenceBtn}
-                                        ${editBtn}
+                                    <ul class="dropdown-menu dropdown-menu-end shadow border-0 p-2 action-dropdown-menu" style="border-radius: 0.75rem; min-width: 180px;">
+                                        <li><h6 class="dropdown-header smaller text-muted fw-bold">LESSON OPTIONS</h6></li>
                                         ${viewBtn}
+                                        ${editBtn}
+                                        ${addReferenceBtn}
+                                        <div class="dropdown-divider"></div>
                                         ${deleteBtn}
                                     </ul>
-                                </div>
-
-                            `;
+                                </div>`;
                         }
                     },
-                    { data: 'batch.batchName', name: 'batch.batchName', defaultContent: '' },
-                    { data: 'lesson.lessonName', name: 'lesson.lessonName', defaultContent: '' },
-                    { data: 'description', name: 'description', defaultContent: 'N/A' },
-                    { data: 'lessonDateTime', name: 'lessonDateTime', render: function (data) { return renderDateTime(data); } },
-                    { data: 'recordingUrl', name: 'recordingUrl', defaultContent: '', render: function (data) { return data ? `<a href="${data}" target="_blank">View</a>` : ''; } },
+                    { data: 'batch.batchName', name: 'batch.batchName', defaultContent: '', render: function(d) { return `<span class="fw-bold text-dark">${d||'—'}</span>`; } },
+                    { data: 'lesson.lessonName', name: 'lesson.lessonName', defaultContent: '', render: function(d) { return `<div class="fw-600">${d||'No Title'}</div>`; } },
+                    { data: 'description', name: 'description', defaultContent: 'N/A', render: function(d) { return `<small class="text-muted d-inline-block text-truncate" style="max-width: 150px;">${d}</small>`; } },
+                    { data: 'lessonDateTime', name: 'lessonDateTime', render: function (data) { return `<div class="text-muted small">${renderDateOnly(data)}</div>`; } },
+                    { data: 'recordingUrl', name: 'recordingUrl', defaultContent: '', render: function (data) { return data ? `<a href="${data}" target="_blank" class="btn btn-xs btn-outline-primary rounded-pill px-2" style="font-size: 0.65rem;">Watch <i class="fas fa-play ms-1"></i></a>` : '<span class="text-muted smaller">No recording</span>'; } },
                 ],
                 drawCallback: function () {
-
-                    if (window.feather) {
-                        feather.replace();
-                    }
-
+                    if (window.feather) { feather.replace(); }
                     editBatchLessonButton();
                     deleteBatchLessonButton();
                     addBatchLessonReferenceButton();
                 }
             });
-
         }
 
-        function renderDateTime(data) {
-            if (!data) return '';
-
+        function renderDateOnly(data) {
+            if (!data) return '—';
             return data.split('T')[0];
         }
-
 
     </script>
 
