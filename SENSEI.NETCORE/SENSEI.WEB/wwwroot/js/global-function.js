@@ -17,7 +17,9 @@ function loadSelectBox(options) {
         placeholder: options.title,
         dropdownParent: $dropdownParent,
         data: options.data,
+        width: '100%'
     });
+
 }
 
 /**

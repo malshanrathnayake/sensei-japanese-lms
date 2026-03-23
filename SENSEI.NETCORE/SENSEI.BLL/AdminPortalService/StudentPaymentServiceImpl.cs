@@ -1,4 +1,4 @@
-﻿using devspark_core_data_access_layer;
+using devspark_core_data_access_layer;
 using Microsoft.Data.SqlClient;
 using Newtonsoft.Json;
 using SENSEI.BLL.AdminPortalService.Interface;
@@ -85,6 +85,14 @@ namespace SENSEI.BLL.AdminPortalService
             DataTransactionManager dataTransactionManager = new DataTransactionManager(_databaseService.GetConnectionString());
             var (status, primaryKey) = await dataTransactionManager.StudentBatchPaymentDataManager.UpdateDataReturnPrimaryKey("RejectStudentBatchPayment", jsonString);
             return status;
+        }
+
+        public async Task<IEnumerable<dynamic>> GetStudentBatches(long studentId)
+        {
+            DataTransactionManager dataTransactionManager = new DataTransactionManager(_databaseService.GetConnectionString());
+            return await dataTransactionManager.StudentBatchPaymentDataManager.RetrieveDynamicData("GetStudentBatchesList", new SqlParameter[] {
+                new SqlParameter("@studentId", studentId)
+            });
         }
 
     }

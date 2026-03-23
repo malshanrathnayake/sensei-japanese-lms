@@ -1,4 +1,66 @@
-﻿var paymentSaveLadda;
+var paymentSaveLadda;
+
+//Create Student Payment
+$("#btnNewStudentPayment").on("click", function () {
+
+    var actionUrl = $(this).data("action-url");
+
+    $("#studentPayment-offcanvas-content").load(actionUrl, function () {
+
+        // Reset unobtrusive validation (important)
+        var form = $("#studentPayment-create-form");
+        if (form.length) {
+            form.removeData("validator");
+            form.removeData("unobtrusiveValidation");
+            $.validator.unobtrusive.parse(form);
+        }
+
+        // Show offcanvas
+        var offcanvasEl = document.getElementById('studentPaymentOffcanvas');
+        var offcanvas = new bootstrap.Offcanvas(offcanvasEl);
+        offcanvas.show();
+
+
+    });
+
+});
+
+function onPaymentCreateBegin() {
+    paymentSaveLadda = Ladda.create($('#btnSaveStudentPayment')[0]);
+    paymentSaveLadda.start();
+}
+
+function onPaymentCreateSuccess(response) {
+
+    if (response.success) {
+
+        // Close offcanvas
+        var offcanvasEl = document.getElementById('studentPaymentOffcanvas');
+        var offcanvas = bootstrap.Offcanvas.getInstance(offcanvasEl);
+        offcanvas.hide();
+
+        loadStudentPayments();
+
+        popUpNotification('success', response.message);
+
+    } else {
+
+        popUpNotification('error', response.message);
+
+    }
+}
+
+function onPaymentCreateFailure() {
+    popUpNotification('error', 'Failed to save student payment');
+}
+
+function onPaymentCreateComplete() {
+    if (paymentSaveLadda) {
+        paymentSaveLadda.stop();
+    }
+}
+
+
 
 
 function approveButton() {

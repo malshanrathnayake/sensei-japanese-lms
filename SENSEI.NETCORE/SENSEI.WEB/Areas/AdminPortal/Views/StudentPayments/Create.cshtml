@@ -1,0 +1,178 @@
+@using SENSEI.DOMAIN
+@model StudentBatchPayment
+
+@{
+    Layout = null;
+}
+
+<style>
+    .offcanvas-payment { border-radius: 20px 0 0 20px !important; border-left: 4px solid #ff5a5f; }
+    .offcanvas-header-premium { background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); padding: 1.5rem; border-bottom: 1px solid #e2e8f0; }
+    .offcanvas-title { font-weight: 800; color: #1e293b; letter-spacing: -0.02em; }
+    
+    .form-label-premium { font-weight: 700; color: #475569; font-size: 0.85rem; margin-bottom: 0.6rem; display: flex; align-items: center; gap: 0.5rem; }
+    .form-label-premium i { color: #ff5a5f; font-size: 0.9rem; }
+    
+    .input-group-premium { position: relative; }
+    .form-control-premium { border-radius: 12px !important; border: 1.5px solid #e2e8f0 !important; padding: 0.7rem 1rem !important; transition: all 0.2s ease !important; font-weight: 500; }
+    .form-control-premium:focus { border-color: #ff5a5f !important; box-shadow: 0 0 0 4px rgba(255, 90, 95, 0.1) !important; outline: none; }
+    
+    .payment-summary-card { background: #f0f7ff; border: 1px dashed #007bff; border-radius: 12px; padding: 1rem; margin-top: 1.5rem; }
+    .payment-summary-card i { font-size: 1.25rem; color: #007bff; }
+    
+    .btn-save-payment { background: linear-gradient(135deg, #ff5a5f 0%, #d83236 100%); border: none; border-radius: 12px; font-weight: 700; padding: 0.8rem 2rem; box-shadow: 0 10px 20px rgba(216, 50, 54, 0.2); transition: all 0.3s; color: white; }
+    .btn-save-payment:hover { transform: translateY(-2px); box-shadow: 0 12px 25px rgba(216, 50, 54, 0.3); color: white; }
+    
+    .btn-cancel-payment { border: 1.5px solid #e2e8f0; background: white; border-radius: 12px; font-weight: 600; color: #64748b; padding: 0.8rem 1.5rem; }
+    .btn-cancel-payment:hover { background: #f8fafc; border-color: #cbd5e1; }
+
+    /* Select2 Bootstrap 5 Theme Overrides */
+    .select2-container--bootstrap-5 .select2-selection { border-radius: 12px !important; border: 1.5px solid #e2e8f0 !important; min-height: 48px !important; padding: 6px 12px !important; }
+    .select2-container--bootstrap-5 .select2-selection--single .select2-selection__rendered { padding-top: 3px !important; }
+</style>
+
+<div class="offcanvas-header offcanvas-header-premium">
+    <div class="d-flex align-items-center gap-3">
+        <div class="bg-primary bg-opacity-10 p-2 rounded-3 text-primary">
+            <i class="fas fa-credit-card fs-4"></i>
+        </div>
+        <h5 class="offcanvas-title m-0">Record New Payment</h5>
+    </div>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+</div>
+
+<div class="offcanvas-body p-4">
+
+    <form id="studentPayment-create-form" asp-area="AdminPortal" asp-controller="StudentPayments" asp-action="Create"
+          data-ajax="true" data-ajax-method="POST"
+          data-ajax-begin="onPaymentCreateBegin" data-ajax-success="onPaymentCreateSuccess" data-ajax-failure="onPaymentCreateFailure" data-ajax-complete="onPaymentCreateComplete">
+
+        <div class="mb-4">
+            <label class="form-label-premium"><i class="fas fa-user-graduate"></i> Search Student</label>
+            <div class="input-group-premium">
+                <select id="StudentId" class="form-control student-select"></select>
+            </div>
+            <small class="text-muted mt-1 d-block"><i class="fas fa-info-circle me-1"></i> Search by name or index number</small>
+        </div>
+
+        <div class="mb-4">
+            <label class="form-label-premium"><i class="fas fa-layer-group"></i> @Html.DisplayNameFor(m => m.StudentBatchId)</label>
+            <div class="input-group-premium">
+                <select asp-for="StudentBatchId" id="StudentBatchId" class="form-control student-batch-select" required>
+                    <option value="">Select Student First</option>
+                </select>
+            </div>
+            <span asp-validation-for="StudentBatchId" class="text-danger small mt-1"></span>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <label class="form-label-premium"><i class="fas fa-money-bill-wave"></i> @Html.DisplayNameFor(m => m.Amount)</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-light border-end-0" style="border-radius: 12px 0 0 12px; border: 1.5px solid #e2e8f0;"><i class="fas fa-coins text-muted"></i></span>
+                    <input asp-for="Amount" class="form-control form-control-premium border-start-0" style="border-radius: 0 12px 12px 0 !important;" type="number" step="0.01" required value="0" />
+                </div>
+                <span asp-validation-for="Amount" class="text-danger small mt-1"></span>
+            </div>
+
+            <div class="col-md-6 mb-4">
+                <label class="form-label-premium"><i class="fas fa-calendar-alt"></i> @Html.DisplayNameFor(m => m.PaymentMonth)</label>
+                <input asp-for="PaymentMonth" class="form-control form-control-premium" type="date" required value="@Model.PaymentMonth.ToString("yyyy-MM-dd")" />
+                <span asp-validation-for="PaymentMonth" class="text-danger small mt-1"></span>
+            </div>
+        </div>
+
+        <div class="payment-summary-card d-flex align-items-start gap-3">
+            <i class="fas fa-magic"></i>
+            <div>
+                <h6 class="mb-1 fw-bold text-primary">Instant Approval</h6>
+                <p class="mb-0 small text-muted">This manual payment will be marked as <b>Approved</b> immediately upon saving.</p>
+            </div>
+        </div>
+
+        <div class="mt-5 d-flex flex-column gap-2">
+            <button type="submit" id="btnSaveStudentPayment" class="btn btn-save-payment ladda-button w-100" data-style="zoom-in">
+                <span class="ladda-label"><i class="fas fa-check-circle me-2"></i> Save Payment Record</span>
+            </button>
+            <button type="button" class="btn btn-cancel-payment w-100" data-bs-dismiss="offcanvas">
+                Cancel
+            </button>
+        </div>
+
+    </form>
+
+</div>
+
+<script>
+    $(document).ready(function () {
+        // Apply offcanvas custom class
+        $('#studentPaymentOffcanvas').addClass('offcanvas-payment');
+
+        $('.student-select').select2({
+            theme: 'bootstrap5',
+            dropdownParent: $('#studentPaymentOffcanvas'),
+            placeholder: 'Search Student...',
+            minimumInputLength: 2,
+            allowClear: true,
+            ajax: {
+                url: '/AdminPortal/StudentPayments/GetStudentListJsonResult',
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        searchTerm: params.term
+                    };
+                },
+                processResults: function (data) {
+                    return {
+                        results: data
+                    };
+                },
+                cache: true
+            }
+        });
+
+        $('.student-select').on('select2:select', function (e) {
+            var data = e.params.data;
+            var studentId = data.id;
+            
+            if (studentId) {
+                // Show loading state
+                $('#StudentBatchId').empty().append('<option value="">Loading batches...</option>');
+                
+                $.getJSON('/AdminPortal/StudentPayments/GetStudentBatchListJsonResult', { studentId: studentId }, function (jsonResponse) {
+                    $('#StudentBatchId').empty();
+                    $('#StudentBatchId').append('<option value="">Select Batch</option>');
+                    
+                    if (jsonResponse && jsonResponse.length > 0) {
+                        $.each(jsonResponse, function (index, item) {
+                            $('#StudentBatchId').append('<option value="' + item.id + '">' + item.text + '</option>');
+                        });
+                        // Trigger change to refresh Select2
+                        $('#StudentBatchId').trigger('change');
+                        popUpNotification('success', 'Batches loaded for ' + data.text);
+                    } else {
+                        $('#StudentBatchId').append('<option value="">No active batches found</option>');
+                        popUpNotification('warning', 'This student is not enrolled in any active batches.');
+                    }
+                }).fail(function() {
+                    $('#StudentBatchId').empty().append('<option value="">Error loading batches</option>');
+                    popUpNotification('error', 'Failed to retrieve batches from server.');
+                });
+            }
+        });
+
+        $('.student-select').on('select2:unselect', function() {
+            $('#StudentBatchId').empty().append('<option value="">Select Student First</option>');
+        });
+        
+        // Initialize static select2
+        $('.student-batch-select').select2({
+            theme: 'bootstrap5',
+            dropdownParent: $('#studentPaymentOffcanvas'),
+            placeholder: 'Select Batch',
+            allowClear: true,
+            width: '100%'
+        });
+    });
+</script>

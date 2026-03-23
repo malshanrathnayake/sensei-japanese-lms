@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [dbo].[SearchStudent]
+CREATE PROCEDURE [dbo].[SearchStudent]
 	@courseId BIGINT = 0,
 	@batchId BIGINT = 0,
 	@start INT = 0,
@@ -26,9 +26,10 @@ BEGIN
 	INNER JOIN StudentLearningMode SLM ON SLM.StudentLearningModeId = ST.StudentLearningModeId
 	WHERE 
 		ST.IsDeleted = 0
+		AND STB.IsDeleted = 0
 		AND (@courseId = 0 OR B.CourseId = @courseId)
 		AND (@batchId = 0 OR B.BatchId = @batchId)
-		AND (@searchValue = '' OR ST.FirstName LIKE '%' + @searchValue + '%' OR ST.LastName LIKE '%' + @searchValue + '%' OR ST.MiddleName LIKE '%' + @searchValue + '%' OR  C.CourseName LIKE '%' + @searchValue + '%' OR SLM.LearningModeName LIKE '%' + @searchValue + '%' OR ST.Email LIKE '%' + @searchValue + '%' OR ST.PhoneNo LIKE '%' + @searchValue + '%')
+		AND (@searchValue = '' OR ST.FirstName LIKE '%' + @searchValue + '%' OR ST.LastName LIKE '%' + @searchValue + '%' OR ST.MiddleName LIKE '%' + @searchValue + '%' OR ST.IndexNumber LIKE '%' + @searchValue + '%' OR C.CourseName LIKE '%' + @searchValue + '%' OR SLM.LearningModeName LIKE '%' + @searchValue + '%' OR ST.Email LIKE '%' + @searchValue + '%' OR ST.PhoneNo LIKE '%' + @searchValue + '%')
 	ORDER BY 
 		CASE WHEN @sortColumn = 'studentPopulatedName' AND @sortDirection = 'ASC' THEN ST.FirstName END ASC,CASE WHEN @sortColumn = 'studentPopulatedName' AND @sortDirection = 'DESC' THEN ST.FirstName END DESC,
 		CASE WHEN @sortColumn = 'courseName' AND @sortDirection = 'ASC' THEN C.CourseName END ASC,CASE WHEN @sortColumn = 'courseName' AND @sortDirection = 'DESC' THEN C.CourseName END DESC,
@@ -49,7 +50,8 @@ BEGIN
 	INNER JOIN StudentLearningMode SLM ON SLM.StudentLearningModeId = ST.StudentLearningModeId
 	WHERE 
 		ST.IsDeleted = 0
+		AND STB.IsDeleted = 0
 		AND (@courseId = 0 OR B.CourseId = @courseId)
-		AND (@searchValue = '' OR ST.FirstName LIKE '%' + @searchValue + '%' OR ST.LastName LIKE '%' + @searchValue + '%' OR ST.MiddleName LIKE '%' + @searchValue + '%' OR  C.CourseName LIKE '%' + @searchValue + '%' OR SLM.LearningModeName LIKE '%' + @searchValue + '%' OR ST.Email LIKE '%' + @searchValue + '%' OR ST.PhoneNo LIKE '%' + @searchValue + '%')
+		AND (@searchValue = '' OR ST.FirstName LIKE '%' + @searchValue + '%' OR ST.LastName LIKE '%' + @searchValue + '%' OR ST.MiddleName LIKE '%' + @searchValue + '%' OR ST.IndexNumber LIKE '%' + @searchValue + '%' OR C.CourseName LIKE '%' + @searchValue + '%' OR SLM.LearningModeName LIKE '%' + @searchValue + '%' OR ST.Email LIKE '%' + @searchValue + '%' OR ST.PhoneNo LIKE '%' + @searchValue + '%')
 
 END
