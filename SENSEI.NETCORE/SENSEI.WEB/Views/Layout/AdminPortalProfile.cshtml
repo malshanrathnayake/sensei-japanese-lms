@@ -1,21 +1,65 @@
-﻿@{
+@{
 	Layout = null;
 	var userDisplayName = Context.Session.GetString("DisplayName") ?? "User";
+	var userEmail = Context.Session.GetString("UserName") ?? "";
 	var userProfileImage = Context.Session.GetString("ProfileImage") ?? "/theme/v1/img/avatars/placeholder_1.jpeg";
+	var userRole = Context.Session.GetString("UserType") ?? "Staff";
 }
 
-<li class="nav-item dropdown">
-	<a class="nav-icon dropdown-toggle d-inline-block d-sm-none" href="#" data-bs-toggle="dropdown">
-		<img src="@Url.Content(userProfileImage)" class="avatar img-fluid rounded-circle" alt="@userDisplayName" style="border: 1px solid var(--primary); width: 28px; height: 28px; object-fit: cover;" onerror="this.src='@Url.Content("/theme/v1/img/avatars/placeholder_1.jpeg")'" />
+<li class="nav-item dropdown px-lg-2">
+	<a class="nav-link dropdown-toggle d-flex align-items-center py-0" href="#" id="adminProfileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+		<div class="position-relative d-inline-block me-2">
+			<img src="@Url.Content(userProfileImage)" 
+				 class="avatar img-fluid rounded-circle border border-2 border-white shadow-sm" 
+				 alt="@userDisplayName" 
+				 style="width: 42px; height: 42px; object-fit: cover; border-color: #fdeaea !important;" 
+				 onerror="this.src='/theme/v1/img/avatars/placeholder_1.jpeg'" />
+			<span class="position-absolute bottom-0 end-0 bg-success border border-2 border-white rounded-circle" style="width: 12px; height: 12px; transform: translate(5%, 5%);" title="Online"></span>
+		</div>
+		<div class="d-none d-lg-block text-start me-1">
+			<div class="fw-800 text-dark lh-1 mb-1" style="font-size: 0.95rem; text-transform: capitalize;">@userDisplayName.ToLower()</div>
+			<div class="text-muted fw-700" style="font-size: 0.72rem; letter-spacing: 0.01em;">@userRole Console</div>
+		</div>
 	</a>
 
-    <a class="nav-link dropdown-toggle d-none d-sm-inline-block" href="#" data-bs-toggle="dropdown">
-        <img src="@Url.Content(userProfileImage)" class="avatar img-fluid rounded-circle me-1" alt="@userDisplayName" style="border: 2px solid var(--primary); width: 32px; height: 32px; object-fit: cover;" onerror="this.src='@Url.Content("/theme/v1/img/avatars/placeholder_1.jpeg")'" />
-        <span class="text-dark fw-bold">@userDisplayName</span>
-    </a>
-	<div class="dropdown-menu dropdown-menu-end">
-		<a class="dropdown-item" href="pages-profile.html"><i class="align-middle me-1" data-feather="user"></i> Profile</a>
-		<div class="dropdown-divider"></div>
-		<a asp-area="" asp-controller="SenseiJapaneseSchool" asp-action="LogoutGoogle" class="dropdown-item">Log out</a>
+	<div class="dropdown-menu dropdown-menu-end shadow-lg border-0 p-2 animated fadeIn" aria-labelledby="adminProfileDropdown" style="min-width: 280px; border-radius: 1.25rem; margin-top: 15px;">
+		<!-- Enhanced User Header -->
+		<div class="dropdown-header d-flex flex-column align-items-center p-4 bg-light rounded-4 mb-2 mx-1">
+			<div class="position-relative mb-3">
+				<img src="@Url.Content(userProfileImage)" 
+					 class="avatar img-fluid rounded-circle border border-4 border-white shadow-sm" 
+					 style="width: 80px; height: 80px; object-fit: cover;"
+					 onerror="this.src='/theme/v1/img/avatars/placeholder_1.jpeg'">
+				<span class="badge bg-success position-absolute rounded-circle p-1 border border-2 border-white" style="bottom: 5px; right: 5px; width: 14px; height: 14px;"></span>
+			</div>
+			<h6 class="mb-1 fw-900 text-dark text-center text-capitalize">@userDisplayName.ToLower()</h6>
+			<p class="text-muted small mb-0 fw-600 text-center">@userEmail</p>
+			<span class="badge bg-soft-primary text-primary mt-2 px-3 py-1 rounded-pill fw-bold" style="font-size: 0.7rem; letter-spacing: 0.05em; text-transform: uppercase;">@userRole Account</span>
+		</div>
+
+		<!-- Menu Actions -->
+		<div class="p-1">
+			<a class="dropdown-item d-flex align-items-center gap-3 py-2 px-3 rounded-3 mb-1" href="@Url.Action("Index", "AdminProfile", new { area = "AdminPortal" })">
+				<div class="d-flex align-items-center justify-content-center bg-soft-primary text-primary rounded-circle" style="width: 36px; height: 36px;">
+					<i data-feather="user" style="width: 18px; height: 18px;"></i>
+				</div>
+				<div class="flex-grow-1">
+					<div class="fw-800 text-dark small">My Profile</div>
+					<div class="text-muted fw-600" style="font-size: 0.68rem;">View & manage account</div>
+				</div>
+			</a>
+
+			<div class="dropdown-divider my-2 mx-n2 opacity-5"></div>
+
+			<a asp-area="" asp-controller="SenseiJapaneseSchool" asp-action="LogoutGoogle" class="dropdown-item d-flex align-items-center gap-3 py-2 px-3 rounded-3 text-danger mb-0">
+				<div class="d-flex align-items-center justify-content-center bg-soft-danger text-danger rounded-circle" style="width: 36px; height: 36px;">
+					<i data-feather="log-out" style="width: 18px; height: 18px;"></i>
+				</div>
+				<div class="flex-grow-1">
+					<div class="fw-800 small">Sign Out</div>
+				</div>
+				<i data-feather="chevron-right" style="width: 16px; height: 16px; opacity: 0.4;"></i>
+			</a>
+		</div>
 	</div>
-</li>
+</li>

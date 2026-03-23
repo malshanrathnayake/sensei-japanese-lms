@@ -1,0 +1,220 @@
+@model SENSEI.DOMAIN.User
+@{
+    ViewData["Title"] = "Admin Profile";
+    var staffName = Model?.Staff?.StaffPopulatedName ?? Model?.userName ?? "Administrator";
+    var userEmail = Model?.userName ?? "N/A";
+    var userType = Model?.UserTypeEnum.ToString() ?? "Admin";
+    var profileImage = Context.Session.GetString("ProfileImage") ?? "/theme/v1/img/avatars/placeholder_1.jpeg";
+}
+
+<style>
+    /* Admin Profile Premium Design */
+    .admin-profile-container {
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+
+    .profile-banner {
+        height: 120px;
+        background: linear-gradient(135deg, var(--primary) 0%, #b1282c 100%);
+        border-radius: 20px 20px 0 0;
+        position: relative;
+    }
+
+    .profile-card {
+        background: #fff;
+        border-radius: 24px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+        border: 1px solid rgba(216, 50, 54, 0.08);
+        overflow: hidden;
+        margin-top: -60px;
+        position: relative;
+        z-index: 10;
+    }
+
+    .avatar-lg {
+        width: 130px;
+        height: 130px;
+        border: 6px solid #fff;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        background: #fff;
+    }
+
+    .section-title {
+        font-weight: 800;
+        letter-spacing: -0.01em;
+        color: var(--primary);
+        font-size: 1.1rem;
+        border-bottom: 3px solid rgba(216, 50, 54, 0.1);
+        display: inline-block;
+        padding-bottom: 5px;
+        margin-bottom: 25px;
+    }
+
+    .info-label {
+        font-weight: 800;
+        color: #adb5bd;
+        font-size: 0.65rem;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        margin-bottom: 0.3rem;
+    }
+
+    .info-value {
+        font-weight: 700;
+        color: #212529;
+        font-size: 0.95rem;
+    }
+
+    .badge-soft-success {
+        background: rgba(46, 125, 50, 0.08);
+        color: #2e7d32;
+        padding: 5px 15px;
+        border-radius: 50px;
+        font-weight: 800;
+        font-size: 0.75rem;
+    }
+
+    .profile-input {
+        border-radius: 14px;
+        padding: 0.7rem 1rem;
+        border: 2px solid #f8f9fa;
+        background: #fdfdfd;
+        transition: all 0.2s ease;
+    }
+
+    .profile-input:focus {
+        border-color: var(--primary);
+        background: #fff;
+        box-shadow: 0 0 0 5px rgba(216, 50, 54, 0.05);
+    }
+
+    .btn-save {
+        border-radius: 12px;
+        padding: 0.8rem 2.5rem;
+        font-weight: 800;
+        box-shadow: 0 8px 20px rgba(216, 50, 54, 0.2);
+    }
+</style>
+
+<div class="container-fluid py-4 min-vh-100">
+    <div class="admin-profile-container">
+        
+        <!-- Header -->
+        <div class="d-flex align-items-center justify-content-between mb-4">
+            <div>
+                <h2 class="fw-900 text-dark mb-1">Account <span class="text-primary">Profile</span></h2>
+                <p class="text-muted small fw-600 mb-0">Management panel personal settings.</p>
+            </div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb bg-transparent p-0 mb-0">
+                    <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home", new { area = "AdminPortal" })" class="text-muted fw-600">Home</a></li>
+                    <li class="breadcrumb-item active text-dark fw-700">Profile</li>
+                </ol>
+            </nav>
+        </div>
+
+        <div class="profile-banner"></div>
+        
+        <div class="profile-card">
+            <div class="row g-0">
+                <!-- Sidebar info -->
+                <div class="col-12 col-lg-4 border-end bg-light bg-opacity-10">
+                    <div class="p-5 text-center">
+                        <div class="position-relative d-inline-block mb-4">
+                            <img src="@profileImage" class="rounded-circle avatar-lg object-fit-cover shadow" alt="@staffName">
+                            <span class="position-absolute bottom-0 end-0 bg-success border border-white border-4 rounded-circle p-2" title="Online"></span>
+                        </div>
+                        
+                        <h4 class="fw-900 text-dark mb-1">@staffName</h4>
+                        <p class="text-muted fw-600 small mb-4">@userType</p>
+                        
+                        <div class="d-flex justify-content-center mb-5">
+                            <span class="badge-soft-success d-flex align-items-center gap-2">
+                                <i data-feather="shield" style="width: 14px; height: 14px;"></i>
+                                @userType AUTHORIZED
+                            </span>
+                        </div>
+                        
+                        <div class="text-start space-y-4">
+                            <div class="mb-4">
+                                <div class="info-label">Email Address</div>
+                                <div class="info-value d-flex align-items-center gap-2">
+                                    <i data-feather="mail" class="text-muted" style="width: 16px; height: 16px;"></i>
+                                    @userEmail
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <div class="info-label">Member Since</div>
+                                <div class="info-value d-flex align-items-center gap-2">
+                                    <i data-feather="calendar" class="text-muted" style="width: 16px; height: 16px;"></i>
+                                    @Model?.CreatedDateTiime.ToString("MMMM dd, yyyy")
+                                </div>
+                            </div>
+                            <div class="mb-0">
+                                <div class="info-label">Status</div>
+                                <div class="info-value">
+                                    <span class="text-success fw-bolder">Active Session</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Forms -->
+                <div class="col-12 col-lg-8">
+                    <div class="p-5">
+                        <form asp-action="UpdateProfile" method="post">
+                            <input type="hidden" asp-for="UserId" />
+                            
+                            <h5 class="section-title">Personal Details</h5>
+                            
+                            <div class="row mb-4">
+                                <div class="col-md-6 mb-3">
+                                    <label class="info-label">First Name</label>
+                                    <input type="text" class="form-control profile-input" value="@Model?.Staff?.FirstName" readonly>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="info-label">Last Name</label>
+                                    <input type="text" class="form-control profile-input" value="@Model?.Staff?.LastName" readonly>
+                                </div>
+                            </div>
+
+                            <div class="row mb-5">
+                                <div class="col-md-6 mb-3">
+                                    <label class="info-label">Employee Code</label>
+                                    <div class="d-flex align-items-center gap-2 info-value">
+                                        <div class="bg-dark text-white p-2 rounded-3 text-center" style="min-width: 120px; font-family: monospace;">
+                                            @Model?.Staff?.EmployeeCode
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3 text-muted small mt-auto pb-2">
+                                    <i data-feather="info" class="me-1"></i> Staff information is managed by Super Admin.
+                                </div>
+                            </div>
+
+                            <div class="text-end mt-5 pt-3">
+                                <button type="submit" class="btn btn-primary btn-save" disabled>
+                                    <i class="me-2" data-feather="save"></i> Update Profile
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-4 text-center text-muted small fw-600">
+            &copy; @DateTime.Now.Year SENSEI Japanese LMS • Version 2.0.4
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            if (window.feather) { feather.replace(); }
+        });
+    </script>
+}
