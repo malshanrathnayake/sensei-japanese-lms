@@ -1,8 +1,10 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace SENSEI.WEB.Areas.StudentPortal.Controllers
 {
     [Area("StudentPortal")]
+    [Authorize(Roles = "Student")]
     public class HomeController : Controller
     {
         private readonly SENSEI.BLL.StudentPortalService.Interfaces.IStudentService _studentService;

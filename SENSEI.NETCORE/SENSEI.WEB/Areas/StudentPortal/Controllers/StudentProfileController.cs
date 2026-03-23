@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SENSEI.BLL.StudentPortalService.Interfaces;
 using SENSEI.DOMAIN;
@@ -7,6 +8,7 @@ using System.Threading.Tasks;
 namespace SENSEI.WEB.Areas.StudentPortal.Controllers
 {
     [Area("StudentPortal")]
+    [Authorize(Roles = "Student")]
     public class StudentProfileController : Controller
     {
         private readonly IStudentService _studentService;

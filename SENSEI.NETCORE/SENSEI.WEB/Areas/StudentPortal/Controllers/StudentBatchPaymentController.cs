@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using SENSEI.BLL.AdminPortalService.Interface;
@@ -13,6 +14,7 @@ using System.Threading.Tasks;
 namespace SENSEI.WEB.Areas.StudentPortal.Controllers
 {
     [Area("StudentPortal")]
+    [Authorize(Roles = "Student")]
     public class StudentBatchPaymentController : Controller
     {
         private readonly SENSEI.BLL.StudentPortalService.Interfaces.IStudentService _studentService;

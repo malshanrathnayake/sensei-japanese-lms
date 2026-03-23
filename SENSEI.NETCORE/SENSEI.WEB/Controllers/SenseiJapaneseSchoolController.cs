@@ -186,7 +186,7 @@ namespace SENSEI.WEB.Controllers
             }
 
 
-                var appClaims = new List<Claim>
+            var appClaims = new List<Claim>
             {
                 new Claim("UserId", user.UserId.ToString()),
                 new Claim(ClaimTypes.Email, user.userName),

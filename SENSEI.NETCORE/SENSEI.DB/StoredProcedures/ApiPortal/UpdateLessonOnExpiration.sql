@@ -17,7 +17,8 @@ BEGIN
 
 		FROM [BatchStudentLessonAccess] BSLA
 		INNER JOIN [BatchLesson] BL ON BSLA.BatchLessonId = BL.BatchLessonId
-		WHERE BL.RecordingExpireDate < GETUTCDATE();
+		WHERE BL.RecordingExpireDate < GETUTCDATE()
+		AND BL.BatchLessonId NOT IN (SELECT BatchLessonId FROM BatchStudentLessonAccess WHERE BatchStudentLessonAccessId IN (SELECT BatchStudentLessonAccessId FROM BatchStudentLessonAccessRequest WHERE ApproveStatusEnum = 1))
 
 
 		COMMIT TRANSACTION;
