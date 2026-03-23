@@ -9,11 +9,11 @@ function loadSelectBox(options) {
 
     var $dropdownParent = options.dropdownParentId
         ? $('#' + options.dropdownParentId)
-        : $(document.body); // Default to body to avoid clipping
+        : $(document.body);
 
     $select.select2({
-        theme: 'bootstrap5',
-        allowClear: true,
+        theme: options.theme || 'bootstrap5',
+        allowClear: options.allowClear !== undefined ? options.allowClear : true,
         placeholder: options.title,
         dropdownParent: $dropdownParent,
         data: options.data,

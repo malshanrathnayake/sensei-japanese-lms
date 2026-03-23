@@ -5,57 +5,51 @@ function loadBatchDropdown(batchSelectClass, wrapperId, hdnBatchIdSelector) {
 
         var $select = $('.' + batchSelectClass).first();
         $select.empty();
-        $select.append('<option value="0">Select Batch</option>');
 
         loadSelectBox({
             data: data,
             className: batchSelectClass,
             title: 'Select Batch',
-            dropdownParentId: wrapperId
+            dropdownParentId: wrapperId,
+            allowClear: false
         });
 
         var batchId = $(hdnBatchIdSelector).val();
-        if (batchId) {
+        if (batchId && batchId !== "0") {
             $select.val(batchId).trigger('change');
             loadLessonDropdown('edit-lesson-select', 'edit-lesson-wrapper', '#hdnLessonId');
         } else {
             loadLessonDropdown('lesson-select', 'create-lesson-wrapper', '#hdnLessonId');
         }
 
-        
-
     });
 }
 
 function loadLessonDropdown(lessonSelectClass, wrapperId, hdnLessonIdSelector) {
+    var currentBatchId = $('#BatchId').val() || $('#EditBatchId').val() || "0";
+    
     $.getJSON('/AdminPortal/BatchLesson/GetLessonListJsonResult', {
-        batchId: $('#BatchId').val() || $('#EditBatchId').val()
+        batchId: currentBatchId
     }, function (data) {
 
         var $select = $('.' + lessonSelectClass).first();
         $select.empty();
-        $select.append('<option value="0">Select Lesson</option>');
 
         loadSelectBox({
             data: data,
             className: lessonSelectClass,
             title: 'Select Lesson',
-            dropdownParentId: wrapperId
+            dropdownParentId: wrapperId,
+            allowClear: false
         });
 
         var lessonId = $(hdnLessonIdSelector).val();
-        if (lessonId) {
+        if (lessonId && lessonId !== "0") {
             $select.val(lessonId).trigger('change');
         }
 
         setTimeout(function () {
-
-            if (wrapperId == 'edit-lesson-wrapper') {
-                $("#edit-lesson-wrapper").find(".select2-container").css("width", "100%");
-            }else{
-                $("#create-lesson-wrapper").find(".select2-container").css("width", "100%");
-            }
-            
+            $(".select2-container").css("width", "100%");
         }, 100);
 
     });

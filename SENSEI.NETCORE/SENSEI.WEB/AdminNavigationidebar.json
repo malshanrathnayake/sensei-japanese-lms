@@ -43,10 +43,5 @@
     "Title": "Student Payments",
     "Icon": "credit-card",
     "Url": "/AdminPortal/StudentPayments/Index"
-  },
-  {
-    "Title": "My Profile",
-    "Icon": "user",
-    "Url": "/AdminPortal/AdminProfile/Index"
   }
 ]

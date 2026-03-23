@@ -1,21 +1,277 @@
-﻿@{
-	ViewData["Title"] = "Home Page";
+@model SENSEI.WEB.Models.AdminDashboardViewModel
+@{
+    ViewData["Title"] = "Admin Dashboard";
 }
 
+<style>
+    /* Premium Dashboard Styling */
+    .stat-card {
+        border-radius: 20px;
+        border: 1px solid rgba(216, 50, 54, 0.08);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+        transition: all 0.3s ease;
+        background: #fff;
+        overflow: hidden;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 30px rgba(216, 50, 54, 0.1);
+    }
+
+    .stat-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+    }
+
+    .dashboard-action-btn {
+        border-radius: 14px;
+        padding: 1rem;
+        text-align: center;
+        transition: all 0.2s;
+        border: 1px dashed #dee2e6;
+        background: #fdfdfd;
+        color: var(--primary);
+        font-weight: 700;
+        text-decoration: none;
+        display: block;
+    }
+
+    .dashboard-action-btn:hover {
+        background: var(--accent-sakura);
+        border-color: var(--primary);
+        border-style: solid;
+        color: var(--primary);
+        transform: scale(1.02);
+    }
+
+    .activity-item {
+        padding: 12px 0;
+        border-bottom: 1px solid #f8f9fa;
+        transition: background 0.2s;
+    }
+
+    .activity-item:hover {
+        background: #fffafa;
+    }
+
+    .activity-item:last-child {
+        border-bottom: none;
+    }
+</style>
+
 <div class="container-fluid p-0">
+    <!-- Page Header & Welcome -->
+    <div class="row mb-5 align-items-center">
+        <div class="col-8">
+            <h1 class="h2 fw-900 text-dark mb-1">Welcome back, <span class="text-primary">@Context.Session.GetString("DisplayName")</span>!</h1>
+            <p class="text-muted small fw-600 mb-0">Here's what's happening at Sensei Japanese Center today.</p>
+        </div>
+        <div class="col-4 text-end">
+            <span class="badge bg-soft-primary text-primary px-3 py-2 rounded-pill fw-bold">
+                <i class="align-middle me-1" data-feather="calendar"></i> @DateTime.Now.ToString("dd MMM yyyy")
+            </span>
+        </div>
+    </div>
 
-	<h1 class="h3 mb-3">Home</h1>
+    <!-- Quick Stats Grid -->
+    <div class="row mb-4">
+        <div class="col-sm-6 col-xl-3">
+            <div class="card stat-card border-top border-4 border-primary">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col mt-0">
+                            <h5 class="card-title text-muted fw-bold small text-uppercase">Total Students</h5>
+                        </div>
+                        <div class="col-auto">
+                            <div class="stat-icon bg-soft-primary text-primary">
+                                <i data-feather="users"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <h1 class="mt-1 mb-3 fw-900">@Model.TotalStudents</h1>
+                    <div class="mb-0">
+                        <span class="text-success small fw-700"> <i class="mdi mdi-arrow-bottom-right"></i> Active learners </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+            <div class="card stat-card border-top border-4 border-info">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col mt-0">
+                            <h5 class="card-title text-muted fw-bold small text-uppercase">Pending Regs</h5>
+                        </div>
+                        <div class="col-auto">
+                            <div class="stat-icon bg-soft-info text-info">
+                                <i data-feather="user-plus"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <h1 class="mt-1 mb-3 fw-900 text-info">@Model.PendingRegistrations</h1>
+                    <div class="mb-0">
+                        <a href="@Url.Action("Index", "StudentRegistration", new { Area = "AdminPortal" })" class="text-info small fw-800 text-decoration-none">Review Requests &rarr;</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+            <div class="card stat-card border-top border-4 border-success">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col mt-0">
+                            <h5 class="card-title text-muted fw-bold small text-uppercase">Batches</h5>
+                        </div>
+                        <div class="col-auto">
+                            <div class="stat-icon bg-soft-success text-success">
+                                <i data-feather="layers"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <h1 class="mt-1 mb-3 fw-900">@Model.TotalBatches</h1>
+                    <div class="mb-0">
+                        <span class="text-muted small fw-600">Across @Model.TotalCourses courses</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+            <div class="card stat-card border-top border-4 border-warning">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col mt-0">
+                            <h5 class="card-title text-muted fw-bold small text-uppercase">Courses</h5>
+                        </div>
+                        <div class="col-auto">
+                            <div class="stat-icon bg-soft-warning text-warning">
+                                <i data-feather="book"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <h1 class="mt-1 mb-3 fw-900">@Model.TotalCourses</h1>
+                    <div class="mb-0">
+                        <span class="text-muted small fw-600">Active programs</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-	<div class="row">
-		<div class="col-12">
-			<div class="card">
-				<div class="card-header">
-					<h5 class="card-title mb-0">Home</h5>
-				</div>
-				<div class="card-body">
-				</div>
-			</div>
-		</div>
-	</div>
+    <div class="row">
+        <!-- Main Dashboard Column -->
+        <div class="col-12 col-lg-8">
+            <div class="card mb-4" style="border-radius: 20px; border: none; box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
+                <div class="card-header bg-white border-0 py-4 px-4 d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0 fw-800">Recent Registrations</h5>
+                    <a href="@Url.Action("Index", "StudentRegistration", new { Area = "AdminPortal" })" class="btn btn-sm btn-outline-primary rounded-pill px-3">View All</a>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="bg-light bg-opacity-50">
+                                <tr>
+                                    <th class="ps-4">Student Name</th>
+                                    <th>Course</th>
+                                    <th>Phone</th>
+                                    <th class="text-end pe-4">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if(Model.RecentRegistrations != null && Model.RecentRegistrations.Any()) {
+                                    foreach(var reg in Model.RecentRegistrations) {
+                                        <tr>
+                                            <td class="ps-4">
+                                                <div class="d-flex align-items-center">
+                                                    <div class="avatar-soft bg-soft-primary text-primary rounded-circle me-3 d-flex align-items-center justify-content-center" style="width: 35px; height: 35px;">
+                                                        @reg.FirstName[0]@reg.LastName[0]
+                                                    </div>
+                                                    <div>
+                                                        <div class="fw-bold text-dark">@reg.StudentRegistrationPopulatedName</div>
+                                                        <div class="text-muted smaller" style="font-size: 0.65rem;">@reg.CreatedDateTime.ToString("MMM dd, yyyy")</div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="vertical-align-middle">@reg.Course?.CourseName</td>
+                                            <td class="vertical-align-middle fw-600">@reg.PhoneNo</td>
+                                            <td class="text-end pe-4 vertical-align-middle">
+                                                @if (reg.IsApproved)
+                                                {
+                                                    <span class="badge bg-soft-success text-success rounded-pill px-3">Approved</span>
+                                                }
+                                                else if (reg.IsRejected)
+                                                {
+                                                    <span class="badge bg-soft-danger text-danger rounded-pill px-3">Rejected</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-soft-warning text-warning rounded-pill px-3">Pending</span>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                } else {
+                                    <tr>
+                                        <td colspan="4" class="text-center py-4 text-muted">No recent registrations found.</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
 
+        <!-- Sidebar Dashboard Column -->
+        <div class="col-12 col-lg-4">
+            <!-- Quick Actions -->
+            <div class="card mb-4" style="border-radius: 20px; border: none; box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
+                <div class="card-header bg-white border-0 py-4 px-4">
+                    <h5 class="card-title mb-0 fw-800 text-dark">Quick Actions</h5>
+                </div>
+                <div class="card-body pt-0 px-4 pb-4">
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <a href="@Url.Action("Index", "Batch", new { Area = "AdminPortal" })" class="dashboard-action-btn">
+                                <i class="d-block mb-1" data-feather="plus-circle"></i>
+                                New Batch
+                            </a>
+                        </div>
+                        <div class="col-6">
+                            <a href="@Url.Action("Index", "StudentRegistration", new { Area = "AdminPortal" })" class="dashboard-action-btn">
+                                <i class="d-block mb-1" data-feather="user-check"></i>
+                                Approvals
+                            </a>
+                        </div>
+                        <div class="col-6">
+                            <a href="@Url.Action("Index", "Course", new { Area = "AdminPortal" })" class="dashboard-action-btn">
+                                <i class="d-block mb-1" data-feather="book-open"></i>
+                                Our Courses
+                            </a>
+                        </div>
+                        <div class="col-6">
+                            <a href="@Url.Action("Index", "StudentPayments", new { Area = "AdminPortal" })" class="dashboard-action-btn">
+                                <i class="d-block mb-1" data-feather="credit-card"></i>
+                                Payments
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
 </div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            if (window.feather) { feather.replace(); }
+        });
+    </script>
+}
