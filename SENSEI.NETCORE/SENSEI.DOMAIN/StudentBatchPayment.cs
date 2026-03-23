@@ -24,7 +24,7 @@ namespace SENSEI.DOMAIN
         [DisplayName("Payment Date")]
         public DateTime? PaymentDate { get; set; }
 
-        [DisplayName("Slup URL")]
+        [DisplayName("Slip URL")]
         public string SlipUrl { get; set; }
 
         [DisplayName("Approved")]
