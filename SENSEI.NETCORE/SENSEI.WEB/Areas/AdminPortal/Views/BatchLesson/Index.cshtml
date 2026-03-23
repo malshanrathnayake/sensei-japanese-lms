@@ -164,12 +164,12 @@
                             var viewBtn = `<li><a class="dropdown-item d-flex align-items-center gap-2" href="${viewUrl}"> <i data-feather="eye"></i><span>View</span></a></li>`;
 
                             return `
-                                <div class="dropdown">
+                                <div class="dropdown action-dropdown">
                                     <button class="btn btn-sm btn-light p-1" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                         <i data-feather="more-vertical"></i>
                                     </button>
 
-                                    <ul class="dropdown-menu dropdown-menu-end">
+                                    <ul class="dropdown-menu dropdown-menu-end action-dropdown-menu">
                                         ${addReferenceBtn}
                                         ${editBtn}
                                         ${viewBtn}
