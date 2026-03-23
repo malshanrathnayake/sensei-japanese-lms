@@ -21,11 +21,22 @@ namespace SENSEI.DOMAIN
         [DisplayName("Amount")]
         public decimal Amount { get; set; }
 
+        [DisplayName("Payment Date")]
         public DateTime? PaymentDate { get; set; }
+
+        [DisplayName("Slup URL")]
         public string SlipUrl { get; set; }
+
+        [DisplayName("Approved")]
         public bool IsApproved { get; set; }
+
+        [DisplayName("Approved By")]
         public long? ApprovedById { get; set; }
+
+        [DisplayName("Changed Date")]
         public DateTime? ChangeDateTIme { get; set; }
+
+        [DisplayName("Rejected")]
         public bool IsRejected { get; set; }
 
         [DisplayName("Is Deleted")]

@@ -44,6 +44,7 @@ namespace SENSEI.DOMAIN
         [DisplayName("Is Deleted")]
         public bool IsDeleted { get; set; }
 
+        [DisplayName("Full Name")]
         public string StaffPopulatedName
         {
             get
@@ -58,6 +59,7 @@ namespace SENSEI.DOMAIN
             }
         }
 
+        [DisplayName("Phone Number")]
         public string PhoneNo { get; set; }
 
         // Navigation

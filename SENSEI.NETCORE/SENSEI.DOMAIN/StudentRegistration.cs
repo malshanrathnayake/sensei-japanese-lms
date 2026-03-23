@@ -84,6 +84,7 @@ namespace SENSEI.DOMAIN
         [DisplayName("Course *")]
         public long CourseId { get; set; }
 
+        [DisplayName("Full Name")]
         public string StudentRegistrationPopulatedName
         {
             get
@@ -100,9 +101,15 @@ namespace SENSEI.DOMAIN
 
         [ValidateNever]
         public string EncryptedKey { get; set; }
+
+        [DisplayName("Created Date")]
         public DateTime CreatedDateTime { get; set; }
+
+        [DisplayName("Rejected")]
         public bool IsRejected { get; set; }
+
         [ValidateNever]
+        [DisplayName("Comment")]
         public string RejectionComment { get; set; }
 
         [Required(ErrorMessage = "Country is required.")]

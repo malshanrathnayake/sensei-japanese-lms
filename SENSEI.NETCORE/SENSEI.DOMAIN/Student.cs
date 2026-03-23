@@ -77,6 +77,7 @@ namespace SENSEI.DOMAIN
         [DisplayName("Learning Mode *")]
         public int StudentLearningModeId { get; set; }
 
+        [DisplayName("Full Name")]
         public string StudentPopulatedName
         {
             get
