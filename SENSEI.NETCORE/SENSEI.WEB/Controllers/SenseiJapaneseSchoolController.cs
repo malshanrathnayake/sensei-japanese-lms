@@ -161,6 +161,17 @@ namespace SENSEI.WEB.Controllers
                 return RedirectToAction("Login");
             }
 
+            if (!user.IsActive)
+            {
+                TempData.AddNotification(new NotificationMessage
+                {
+                    Type = "Error",
+                    Message = "Your account is not active."
+                });
+
+                return RedirectToAction("Login");
+            }
+
             HttpContext.Session.SetString("UserId", user.UserId.ToString());
             HttpContext.Session.SetString("UserName", user.userName);
             HttpContext.Session.SetString("DisplayName", user.Staff != null ? user.Staff.StaffPopulatedName : user.Student.StudentPopulatedName);
@@ -352,6 +363,17 @@ namespace SENSEI.WEB.Controllers
                 {
                     Type = "Error",
                     Message = "Your account is not registered."
+                });
+
+                return RedirectToAction("Login");
+            }
+
+            if (!user.IsActive)
+            {
+                TempData.AddNotification(new NotificationMessage
+                {
+                    Type = "Error",
+                    Message = "Your account is not active."
                 });
 
                 return RedirectToAction("Login");
