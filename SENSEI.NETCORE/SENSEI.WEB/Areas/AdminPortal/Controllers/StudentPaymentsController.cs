@@ -79,11 +79,11 @@ namespace SENSEI.WEB.Areas.AdminPortal.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Approve(long StudentBatchPaymentId)
+        public async Task<IActionResult> Approve(long StudentBatchPaymentId, DateTime PaymentMonth)
         {
             var userId = Convert.ToInt64(HttpContext.Session.GetString("UserId"));
 
-            var result = await _studentPaymentService.ApproveStudentBatchPayment(StudentBatchPaymentId, userId);
+            var result = await _studentPaymentService.ApproveStudentBatchPayment(StudentBatchPaymentId, userId, PaymentMonth);
 
             if (result)
             {

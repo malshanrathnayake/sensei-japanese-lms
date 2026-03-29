@@ -59,12 +59,13 @@ namespace SENSEI.BLL.AdminPortalService
             return studentBatchPayment.FirstOrDefault();
         }
 
-        public async Task<bool> ApproveStudentBatchPayment(long studentBatchPaymentId, long approvedById)
+        public async Task<bool> ApproveStudentBatchPayment(long studentBatchPaymentId, long approvedById, DateTime paymentMonth)
         {
             var approveData = new
             {
                 StudentBatchPaymentId = studentBatchPaymentId,
-                ApprovedById = approvedById
+                ApprovedById = approvedById,
+                PaymentMonth = paymentMonth
             };
 
             string jsonString = JsonConvert.SerializeObject(approveData);
