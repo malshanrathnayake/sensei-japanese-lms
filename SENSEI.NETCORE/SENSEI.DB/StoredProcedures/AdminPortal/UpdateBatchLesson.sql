@@ -10,13 +10,14 @@ BEGIN
 
     BEGIN TRY
 
-        DECLARE @batchLessonId BIGINT, @batchId BIGINT;
+        DECLARE @batchLessonId BIGINT, @batchId BIGINT, @lessonDateTime DATETIME;
 
-        SELECT @batchLessonId = [BatchLessonId], @batchId = [BatchId]
+        SELECT @batchLessonId = [BatchLessonId], @batchId = [BatchId], @lessonDateTime = [LessonDateTime]
         FROM OPENJSON(@jsonString, '$')
         WITH (
             [BatchLessonId] BIGINT,
-            [BatchId] BIGINT
+            [BatchId] BIGINT,
+            [LessonDateTime] DATETIMEOFFSET
         );
 
         IF (ISNULL(@batchLessonId, 0) = 0)
@@ -43,7 +44,7 @@ BEGIN
             SELECT  @primaryKey, sb.StudentId, 1
             FROM StudentBatch sb
             WHERE sb.BatchId = @batchId
-            AND sb.StudentBatchId IN (SELECT StudentBatchId FROM StudentBatchPayment WHERE StudentBatchId = sb.StudentBatchId )
+            AND sb.StudentBatchId IN (SELECT StudentBatchId FROM StudentBatchPayment WHERE StudentBatchId = sb.StudentBatchId AND MONTH(PaymentMonth) = MONTH(@lessonDateTime) AND YEAR(PaymentMonth) = YEAR(@lessonDateTime))
 
         END
         ELSE

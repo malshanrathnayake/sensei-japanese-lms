@@ -11,14 +11,15 @@ BEGIN
 
 	BEGIN TRY
 
-		DECLARE @studentBatchPaymentId BIGINT, @approvedById BIGINT, @batchId BIGINT, @studentId BIGINT;
+		DECLARE @studentBatchPaymentId BIGINT, @approvedById BIGINT, @batchId BIGINT, @studentId BIGINT, @paymentMonth DATETIME
 
-		SELECT @studentBatchPaymentId = [StudentBatchPaymentId], @approvedById = [ApprovedById]
+		SELECT @studentBatchPaymentId = [StudentBatchPaymentId], @approvedById = [ApprovedById], @paymentMonth = [PaymentMonth]
 		FROM OPENJSON(@jsonString, '$')
 		WITH
 		(
 			[StudentBatchPaymentId] BIGINT,
-			[ApprovedById] BIGINT
+			[ApprovedById] BIGINT,
+			[PaymentMonth] DATETIMEOFFSET
 		);
 
 		SELECT @batchId = BatchId, @studentId = StudentId
@@ -31,7 +32,7 @@ BEGIN
 		INSERT INTO BatchStudentLessonAccess([BatchLessonId], [StudentId], [HasAccess])
 		SELECT BatchLessonId , @studentId, 1
 		FROM BatchLesson BL
-		WHERE BL.BatchId = @batchId
+		WHERE BL.BatchId = @batchId AND MONTH(BL.LessonDateTime) = MONTH(@paymentMonth) AND YEAR(BL.LessonDateTime) = YEAR(@paymentMonth)
 
 		COMMIT TRANSACTION;
 		SET @executionStatus = 1;
