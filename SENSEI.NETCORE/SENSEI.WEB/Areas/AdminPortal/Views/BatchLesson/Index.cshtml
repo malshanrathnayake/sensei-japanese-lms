@@ -72,6 +72,7 @@
         $(document).ready(function () {
 
             $('#SearchBatchId').change(function () {
+                updateUrlParameter('page', 1);
                 loadBatchLessons();
             });
 
@@ -102,12 +103,18 @@
                 $('#BatchLessonDataTable tbody').empty();
             }
 
-            $('#BatchLessonDataTable').DataTable({
+            const urlParams = new URLSearchParams(window.location.search);
+            const pageParam = urlParams.get('page');
+            const pageLength = 25;
+            const startPage = pageParam ? (parseInt(pageParam) - 1) * pageLength : 0;
+
+            var table = $('#BatchLessonDataTable').DataTable({
                 processing: true,
                 serverSide: true,
                 autoWidth: false,
                 lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
-                pageLength: 25,
+                pageLength: pageLength,
+                displayStart: startPage,
                 columnDefs: [
                     { targets: 0, className: 'noVis ps-3' },
                     { width: 40, targets: 0, orderable: false },
@@ -168,6 +175,17 @@
                     addBatchLessonReferenceButton();
                 }
             });
+
+            table.on('page.dt', function () {
+                var info = table.page.info();
+                updateUrlParameter('page', info.page + 1);
+            });
+        }
+
+        function updateUrlParameter(key, value) {
+            var url = new URL(window.location.href);
+            url.searchParams.set(key, value);
+            window.history.replaceState({ path: url.href }, '', url.href);
         }
 
         function renderDateOnly(data) {
