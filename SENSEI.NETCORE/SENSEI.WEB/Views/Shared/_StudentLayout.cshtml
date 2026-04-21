@@ -156,6 +156,12 @@
         .jp-wm-2 { bottom: 5%; right: 2%; font-size: 6rem; }
         .jp-wm-3 { top: 40%; right: 5%; font-size: 4rem; opacity: 0.02; }
 
+        @@media (max-width: 768px) {
+            .jp-wm-1 { font-size: 4rem; }
+            .jp-wm-2 { font-size: 3rem; }
+            .jp-wm-3 { font-size: 2rem; }
+        }
+
 		.sidebar-brand span {
 			font-family: 'Noto Serif JP', serif !important;
             letter-spacing: 0.05em;
@@ -277,6 +283,19 @@
         .content {
             padding: 1.5rem !important;
             width: 100% !important;
+        }
+
+        @@media (max-width: 576px) {
+            .content { padding: 1rem !important; }
+            .sidebar {
+                position: fixed;
+                left: -260px;
+                height: 100vh;
+                z-index: 1050;
+            }
+            .sidebar.collapsed {
+                left: 0;
+            }
         }
 	</style>
 </head>

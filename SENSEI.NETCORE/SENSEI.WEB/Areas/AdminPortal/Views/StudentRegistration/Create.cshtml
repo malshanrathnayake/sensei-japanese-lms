@@ -26,16 +26,38 @@
     .input-group-text { border-radius: 10px 0 0 10px; border: 1.5px solid #e2e8f0; border-right: none; background-color: #f8fafc; color: #64748b; }
     .alert-soft-primary { background-color: #f0f7ff; border: 1px solid #e0efff; color: #007bff; border-radius: 12px; }
     .select2-container { width: 100% !important; }
+
+    /* Mobile Enhancements */
+    @@media (max-width: 768px) {
+        .card-header { padding: 1.25rem !important; }
+        .card-body { padding: 1.25rem !important; }
+        .h3 { font-size: 1.25rem !important; }
+        .btn-primary { width: 100% !important; margin-bottom: 0.5rem; }
+        .d-flex.gap-3 { flex-direction: column; width: 100%; gap: 1rem !important; }
+        .btn-link { width: 100%; order: 2; }
+        .btn-primary { order: 1; }
+        
+        #learning-mode-buttons { margin-bottom: 1.5rem; }
+        .card-title { font-size: 1rem !important; }
+    }
 </style>
 
 
 <div class="container-fluid p-0">
 
-    <div class="mb-3">
-        <h1 class="h3 d-inline align-middle">New Student Registration</h1>
-        <a href="@Url.Action("Index", "StudentRegistration", new { area = "AdminPortal" })" class="btn btn-outline-secondary btn-sm float-end">
-            <i class="fas fa-arrow-left me-1"></i> Back to List
-        </a>
+    <div class="d-flex justify-content-between align-items-center mb-4 mt-2">
+        <div class="d-flex align-items-center gap-3">
+            <a href="@Url.Action("Index", "StudentRegistration", new { area = "AdminPortal" })" 
+               class="btn btn-white shadow-sm rounded-circle d-flex align-items-center justify-content-center" 
+               style="width: 40px; height: 40px; border: 1px solid #f1f5f9; background: #fff;"
+               title="Back to List">
+                <i class="fas fa-chevron-left text-muted" style="font-size: 0.9rem;"></i>
+            </a>
+            <div>
+                <h1 class="h3 mb-0 fw-bold text-dark">New Student Registration</h1>
+                <p class="text-muted small mb-0">Create and instantly approve a new student admission.</p>
+            </div>
+        </div>
     </div>
 
     <form asp-action="Create" asp-controller="StudentRegistration" asp-area="AdminPortal" method="post" id="student-create-form">
@@ -67,10 +89,6 @@
                             <div class="col-md-6 mb-3">
                                 <label class="form-label" asp-for="Initials"><i class="fas fa-id-card me-1"></i> Initials (Optional)</label>
                                 @Html.TextBoxFor(m => m.Initials, new { @class = "form-control", placeholder = "e.g. A.B.C." })
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label" asp-for="CallingName"><i class="fas fa-comment-dots me-1"></i> Calling Name (Optional)</label>
-                                @Html.TextBoxFor(m => m.CallingName, new { @class = "form-control", placeholder = "Nickname" })
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label" asp-for="NIC"><i class="fas fa-fingerprint me-1"></i> NIC Number *</label>
@@ -109,10 +127,6 @@
                                 @Html.TextBoxFor(m => m.AddressLineOne, new { @class = "form-control", placeholder = "Street Address" })
                                 <span asp-validation-for="AddressLineOne" class="text-danger"></span>
                             </div>
-                            <div class="col-12 mb-3">
-                                <label class="form-label" asp-for="AddressLineTwo">Address Line Two (Optional)</label>
-                                @Html.TextBoxFor(m => m.AddressLineTwo, new { @class = "form-control", placeholder = "Apartment, suite, etc." })
-                            </div>
 
                             <div class="col-6 mb-3">
                                 <div class="mb-3" id="country-wrapper">
@@ -130,10 +144,6 @@
                             <div class="col-md-6 mb-3">
                                 <label class="form-label" asp-for="State">State / Region (Optional)</label>
                                 @Html.TextBoxFor(m => m.State, new { @class = "form-control", placeholder = "State / Province" })
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label" asp-for="PostalCode">Postal Code (Optional)</label>
-                                @Html.TextBoxFor(m => m.PostalCode, new { @class = "form-control", placeholder = "Postal Code" })
                             </div>
                         </div>
                     </div>
@@ -209,10 +219,15 @@
 
         <div class="row mb-5">
             <div class="col-12 text-center">
-                <hr />
-                <button type="submit" class="btn btn-primary btn-lg ladda-button" id="btnSubmitRegistration" data-style="zoom-in" style="min-width: 200px;">
-                    <span class="ladda-label"><i class="fas fa-save me-2"></i> Register & Approve Student</span>
-                </button>
+                <hr class="my-4" />
+                <div class="d-flex align-items-center justify-content-center gap-3 mobile-form-actions">
+                    <button type="submit" class="btn btn-primary btn-lg ladda-button" id="btnSubmitRegistration" data-style="zoom-in">
+                        <span class="ladda-label"><i class="fas fa-save me-2"></i> Register & Approve Student</span>
+                    </button>
+                    <a href="@Url.Action("Index", "StudentRegistration", new { area = "AdminPortal" })" class="btn btn-link text-muted fw-bold text-decoration-none">
+                        Cancel & Return
+                    </a>
+                </div>
             </div>
         </div>
 

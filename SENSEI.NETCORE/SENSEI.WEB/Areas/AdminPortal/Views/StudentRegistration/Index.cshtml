@@ -1,33 +1,179 @@
 @using SENSEI.DOMAIN
 @using core_web.Helpers
-@model StudentRegistration
+@model SENSEI.DOMAIN.StudentRegistration
 
 @{
     ViewData["Title"] = "Registration Management";
 }
 
+<style>
+    .avatar-circle {
+        width: 38px;
+        height: 38px;
+        background: linear-gradient(135deg, var(--sensei-red) 0%, var(--sensei-red-dark) 100%);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        font-weight: 800;
+        font-size: 0.85rem;
+        box-shadow: 0 4px 10px rgba(216, 50, 54, 0.2);
+    }
+    .stats-card-premium {
+        border: none !important;
+        border-radius: 20px !important;
+        background: white;
+        transition: all 0.3s ease;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.02) !important;
+    }
+    .stats-card-premium:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(0,0,0,0.05) !important;
+    }
+    .stats-icon-box {
+        width: 48px;
+        height: 48px;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+    }
+    #StudentRegistrationDataTable thead th {
+        background-color: #f8f9fa;
+        color: #495057;
+        font-weight: 800;
+        text-transform: uppercase;
+        font-size: 0.65rem;
+        letter-spacing: 0.08em;
+        padding: 1rem;
+        border-bottom: 2px solid #f1f3f5;
+    }
+    .badge-premium {
+        padding: 6px 12px;
+        border-radius: 50px;
+        font-weight: 800;
+        font-size: 0.65rem;
+        letter-spacing: 0.05em;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+
+    /* Mobile Enhancements */
+    @@media (max-width: 768px) {
+        .stats-card-premium { margin-bottom: 1rem; }
+        .stats-icon-box { width: 40px; height: 40px; font-size: 1rem; }
+        .stats-card-premium h3 { font-size: 1.25rem; }
+        .stats-card-premium h6 { font-size: 0.6rem; }
+        .stats-card-premium .card-body { padding: 1.25rem !important; }
+        
+        .hide-mobile { display: none !important; }
+        .table-responsive { border: none !important; }
+        
+        .btn-new-mobile { width: 100%; margin-top: 1rem; }
+        .page-header-mobile { flex-direction: column; align-items: flex-start !important; }
+    }
+
+    @@media (max-width: 576px) {
+        .row-cols-mobile-2 > * {
+            flex: 0 0 50%;
+            max-width: 50%;
+        }
+    }
+</style>
+
 <div class="container-fluid p-0">
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-4 page-header-mobile">
         <div>
             <h1 class="h3 mb-1 fw-bold">Student Registrations</h1>
             <p class="text-muted small mb-0">Review and approve incoming student admission requests.</p>
         </div>
 
-        <button type="button" class="btn btn-primary px-4 rounded-pill shadow-sm" id="btnNewStudentRegister" data-action-url="/AdminPortal/StudentRegistration/Create">
+        <button type="button" class="btn btn-primary px-4 rounded-pill shadow-sm btn-new-mobile" id="btnNewStudentRegister" data-action-url="/AdminPortal/StudentRegistration/Create">
             <i class="fas fa-plus me-2"></i> New Registration
         </button>
     </div>
 
-    <!-- Filter Section -->
-    <div class="card border-0 shadow-sm mb-4" style="border-radius: 1rem;">
-        <div class="card-header bg-white py-3">
-            <h5 class="card-title mb-0 fw-800"><i class="fas fa-filter me-2 text-primary"></i> Filter by Course</h5>
+    <!-- Statistics Row -->
+    <div class="row mb-2 row-cols-mobile-2">
+        <div class="col-md-3 mb-3">
+            <div class="card stats-card-premium h-100">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center">
+                        <div class="stats-icon-box bg-soft-warning text-warning me-3">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div>
+                            <h6 class="text-muted small fw-bold text-uppercase mb-1">Pending</h6>
+                            <h3 class="mb-0 fw-900" id="stat-pending">--</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="card-body">
-            <div class="row g-3">
+        <div class="col-md-3 mb-3">
+            <div class="card stats-card-premium h-100">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center">
+                        <div class="stats-icon-box bg-soft-success text-success me-3">
+                            <i class="fas fa-check-double"></i>
+                        </div>
+                        <div>
+                            <h6 class="text-muted small fw-bold text-uppercase mb-1">Approved</h6>
+                            <h3 class="mb-0 fw-900" id="stat-approved">--</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card stats-card-premium h-100">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center">
+                        <div class="stats-icon-box bg-soft-danger text-danger me-3">
+                            <i class="fas fa-times-circle"></i>
+                        </div>
+                        <div>
+                            <h6 class="text-muted small fw-bold text-uppercase mb-1">Rejected</h6>
+                            <h3 class="mb-0 fw-900" id="stat-rejected">--</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card stats-card-premium h-100">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center">
+                        <div class="stats-icon-box bg-soft-primary text-primary me-3">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div>
+                            <h6 class="text-muted small fw-bold text-uppercase mb-1">Total</h6>
+                            <h3 class="mb-0 fw-900" id="stat-total">--</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filter Section -->
+    <div class="card border-0 shadow-sm mb-4" style="border-radius: 1.25rem;">
+        <div class="card-header bg-white py-3 border-0">
+            <h5 class="card-title mb-0 fw-900 fs-6"><i class="fas fa-sliders-h me-2 text-primary"></i> Control Panel</h5>
+        </div>
+        <div class="card-body pt-0">
+            <div class="row g-3 align-items-end">
                 <div class="col-md-4">
+                    <label class="form-label text-muted small fw-bold text-uppercase mb-2">Filter by Course</label>
                     <select id="SearchCourseId" class="form-control select2 search-course-select shadow-none border-light-subtle bg-light"></select>
+                </div>
+                <div class="col-md-2 ms-auto">
+                    <button type="button" class="btn btn-outline-primary w-100 rounded-pill fw-bold small" onclick="loadStudentRegistrations()">
+                        <i class="fas fa-sync-alt me-2"></i> Refresh
+                    </button>
                 </div>
             </div>
         </div>
@@ -45,11 +191,11 @@
                         <tr>
                             <th class="ps-4" style="width: 40px;"></th>
                             <th>Student</th>
-                            <th>Applied Course</th>
-                            <th>Mode</th>
-                            <th>Contact Info</th>
-                            <th>Submission Date</th>
-                            <th>Status</th>
+                            <th class="hide-mobile">Applied Course</th>
+                            <th class="hide-mobile">Mode</th>
+                            <th class="hide-mobile">Contact Info</th>
+                            <th class="hide-mobile">Submission Date</th>
+                            <th class="text-center">Status</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -97,8 +243,18 @@
             });
 
             loadStudentRegistrations();
+            loadRegistrationStats();
 
         });
+
+        function loadRegistrationStats() {
+            $.getJSON('/AdminPortal/StudentRegistration/GetRegistrationStats', function (data) {
+                $('#stat-pending').text(data.pending);
+                $('#stat-approved').text(data.approved);
+                $('#stat-rejected').text(data.rejected);
+                $('#stat-total').text(data.total);
+            });
+        }
 
         function loadStudentRegistrations() {
 
@@ -114,7 +270,9 @@
                 lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
                 pageLength: 25,
                 columnDefs: [
+                    { targets: [2, 3, 4, 5], className: 'hide-mobile' },
                     { targets: 0, className: 'noVis ps-3' },
+                    { targets: 6, className: 'text-center' },
                     { width: 40, targets: 0, orderable: false },
                 ],
                 dom:
@@ -136,10 +294,13 @@
 
                             var approveUrl = `/AdminPortal/StudentRegistration/Approve/?q=${row.encryptedKey}`;
                             var rejectUrl = `/AdminPortal/StudentRegistration/Reject/?q=${row.encryptedKey}`;
-                            var isFinalized = row.isApproved || row.isRejected;
+                            var isFinalized = row.isApproved; 
+                            var isRejected = row.isRejected;
 
-                            var approveAction = `<li><a class="dropdown-item d-flex align-items-center gap-2 text-success ${isFinalized ? 'disabled opacity-50' : 'approve-registration'}" href="javascript:void(0)" data-action-url="${approveUrl}"> <i data-feather="check-circle" style="width: 14px; height: 14px;"></i><span>Approve Admission</span></a></li>`;
+                            var approveActionText = isRejected ? "Review & Re-Approve" : "Approve Admission";
+                            var approveAction = `<li><a class="dropdown-item d-flex align-items-center gap-2 text-success ${isFinalized ? 'disabled opacity-50' : 'approve-registration'}" href="javascript:void(0)" data-action-url="${approveUrl}"> <i data-feather="${isRejected ? 'refresh-cw' : 'check-circle'}" style="width: 14px; height: 14px;"></i><span>${approveActionText}</span></a></li>`;
                             var rejectAction = `<li><a class="dropdown-item d-flex align-items-center gap-2 text-danger ${isFinalized ? 'disabled opacity-50' : 'reject-registration'}" href="javascript:void(0)" data-action-url="${rejectUrl}" data-action-parameter="${row.studentRegistrationPopulatedName}"><i data-feather="x-circle" style="width: 14px; height: 14px;"></i><span>Reject admission</span></a></li>`;
+                            var detailsUrl = `/AdminPortal/StudentRegistration/Details/?q=${row.encryptedKey}`;
 
                             return `
                                 <div class="dropdown">
@@ -151,7 +312,7 @@
                                         ${approveAction}
                                         ${rejectAction}
                                         <div class="dropdown-divider"></div>
-                                        <li><a class="dropdown-item d-flex align-items-center gap-2" href="javascript:void(0)"><i data-feather="eye" style="width: 14px; height: 14px;"></i>View Details</a></li>
+                                        <li><a class="dropdown-item d-flex align-items-center gap-2 view-registration-details" href="javascript:void(0)" data-action-url="${detailsUrl}"><i data-feather="eye" style="width: 14px; height: 14px;"></i>View Details</a></li>
                                     </ul>
                                 </div>`;
                         }
@@ -160,7 +321,16 @@
                         data: 'studentRegistrationPopulatedName', 
                         name:'studentRegistrationPopulatedName',
                         render: function(data, type, row) {
-                            return `<div class="fw-bold text-dark">${data}</div><div class="text-muted smaller">${row.email}</div>`;
+                            var detailsUrl = `/AdminPortal/StudentRegistration/Details/?q=${row.encryptedKey}`;
+                            var initial = data.substring(0, 1).toUpperCase();
+                            return `
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="avatar-circle">${initial}</div>
+                                    <div>
+                                        <div class="fw-bold text-dark"><a href="javascript:void(0)" class="text-dark text-decoration-none view-registration-details" data-action-url="${detailsUrl}">${data}</a></div>
+                                        <div class="text-muted smaller">${row.email}</div>
+                                    </div>
+                                </div>`;
                         }
                     },
                     { data: 'course.courseName', name:'course.courseName' },
@@ -179,19 +349,22 @@
                         orderable: false, 
                         render: function (data, type, row) {
                             if (row.isApproved) {
-                                return `<span class="badge bg-soft-success text-success border-0 px-3 py-2 rounded-pill fw-bold" style="font-size: 0.65rem; letter-spacing: 0.05em;">APPROVED</span>`;
+                                return `<span class="badge badge-premium bg-soft-success text-success border-0 rounded-pill">APPROVED</span>`;
                             }
                             if (row.isRejected) {
-                                return `<span class="badge bg-soft-danger text-danger border-0 px-3 py-2 rounded-pill fw-bold" style="font-size: 0.65rem; letter-spacing: 0.05em;">REJECTED</span>`;
+                                return `<span class="badge badge-premium bg-soft-danger text-danger border-0 rounded-pill">REJECTED</span>`;
                             }
-                            return `<span class="badge bg-soft-warning text-warning border-0 px-3 py-2 rounded-pill fw-bold" style="font-size: 0.65rem; letter-spacing: 0.05em;">PENDING</span>`;
+                            return `<span class="badge badge-premium bg-soft-warning text-warning border-0 rounded-pill">PENDING</span>`;
                         }
                     }
                 ],
-                drawCallback: function () {
+                drawCallback: function (settings) {
                     if (window.feather) { feather.replace(); }
                     approveButton();
                     rejectButton();
+                    viewDetailsButton();
+
+                    loadRegistrationStats();
                 }
             });
         }

@@ -1,4 +1,4 @@
-﻿var registrationSaveLadda;
+var registrationSaveLadda;
 
 
 function loadBatchDropdown() {
@@ -151,5 +151,17 @@ function onRejectCreateComplete() {
     if (batchSaveLadda) {
         batchSaveLadda.stop();
     }
+}
+
+
+function viewDetailsButton() {
+    $(".view-registration-details").on("click", function () {
+        var actionUrl = $(this).data("action-url");
+        $("#studentRegistration-offcanvas-content").load(actionUrl, function () {
+            var offcanvasEl = document.getElementById('studentRegistrationOffcanvas');
+            var offcanvas = new bootstrap.Offcanvas(offcanvasEl);
+            offcanvas.show();
+        });
+    });
 }
 

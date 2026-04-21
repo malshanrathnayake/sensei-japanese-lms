@@ -66,6 +66,25 @@ namespace SENSEI.WEB.Areas.AdminPortal.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> GetStudentStats()
+        {
+            var (list, count) = await _studentService.SearchStudent(0, 0, 0, 10000);
+            
+            // For now let's show Total, and maybe filter by some criteria if available in the model
+            // If the model has IsActive, we can use that. Let's stick to Total and maybe 'New' if we have date.
+            
+            var total = count;
+            var active = list.Count(x => x.IsActive); 
+            var newThisMonth = 0; // The Student model doesn't have a creation date field.
+
+            return Json(new { 
+                total = total, 
+                active = active, 
+                newThisMonth = newThisMonth 
+            });
+        }
+
+        [HttpGet]
         public async Task<JsonResult> GetCourseListJsonResult()
         {
             var courses = await _courseService.GetCourses();

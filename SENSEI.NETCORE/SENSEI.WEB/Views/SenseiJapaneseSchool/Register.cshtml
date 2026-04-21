@@ -67,6 +67,11 @@
         transform: rotate(-10deg);
     }
 
+    @@media (max-width: 768px) {
+        body::before { font-size: 8rem; }
+        body::after { font-size: 6rem; top: 10%; }
+    }
+
     .card {
         background: var(--glass-bg) !important;
         backdrop-filter: blur(20px);
@@ -127,11 +132,20 @@
         letter-spacing: 0.02em;
         box-shadow: 0 15px 35px rgba(216, 50, 54, 0.35) !important;
         transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+        width: auto;
     }
 
     .btn-primary:hover {
         transform: translateY(-4px) scale(1.02);
         box-shadow: 0 20px 45px rgba(216, 50, 54, 0.45) !important;
+    }
+
+    @@media (max-width: 576px) {
+        .btn-primary {
+            padding: 1rem 2rem !important;
+            font-size: 1rem !important;
+            width: 100%;
+        }
     }
 
     /* Navigation Header Refinement */
@@ -173,6 +187,12 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
+    }
+
+    @@media (max-width: 576px) {
+        .nav-container { padding: 0.4rem 1rem; }
+        .brand-logo-small { width: 40px; height: 40px; }
+        .brand-name-img { height: 1.2rem; }
     }
 
     .nav-brand {
@@ -405,9 +425,19 @@
     }
     
     @@media (max-width: 768px) {
-        .nav-links { display: none; }
-        .nav-header { padding: 1rem 1.5rem; }
-        .register-wrapper { padding-top: 100px; }
+        .nav-links { display: flex; gap: 0.25rem; }
+        .nav-links a { padding: 0.5rem 0.8rem; font-size: 0.8rem; }
+        .nav-links a span, .nav-links a i { display: inline-block; }
+        .btn-link-home i { margin-right: 0; }
+        .nav-header { padding: 0.5rem 0; }
+        .register-wrapper { padding-top: 90px; }
+        .register-header h1 { font-size: 1.8rem; }
+        .brand-text { display: none; } /* Hide text on very small to save space if needed, or keep for branding */
+    }
+
+    @@media (max-width: 480px) {
+        .nav-links a { padding: 0.4rem 0.6rem; }
+        .nav-links a:not(.btn-link-home) { display: none; } /* Keep only Home for minimal space */
     }
 
 </style>
@@ -487,15 +517,10 @@
                                 <span asp-validation-for="LastName" class="text-danger"></span>
                             </div>
 
-                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 mb-4">
-                                <label class="form-label" asp-for="CallingName"><i class="fas fa-comment-dots"></i> Calling Name (Optional)</label>
-                                @Html.TextBoxFor(m => m.CallingName, new { @class = "form-control", placeholder = "Calling Name" })
-                                @* <span asp-validation-for="CallingName" class="text-danger"></span> *@
-                            </div>
 
                             <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 mb-4">
                                 <label class="form-label" asp-for="NIC"><i class="fas fa-fingerprint"></i> NIC *</label>
-                                @Html.TextBoxFor(m => m.NIC, new { @class = "form-control", placeholder = "Identity Card No" })
+                                @Html.TextBoxFor(m => m.NIC, new { @class = "form-control", placeholder = "Identity Card No", inputmode = "numeric" })
                                 <span asp-validation-for="NIC" class="text-danger"></span>
                             </div>
 
@@ -528,17 +553,7 @@
                                 <span asp-validation-for="AddressLineOne" class="text-danger"></span>
                             </div>
 
-                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 mb-4">
-                                <label class="form-label" asp-for="AddressLineTwo"><i class="fas fa-building"></i> Address Line Two (Optional)</label>
-                                @Html.TextBoxFor(m => m.AddressLineTwo, new { @class = "form-control", placeholder = "Apt / Suite / Floor (Optional)" })
-                                <span asp-validation-for="AddressLineTwo" class="text-danger"></span>
-                            </div>
 
-                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 mb-4">
-                                <label class="form-label" asp-for="PostalCode"><i class="fas fa-mail-bulk"></i> Postal Code (Optional)</label>
-                                @Html.TextBoxFor(m => m.PostalCode, new { @class = "form-control", placeholder = "Zip Code" })
-                                <span asp-validation-for="PostalCode" class="text-danger"></span>
-                            </div>
 
                             <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 mb-4">
                                 <div id="country-wrapper">
@@ -562,7 +577,7 @@
 
                             <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 mb-4">
                                 <label class="form-label d-block" asp-for="PhoneNo"><i class="fas fa-phone-alt"></i> Phone Number *</label>
-                                @Html.TextBoxFor(m => m.PhoneNo, new { @class = "form-control w-100", id = "PhoneNo", type = "tel" })
+                                @Html.TextBoxFor(m => m.PhoneNo, new { @class = "form-control w-100", id = "PhoneNo", type = "tel", inputmode = "tel" })
                                 <input type="hidden" name="IntelPhoneNO" id="IntelPhoneNO"/>
                                 @* <span id="phone-error" class="text-danger d-none mt-1 small">Please enter exactly 9 digits (no leading 0).</span> *@
                                 <span id="phone-error" class="text-danger d-none mt-1 small">Invalid Phone Number</span>

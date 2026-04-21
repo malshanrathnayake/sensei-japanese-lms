@@ -281,8 +281,22 @@ header.scrolled .brand-name-img {
 
     .nav-links .btn-login {
         width: 100%;
-        margin-top: 1rem;
+        margin-top: 2rem;
+        padding: 1.1rem;
+        font-size: 1.1rem;
         text-align: center;
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+        box-shadow: 0 15px 35px rgba(216, 50, 54, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .nav-links .btn-login::before {
+        content: "\f2f6";
+        font-family: "Font Awesome 6 Free";
+        font-weight: 900;
     }
 }
 

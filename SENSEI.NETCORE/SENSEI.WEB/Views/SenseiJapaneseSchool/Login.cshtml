@@ -1,4 +1,4 @@
-﻿@{
+@{
 	Layout = "~/Views/Shared/_AuthLayout.cshtml";
 	ViewData["Title"] = "Sign In";
     ViewData["MetaDescription"] = "Sensei Japanese Center offers professional Japanese language courses, JLPT preparation, and cultural training programs in Sri Lanka. Start your journey to Japan with us.";
@@ -203,6 +203,14 @@
         letter-spacing: -1px;
     }
 
+    @@media (max-width: 576px) {
+        .login-title { font-size: 1.8rem; }
+        .login-subtitle { font-size: 1rem; margin-bottom: 30px; }
+        .login-card { padding: 35px 25px; border-radius: 24px; }
+        .brand-logo { width: 80px; height: 80px; }
+        .logo-box { margin-bottom: 25px; }
+    }
+
     .login-subtitle {
         color: var(--text-muted);
         font-size: 1.15rem;
@@ -302,13 +310,20 @@
         user-select: none;
     }
 
+    @@media (max-width: 768px) {
+        .jp-watermark { font-size: 8rem; }
+    }
+
     .jp-pos-1 { top: 10%; right: -5%; transform: rotate(15deg); }
     .jp-pos-2 { bottom: 10%; left: -5%; transform: rotate(-15deg); }
 
     @@media (max-width: 768px) {
-        .nav-links { display: none; }
-        .nav-header { padding: 1rem 1.5rem; }
-        .login-card { padding: 40px 30px; }
+        .nav-links { display: flex; gap: 0.25rem; }
+        .nav-links a { padding: 0.5rem 0.8rem; font-size: 0.8rem; }
+        .nav-header { padding: 0.5rem; }
+        .nav-container { padding: 0.4rem 1rem; }
+        .brand-logo-small { width: 40px; height: 40px; }
+        .brand-text { display: none; }
     }
 
 </style>

@@ -32,6 +32,12 @@
         transform: rotate(-10deg);
     }
 
+    @@media (max-width: 768px) {
+        .dashboard-hero::after { font-size: 4rem; top: 0; right: 0; }
+        .dashboard-hero h2 { font-size: 1.4rem; }
+        .dashboard-hero { padding: 1.25rem 1.5rem; }
+    }
+
     .dashboard-hero h2 {
         font-size: 1.8rem;
         font-weight: 900;
@@ -157,6 +163,13 @@
         padding: 2px 5px !important;
         font-size: 0.7rem !important;
         font-weight: 800 !important;
+    }
+
+    @@media (max-width: 576px) {
+        .stat-icon-wrap { width: 48px; height: 48px; font-size: 1.4rem; }
+        .stat-card-premium h2 { font-size: 1.5rem; }
+        .fc .fc-toolbar { flex-direction: column; gap: 0.5rem; }
+        .fc .fc-toolbar-title { font-size: 0.9rem !important; }
     }
 </style>
 

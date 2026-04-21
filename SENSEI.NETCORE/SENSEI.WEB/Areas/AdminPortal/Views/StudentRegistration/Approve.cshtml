@@ -1,4 +1,4 @@
-﻿@using SENSEI.DOMAIN
+@using SENSEI.DOMAIN
 @model StudentRegistration
 
 @{
@@ -21,6 +21,17 @@
 
         @Html.HiddenFor(m => m.StudentRegistrationId)
         @Html.HiddenFor(m => m.CourseId)
+
+        @if (Model.IsRejected)
+        {
+            <div class="alert alert-soft-warning d-flex align-items-center mb-4 border-0 rounded-4">
+                <i class="fas fa-exclamation-triangle me-3 fs-4"></i>
+                <div>
+                    <h6 class="mb-1 fw-bold">Reconsideration Notice</h6>
+                    <p class="mb-0 small text-muted">This student was previously <strong>Rejected</strong>. Reason: <em>@(Model.RejectionComment ?? "No comment provided")</em></p>
+                </div>
+            </div>
+        }
 
         <div class="mb-3">
             <label class="form-label">@Html.DisplayNameFor(m => m.CourseId)</label>

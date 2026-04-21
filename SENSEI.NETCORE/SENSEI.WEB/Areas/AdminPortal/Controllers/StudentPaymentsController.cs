@@ -18,6 +18,7 @@ namespace SENSEI.WEB.Areas.AdminPortal.Controllers
         private readonly IStudentService _studentService;
         private readonly IDataProtector _protector;
         private readonly ISmsService _smsService;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
         public StudentPaymentsController
         (
@@ -26,7 +27,8 @@ namespace SENSEI.WEB.Areas.AdminPortal.Controllers
             ICourseService courseService,
             IStudentService studentService,
             IDataProtectionProvider provider,
-            ISmsService smsService
+            ISmsService smsService,
+            IWebHostEnvironment webHostEnvironment
         )
         {
             _studentPaymentService = studentPaymentService;
@@ -35,6 +37,7 @@ namespace SENSEI.WEB.Areas.AdminPortal.Controllers
             _studentService = studentService;
             _protector = provider.CreateProtector("CourseProtector");
             _smsService = smsService;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         public async Task<IActionResult> Index()
@@ -165,6 +168,26 @@ namespace SENSEI.WEB.Areas.AdminPortal.Controllers
             studentBatchPayment.PaymentDate = DateTime.UtcNow;
             studentBatchPayment.IsApproved = true; // Admin created payments are auto-approved
             studentBatchPayment.ApprovedById = userId;
+
+            // Handle Payment Slip Upload (Optional)
+            if (studentBatchPayment.SlipImage != null && studentBatchPayment.SlipImage.Length > 0)
+            {
+                string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "uploads", "slips");
+                if (!Directory.Exists(uploadsFolder))
+                {
+                    Directory.CreateDirectory(uploadsFolder);
+                }
+
+                string uniqueFileName = Guid.NewGuid().ToString() + "_" + studentBatchPayment.SlipImage.FileName;
+                string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    await studentBatchPayment.SlipImage.CopyToAsync(fileStream);
+                }
+
+                studentBatchPayment.SlipUrl = "/uploads/slips/" + uniqueFileName;
+            }
 
             var (status, paymentId) = await _studentPaymentService.UpdateStudentBatchPayment(studentBatchPayment);
 

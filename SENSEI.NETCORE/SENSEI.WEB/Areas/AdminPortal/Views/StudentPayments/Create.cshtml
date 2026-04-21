@@ -29,6 +29,19 @@
     /* Select2 Bootstrap 5 Theme Overrides */
     .select2-container--bootstrap-5 .select2-selection { border-radius: 12px !important; border: 1.5px solid #e2e8f0 !important; min-height: 48px !important; padding: 6px 12px !important; }
     .select2-container--bootstrap-5 .select2-selection--single .select2-selection__rendered { padding-top: 3px !important; }
+
+    /* File Upload Styling */
+    .file-upload-wrapper {
+        border: 2px dashed #e2e8f0;
+        border-radius: 12px;
+        padding: 1rem;
+        text-align: center;
+        background: #f8fafc;
+        transition: all 0.2s;
+        cursor: pointer;
+    }
+    .file-upload-wrapper:hover { border-color: #ff5a5f; background: #fff5f5; }
+    #SlipImage { display: none; }
 </style>
 
 <div class="offcanvas-header offcanvas-header-premium">
@@ -43,9 +56,7 @@
 
 <div class="offcanvas-body p-4">
 
-    <form id="studentPayment-create-form" asp-area="AdminPortal" asp-controller="StudentPayments" asp-action="Create"
-          data-ajax="true" data-ajax-method="POST"
-          data-ajax-begin="onPaymentCreateBegin" data-ajax-success="onPaymentCreateSuccess" data-ajax-failure="onPaymentCreateFailure" data-ajax-complete="onPaymentCreateComplete">
+    <form id="studentPayment-create-form" asp-area="AdminPortal" asp-controller="StudentPayments" asp-action="Create" enctype="multipart/form-data">
 
         <div class="mb-4">
             <label class="form-label-premium"><i class="fas fa-user-graduate"></i> Search Student</label>
@@ -79,6 +90,15 @@
                 <label class="form-label-premium"><i class="fas fa-calendar-alt"></i> @Html.DisplayNameFor(m => m.PaymentMonth)</label>
                 <input asp-for="PaymentMonth" class="form-control form-control-premium" type="date" required value="@Model.PaymentMonth.ToString("yyyy-MM-dd")" />
                 <span asp-validation-for="PaymentMonth" class="text-danger small mt-1"></span>
+            </div>
+        </div>
+
+        <div class="mb-4">
+            <label class="form-label-premium"><i class="fas fa-file-invoice"></i> Payment Slip (Optional)</label>
+            <div class="file-upload-wrapper" onclick="document.getElementById('SlipImage').click()">
+                <i class="fas fa-cloud-upload-alt fs-3 text-muted mb-2"></i>
+                <div class="small fw-600 text-muted" id="file-name-display">Click to upload slip image</div>
+                <input type="file" asp-for="SlipImage" id="SlipImage" accept="image/*,.pdf" onchange="updateFileName(this)"/>
             </div>
         </div>
 
@@ -174,5 +194,49 @@
             allowClear: true,
             width: '100%'
         });
+
+        // Manual Form Submission for File Upload support
+        $('#studentPayment-create-form').on('submit', function (e) {
+            e.preventDefault();
+
+            if (!$(this).valid()) return false;
+
+            var l = Ladda.create(document.querySelector('#btnSaveStudentPayment'));
+            l.start();
+
+            var formData = new FormData(this);
+
+            $.ajax({
+                url: $(this).attr('action'),
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    if (response.success) {
+                        popUpNotification('success', response.message);
+                        bootstrap.Offcanvas.getInstance(document.getElementById('studentPaymentOffcanvas')).hide();
+                        if (typeof loadStudentPayments === 'function') loadStudentPayments();
+                    } else {
+                        popUpNotification('error', response.message);
+                    }
+                },
+                error: function () {
+                    popUpNotification('error', 'An error occurred while saving the payment.');
+                },
+                complete: function () {
+                    l.stop();
+                }
+            });
+        });
     });
+
+    function updateFileName(input) {
+        var fileName = input.files.length > 0 ? input.files[0].name : "Click to upload slip image";
+        document.getElementById('file-name-display').innerText = fileName;
+        if (input.files.length > 0) {
+            document.querySelector('.file-upload-wrapper').style.borderColor = '#007bff';
+            document.querySelector('.file-upload-wrapper').style.background = '#f0f7ff';
+        }
+    }
 </script>

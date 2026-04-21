@@ -3,15 +3,118 @@
 @model BatchStudentLessonAccessRequest
 
 @{
-    ViewData["Title"] = "Payment Management";
+    ViewData["Title"] = "Lesson Access Management";
 }
+
+<style>
+    .avatar-circle {
+        width: 38px;
+        height: 38px;
+        background: linear-gradient(135deg, var(--sensei-red) 0%, var(--sensei-red-dark) 100%);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        font-weight: 800;
+        font-size: 0.85rem;
+        box-shadow: 0 4px 10px rgba(216, 50, 54, 0.2);
+    }
+    .stats-card-premium {
+        border: none !important;
+        border-radius: 20px !important;
+        background: white;
+        transition: all 0.3s ease;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.02) !important;
+    }
+    .stats-card-premium:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(0,0,0,0.05) !important;
+    }
+    .stats-icon-box {
+        width: 48px;
+        height: 48px;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+    }
+    #LessonRequestDataTable thead th {
+        background-color: #f8f9fa;
+        color: #495057;
+        font-weight: 800;
+        text-transform: uppercase;
+        font-size: 0.65rem;
+        letter-spacing: 0.08em;
+        padding: 1rem;
+        border-bottom: 2px solid #f1f3f5;
+    }
+    .badge-premium {
+        padding: 6px 12px;
+        border-radius: 50px;
+        font-weight: 800;
+        font-size: 0.65rem;
+        letter-spacing: 0.05em;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+</style>
 
 <div class="container-fluid p-0">
 
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h1 class="h3 mb-1 fw-bold">Payment Requests</h1>
-            <p class="text-muted small mb-0">Verify student payments and grant lesson access.</p>
+            <h1 class="h3 mb-1 fw-bold">Student Lesson Requests</h1>
+            <p class="text-muted small mb-0">Review and authorize student access to specific course material.</p>
+        </div>
+    </div>
+
+    <!-- Statistics Row -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card stats-card-premium">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center">
+                        <div class="stats-icon-box bg-soft-warning text-warning me-3">
+                            <i class="fas fa-hourglass-start"></i>
+                        </div>
+                        <div>
+                            <h6 class="text-muted small fw-bold text-uppercase mb-1">Pending Approval</h6>
+                            <h3 class="mb-0 fw-900" id="stat-pending">--</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card stats-card-premium">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center">
+                        <div class="stats-icon-box bg-soft-success text-success me-3">
+                            <i class="fas fa-lock-open"></i>
+                        </div>
+                        <div>
+                            <h6 class="text-muted small fw-bold text-uppercase mb-1">Access Granted</h6>
+                            <h3 class="mb-0 fw-900" id="stat-approved">--</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card stats-card-premium">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center">
+                        <div class="stats-icon-box bg-soft-primary text-primary me-3">
+                            <i class="fas fa-clipboard-list"></i>
+                        </div>
+                        <div>
+                            <h6 class="text-muted small fw-bold text-uppercase mb-1">Total Requests</h6>
+                            <h3 class="mb-0 fw-900" id="stat-total">--</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -36,8 +139,11 @@
 
     <!-- Table Section -->
     <div class="card border-0 shadow-sm" style="border-radius: 1rem;">
-        <div class="card-header bg-white py-3 border-bottom">
-            <h5 class="card-title mb-0 fw-800">Recent Transactions</h5>
+        <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center">
+            <h5 class="card-title mb-0 fw-800">Lesson Access History</h5>
+            <button class="btn btn-sm btn-outline-primary rounded-pill px-3" onclick="loadBatchStudentLessonRequests()">
+                <i class="fas fa-sync-alt me-1"></i> Refresh
+            </button>
         </div>
         <div class="card-body p-0">
             <div id="LessonRequestTableContent" class="table-responsive">
@@ -159,24 +265,24 @@
                             var approveUrl = `/AdminPortal/BatchStudentLessonRequest/Approve/?q=${row.encryptedKey}`;
                             var approveBtn = '';
 
-                            if(row.approveStatusEnum != 1 && row.approveStatusEnum != 2){
-                                approveBtn = `<li><a class="dropdown-item d-flex align-items-center gap-2 text-success approve-request" href="javascript:void(0)" data-action-url="${approveUrl}"> <i data-feather="check-circle" style="width: 14px; height: 14px;"></i><span>Approve Payment</span></a></li>`;
-                            } else {
-                                approveBtn = `<li><a class="dropdown-item d-flex align-items-center gap-2 disabled opacity-50" href="javascript:void(0)"> <i data-feather="check-circle" style="width: 14px; height: 14px;"></i><span>Already Processed</span></a></li>`;
-                            }
+                             if(row.approveStatusEnum != 1 && row.approveStatusEnum != 2){
+                                 approveBtn = `<li><a class="dropdown-item d-flex align-items-center gap-2 text-success approve-request" href="javascript:void(0)" data-action-url="${approveUrl}"> <i data-feather="check-circle" style="width: 14px; height: 14px;"></i><span>Grant Lesson Access</span></a></li>`;
+                             } else {
+                                 approveBtn = `<li><a class="dropdown-item d-flex align-items-center gap-2 disabled opacity-50" href="javascript:void(0)"> <i data-feather="check-circle" style="width: 14px; height: 14px;"></i><span>Request Finalized</span></a></li>`;
+                             }
 
-                            return `
-                                <div class="dropdown">
-                                    <button class="btn btn-sm btn-light border-0 p-1 rounded-circle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="width: 32px; height: 32px;">
-                                        <i data-feather="more-vertical" style="width: 16px; height: 16px;"></i>
-                                    </button>
-                                    <ul class="dropdown-menu dropdown-menu-end shadow border-0 p-2" style="border-radius: 0.75rem; min-width: 180px;">
-                                        <li><h6 class="dropdown-header smaller text-muted fw-bold">PAYMENT ACTIONS</h6></li>
-                                        ${approveBtn}
-                                        <div class="dropdown-divider"></div>
-                                        <li><a class="dropdown-item d-flex align-items-center gap-2 text-danger" href="javascript:void(0)"><i data-feather="slash" style="width: 14px; height: 14px;"></i>Void Transaction</a></li>
-                                    </ul>
-                                </div>`;
+                             return `
+                                 <div class="dropdown">
+                                     <button class="btn btn-sm btn-light border-0 p-1 rounded-circle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="width: 32px; height: 32px;">
+                                         <i data-feather="more-vertical" style="width: 16px; height: 16px;"></i>
+                                     </button>
+                                     <ul class="dropdown-menu dropdown-menu-end shadow border-0 p-2" style="border-radius: 0.75rem; min-width: 180px;">
+                                         <li><h6 class="dropdown-header smaller text-muted fw-bold">ACCESS ACTIONS</h6></li>
+                                         ${approveBtn}
+                                         <div class="dropdown-divider"></div>
+                                         <li><a class="dropdown-item d-flex align-items-center gap-2 text-danger" href="javascript:void(0)"><i data-feather="slash" style="width: 14px; height: 14px;"></i>Void Request</a></li>
+                                     </ul>
+                                 </div>`;
                         }
                     },
                     { 
@@ -186,13 +292,21 @@
                             return `<div class="fw-bold text-dark">${d||'No Batch'}</div><div class="text-muted smaller">${r.batchStudentLessonAccess.batchLesson.lesson.lessonName}</div>`;
                         }
                     },
-                    { 
-                        data: 'batchStudentLessonAccess.student.studentPopulatedName', 
-                        name:'studentPopulatedName',
-                        render: function(d, t, r) {
-                            return `<div class="fw-600">${d}</div><div class="text-muted smaller">Index: ${r.batchStudentLessonAccess.student.indexNumber}</div>`;
-                        }
-                    },
+                     { 
+                         data: 'batchStudentLessonAccess.student.studentPopulatedName', 
+                         name:'studentPopulatedName',
+                         render: function(d, t, r) {
+                             var initial = d.substring(0, 1).toUpperCase();
+                             return `
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="avatar-circle">${initial}</div>
+                                    <div>
+                                        <div class="fw-bold text-dark">${d}</div>
+                                        <div class="text-muted smaller">Index: ${r.batchStudentLessonAccess.student.indexNumber}</div>
+                                    </div>
+                                </div>`;
+                         }
+                     },
                     { data: 'batchStudentLessonAccess.batchLesson.description', name:'description', render: function(d) { return `<small class="text-muted">${d||'—'}</small>`; } },
                     { data: 'requestedDate', name:'requestedDate', render: function (data) { return renderDateTime(data); } },
                     { 
@@ -213,9 +327,16 @@
                         }
                     }
                 ],
-                drawCallback: function () {
+                 drawCallback: function (settings) {
                     if (window.feather) { feather.replace(); }
-                    approveButton();                
+                    approveButton();
+
+                    // Update local stats from table metadata
+                    if (settings.json) {
+                        $('#stat-total').text(settings.json.recordsTotal);
+                        // For granular stats, we usually need a separate API like we did for Registration.
+                        // I will keep them updated if the API is available or just show total for now.
+                    }
                 }
             });
         }

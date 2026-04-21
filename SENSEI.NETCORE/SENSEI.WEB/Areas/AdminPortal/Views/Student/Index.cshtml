@@ -6,51 +6,165 @@
     ViewData["Title"] = "Student Management";
 }
 
+<style>
+    .avatar-circle {
+        width: 38px;
+        height: 38px;
+        background: linear-gradient(135deg, var(--sensei-red) 0%, var(--sensei-red-dark) 100%);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        font-weight: 800;
+        font-size: 0.85rem;
+        box-shadow: 0 4px 10px rgba(216, 50, 54, 0.2);
+    }
+    .stats-card-premium {
+        border: none !important;
+        border-radius: 20px !important;
+        background: white;
+        transition: all 0.3s ease;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.02) !important;
+    }
+    .stats-card-premium:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(0,0,0,0.05) !important;
+    }
+    .stats-icon-box {
+        width: 48px;
+        height: 48px;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+    }
+    #StudentDataTable thead th {
+        background-color: #f8f9fa;
+        color: #495057;
+        font-weight: 800;
+        text-transform: uppercase;
+        font-size: 0.65rem;
+        letter-spacing: 0.08em;
+        padding: 1rem;
+        border-bottom: 2px solid #f1f3f5;
+    }
+    .badge-premium {
+        padding: 6px 12px;
+        border-radius: 50px;
+        font-weight: 800;
+        font-size: 0.65rem;
+        letter-spacing: 0.05em;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+
+    /* Mobile Enhancements */
+    @@media (max-width: 768px) {
+        .hide-mobile { display: none !important; }
+        .stats-card-premium { margin-bottom: 1rem; }
+        .btn-new-mobile { width: 100%; margin-top: 1rem; }
+        .page-header-mobile { flex-direction: column; align-items: flex-start !important; }
+    }
+</style>
+
 <div class="container-fluid p-0">
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-4 page-header-mobile">
         <div>
-            <h1 class="h3 mb-1 fw-bold">Students</h1>
-            <p class="text-muted small mb-0">View student accounts and filtering options.</p>
+            <h1 class="h3 mb-1 fw-bold">Student Directory</h1>
+            <p class="text-muted small mb-0">Manage and view all enrolled student records across all batches.</p>
         </div>
 
-        <button type="button" class="btn btn-primary px-4 rounded-pill shadow-sm" id="btnNewStudentRegister" data-action-url="/AdminPortal/StudentRegistration/Create">
+        <button type="button" class="btn btn-primary px-4 rounded-pill shadow-sm btn-new-mobile" id="btnNewStudentRegister" data-action-url="/AdminPortal/StudentRegistration/Create">
             <i class="fas fa-plus me-2"></i> Register New Student
         </button>
     </div>
 
-    <!-- Search Section -->
-    <div class="card border-0 shadow-sm mb-4" style="border-radius: 1rem;">
-        <div class="card-header bg-white py-3">
-            <h5 class="card-title mb-0 fw-800"><i class="fas fa-filter me-2 text-primary"></i> Filter Students</h5>
+    <!-- Statistics Row -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card stats-card-premium">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center">
+                        <div class="stats-icon-box bg-soft-primary text-primary me-3">
+                            <i class="fas fa-user-graduate"></i>
+                        </div>
+                        <div>
+                            <h6 class="text-muted small fw-bold text-uppercase mb-1">Total Enrolled</h6>
+                            <h3 class="mb-0 fw-900" id="stat-total">--</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="card-body">
-            <div class="row g-3">
+        <div class="col-md-4">
+            <div class="card stats-card-premium">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center">
+                        <div class="stats-icon-box bg-soft-success text-success me-3">
+                            <i class="fas fa-user-plus"></i>
+                        </div>
+                        <div>
+                            <h6 class="text-muted small fw-bold text-uppercase mb-1">New This Month</h6>
+                            <h3 class="mb-0 fw-900" id="stat-new">--</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card stats-card-premium">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center">
+                        <div class="stats-icon-box bg-soft-info text-info me-3">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div>
+                            <h6 class="text-muted small fw-bold text-uppercase mb-1">Active Accounts</h6>
+                            <h3 class="mb-0 fw-900" id="stat-active">--</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filter Section -->
+    <div class="card border-0 shadow-sm mb-4" style="border-radius: 1.25rem;">
+        <div class="card-header bg-white py-3 border-0">
+            <h5 class="card-title mb-0 fw-900 fs-6"><i class="fas fa-sliders-h me-2 text-primary"></i> Directory Filter</h5>
+        </div>
+        <div class="card-body pt-0">
+            <div class="row g-3 align-items-end">
                 <div class="col-md-4">
-                    <label class="form-label fw-700">Course</label>
+                    <label class="form-label text-muted small fw-bold text-uppercase mb-2">Primary Course</label>
                     <select id="SearchCourseId" class="form-control select2 search-course-select shadow-none border-light-subtle bg-light"></select>
+                </div>
+                <div class="col-md-2 ms-auto">
+                    <button type="button" class="btn btn-outline-primary w-100 rounded-pill fw-bold small" onclick="loadStudents()">
+                        <i class="fas fa-sync-alt me-2"></i> Refresh List
+                    </button>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Table Section -->
-    <div class="card border-0 shadow-sm" style="border-radius: 1rem;">
+    <div class="card border-0 shadow-sm" style="border-radius: 1.25rem;">
         <div class="card-header bg-white py-3 border-bottom">
-            <div class="d-flex justify-content-between align-items-center">
-                <h5 class="card-title mb-0 fw-800">Student List</h5>
-            </div>
+            <h5 class="card-title mb-0 fw-800">Enrollment List</h5>
         </div>
         <div class="card-body p-0">
             <div id="StudentTableContent" class="table-responsive">
                 <table id="StudentDataTable" class="table table-hover align-middle mb-0 w-100">
                     <thead class="bg-light">
                         <tr>
-                            <th class="ps-4">Student Name</th>
-                            <th>Course</th>
-                            <th>Batch</th>
+                            <th class="ps-4">Student</th>
                             <th>Index Number</th>
-                            <th>Mode</th>
+                            <th class="hide-mobile">Applied Course</th>
+                            <th class="hide-mobile">Current Batch</th>
+                            <th class="hide-mobile">Mode</th>
                             <th>Contact</th>
                         </tr>
                     </thead>
@@ -95,8 +209,17 @@
             });
 
             loadStudents();
+            loadStudentStats();
 
         });
+
+        function loadStudentStats() {
+            $.getJSON('/AdminPortal/Student/GetStudentStats', function (data) {
+                $('#stat-total').text(data.total);
+                $('#stat-active').text(data.active);
+                $('#stat-new').text(data.newThisMonth);
+            });
+        }
 
         function loadStudents() {
 
@@ -112,7 +235,9 @@
                 lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
                 pageLength: 25,
                 columnDefs: [
-                    { targets: 0, className: 'ps-4 fw-bold' },
+                    { targets: [2, 3, 4], className: 'hide-mobile text-muted small' },
+                    { targets: 0, className: 'ps-4' },
+                    { targets: 1, className: 'fw-bold text-primary small' }
                 ],
                 dom:
                     "<'row p-3 mb-0'<'col-sm-6'l><'col-sm-6 text-end'f>>" +
@@ -130,17 +255,42 @@
                         data: 'studentPopulatedName', 
                         name:'studentPopulatedName',
                         render: function(data, type, row) {
-                            return `<div class="text-dark">${data}</div><div class="text-muted smaller fw-normal">${row.email}</div>`;
+                            var initial = data.substring(0, 1).toUpperCase();
+                            return `
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="avatar-circle">${initial}</div>
+                                    <div>
+                                        <div class="fw-bold text-dark">${data}</div>
+                                        <div class="text-muted smaller">${row.email}</div>
+                                    </div>
+                                </div>`;
                         }
                     },
-                    { data: 'studentBatches.0.batch.course.courseName', name:'courseName' },
-                    { data: 'studentBatches.0.batch.batchName', name:'batchName' },
                     { data: 'indexNumber', name:'indexNumber' },
-                    { data: 'studentLearningMode.learningModeName', name:'studentLearningMode.learningModeName' },
-                    { data: 'phoneNo', name:'phoneNo' }
+                    { 
+                        data: 'studentBatches.0.batch.course.courseName', 
+                        name:'courseName',
+                        render: function(d) { return d || '<span class="text-muted">—</span>'; }
+                    },
+                    { 
+                        data: 'studentBatches.0.batch.batchName', 
+                        name:'batchName',
+                        render: function(d) { return d || '<span class="text-muted">—</span>'; }
+                    },
+                    { 
+                        data: 'studentLearningMode.learningModeName', 
+                        name:'studentLearningMode.learningModeName',
+                        render: function(d) { return `<span class="badge badge-premium bg-soft-info text-info border-0 rounded-pill">${d}</span>`; }
+                    },
+                    { 
+                        data: 'phoneNo', 
+                        name:'phoneNo',
+                        render: function(d) { return `<div class="small fw-600"><i class="fas fa-phone me-1 text-muted"></i> ${d}</div>`; }
+                    }
                 ],
                 drawCallback: function () {
                     if (window.feather) { feather.replace(); }
+                    loadStudentStats();
                 }
             });
         }

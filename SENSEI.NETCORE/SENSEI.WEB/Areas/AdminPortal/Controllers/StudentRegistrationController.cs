@@ -66,7 +66,34 @@ namespace SENSEI.WEB.Areas.AdminPortal.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> GetRegistrationStats()
+        {
+            var (list, count) = await _studentRegistrationService.SearchStudentRegistraion(0, 0, 10000);
+            
+            var approved = list.Count(x => x.IsApproved);
+            var rejected = list.Count(x => x.IsRejected);
+            var pending = list.Count(x => !x.IsApproved && !x.IsRejected);
+
+            return Json(new { 
+                total = count, 
+                approved = approved, 
+                rejected = rejected, 
+                pending = pending 
+            });
+        }
+
+        [HttpGet]
         public async Task<IActionResult> Approve(string q)
+        {
+            long studentRegistrationId = Convert.ToInt64(_protector.Unprotect(q));
+
+            var studentRegistration = await _studentRegistrationService.GetStudentRegistraion(studentRegistrationId);
+
+            return View(studentRegistration);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Details(string q)
         {
             long studentRegistrationId = Convert.ToInt64(_protector.Unprotect(q));
 
