@@ -71,6 +71,8 @@
                             <thead>
                                 <tr>
                                     <th></th>
+                                    <th>Index Number</th>
+                                    <th>Student Name</th>   
                                     <th>@Html.DisplayNameFor(m => m.StudentBatch.Batch.Course.CourseName)</th>
                                     <th>@Html.DisplayNameFor(m => m.StudentBatch.BatchId)</th>
                                     <th>@Html.DisplayNameFor(m => m.PaymentMonth)</th>
@@ -119,7 +121,7 @@
                 loadStudentPayments();
             });
 
-            $("#SearchIndexNumber").change(function () {
+            $("#SearchIndexNumber").keyup(function () {
                 loadStudentPayments();
             });
 
@@ -240,6 +242,8 @@
                             `;
                         }
                     },
+                    { data: 'studentBatch.student.indexNumber', name:'studentBatch.student.indexNumber' },
+                    { data: 'studentBatch.student.studentPopulatedName', name:'studentBatch.student.studentPopulatedName' },
                     { data: 'studentBatch.batch.course.courseName', name:'studentBatch.batch.course.courseName' },
                     { data: 'studentBatch.batch.batchName', name:'studentBatch.batch.batchName' },
                     { data: 'paymentMonth', name:'paymentMonth', render: function (data) { return renderDateOnly(data); } },
