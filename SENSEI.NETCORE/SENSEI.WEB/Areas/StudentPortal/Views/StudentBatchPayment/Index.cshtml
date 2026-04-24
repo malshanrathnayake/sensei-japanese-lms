@@ -252,8 +252,9 @@
                         }
                     },
                     { 
-                        "data": "PaymentDate",
+                        "data": "paymentDate",
                         "render": function(data) {
+                            if (!data) return '<span class="text-muted small">—</span>';
                             return `<div class="text-muted fw-600 small">
                                         ${moment(data).format('MMM DD, YYYY')}
                                         <div class="opacity-50">${moment(data).format('h:mm A')}</div>

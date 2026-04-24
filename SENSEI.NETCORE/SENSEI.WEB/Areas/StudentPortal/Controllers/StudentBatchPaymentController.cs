@@ -161,7 +161,7 @@ namespace SENSEI.WEB.Areas.StudentPortal.Controllers
                     UserId = null,
                     UserTypeEnum = UserTypeEnum.Admin,
                     NotificationType = "New Student Payment",
-                    Message = "New Student Payment for " + student.StudentBatches.FirstOrDefault().Batch.BatchName.ToString() + " by the student " + student.StudentPopulatedName.ToString() + " has been uploaded.",
+                    Message = $"New Student Payment for {batchName} by the student {student.StudentPopulatedName} has been uploaded.",
                     Icon = GlobalHelpers.GetEnumDisplayName(FeatherIconEnum.MessageCircle),
                     BatchId = null,
                     CourseId = null,
