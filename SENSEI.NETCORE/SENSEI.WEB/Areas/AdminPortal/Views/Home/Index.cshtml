@@ -63,6 +63,11 @@
     .activity-item:last-child {
         border-bottom: none;
     }
+
+    .hover-primary:hover {
+        color: var(--primary) !important;
+        text-decoration: underline !important;
+    }
 </style>
 
 <div class="container-fluid p-0">
@@ -82,84 +87,92 @@
     <!-- Quick Stats Grid -->
     <div class="row mb-4">
         <div class="col-sm-6 col-xl-3">
-            <div class="card stat-card border-top border-4 border-primary">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col mt-0">
-                            <h5 class="card-title text-muted fw-bold small text-uppercase">Total Students</h5>
-                        </div>
-                        <div class="col-auto">
-                            <div class="stat-icon bg-soft-primary text-primary">
-                                <i data-feather="users"></i>
+            <a href="@Url.Action("Index", "Student", new { Area = "AdminPortal" })" class="text-decoration-none">
+                <div class="card stat-card border-top border-4 border-primary h-100">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col mt-0">
+                                <h5 class="card-title text-muted fw-bold small text-uppercase">Total Students</h5>
+                            </div>
+                            <div class="col-auto">
+                                <div class="stat-icon bg-soft-primary text-primary">
+                                    <i data-feather="users"></i>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <h1 class="mt-1 mb-3 fw-900">@Model.TotalStudents</h1>
-                    <div class="mb-0">
-                        <span class="text-success small fw-700"> <i class="mdi mdi-arrow-bottom-right"></i> Active learners </span>
+                        <h1 class="mt-1 mb-3 fw-900 text-dark">@Model.TotalStudents</h1>
+                        <div class="mb-0">
+                            <span class="text-primary small fw-800">View Students &rarr;</span>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </a>
         </div>
         <div class="col-sm-6 col-xl-3">
-            <div class="card stat-card border-top border-4 border-info">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col mt-0">
-                            <h5 class="card-title text-muted fw-bold small text-uppercase">Pending Regs</h5>
-                        </div>
-                        <div class="col-auto">
-                            <div class="stat-icon bg-soft-info text-info">
-                                <i data-feather="user-plus"></i>
+            <a href="@Url.Action("Index", "StudentRegistration", new { Area = "AdminPortal", status = 1 })" class="text-decoration-none">
+                <div class="card stat-card border-top border-4 border-info h-100">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col mt-0">
+                                <h5 class="card-title text-muted fw-bold small text-uppercase">Pending Regs</h5>
+                            </div>
+                            <div class="col-auto">
+                                <div class="stat-icon bg-soft-info text-info">
+                                    <i data-feather="user-plus"></i>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <h1 class="mt-1 mb-3 fw-900 text-info">@Model.PendingRegistrations</h1>
-                    <div class="mb-0">
-                        <a href="@Url.Action("Index", "StudentRegistration", new { Area = "AdminPortal" })" class="text-info small fw-800 text-decoration-none">Review Requests &rarr;</a>
+                        <h1 class="mt-1 mb-3 fw-900 text-info">@Model.PendingRegistrations</h1>
+                        <div class="mb-0">
+                            <span class="text-info small fw-800">Review Requests &rarr;</span>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </a>
         </div>
         <div class="col-sm-6 col-xl-3">
-            <div class="card stat-card border-top border-4 border-success">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col mt-0">
-                            <h5 class="card-title text-muted fw-bold small text-uppercase">Batches</h5>
-                        </div>
-                        <div class="col-auto">
-                            <div class="stat-icon bg-soft-success text-success">
-                                <i data-feather="layers"></i>
+            <a href="@Url.Action("Index", "Batch", new { Area = "AdminPortal" })" class="text-decoration-none">
+                <div class="card stat-card border-top border-4 border-success h-100">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col mt-0">
+                                <h5 class="card-title text-muted fw-bold small text-uppercase">Batches</h5>
+                            </div>
+                            <div class="col-auto">
+                                <div class="stat-icon bg-soft-success text-success">
+                                    <i data-feather="layers"></i>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <h1 class="mt-1 mb-3 fw-900">@Model.TotalBatches</h1>
-                    <div class="mb-0">
-                        <span class="text-muted small fw-600">Across @Model.TotalCourses courses</span>
+                        <h1 class="mt-1 mb-3 fw-900 text-dark">@Model.TotalBatches</h1>
+                        <div class="mb-0">
+                            <span class="text-success small fw-800">Manage Batches &rarr;</span>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </a>
         </div>
         <div class="col-sm-6 col-xl-3">
-            <div class="card stat-card border-top border-4 border-warning">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col mt-0">
-                            <h5 class="card-title text-muted fw-bold small text-uppercase">Courses</h5>
-                        </div>
-                        <div class="col-auto">
-                            <div class="stat-icon bg-soft-warning text-warning">
-                                <i data-feather="book"></i>
+            <a href="@Url.Action("Index", "Course", new { Area = "AdminPortal" })" class="text-decoration-none">
+                <div class="card stat-card border-top border-4 border-warning h-100">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col mt-0">
+                                <h5 class="card-title text-muted fw-bold small text-uppercase">Courses</h5>
+                            </div>
+                            <div class="col-auto">
+                                <div class="stat-icon bg-soft-warning text-warning">
+                                    <i data-feather="book"></i>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <h1 class="mt-1 mb-3 fw-900">@Model.TotalCourses</h1>
-                    <div class="mb-0">
-                        <span class="text-muted small fw-600">Active programs</span>
+                        <h1 class="mt-1 mb-3 fw-900 text-dark">@Model.TotalCourses</h1>
+                        <div class="mb-0">
+                            <span class="text-warning small fw-800">View Programs &rarr;</span>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </a>
         </div>
     </div>
 
@@ -192,7 +205,9 @@
                                                         @reg.FirstName[0]@reg.LastName[0]
                                                     </div>
                                                     <div>
-                                                        <div class="fw-bold text-dark">@reg.StudentRegistrationPopulatedName</div>
+                                                        <div class="fw-bold text-dark">
+                                                            <a href="@Url.Action("Details", "StudentRegistration", new { Area = "AdminPortal", q = reg.EncryptedKey })" class="text-dark text-decoration-none hover-primary">@reg.StudentRegistrationPopulatedName</a>
+                                                        </div>
                                                         <div class="text-muted smaller" style="font-size: 0.65rem;">@reg.CreatedDateTime.ToString("MMM dd, yyyy")</div>
                                                     </div>
                                                 </div>
@@ -243,7 +258,7 @@
                             </a>
                         </div>
                         <div class="col-6">
-                            <a href="@Url.Action("Index", "StudentRegistration", new { Area = "AdminPortal" })" class="dashboard-action-btn">
+                            <a href="@Url.Action("Index", "StudentRegistration", new { Area = "AdminPortal", status = 1 })" class="dashboard-action-btn">
                                 <i class="d-block mb-1" data-feather="user-check"></i>
                                 Approvals
                             </a>

@@ -1,4 +1,4 @@
-﻿using SENSEI.DOMAIN;
+using SENSEI.DOMAIN;
 using System;
 using System.Collections.Generic;
 using System.Text;

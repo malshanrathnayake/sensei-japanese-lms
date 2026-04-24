@@ -40,7 +40,7 @@ namespace SENSEI.WEB.Areas.AdminPortal.Controllers
             return View();
         }
 
-        public async Task<IActionResult> ListOfStudentRegistrations(long courseId = 0)
+        public async Task<IActionResult> ListOfStudentRegistrations(long courseId = 0, int status = 0)
         {
             int draw = int.Parse(Request.Form["draw"]);
             int start = int.Parse(Request.Form["start"]);
@@ -51,18 +51,20 @@ namespace SENSEI.WEB.Areas.AdminPortal.Controllers
             string sortColumn = Request.Form[$"columns[{sortColumnIndex}][name]"];
             string sortDirection = Request.Form["order[0][dir]"]; // asc | desc
 
-            IQueryable<StudentRegistration> studentRegistrations = new List<StudentRegistration>().AsQueryable();
+            // Fetch all records for in-memory filtering (to avoid SP changes)
+            var (allList, _) = await _studentRegistrationService.SearchStudentRegistraion(courseId, 0, 10000, searchValue, sortColumn, sortDirection);
+            
+            var filteredList = allList.AsQueryable();
+            if (status == 1) filteredList = filteredList.Where(x => !x.IsApproved && !x.IsRejected);
+            else if (status == 2) filteredList = filteredList.Where(x => x.IsApproved);
+            else if (status == 3) filteredList = filteredList.Where(x => x.IsRejected);
 
-            var (studentRegistrationList, count) = await _studentRegistrationService.SearchStudentRegistraion(courseId, start, length, searchValue, sortColumn, sortDirection);
-            studentRegistrations = studentRegistrationList.AsQueryable();
+            var filteredCount = filteredList.Count();
+            var pagedList = filteredList.Skip(start).Take(length).ToList();
 
-            studentRegistrations.ToList().ForEach(e =>
-            {
-                e.EncryptedKey = _protector.Protect(e.StudentRegistrationId.ToString());
-            });
+            pagedList.ForEach(e => e.EncryptedKey = _protector.Protect(e.StudentRegistrationId.ToString()));
 
-
-            return Json(new { draw, recordsTotal = count, recordsFiltered = count, data = studentRegistrations });
+            return Json(new { draw, recordsTotal = filteredCount, recordsFiltered = filteredCount, data = pagedList });
         }
 
         [HttpGet]
