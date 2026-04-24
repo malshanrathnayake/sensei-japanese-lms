@@ -68,7 +68,7 @@ namespace SENSEI.WEB.Areas.StudentPortal.Controllers
             ViewBag.AverageProgress = Math.Round(averageProgress);
             ViewBag.CourseCount = allLessons.GroupBy(e => e.Lesson.CourseId).Count();
 
-            return View();
+            return View(student);
         }
 
         [HttpGet]

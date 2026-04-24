@@ -62,12 +62,15 @@ namespace SENSEI.WEB.Areas.StudentPortal.Controllers
         public async Task<IActionResult> UpdatePayment()
         {
             long userId = Convert.ToInt64(User.FindFirst("UserId")?.Value ?? "0");
+            var studentId = Convert.ToInt64(HttpContext.Session.GetString("StudentId"));
+            
             var student = await _studentService.GetStudentProfile(userId);
 
             StudentBatchPayment studentBatchPayment = new StudentBatchPayment();
             studentBatchPayment.PaymentMonth = DateTime.Today;
 
-            ViewBag.StudentBatches = student.StudentBatches.Select(e => new { id = e.StudentBatchId, text = e.Batch.BatchName + " (" + e.Batch.Course.CourseName + ")" }).ToList();
+            var batchesRaw = await _studentService.GetStudentBatchesList(studentId);
+            ViewBag.StudentBatches = batchesRaw.Select(e => new { id = e.StudentBatchId, text = e.BatchName + " (" + e.CourseName + ")" }).ToList();
 
             return View(studentBatchPayment);
         }
@@ -144,7 +147,9 @@ namespace SENSEI.WEB.Areas.StudentPortal.Controllers
                 IsApproved = false,
                 ApprovedById = null,
                 IsDeleted = false,
-                LessonId = studentBatchPayment.LessonId
+                LessonId = studentBatchPayment.LessonId,
+                ReferenceNumber = studentBatchPayment.ReferenceNumber,
+                Remarks = studentBatchPayment.Remarks
             };
 
             var (status, primaryKey) = await _studentService.UpdateStudentBatchPayment(payment);

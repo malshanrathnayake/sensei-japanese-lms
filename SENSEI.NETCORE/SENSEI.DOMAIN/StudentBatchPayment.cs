@@ -45,6 +45,14 @@ namespace SENSEI.DOMAIN
         [DisplayName("Lesson Category (Optional)")]
         public long? LessonId { get; set; }
 
+        [MaxLength(100)]
+        [DisplayName("Reference Number")]
+        public string ReferenceNumber { get; set; }
+
+        [MaxLength(500)]
+        [DisplayName("Remarks")]
+        public string Remarks { get; set; }
+
         public IFormFile SlipImage { get; set; }
         public string EncryptedKey { get; set; }
 

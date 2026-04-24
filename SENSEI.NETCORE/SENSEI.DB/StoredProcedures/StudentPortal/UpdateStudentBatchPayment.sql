@@ -12,15 +12,17 @@ BEGIN
 
 		IF @paymentId = 0
 		BEGIN
-			INSERT INTO StudentBatchPayment (StudentBatchId, PaymentMonth, Amount, PaymentDate, SlipUrl, IsApproved, LessonId)
-			SELECT StudentBatchId, PaymentMonth, Amount, GETUTCDATE(), SlipUrl, 0, LessonId
+			INSERT INTO StudentBatchPayment (StudentBatchId, PaymentMonth, Amount, PaymentDate, SlipUrl, IsApproved, LessonId, ReferenceNumber, Remarks)
+			SELECT StudentBatchId, PaymentMonth, Amount, GETUTCDATE(), SlipUrl, 0, LessonId, ReferenceNumber, Remarks
 			FROM OPENJSON(@jsonString)
 			WITH (
 				StudentBatchId BIGINT,
 				PaymentMonth DATETIME,
 				Amount DECIMAL(18, 2),
 				SlipUrl NVARCHAR(MAX),
-				LessonId BIGINT
+				LessonId BIGINT,
+				ReferenceNumber NVARCHAR(100),
+				Remarks NVARCHAR(500)
 			);
 			SET @primaryKey = SCOPE_IDENTITY();
 		END
@@ -31,7 +33,9 @@ BEGIN
 				PaymentMonth = J.PaymentMonth,
 				Amount = J.Amount,
 				SlipUrl = ISNULL(J.SlipUrl, SBP.SlipUrl),
-				LessonId = ISNULL(J.LessonId, SBP.LessonId)
+				LessonId = ISNULL(J.LessonId, SBP.LessonId),
+				ReferenceNumber = J.ReferenceNumber,
+				Remarks = J.Remarks
 			FROM StudentBatchPayment SBP
 			INNER JOIN OPENJSON(@jsonString)
 			WITH (
@@ -40,7 +44,9 @@ BEGIN
 				PaymentMonth DATETIME,
 				Amount DECIMAL(18, 2),
 				SlipUrl NVARCHAR(MAX),
-				LessonId BIGINT
+				LessonId BIGINT,
+				ReferenceNumber NVARCHAR(100),
+				Remarks NVARCHAR(500)
 			) J ON SBP.StudentBatchPaymentId = J.StudentBatchPaymentId
 			WHERE SBP.StudentBatchPaymentId = @paymentId;
 			SET @primaryKey = @paymentId;

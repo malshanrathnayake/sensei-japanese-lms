@@ -12,12 +12,8 @@
         backdrop-filter: blur(15px);
         border-left: 1px solid rgba(216, 50, 54, 0.1);
         box-shadow: -15px 0 50px rgba(0, 0, 0, 0.08) !important;
-        top: 15px !important;
-        bottom: 15px !important;
-        right: 15px !important;
-        height: calc(100vh - 30px) !important;
+        width: 420px !important;
         border-radius: 30px 0 0 30px !important;
-        transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1) !important;
     }
 
     .payment-upload-card {
@@ -163,7 +159,7 @@
           data-ajax-begin="onPaymentCreateBegin" data-ajax-success="onPaymentCreateSuccess" data-ajax-failure="onPaymentCreateFailure" data-ajax-complete="onPaymentCreateComplete" >
 
         <div class="mb-4">
-            <label class="form-label-premium">Select Course / Batch</label>
+            <label class="form-label-premium">1. Select Course / Batch</label>
             <div class="input-group">
                 <span class="input-group-text bg-white border-end-0 text-muted rounded-start-4 ps-3 pe-0" style="border: 1px solid rgba(0,0,0,0.08); border-right: 0;"><i data-feather="book" style="width: 16px;"></i></span>
                 <select id="StudentBatchId" name="StudentBatchId" class="form-control input-premium border-start-0" required>
@@ -180,83 +176,49 @@
             <span asp-validation-for="StudentBatchId" class="text-danger small mt-1 d-block fw-600"></span>
         </div>
 
-        <div class="alert alert-soft-primary border-0 rounded-4 p-4 mb-4 d-flex align-items-center animate-fade-in" style="background: rgba(216, 50, 54, 0.03);">
-            <div class="rounded-circle bg-white d-flex align-items-center justify-content-center me-3 shadow-sm" style="width: 36px; height: 36px; flex-shrink: 0;">
-                <i data-feather="shield" style="width: 18px; height: 18px; color: var(--sensei-red);"></i>
-            </div>
-            <div class="small fw-700 text-muted" style="line-height: 1.4;">
-                Payment verification takes <span class="text-dark">24h</span>. Ensure all details are clear.
-            </div>
-        </div>
-
-        <div class="mb-4">
-            <label class="form-label-premium">Amount Paid (LKR)</label>
-            <div class="input-group">
-                <span class="input-group-text bg-white border-end-0 text-muted rounded-start-4 ps-3 pe-0" style="border: 1px solid rgba(0,0,0,0.08); border-right: 0;"><i data-feather="dollar-sign" style="width: 16px;"></i></span>
-                <input type="number" step="0.01" class="form-control input-premium border-start-0" asp-for="Amount" placeholder="e.g. 5,000.00" />
-            </div>
-            <span asp-validation-for="Amount" class="text-danger small mt-1 d-block fw-600"></span>
-        </div>
-
-        <div class="mb-4">
-            <label class="form-label-premium">Payment Month</label>
-            <div class="input-group">
-                <span class="input-group-text bg-white border-end-0 text-muted rounded-start-4 ps-3 pe-0" style="border: 1px solid rgba(0,0,0,0.08); border-right: 0;"><i data-feather="calendar" style="width: 16px;"></i></span>
-                <input type="text" class="form-control input-premium datepicker border-start-0" id="PaymentMonth" name="PaymentMonth" value="@Model.PaymentMonth.ToString("yyyy-MM")" autocomplete="off" placeholder="Select Period"/>
-            </div>
-            <span asp-validation-for="PaymentMonth" class="text-danger small mt-1 d-block fw-600"></span>
-        </div>
-
-        <div class="mb-4">
-            <label class="form-label-premium">Course Category (Optional)</label>
+        <div class="mb-4 animate-fade-in" id="ssw-module-section" style="display: none;">
+            <label class="form-label-premium" style="color: var(--sensei-red);">2. Select Module / Category</label>
             <div class="input-group">
                 <span class="input-group-text bg-white border-end-0 text-muted rounded-start-4 ps-3 pe-0" style="border: 1px solid rgba(0,0,0,0.08); border-right: 0;"><i data-feather="tag" style="width: 16px;"></i></span>
                 <select asp-for="LessonId" id="LessonId" class="form-control input-premium border-start-0">
-                    <option value="">Full Month Access (General)</option>
+                    <option value="">Full Course Access (Standard)</option>
                 </select>
             </div>
-            <small class="text-muted mt-1 d-block fw-600">Specify if this is for a specific part/category (e.g. SSW Customer Service)</small>
+            <small class="text-muted mt-2 d-block fw-600 bg-soft-danger p-2 rounded-3" style="color: var(--sensei-red);">
+                <i data-feather="info" class="me-1" style="width: 12px;"></i> 
+                <strong>SSW Students:</strong> If you are paying for a specific module (e.g. Nursing, Food Service), please select it here. If not, keep it as "Full Course Access".
+            </small>
         </div>
 
-        <script>
-            $(document).ready(function() {
-                if (window.feather) { feather.replace(); }
-
-                $('#StudentBatchId').on('change', function() {
-                    var studentBatchId = $(this).val();
-                    var dropdown = $('#LessonId');
-                    dropdown.empty().append('<option value="">Full Month Access (General)</option>');
-
-                    if (studentBatchId) {
-                        // First we need to get the actual batchId from the studentBatchId
-                        // But looking at the controller, GetBatchLessons takes batchId.
-                        // Wait, looking at the code, StudentBatchId is actually passed. 
-                        // Let's assume StudentBatchId is what we have. 
-                        // Actually, I should check the GetBatchLessons implementation in the controller.
-                        
-                        $.getJSON('/StudentPortal/StudentBatchPayment/GetBatchLessons', { studentBatchId: studentBatchId }, function(data) {
-                            $.each(data, function(index, item) {
-                                dropdown.append($('<option>', {
-                                    value: item.id,
-                                    text: item.text
-                                }));
-                            });
-                        });
-                    }
-                });
-            });
-        </script>
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <label class="form-label-premium">3. Amount Paid (LKR)</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-white border-end-0 text-muted rounded-start-4 ps-3 pe-0" style="border: 1px solid rgba(0,0,0,0.08); border-right: 0;"><i data-feather="dollar-sign" style="width: 16px;"></i></span>
+                    <input type="number" step="0.01" class="form-control input-premium border-start-0" asp-for="Amount" placeholder="0.00" />
+                </div>
+                <span asp-validation-for="Amount" class="text-danger small mt-1 d-block fw-600"></span>
+            </div>
+            <div class="col-md-6 mb-4">
+                <label class="form-label-premium">4. For Which Month?</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-white border-end-0 text-muted rounded-start-4 ps-3 pe-0" style="border: 1px solid rgba(0,0,0,0.08); border-right: 0;"><i data-feather="calendar" style="width: 16px;"></i></span>
+                    <input type="text" class="form-control input-premium datepicker border-start-0" id="PaymentMonth" name="PaymentMonth" value="@Model.PaymentMonth.ToString("yyyy-MM")" autocomplete="off" placeholder="Select Month"/>
+                </div>
+                <span asp-validation-for="PaymentMonth" class="text-danger small mt-1 d-block fw-600"></span>
+            </div>
+        </div>
 
         <div class="mb-0">
-            <label class="form-label-premium">Upload Payment Slip</label>
+            <label class="form-label-premium">5. Upload Payment Slip</label>
             
             <div class="payment-upload-card" id="drop-zone" onclick="document.getElementById('SlipImage').click()">
                 <div id="upload-prompt">
                     <div class="upload-icon-circle">
                         <i data-feather="image" style="width: 28px; height: 28px;"></i>
                     </div>
-                    <h6 class="fw-900 text-dark mb-1">Upload Your Slip</h6>
-                    <p class="text-muted small mb-0 px-3 fw-600">Tap here to select an image from your device</p>
+                    <h6 class="fw-900 text-dark mb-1">Select Receipt Photo</h6>
+                    <p class="text-muted small mb-0 px-3 fw-600">Ensure the date and amount are clearly visible</p>
                 </div>
 
                 <div class="slip-preview-container" id="preview-box">
@@ -279,13 +241,45 @@
 
         <div class="mt-5">
             <button type="submit" class="btn btn-action-submit d-flex align-items-center justify-content-center" id="btnSavePayment">
-                <span>Submit My Payment</span>
-                <i class="ms-2" data-feather="send" style="width: 18px;"></i>
+                <span>Securely Submit Payment</span>
+                <i class="ms-2" data-feather="lock" style="width: 18px;"></i>
             </button>
             <button type="button" class="btn btn-link w-100 text-muted small fw-800 mt-2 text-decoration-none" data-bs-dismiss="offcanvas">
-                Not now, go back
+                Cancel, go back
             </button>
         </div>
+
+        <script>
+            $(document).ready(function() {
+                if (window.feather) { feather.replace(); }
+
+                $('#StudentBatchId').on('change', function() {
+                    var studentBatchId = $(this).val();
+                    var dropdown = $('#LessonId');
+                    var section = $('#ssw-module-section');
+                    
+                    dropdown.empty().append('<option value="">Full Course Access (Standard)</option>');
+
+                    if (studentBatchId) {
+                        $.getJSON('/StudentPortal/StudentBatchPayment/GetBatchLessons', { studentBatchId: studentBatchId }, function(data) {
+                            if (data && data.length > 0) {
+                                section.slideDown();
+                                $.each(data, function(index, item) {
+                                    dropdown.append($('<option>', {
+                                        value: item.id,
+                                        text: item.text
+                                    }));
+                                });
+                            } else {
+                                section.slideUp();
+                            }
+                        });
+                    } else {
+                        section.slideUp();
+                    }
+                });
+            });
+        </script>
 
     </form>
 

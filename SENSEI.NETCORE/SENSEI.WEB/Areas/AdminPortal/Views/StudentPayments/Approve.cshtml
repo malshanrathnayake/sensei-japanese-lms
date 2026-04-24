@@ -51,9 +51,20 @@
             <small class="text-muted">Select a specific category if this payment is only for a certain part of the course (e.g. SSW parts).</small>
         </div>
 
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Reference Number</label>
+                <input class="form-control" value="@Model.ReferenceNumber" readonly />
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label">@Html.DisplayNameFor(m => m.PaymentDate)</label>
+                <input class="form-control" value="@Model.PaymentDate?.ToString("yyyy-MM-dd HH:mm:ss")" readonly />
+            </div>
+        </div>
+
         <div class="mb-3">
-            <label class="form-label">@Html.DisplayNameFor(m => m.PaymentDate)</label>
-            <input class="form-control" value="@Model.PaymentDate?.ToString("yyyy-MM-dd HH:mm:ss")" readonly />
+            <label class="form-label">Student Remarks</label>
+            <textarea class="form-control" readonly rows="2">@Model.Remarks</textarea>
         </div>
 
         <script>

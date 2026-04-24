@@ -97,17 +97,18 @@
     <div class="row mb-5 align-items-center bg-white rounded-4 p-4 shadow-sm mx-0 animate-fade-in" style="border-left: 5px solid var(--sensei-red); position: relative; z-index: 2;">
         <div class="col-12 col-md-7 mb-3 mb-md-0">
             <h3 class="fw-900 text-dark mb-1">My <span style="color: var(--sensei-red);">Payments</span> Center</h3>
-            <p class="text-muted mb-0 fw-600">こんにちは, @(Model?.FirstName ?? "Student")! Keep track of your learning investment here. 📚✨</p>
+            <p class="text-muted mb-0 fw-600">Konnichiwa, @(Model?.FirstName ?? "Student")-san! (こんにちは) Keep track of your learning investment here. 📚✨</p>
         </div>
 
-        <div class="col-12 col-md-5 text-md-end">
-            <div class="d-inline-flex gap-3 align-items-center">
-                <div class="text-end d-none d-sm-block">
+        <div class="col-12 col-md-5 d-flex justify-content-md-end align-items-center mt-3 mt-md-0">
+            <div class="d-flex gap-3 align-items-center">
+                <div class="text-end d-none d-sm-block me-2">
                     <div class="text-muted small fw-700">Student Index</div>
                     <div class="fw-800 text-dark">#@Model?.IndexNumber</div>
                 </div>
-                <button class="btn btn-primary btn-new-payment" id="new-payment" data-action-url="@Url.Action("UpdatePayment", "StudentBatchPayment", new { area = "StudentPortal" })">
-                    <i class="align-middle me-2" data-feather="plus-circle" style="width: 18px; height: 18px;"></i> Upload Slip
+                <button class="btn btn-primary btn-new-payment px-4 py-2" id="new-payment" data-action-url="@Url.Action("UpdatePayment", "StudentBatchPayment", new { area = "StudentPortal" })">
+                    <i class="align-middle me-2" data-feather="plus-circle" style="width: 20px; height: 20px;"></i> 
+                    <span>Upload Slip</span>
                 </button>
             </div>
         </div>
@@ -233,10 +234,14 @@
                         "render": function(data) {
 
                             var month = moment.utc(data.paymentMonth).format('MMMM YYYY');
+                            var refHtml = data.referenceNumber ? `<div class="text-muted smaller fw-600 mt-1"><i data-feather="hash" style="width: 10px;"></i> ${data.referenceNumber}</div>` : '';
 
-                            return `<div class="fw-700 text-dark d-flex align-items-center">
-                                        <i data-feather="calendar" class="me-2 text-muted" style="width: 14px; height: 14px;"></i>
-                                        ${month}
+                            return `<div class="fw-700 text-dark d-flex flex-column">
+                                        <div class="d-flex align-items-center">
+                                            <i data-feather="calendar" class="me-2 text-muted" style="width: 14px; height: 14px;"></i>
+                                            ${month}
+                                        </div>
+                                        ${refHtml}
                                     </div>`;
                         }
                     },
@@ -300,12 +305,15 @@
 
                                         <div class="mt-4 pt-3 border-top d-flex justify-content-between align-items-center">
                                             <div class="d-flex align-items-center">
-                                                <div class="rounded-circle bg-soft-success d-flex align-items-center justify-content-center me-2" style="width: 24px; height: 24px;">
-                                                    <i data-feather="refresh-cw" style="width: 12px; height: 12px;"></i>
-                                                </div>
-                                                <span class="text-muted small fw-600">Sync completed</span>
+                                                <button class="btn btn-sm btn-soft-primary fw-800 px-3 py-2 rounded-pill d-flex align-items-center" onclick="openUploadForBatch('${item.batchName}')" style="font-size: 0.7rem;">
+                                                    <i data-feather="plus-circle" class="me-1" style="width: 12px; height: 12px;"></i>
+                                                    Upload Slip
+                                                </button>
                                             </div>
-                                            <i data-feather="shield" class="text-success opacity-25" style="width: 24px; height: 24px;"></i>
+                                            <div class="d-flex align-items-center text-muted">
+                                                <i data-feather="shield" class="text-success opacity-50 me-1" style="width: 14px; height: 14px;"></i>
+                                                <span class="small fw-600">Secure</span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -329,6 +337,16 @@
                 $('#summaryContainer').html(html);
                 if (window.feather) { feather.replace(); }
             });
+        }
+
+        function openUploadForBatch(batchName) {
+            // Trigger the main button
+            $('#new-payment').click();
+            
+            // We need to wait for the offcanvas to load then select the batch
+            // Since .load is async, we can use a small timeout or a better way
+            // But for now, let's just trigger the offcanvas.
+            // Ideally we'd pass the batch name to the UpdatePayment view.
         }
 
     </script>

@@ -1,4 +1,6 @@
+@using SENSEI.DOMAIN
 @using core_web.Helpers
+@model Student
 @{
     ViewData["Title"] = "My Learning";
 }
@@ -313,6 +315,7 @@
                     <div class="col-12 col-lg-7 mb-4 mb-lg-0">
                         <span class="hero-badge-premium">YOUR PROGRESS TRACKER</span>
                         <h1 class="display-6 fw-900 mb-3" style="font-family: 'Noto Serif JP', serif; color: #1e293b; letter-spacing: -0.02em;">My Learning <span style="color: var(--sensei-red);">Journey</span></h1>
+                        <h4 class="fw-800 text-dark mb-2">Konnichiwa, @(Model?.FirstName ?? "Student")-san! (こんにちは)</h4>
                         <p class="mb-0 fw-600 text-muted" style="font-size: 1.05rem; line-height: 1.6;">
                              Every small step brings you closer to mastering Japanese. <br class="d-none d-md-block"> Keep moving forward, Sensei Academy is with you! 🌸
                         </p>
