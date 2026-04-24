@@ -7,25 +7,23 @@
 }
 
 <style>
-    .avatar-circle {
-        width: 38px;
-        height: 38px;
-        background: linear-gradient(135deg, var(--sensei-red) 0%, var(--sensei-red-dark) 100%);
-        color: white;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 50%;
-        font-weight: 800;
-        font-size: 0.85rem;
-        box-shadow: 0 4px 10px rgba(216, 50, 54, 0.2);
+    @@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+    #LessonRequestDataTable, 
+    #LessonRequestDataTable th, 
+    #LessonRequestDataTable td,
+    .stats-card-premium h3,
+    .stats-card-premium h6 {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
     }
+
     .stats-card-premium {
         border: none !important;
         border-radius: 20px !important;
         background: white;
         transition: all 0.3s ease;
         box-shadow: 0 10px 30px rgba(0,0,0,0.02) !important;
+        cursor: pointer;
     }
     .stats-card-premium:hover {
         transform: translateY(-5px);
@@ -41,22 +39,87 @@
         font-size: 1.25rem;
     }
     #LessonRequestDataTable thead th {
-        background-color: #f8f9fa;
-        color: #495057;
+        background-color: #f8fafc;
+        color: #0f172a;
         font-weight: 800;
         text-transform: uppercase;
-        font-size: 0.65rem;
-        letter-spacing: 0.08em;
-        padding: 1rem;
-        border-bottom: 2px solid #f1f3f5;
+        font-size: 0.8rem;
+        letter-spacing: 0.05em;
+        padding: 1.5rem 1rem;
+        border-bottom: 2px solid #e2e8f0;
+        vertical-align: middle;
+    }
+    #LessonRequestDataTable tbody td {
+        padding: 1.5rem 1rem !important;
+        vertical-align: middle !important;
+        border-bottom: 1px solid #f1f5f9;
+        font-size: 0.95rem;
+        color: #1e293b;
+        font-weight: 500;
+    }
+    .avatar-circle {
+        width: 48px;
+        height: 48px;
+        background: #f1f5f9;
+        color: #0f172a;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 12px;
+        font-weight: 800;
+        font-size: 1.1rem;
+        flex-shrink: 0;
+        border: 2px solid #fff;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
     }
     .badge-premium {
-        padding: 6px 12px;
-        border-radius: 50px;
+        padding: 6px 14px;
+        border-radius: 10px;
         font-weight: 800;
-        font-size: 0.65rem;
+        font-size: 0.6rem;
+        text-transform: uppercase;
         letter-spacing: 0.05em;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+    .action-btn-premium {
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: none;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .action-btn-premium:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    }
+    .action-btn-premium.btn-approve {
+        background: #10b981;
+        color: white;
+    }
+    .action-btn-premium.btn-approve:hover {
+        background: #059669;
+    }
+    .action-btn-premium.btn-more {
+        background: #94a3b8;
+        color: white;
+    }
+    .action-btn-premium.btn-more:hover {
+        background: #64748b;
+    }
+
+    /* Mobile Enhancements */
+    @@media (max-width: 768px) {
+        .stats-card-premium { margin-bottom: 1rem; }
+        .stats-icon-box { width: 40px; height: 40px; font-size: 1rem; }
+        .stats-card-premium h3 { font-size: 1.25rem; }
+        .stats-card-premium h6 { font-size: 0.6rem; }
+        .stats-card-premium .card-body { padding: 1.25rem !important; }
+        
+        .hide-mobile { display: none !important; }
+        .table-responsive { border: none !important; }
     }
 </style>
 
@@ -150,7 +213,7 @@
                 <table id="LessonRequestDataTable" class="table table-hover align-middle mb-0 w-100">
                     <thead class="bg-light">
                         <tr>
-                            <th class="ps-4" style="width: 40px;"></th>
+                            <th class="ps-4 text-center" style="width: 140px;">ACTIONS</th>
                             <th>Batch & Lesson</th>
                             <th>Student</th>
                             <th>Reference</th>
@@ -264,8 +327,16 @@
             }
 
             loadBatchStudentLessonRequests();
-
+            loadLessonRequestStats();
         });
+
+        function loadLessonRequestStats() {
+            $.getJSON('/AdminPortal/BatchStudentLessonRequest/GetLessonRequestStats', function (data) {
+                $('#stat-pending').text(data.pending);
+                $('#stat-approved').text(data.approved);
+                $('#stat-total').text(data.total);
+            });
+        }
 
         function loadBatchStudentLessonRequests() {
 
@@ -282,8 +353,9 @@
                 pageLength: 25,
                 order: [[4, "desc"]], // Show New Data First
                 columnDefs: [
-                    { targets: 0, className: 'noVis ps-3' },
-                    { width: 40, targets: 0, orderable: false },
+                    { targets: [3, 4, 5, 6], className: 'text-muted fw-600' },
+                    { targets: 0, className: 'noVis ps-3 text-center' },
+                    { width: 140, targets: 0, orderable: false },
                 ],
                 dom:
                     "<'row p-3 mb-0'<'col-sm-6'l><'col-sm-6 text-end'f>>" +
@@ -314,9 +386,9 @@
                              }
 
                              return `
-                                 <div class="dropdown">
-                                     <button class="btn btn-sm btn-light border-0 p-1 rounded-circle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="width: 32px; height: 32px;">
-                                         <i data-feather="more-vertical" style="width: 16px; height: 16px;"></i>
+                                 <div class="dropdown d-flex justify-content-center">
+                                     <button class="action-btn-premium btn-more" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                         <i data-feather="more-vertical" style="width: 18px; height: 18px;"></i>
                                      </button>
                                      <ul class="dropdown-menu dropdown-menu-end shadow border-0 p-2" style="border-radius: 0.75rem; min-width: 180px;">
                                          <li><h6 class="dropdown-header smaller text-muted fw-bold">ACCESS ACTIONS</h6></li>
@@ -331,24 +403,29 @@
                         data: 'batchStudentLessonAccess.batchLesson.batch.batchName', 
                         name:'batchName',
                         render: function(d, t, r) {
-                            return `<div class="fw-bold text-dark">${d||'No Batch'}</div><div class="text-muted smaller">${r.batchStudentLessonAccess.batchLesson.lesson.lessonName}</div>`;
+                            var batchName = d || '—';
+                            var lessonName = (r.batchStudentLessonAccess && r.batchStudentLessonAccess.batchLesson && r.batchStudentLessonAccess.batchLesson.lesson) 
+                                ? r.batchStudentLessonAccess.batchLesson.lesson.lessonName 
+                                : '—';
+                            return `<div class="fw-bold text-dark">${batchName}</div><div class="text-muted smaller">${lessonName}</div>`;
                         }
                     },
                      { 
                          data: 'batchStudentLessonAccess.student.studentPopulatedName', 
                          name:'studentPopulatedName',
                          render: function(d, t, r) {
-                             var initial = d.substring(0, 1).toUpperCase();
+                             var name = d || 'Unknown';
+                             var initial = name.substring(0, 1).toUpperCase();
+                             var index = (r.batchStudentLessonAccess && r.batchStudentLessonAccess.student) 
+                                ? r.batchStudentLessonAccess.student.indexNumber 
+                                : '—';
                              return `
                                 <div class="d-flex align-items-center gap-3">
                                     <div class="avatar-circle">${initial}</div>
-                                    <div>
-                                        <div class="fw-bold text-dark">${d}</div>
-                                        <div class="text-muted smaller d-flex align-items-center gap-1">
-                                            <i data-feather="hash" style="width: 10px; height: 10px;"></i> Index: ${r.batchStudentLessonAccess.student.indexNumber}
-                                        </div>
-                                        <div class="text-primary smaller fw-bold d-flex align-items-center gap-1 mt-1">
-                                            <i data-feather="phone" style="width: 10px; height: 10px;"></i> ${r.batchStudentLessonAccess.student.phoneNo || 'No Phone'}
+                                    <div class="d-flex flex-column justify-content-center">
+                                        <div class="fw-800 text-dark mb-0" style="line-height: 1.2; font-size: 1rem;">${name}</div>
+                                        <div class="text-muted fw-600 d-flex align-items-center gap-1" style="font-size: 0.8rem;">
+                                            <i data-feather="hash" style="width: 10px; height: 10px;"></i> Index: ${index}
                                         </div>
                                     </div>
                                 </div>`;
@@ -387,31 +464,31 @@
                                 return `<span class="badge bg-soft-success text-success border-0 px-3 py-2 rounded-pill fw-bold" style="font-size: 0.65rem; letter-spacing: 0.05em;">APPROVED</span>`;
                             }
                             if (row.approveStatusEnum === 2) {
-                                return `<span class="badge bg-soft-danger text-danger border-0 px-3 py-2 rounded-pill fw-bold" style="font-size: 0.65rem; letter-spacing: 0.05em;">REJECTED</span>`;
+                                return `<span class="badge bg-soft-danger text-danger border-0 px-3 py-2 rounded-pill fw-bold" style="font-size: 0.65rem; letter-spacing: 0.05em;">EXPIRED</span>`;
                             }
-                            return '';
+                            return `<span class="badge bg-soft-secondary text-secondary border-0 px-3 py-2 rounded-pill fw-bold" style="font-size: 0.65rem; letter-spacing: 0.05em;">UNKNOWN</span>`;
                         }
                     }
                 ],
                  drawCallback: function (settings) {
                     if (window.feather) { feather.replace(); }
                     approveButton();
-
-                    // Update local stats from table metadata
-                    if (settings.json) {
-                        $('#stat-total').text(settings.json.recordsTotal);
-                        // For granular stats, we usually need a separate API like we did for Registration.
-                        // I will keep them updated if the API is available or just show total for now.
-                    }
+                    loadLessonRequestStats();
+                    if (typeof updateAdminBadges === "function") { updateAdminBadges(); }
                 }
             });
         }
 
         function renderDateTime(data) {
             if (!data) return '—';
-            var date = data.split('T')[0];
-            var time = data.split('T')[1].split('.')[0];
-            return `<div>${date}</div><div class="smaller text-muted" style="font-size: 0.7rem;">${time}</div>`;
+            try {
+                var parts = data.split('T');
+                var date = parts[0];
+                var time = parts.length > 1 ? parts[1].split('.')[0] : '';
+                return `<div>${date}</div><div class="smaller text-muted" style="font-size: 0.7rem;">${time}</div>`;
+            } catch (e) {
+                return `<div>${data}</div>`;
+            }
         }
 
     </script>

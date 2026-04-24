@@ -10,5 +10,6 @@ namespace SENSEI.BLL.AdminPortalService.Interface
         Task<(IEnumerable<BatchStudentLessonAccessRequest>, long)> SearchBatchStudentLesson(long courseId = 0, long batchId = 0, string indexNumber = "", int status = -1, int start = 0, int length = 10, string searchValue = "", string sortColumn = "", string sortDirection = "");
         Task<BatchStudentLessonAccessRequest> GetBatchStudentLessonRequest(long batchStudentLessonRequestId);
         Task<bool> ApproveBatchStudentLessonRequest(long batchStudentLessonRequestId, long userId, DateTime? accessEndDate = null);
+        Task<(long pending, long approved, long total)> GetLessonRequestStats();
     }
 }

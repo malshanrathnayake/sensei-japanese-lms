@@ -149,5 +149,11 @@ namespace SENSEI.WEB.Areas.AdminPortal.Controllers
 
             return Json(result);
         }
+        [HttpGet]
+        public async Task<JsonResult> GetLessonRequestStats()
+        {
+            var (pending, approved, total) = await _batchStudentLessonService.GetLessonRequestStats();
+            return Json(new { pending, approved, total });
+        }
     }
 }

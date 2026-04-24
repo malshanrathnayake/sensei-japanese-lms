@@ -32,7 +32,8 @@
   {
     "Title": "Student Lesson Requests",
     "Icon": "inbox",
-    "Url": "/AdminPortal/BatchStudentLessonRequest/Index"
+    "Url": "/AdminPortal/BatchStudentLessonRequest/Index",
+    "BadgeId": "badge-pending-lesson-request"
   },
   {
     "Title": "Student Registration",

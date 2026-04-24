@@ -7,19 +7,16 @@
 }
 
 <style>
-    .avatar-circle {
-        width: 38px;
-        height: 38px;
-        background: linear-gradient(135deg, var(--sensei-red) 0%, var(--sensei-red-dark) 100%);
-        color: white;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 50%;
-        font-weight: 800;
-        font-size: 0.85rem;
-        box-shadow: 0 4px 10px rgba(216, 50, 54, 0.2);
+    @@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+    #StudentRegistrationDataTable, 
+    #StudentRegistrationDataTable th, 
+    #StudentRegistrationDataTable td,
+    .stats-card-premium h3,
+    .stats-card-premium h6 {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
     }
+
     .stats-card-premium {
         border: none !important;
         border-radius: 20px !important;
@@ -51,22 +48,74 @@
         font-size: 1.25rem;
     }
     #StudentRegistrationDataTable thead th {
-        background-color: #f8f9fa;
-        color: #495057;
+        background-color: #f8fafc;
+        color: #0f172a;
         font-weight: 800;
         text-transform: uppercase;
-        font-size: 0.65rem;
-        letter-spacing: 0.08em;
-        padding: 1rem;
-        border-bottom: 2px solid #f1f3f5;
-    }
-    .badge-premium {
-        padding: 6px 12px;
-        border-radius: 50px;
-        font-weight: 800;
-        font-size: 0.65rem;
+        font-size: 0.8rem;
         letter-spacing: 0.05em;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        padding: 1.5rem 1rem;
+        border-bottom: 2px solid #e2e8f0;
+        vertical-align: middle;
+    }
+    #StudentRegistrationDataTable tbody td {
+        padding: 1.5rem 1rem !important;
+        vertical-align: middle !important;
+        border-bottom: 1px solid #f1f5f9;
+        font-size: 0.95rem;
+        color: #1e293b;
+        font-weight: 500;
+    }
+    .avatar-circle {
+        width: 48px;
+        height: 48px;
+        background: #f1f5f9;
+        color: #0f172a;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 12px;
+        font-weight: 800;
+        font-size: 1.1rem;
+        flex-shrink: 0;
+        border: 2px solid #fff;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+    .action-btn-premium {
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: none;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .action-btn-premium:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    }
+    .action-btn-premium.btn-approve {
+        background: #10b981;
+        color: white;
+    }
+    .action-btn-premium.btn-approve:hover {
+        background: #059669;
+    }
+    .action-btn-premium.btn-view {
+        background: #3b82f6;
+        color: white;
+    }
+    .action-btn-premium.btn-view:hover {
+        background: #2563eb;
+    }
+    .action-btn-premium.btn-more {
+        background: #94a3b8;
+        color: white;
+    }
+    .action-btn-premium.btn-more:hover {
+        background: #64748b;
     }
 
     /* Mobile Enhancements */
@@ -79,16 +128,6 @@
         
         .hide-mobile { display: none !important; }
         .table-responsive { border: none !important; }
-        
-        .btn-new-mobile { width: 100%; margin-top: 1rem; }
-        .page-header-mobile { flex-direction: column; align-items: flex-start !important; }
-    }
-
-    @@media (max-width: 576px) {
-        .row-cols-mobile-2 > * {
-            flex: 0 0 50%;
-            max-width: 50%;
-        }
     }
 </style>
 
@@ -199,7 +238,7 @@
                 <table id="StudentRegistrationDataTable" class="table table-hover align-middle mb-0 w-100">
                     <thead class="bg-light">
                         <tr>
-                            <th class="ps-4" style="width: 40px;"></th>
+                            <th class="ps-4 text-center" style="width: 160px;">ACTIONS</th>
                             <th>Student</th>
                             <th class="hide-mobile">Applied Course</th>
                             <th class="hide-mobile">Mode</th>
@@ -308,10 +347,10 @@
                 pageLength: 25,
                 order: [[5, "desc"]], // Show New Data First (Submission Date)
                 columnDefs: [
-                    { targets: [2, 3, 4, 5], className: 'hide-mobile' },
-                    { targets: 0, className: 'noVis ps-3' },
+                    { targets: [2, 3, 4, 5], className: 'hide-mobile fw-700' },
+                    { targets: 0, className: 'noVis ps-3 text-center' },
                     { targets: 6, className: 'text-center' },
-                    { width: 40, targets: 0, orderable: false },
+                    { width: 160, targets: 0, orderable: false },
                 ],
                 dom:
                     "<'row p-3 mb-0'<'col-sm-6'l><'col-sm-6 text-end'f>>" +
@@ -337,18 +376,18 @@
                             var isFinalized = row.isApproved; 
                             var isRejected = row.isRejected;
 
-                            var approveBtn = `<button class="btn btn-sm btn-soft-success p-1 px-2 rounded-pill approve-registration" data-action-url="${approveUrl}" title="Approve Admission">
-                                                <i data-feather="check-circle" style="width: 14px; height: 14px;"></i>
+                            var approveBtn = `<button class="action-btn-premium btn-approve approve-registration" data-action-url="${approveUrl}" title="Approve Admission">
+                                                <i data-feather="check-circle" style="width: 16px; height: 16px;"></i>
                                               </button>`;
                             
-                            var viewBtn = `<button class="btn btn-sm btn-soft-info p-1 px-2 rounded-pill view-registration-details" data-action-url="${detailsUrl}" title="View Details">
-                                                <i data-feather="eye" style="width: 14px; height: 14px;"></i>
+                            var viewBtn = `<button class="action-btn-premium btn-view view-registration-details" data-action-url="${detailsUrl}" title="View Details">
+                                                <i data-feather="eye" style="width: 16px; height: 16px;"></i>
                                            </button>`;
 
                             var moreBtn = `
-                                <div class="dropdown d-inline-block ms-1">
-                                    <button class="btn btn-sm btn-light border-0 p-1 rounded-circle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="width: 32px; height: 32px;">
-                                        <i data-feather="more-vertical" style="width: 16px; height: 16px;"></i>
+                                <div class="dropdown d-inline-block">
+                                    <button class="action-btn-premium btn-more" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i data-feather="more-vertical" style="width: 18px; height: 18px;"></i>
                                     </button>
                                     <ul class="dropdown-menu dropdown-menu-end shadow border-0 p-2" style="border-radius: 0.75rem; min-width: 180px;">
                                         <li><h6 class="dropdown-header smaller text-muted fw-bold">MORE ACTIONS</h6></li>
@@ -356,7 +395,7 @@
                                     </ul>
                                 </div>`;
 
-                            return `<div class="d-flex justify-content-center align-items-center gap-1">
+                            return `<div class="d-flex justify-content-center align-items-center gap-2">
                                         ${viewBtn}
                                         ${(!isFinalized && !isRejected) ? approveBtn : ''}
                                         ${moreBtn}
@@ -372,9 +411,11 @@
                             return `
                                 <div class="d-flex align-items-center gap-3">
                                     <div class="avatar-circle">${initial}</div>
-                                    <div>
-                                        <div class="fw-bold text-dark"><a href="javascript:void(0)" class="text-dark text-decoration-none view-registration-details" data-action-url="${detailsUrl}">${data}</a></div>
-                                        <div class="text-muted smaller">${row.email}</div>
+                                    <div class="d-flex flex-column justify-content-center">
+                                        <div class="fw-800 text-dark mb-0" style="line-height: 1.2; font-size: 1rem;">
+                                            <a href="javascript:void(0)" class="text-dark text-decoration-none view-registration-details" data-action-url="${detailsUrl}">${data}</a>
+                                        </div>
+                                        <div class="text-muted fw-600" style="font-size: 0.8rem;">${row.email}</div>
                                     </div>
                                 </div>`;
                         }
@@ -409,8 +450,8 @@
                     approveButton();
                     rejectButton();
                     viewDetailsButton();
-
                     loadRegistrationStats();
+                    if (typeof updateAdminBadges === "function") { updateAdminBadges(); }
                 }
             });
         }

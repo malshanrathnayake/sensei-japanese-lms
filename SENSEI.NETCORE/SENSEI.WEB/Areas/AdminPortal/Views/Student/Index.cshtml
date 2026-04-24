@@ -7,19 +7,14 @@
 }
 
 <style>
-    .avatar-circle {
-        width: 38px;
-        height: 38px;
-        background: linear-gradient(135deg, var(--sensei-red) 0%, var(--sensei-red-dark) 100%);
-        color: white;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 50%;
-        font-weight: 800;
-        font-size: 0.85rem;
-        box-shadow: 0 4px 10px rgba(216, 50, 54, 0.2);
+    @@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+    #StudentDataTable, 
+    #StudentDataTable th, 
+    #StudentDataTable td {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
     }
+
     .stats-card-premium {
         border: none !important;
         border-radius: 20px !important;
@@ -41,22 +36,46 @@
         font-size: 1.25rem;
     }
     #StudentDataTable thead th {
-        background-color: #f8f9fa;
-        color: #495057;
+        background-color: #f8fafc;
+        color: #0f172a;
         font-weight: 800;
         text-transform: uppercase;
-        font-size: 0.65rem;
-        letter-spacing: 0.08em;
-        padding: 1rem;
-        border-bottom: 2px solid #f1f3f5;
+        font-size: 0.8rem;
+        letter-spacing: 0.05em;
+        padding: 1.5rem 1rem;
+        border-bottom: 2px solid #e2e8f0;
+        vertical-align: middle;
+    }
+    #StudentDataTable tbody td {
+        padding: 1.5rem 1rem !important;
+        vertical-align: middle !important;
+        border-bottom: 1px solid #f1f5f9;
+        font-size: 0.95rem;
+        color: #1e293b;
+        font-weight: 500;
+    }
+    .avatar-circle {
+        width: 48px;
+        height: 48px;
+        background: #f1f5f9;
+        color: #0f172a;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 12px;
+        font-weight: 800;
+        font-size: 1.1rem;
+        flex-shrink: 0;
+        border: 2px solid #fff;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
     }
     .badge-premium {
-        padding: 6px 12px;
-        border-radius: 50px;
+        padding: 6px 14px;
+        border-radius: 10px;
         font-weight: 800;
-        font-size: 0.65rem;
+        font-size: 0.6rem;
+        text-transform: uppercase;
         letter-spacing: 0.05em;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
     }
 
     /* Mobile Enhancements */
@@ -235,9 +254,9 @@
                 order: [[0, "desc"]], // New Students First
                 columnDefs: [
                     { targets: 0, visible: false }, // Hide ID
-                    { targets: [3, 4, 5], className: 'hide-mobile text-muted small' },
+                    { targets: [3, 4, 5, 6], className: 'hide-mobile text-muted small fw-600' },
                     { targets: 1, className: 'ps-4' },
-                    { targets: 2, className: 'fw-bold text-primary small' }
+                    { targets: 2, className: 'fw-800 text-primary' }
                 ],
                 dom:
                     "<'row p-3 mb-0'<'col-sm-6'l><'col-sm-6 text-end'f>>" +
@@ -260,9 +279,9 @@
                             return `
                                 <div class="d-flex align-items-center gap-3">
                                     <div class="avatar-circle">${initial}</div>
-                                    <div>
-                                        <div class="fw-bold text-dark">${data}</div>
-                                        <div class="text-muted smaller">${row.email}</div>
+                                    <div class="d-flex flex-column justify-content-center">
+                                        <div class="fw-800 text-dark mb-0" style="line-height: 1.2; font-size: 1rem;">${data}</div>
+                                        <div class="text-muted fw-600" style="font-size: 0.8rem;">${row.email}</div>
                                     </div>
                                 </div>`;
                         }

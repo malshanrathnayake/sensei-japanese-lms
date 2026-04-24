@@ -186,19 +186,20 @@ namespace SENSEI.WEB.Controllers
         {
             var studentRegistrationService = HttpContext.RequestServices.GetService<IStudentRegistrationService>();
             var studentService = HttpContext.RequestServices.GetService<SENSEI.BLL.StudentPortalService.Interfaces.IStudentService>();
+            var batchStudentLessonService = HttpContext.RequestServices.GetService<IBatchStudentLessonService>();
 
             var (registrations, _) = await studentRegistrationService.SearchStudentRegistraion(0, 0, 1000);
             var pendingRegistrations = registrations.Count(x => !x.IsApproved && !x.IsRejected);
 
-            // Fetch pending payments. Assuming 0 as batchId to get all? 
-            // Need to check SearchStudentBatchPayments in service.
-            // For now, let's just get a sample count or use a dedicated method if available.
             var (payments, _) = await studentService.SearchStudentBatchPayments(0, 0, 0, 1000); 
             var pendingPayments = payments.Count(x => !x.IsApproved);
 
+            var (pendingRequests, _, _) = await batchStudentLessonService.GetLessonRequestStats();
+
             return Json(new { 
                 pendingRegistrations = pendingRegistrations,
-                pendingPayments = pendingPayments
+                pendingPayments = pendingPayments,
+                pendingLessonRequests = pendingRequests
             });
         }
     }

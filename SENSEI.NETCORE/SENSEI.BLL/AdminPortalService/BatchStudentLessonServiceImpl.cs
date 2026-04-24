@@ -84,5 +84,27 @@ namespace SENSEI.BLL.AdminPortalService
             return status;
         }
 
+        public async Task<(long pending, long approved, long total)> GetLessonRequestStats()
+        {
+            DataTransactionManager dataTransactionManager = new DataTransactionManager(_databaseService.GetConnectionString());
+            var (allRequests, _) = await dataTransactionManager.BatchStudentLessonAccessRequestDataManager.RetrieveDataWithCount("SearchBatchStudentLesson", new[]
+            {
+                new SqlParameter("@courseId", 0),
+                new SqlParameter("@batchId", 0),
+                new SqlParameter("@indexNumber", ""),
+                new SqlParameter("@start", 0),
+                new SqlParameter("@length", 10000),
+                new SqlParameter("@searchValue", ""),
+                new SqlParameter("@sortColumn", "requestedDate"),
+                new SqlParameter("@sortDirection", "DESC"),
+            });
+
+            var list = allRequests.ToList();
+            long pending = list.Count(x => x.ApproveStatusEnum == ApproveStatusEnum.Pending);
+            long approved = list.Count(x => x.ApproveStatusEnum == ApproveStatusEnum.Approved);
+            long total = list.Count;
+
+            return (pending, approved, total);
+        }
     }
 }
