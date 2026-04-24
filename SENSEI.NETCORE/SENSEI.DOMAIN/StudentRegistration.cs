@@ -42,6 +42,9 @@ namespace SENSEI.DOMAIN
         [DisplayName("NIC *")]
         public string NIC { get; set; } 
 
+        [DisplayName("Index Number")]
+        public string? IndexNumber { get; set; }
+
         [Required(ErrorMessage = "Date of Birth is required.")]
         [DisplayName("Date Of Birth *")]
         public DateTime DateOfBirth { get; set; }
@@ -83,6 +86,9 @@ namespace SENSEI.DOMAIN
         [Range(1, long.MaxValue, ErrorMessage = "The Course field is required.")]
         [DisplayName("Course *")]
         public long CourseId { get; set; }
+
+        [DisplayName("Batch")]
+        public long? BatchId { get; set; }
 
         [DisplayName("Full Name")]
         public string StudentRegistrationPopulatedName
@@ -127,6 +133,8 @@ namespace SENSEI.DOMAIN
         public StudentLearningMode StudentLearningMode { get; set; }
         [ValidateNever]
         public Course Course { get; set; }
+        [ValidateNever]
+        public Batch Batch { get; set; }
         #endregion
     }
 }

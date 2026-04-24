@@ -29,7 +29,7 @@ BEGIN
         SELECT @email = Email, @phoneNo = PhoneNo FROM StudentRegistration WHERE StudentRegistrationId = @studentRegistrationId;
 
 		UPDATE [StudentRegistration]
-		SET [IsApproved] = 1, [ApprovedById] = @approvedById, [UpdatedDateTime] = GETUTCDATE()
+		SET [IsApproved] = 1, [ApprovedById] = @approvedById, [UpdatedDateTime] = GETUTCDATE(), [BatchId] = @batchId
 		WHERE [StudentRegistrationId] = @studentRegistrationId;
 
         -- Check if user exists

@@ -42,11 +42,15 @@ namespace SENSEI.DOMAIN
         [DisplayName("Is Deleted")]
         public bool IsDeleted { get; set; }
 
+        [DisplayName("Lesson Category (Optional)")]
+        public long? LessonId { get; set; }
+
         public IFormFile SlipImage { get; set; }
         public string EncryptedKey { get; set; }
 
         // Navigation
         public StudentBatch StudentBatch { get; set; }
         public Staff ApprovedBy { get; set; }
+        public Lesson Lesson { get; set; }
     }
 }

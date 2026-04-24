@@ -439,7 +439,29 @@
         .nav-links a { padding: 0.4rem 0.6rem; }
         .nav-links a:not(.btn-link-home) { display: none; } /* Keep only Home for minimal space */
     }
+    /* Select2 Validation Styles */
+    .is-invalid-select2 .select2-selection {
+        border-color: #dc3545 !important;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e") !important;
+        background-repeat: no-repeat !important;
+        background-position: right 12px center !important;
+        background-size: 16px 16px !important;
+    }
 
+    .select2-container--bootstrap5 .select2-selection--single {
+        height: 52px !important;
+        border-radius: 14px !important;
+        border: 1px solid #f0f0f0 !important;
+        background-color: #fdfdfd !important;
+        display: flex !important;
+        align-items: center !important;
+        transition: all 0.3s ease !important;
+    }
+
+    .select2-container--bootstrap5.select2-container--focus .select2-selection--single {
+        border-color: var(--primary) !important;
+        box-shadow: 0 0 0 5px var(--primary-glow) !important;
+    }
 </style>
 
 <!-- intl-tel-input -->
@@ -630,6 +652,22 @@
                                 </div>
                             </div>
 
+                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+                                <div class="mb-3" id="batch-wrapper">
+                                    <label class="form-label" asp-for="BatchId">Batch (Optional)</label>
+                                    <select id="BatchId" class="form-control batch-select" name="BatchId" asp-for="BatchId"></select>
+                                    <span asp-validation-for="BatchId" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+                                <div class="mb-3">
+                                    <label class="form-label" asp-for="IndexNumber"><i class="fas fa-id-badge"></i> Previous Index Number (Optional)</label>
+                                    @Html.TextBoxFor(m => m.IndexNumber, new { @class = "form-control", placeholder = "e.g. SJC/2023/001" })
+                                    <span asp-validation-for="IndexNumber" class="text-danger"></span>
+                                </div>
+                            </div>
+
                         </div>
 
                     </div>
@@ -784,6 +822,36 @@
                     title: 'Select Branch',
                     dropdownParentId: 'branch-wrapper'
                 });
+            });
+
+            // Initialize Batch Dropdown as empty Select2
+            loadSelectBox({
+                data: [],
+                className: 'batch-select',
+                title: 'Select Course First',
+                dropdownParentId: 'batch-wrapper'
+            });
+
+            // Load Batches based on Course
+            $('#CourseId').on('change', function() {
+                const courseId = $(this).val();
+                if (courseId > 0) {
+                    $.getJSON('/SenseiJapaneseSchool/GetBatchListJsonResult', { courseId: courseId }, function (data) {
+                        loadSelectBox({
+                            data: data,
+                            className: 'batch-select',
+                            title: 'Select Batch',
+                            dropdownParentId: 'batch-wrapper'
+                        });
+                    });
+                } else {
+                    loadSelectBox({
+                        data: [],
+                        className: 'batch-select',
+                        title: 'Select Course First',
+                        dropdownParentId: 'batch-wrapper'
+                    });
+                }
             });
 
             // Datepicker

@@ -27,6 +27,7 @@ namespace SENSEI.WEB.Controllers
         private readonly IMailService _mailService;
         private readonly IUserNotificationService _userNotificationService;
         private readonly IRealtimeNotifier _realtimeNotifier;
+        private readonly IBatchService _batchService;
 
         public SenseiJapaneseSchoolController
         (
@@ -38,7 +39,8 @@ namespace SENSEI.WEB.Controllers
             IViewRenderService viewRenderService,
             IMailService mailService,
             IUserNotificationService userNotificationService,
-            IRealtimeNotifier realtimeNotifier
+            IRealtimeNotifier realtimeNotifier,
+            IBatchService batchService
         )
         {
             _smsService = smsService;
@@ -50,6 +52,7 @@ namespace SENSEI.WEB.Controllers
             _mailService = mailService;
             _userNotificationService = userNotificationService;
             _realtimeNotifier = realtimeNotifier;
+            _batchService = batchService;
         }
 
         public async Task<IActionResult> Index()
@@ -528,6 +531,14 @@ namespace SENSEI.WEB.Controllers
 
             var result = modes.OrderBy(e => e.LearningModeName).Select(e => new { id = e.StudentLearningModeId, text = e.LearningModeName }).ToList();
 
+            return Json(result);
+        }
+        
+        [HttpGet]
+        public async Task<JsonResult> GetBatchListJsonResult(int courseId)
+        {
+            var batches = await _batchService.GetBatches(courseId);
+            var result = batches.Where(e => !e.IsDeleted).OrderBy(e => e.BatchName).Select(e => new { id = e.BatchId, text = e.BatchName }).ToList();
             return Json(result);
         }
 

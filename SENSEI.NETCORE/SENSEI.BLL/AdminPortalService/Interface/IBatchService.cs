@@ -1,4 +1,4 @@
-﻿using SENSEI.DOMAIN;
+using SENSEI.DOMAIN;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -13,5 +13,6 @@ namespace SENSEI.BLL.AdminPortalService.Interface
         Task<(IEnumerable<Batch>, long)> SearchBatches(long courseId = 0, int start = 0, int length = 10, string searchValue = "", string sortColumn = "", string sortDirection = "");
         Task<bool> DeleteBatch(long batchId);
         Task<IEnumerable<Batch>> GetBatches(int courseId = 0);
+        Task<IEnumerable<BatchLesson>> GetBatchLessons(long batchId);
     }
 }

@@ -11,6 +11,15 @@
     {
         foreach (var lesson in Model.GroupBy(e => e.LessonId).OrderBy(e => e.Key))
         {
+            // Filter: Only show category if student has access to at least one recording in it 
+            // OR if it contains a first-week "trial" recording
+            var hasAccessToCategory = lesson.Any(bl => 
+                bl.BatchStudentLessonAccesses.Any(a => a.StudentId == studentId && a.HasAccess) ||
+                (bl.Batch != null && bl.LessonDateTime <= bl.Batch.BatchStartDate.AddDays(7))
+            );
+            
+            if (!hasAccessToCategory) continue;
+
             var completedBatchLessons = 0;
             foreach (var batchLesson in lesson)
             {

@@ -67,5 +67,15 @@ namespace SENSEI.BLL.AdminPortalService
             });
             return status;
         }
+
+        public async Task<IEnumerable<BatchLesson>> GetBatchLessons(long batchId)
+        {
+            DataTransactionManager dataTransactionManager = new DataTransactionManager(_databaseService.GetConnectionString());
+            var (lessons, count) = await dataTransactionManager.BatchLessonDataManager.RetrieveDataWithCount("SearchBatchLessons", new SqlParameter[] {
+                new SqlParameter("@batchId", batchId),
+                new SqlParameter("@length", -1)
+            });
+            return lessons;
+        }
     }
 }

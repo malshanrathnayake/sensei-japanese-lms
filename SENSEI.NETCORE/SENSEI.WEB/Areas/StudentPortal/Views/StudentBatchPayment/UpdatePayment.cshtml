@@ -191,6 +191,34 @@
             <span asp-validation-for="PaymentMonth" class="text-danger small mt-1 d-block fw-600"></span>
         </div>
 
+        <div class="mb-4">
+            <label class="form-label-premium">Course Category (Optional)</label>
+            <div class="input-group">
+                <span class="input-group-text bg-white border-end-0 text-muted rounded-start-4 ps-3 pe-0" style="border: 1px solid rgba(0,0,0,0.08); border-right: 0;"><i data-feather="tag" style="width: 16px;"></i></span>
+                <select asp-for="LessonId" id="LessonId" class="form-control input-premium border-start-0">
+                    <option value="">Full Month Access (General)</option>
+                </select>
+            </div>
+            <small class="text-muted mt-1 d-block fw-600">Specify if this is for a specific part/category (e.g. SSW Customer Service)</small>
+        </div>
+
+        <script>
+            $(document).ready(function() {
+                var batchId = '@Model.StudentBatchId';
+                if (batchId) {
+                    $.getJSON('/StudentPortal/StudentBatchPayment/GetBatchLessons', { batchId: batchId }, function(data) {
+                        var dropdown = $('#LessonId');
+                        $.each(data, function(index, item) {
+                            dropdown.append($('<option>', {
+                                value: item.id,
+                                text: item.text
+                            }));
+                        });
+                    });
+                }
+            });
+        </script>
+
         <div class="mb-0">
             <label class="form-label-premium">Upload Payment Slip</label>
             

@@ -1,4 +1,4 @@
-﻿CREATE TABLE [dbo].[StudentRegistration]
+CREATE TABLE [dbo].[StudentRegistration]
 (
 	[StudentRegistrationId] BIGINT NOT NULL IDENTITY,
 	[Email] NVARCHAR(256) NOT NULL,
@@ -25,6 +25,8 @@
 	[State] NVARCHAR(100) NULL,
 	[IsRejected] BIT NULL DEFAULT 0,
 	[RejectionComment] NVARCHAR(100) NULL,
+	[BatchId] BIGINT NULL,
+	[IndexNumber] NVARCHAR(50) NULL,
 
 	CONSTRAINT [PK_StudentRegistration_StudentRegistrationId] PRIMARY KEY CLUSTERED ([StudentRegistrationId])
 )

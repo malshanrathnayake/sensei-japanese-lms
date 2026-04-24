@@ -198,6 +198,10 @@
                             <div class="info-label">Branch</div>
                             <div class="info-value">@(Model?.Branch?.BranchName ?? "N/A")</div>
                         </div>
+                        <div class="text-center px-2 border-end border-white">
+                            <div class="info-label">Batch</div>
+                            <div class="info-value">@(Model?.StudentBatches?.FirstOrDefault()?.Batch?.BatchName ?? "N/A")</div>
+                        </div>
                         <div class="text-center px-2">
                             <div class="info-label">Learning Mode</div>
                             <div class="info-value">@(Model?.StudentLearningMode?.LearningModeName ?? "N/A")</div>

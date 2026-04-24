@@ -156,6 +156,7 @@ namespace SENSEI.WEB.Areas.AdminPortal.Controllers
 
             var userId = Convert.ToInt64(HttpContext.Session.GetString("UserId") ?? "0");
 
+            studentRegistration.BatchId = batchId;
             var (status, studentRegistrationId) = await _studentRegistrationService.UpdateStudentRegistraion(studentRegistration);
 
             if (status)

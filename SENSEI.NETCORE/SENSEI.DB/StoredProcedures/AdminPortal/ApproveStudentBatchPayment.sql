@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [dbo].[ApproveStudentBatchPayment]
+CREATE PROCEDURE [dbo].[ApproveStudentBatchPayment]
 	@jsonString NVARCHAR(MAX) = '',
 	@executionStatus BIT OUT,
 	@primaryKey BIGINT OUT
@@ -11,20 +11,22 @@ BEGIN
 
 	BEGIN TRY
 
-		DECLARE @studentBatchPaymentId BIGINT, @approvedById BIGINT, @batchId BIGINT, @studentId BIGINT, @paymentMonth DATETIME
+		DECLARE @studentBatchPaymentId BIGINT, @approvedById BIGINT, @batchId BIGINT, @studentId BIGINT, @paymentMonth DATETIME, @lessonId BIGINT
 
-		SELECT @studentBatchPaymentId = [StudentBatchPaymentId], @approvedById = [ApprovedById], @paymentMonth = [PaymentMonth]
+		SELECT @studentBatchPaymentId = [StudentBatchPaymentId], @approvedById = [ApprovedById], @paymentMonth = [PaymentMonth], @lessonId = [LessonId]
 		FROM OPENJSON(@jsonString, '$')
 		WITH
 		(
 			[StudentBatchPaymentId] BIGINT,
 			[ApprovedById] BIGINT,
-			[PaymentMonth] DATETIMEOFFSET
+			[PaymentMonth] DATETIMEOFFSET,
+			[LessonId] BIGINT
 		);
 
-		SELECT @batchId = BatchId, @studentId = StudentId
-		FROM StudentBatch
-		WHERE StudentBatchId = (SELECT StudentBatchId FROM StudentBatchPayment WHERE StudentBatchPaymentId = @studentBatchPaymentId)
+		SELECT @batchId = BatchId, @studentId = StudentId, @lessonId = ISNULL(@lessonId, LessonId)
+		FROM StudentBatchPayment
+		JOIN StudentBatch ON StudentBatch.StudentBatchId = StudentBatchPayment.StudentBatchId
+		WHERE StudentBatchPaymentId = @studentBatchPaymentId;
 
 		UPDATE [StudentBatchPayment] SET [IsApproved] = 1, [ApprovedById] = @approvedById, [ChangeDateTIme] = GETUTCDATE()
 		WHERE [StudentBatchPaymentId] = @studentBatchPaymentId;
@@ -32,7 +34,9 @@ BEGIN
 		INSERT INTO BatchStudentLessonAccess([BatchLessonId], [StudentId], [HasAccess])
 		SELECT BatchLessonId , @studentId, 1
 		FROM BatchLesson BL
-		WHERE BL.BatchId = @batchId AND MONTH(BL.LessonDateTime) = MONTH(@paymentMonth) AND YEAR(BL.LessonDateTime) = YEAR(@paymentMonth)
+		WHERE BL.BatchId = @batchId 
+			AND (@lessonId IS NULL OR BL.LessonId = @lessonId)
+			AND (@lessonId IS NOT NULL OR (MONTH(BL.LessonDateTime) = MONTH(@paymentMonth) AND YEAR(BL.LessonDateTime) = YEAR(@paymentMonth)))
 
 		COMMIT TRANSACTION;
 		SET @executionStatus = 1;

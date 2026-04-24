@@ -31,7 +31,10 @@
             else if (firstLessonName.Contains("WRAPUP") || firstLessonName.Contains("SESSION") || currentUnitName.Contains("WRAPUP") || currentUnitName.Contains("SESSION"))
                 coverImage = "/theme/v1/img/photos/japanese_cover.png"; // Use the 'sunset' one for sessions
 
-            if (batchLesson.BatchStudentLessonAccesses.Any(e => e.StudentId == studentId && e.BatchLessonId == batchLesson.BatchLessonId && e.HasAccess))
+            var hasPaidAccess = batchLesson.BatchStudentLessonAccesses.Any(e => e.StudentId == studentId && e.BatchLessonId == batchLesson.BatchLessonId && e.HasAccess);
+            var isFirstWeekTrial = batchLesson.Batch != null && batchLesson.LessonDateTime <= batchLesson.Batch.BatchStartDate.AddDays(7);
+
+            if (hasPaidAccess || isFirstWeekTrial)
             {
                 <div class="col-12 col-md-6 col-xl-4 mb-4">
                     <div class="card lesson-card h-100 shadow-sm border-0">

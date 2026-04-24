@@ -142,7 +142,8 @@ namespace SENSEI.WEB.Areas.StudentPortal.Controllers
                 SlipUrl = slipUrl,
                 IsApproved = false,
                 ApprovedById = null,
-                IsDeleted = false
+                IsDeleted = false,
+                LessonId = studentBatchPayment.LessonId
             };
 
             var (status, primaryKey) = await _studentService.UpdateStudentBatchPayment(payment);
@@ -202,6 +203,23 @@ namespace SENSEI.WEB.Areas.StudentPortal.Controllers
         public async Task<IActionResult> StudentBatchPaymentOffCanvas()
         {
             return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetBatchLessons(long batchId)
+        {
+            var batchLessons = await _studentService.GetBatchLessons(batchId);
+            var result = batchLessons
+                .Where(e => !e.IsDeleted)
+                .GroupBy(e => e.LessonId)
+                .Select(g => new { 
+                    id = g.Key, 
+                    text = g.First().Lesson.LessonName 
+                })
+                .OrderBy(e => e.text)
+                .ToList();
+
+            return Json(result);
         }
     }
 }

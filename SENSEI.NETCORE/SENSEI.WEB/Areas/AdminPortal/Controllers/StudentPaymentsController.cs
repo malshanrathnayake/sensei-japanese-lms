@@ -82,11 +82,11 @@ namespace SENSEI.WEB.Areas.AdminPortal.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Approve(long StudentBatchPaymentId, DateTime PaymentMonth)
+        public async Task<IActionResult> Approve(long StudentBatchPaymentId, DateTime PaymentMonth, long? LessonId)
         {
             var userId = Convert.ToInt64(HttpContext.Session.GetString("UserId"));
 
-            var result = await _studentPaymentService.ApproveStudentBatchPayment(StudentBatchPaymentId, userId, PaymentMonth);
+            var result = await _studentPaymentService.ApproveStudentBatchPayment(StudentBatchPaymentId, userId, PaymentMonth, LessonId);
 
             if (result)
             {
@@ -234,6 +234,24 @@ namespace SENSEI.WEB.Areas.AdminPortal.Controllers
 
             var result = courseId != 0 ? batches.Where(e => e.CourseId == courseId).OrderBy(e => e.BatchName).Select(e => new { id = e.BatchId, text = e.BatchName }).ToList()
                 : batches.OrderBy(e => e.BatchName).Select(e => new { id = e.BatchId, text = e.BatchName }).ToList();
+
+            return Json(result);
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetBatchLessonsJsonResult(long batchId)
+        {
+            var batchLessons = await _batchService.GetBatchLessons(batchId);
+            // Group by Lesson to get unique categories
+            var result = batchLessons
+                .Where(e => !e.IsDeleted)
+                .GroupBy(e => e.LessonId)
+                .Select(g => new { 
+                    id = g.Key, 
+                    text = g.First().Lesson.LessonName 
+                })
+                .OrderBy(e => e.text)
+                .ToList();
 
             return Json(result);
         }

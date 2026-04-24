@@ -94,6 +94,16 @@
         </div>
 
         <div class="mb-4">
+            <label class="form-label-premium"><i class="fas fa-tags"></i> Lesson Category (Optional)</label>
+            <div class="input-group-premium">
+                <select asp-for="LessonId" id="LessonId" class="form-control lesson-category-select">
+                    <option value="">Full Month Access (General)</option>
+                </select>
+            </div>
+            <small class="text-muted mt-1 d-block"><i class="fas fa-info-circle me-1"></i> Specify if this payment is for a specific SSW part/category</small>
+        </div>
+
+        <div class="mb-4">
             <label class="form-label-premium"><i class="fas fa-file-invoice"></i> Payment Slip (Optional)</label>
             <div class="file-upload-wrapper" onclick="document.getElementById('SlipImage').click()">
                 <i class="fas fa-cloud-upload-alt fs-3 text-muted mb-2"></i>
@@ -180,6 +190,30 @@
                     popUpNotification('error', 'Failed to retrieve batches from server.');
                 });
             }
+        });
+
+        $('#StudentBatchId').on('change', function() {
+            var batchId = $(this).val();
+            if (batchId) {
+                $('#LessonId').empty().append('<option value="">Loading categories...</option>');
+                $.getJSON('/AdminPortal/StudentPayments/GetBatchLessonsJsonResult', { batchId: batchId }, function(data) {
+                    $('#LessonId').empty().append('<option value="">Full Month Access (General)</option>');
+                    $.each(data, function(index, item) {
+                        $('#LessonId').append('<option value="' + item.id + '">' + item.text + '</option>');
+                    });
+                    $('#LessonId').trigger('change');
+                });
+            } else {
+                $('#LessonId').empty().append('<option value="">Select Batch First</option>');
+            }
+        });
+
+        $('.lesson-category-select').select2({
+            theme: 'bootstrap5',
+            dropdownParent: $('#studentPaymentOffcanvas'),
+            placeholder: 'Full Month Access (General)',
+            allowClear: true,
+            width: '100%'
         });
 
         $('.student-select').on('select2:unselect', function() {

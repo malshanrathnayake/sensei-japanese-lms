@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [dbo].[UpdateBatchLesson]
+CREATE PROCEDURE [dbo].[UpdateBatchLesson]
     @jsonString NVARCHAR(MAX) = '',
     @executionStatus BIT OUT,
     @primaryKey BIGINT OUT
@@ -10,14 +10,15 @@ BEGIN
 
     BEGIN TRY
 
-        DECLARE @batchLessonId BIGINT, @batchId BIGINT, @lessonDateTime DATETIME;
+        DECLARE @batchLessonId BIGINT, @batchId BIGINT, @lessonDateTime DATETIME, @lessonId BIGINT;
 
-        SELECT @batchLessonId = [BatchLessonId], @batchId = [BatchId], @lessonDateTime = [LessonDateTime]
+        SELECT @batchLessonId = [BatchLessonId], @batchId = [BatchId], @lessonDateTime = [LessonDateTime], @lessonId = [LessonId]
         FROM OPENJSON(@jsonString, '$')
         WITH (
             [BatchLessonId] BIGINT,
             [BatchId] BIGINT,
-            [LessonDateTime] DATETIMEOFFSET
+            [LessonDateTime] DATETIMEOFFSET,
+            [LessonId] BIGINT
         );
 
         IF (ISNULL(@batchLessonId, 0) = 0)
@@ -39,12 +40,20 @@ BEGIN
 
             SET @primaryKey = SCOPE_IDENTITY();
 
-            -- will insert access for all students of the batch, who has paid the fee for the batch
+            -- will insert access for all students of the batch, who has paid the fee for the batch/category
             INSERT INTO BatchStudentLessonAccess([BatchLessonId], StudentId, [HasAccess])
             SELECT  @primaryKey, sb.StudentId, 1
             FROM StudentBatch sb
             WHERE sb.BatchId = @batchId
-            AND sb.StudentBatchId IN (SELECT StudentBatchId FROM StudentBatchPayment WHERE StudentBatchId = sb.StudentBatchId AND MONTH(PaymentMonth) = MONTH(@lessonDateTime) AND YEAR(PaymentMonth) = YEAR(@lessonDateTime))
+            AND sb.StudentBatchId IN (
+                SELECT StudentBatchId FROM StudentBatchPayment 
+                WHERE StudentBatchId = sb.StudentBatchId 
+                AND IsApproved = 1
+                AND (
+                    (LessonId = @lessonId) -- Paid for this specific category
+                    OR (LessonId IS NULL AND MONTH(PaymentMonth) = MONTH(@lessonDateTime) AND YEAR(PaymentMonth) = YEAR(@lessonDateTime)) -- Paid for the month (General)
+                )
+            )
 
         END
         ELSE

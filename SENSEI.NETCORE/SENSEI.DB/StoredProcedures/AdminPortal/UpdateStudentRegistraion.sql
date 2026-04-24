@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [dbo].[UpdateStudentRegistraion]
+CREATE PROCEDURE [dbo].[UpdateStudentRegistraion]
 	@jsonString NVARCHAR(MAX) = '',
 	@executionStatus BIT OUT,
 	@primaryKey BIGINT OUT
@@ -32,7 +32,9 @@ BEGIN
 			[CreatedDateTime],
 			[CountryId],
 			[State],
-			[City]
+			[City],
+			[BatchId],
+			[IndexNumber]
 		)
 		SELECT
 			[Email],
@@ -54,7 +56,9 @@ BEGIN
 			GETUTCDATE(),
 			[CountryId],
 			[State],
-			[City]
+			[City],
+			[BatchId],
+			[IndexNumber]
 		FROM OPENJSON(@jsonString, '$')
 		WITH
 		(
@@ -76,7 +80,9 @@ BEGIN
 			[CourseId] BIGINT,
 			[CountryId] INT,
 			[State] NVARCHAR(100),
-			[City] NVARCHAR(20)
+			[City] NVARCHAR(20),
+			[BatchId] BIGINT,
+			[IndexNumber] NVARCHAR(50)
 		);
 
 		SET @primaryKey = SCOPE_IDENTITY();

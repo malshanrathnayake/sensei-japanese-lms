@@ -20,6 +20,7 @@ BEGIN
 			FROM Batch WHERE Batch.IsDeleted = 0 AND Batch.BatchId = StudentBatch.BatchId FOR JSON PATH, WITHOUT_ARRAY_WRAPPER), null)) AS 'Batch',
 			JSON_QUERY(ISNULL((SELECT Student.* FROM Student WHERE Student.IsDeleted = 0 AND Student.StudentId = StudentBatch.StudentId FOR JSON PATH, WITHOUT_ARRAY_WRAPPER), null)) AS 'Student'
 		FROM StudentBatch WHERE StudentBatch.IsDeleted = 0 AND StudentBatch.StudentBatchId = SBP.StudentBatchId FOR JSON PATH, WITHOUT_ARRAY_WRAPPER), null)) AS 'StudentBatch',
+		JSON_QUERY(ISNULL((SELECT Lesson.* FROM Lesson WHERE Lesson.IsDeleted = 0 AND Lesson.LessonId = SBP.LessonId FOR JSON PATH, WITHOUT_ARRAY_WRAPPER), null)) AS 'Lesson',
 		JSON_QUERY(ISNULL((SELECT Staff.* FROM Staff WHERE Staff.IsDeleted = 0 AND Staff.EmployeeId = SBP.ApprovedById FOR JSON PATH, WITHOUT_ARRAY_WRAPPER), null)) AS 'ApprovedBy'
 	FROM StudentBatchPayment SBP
 	INNER JOIN StudentBatch ON StudentBatch.StudentBatchId = SBP.StudentBatchId
