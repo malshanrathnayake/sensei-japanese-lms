@@ -1,4 +1,4 @@
-﻿@model List<SENSEI.WEB.Models.SidebarItem>
+@model List<SENSEI.WEB.Models.SidebarItem>
 
 @{
 	Layout = null;
@@ -19,8 +19,15 @@
 			@foreach(var item in Model)
 			{
 				<li class="sidebar-item">
-					<a class="sidebar-link" href="@item.Url">
-						<i class="align-middle" data-feather="@item.Icon"></i> <span class="align-middle">@item.Title</span>
+					<a class="sidebar-link d-flex align-items-center justify-content-between" href="@item.Url">
+						<div class="d-flex align-items-center">
+							<i class="align-middle me-2" data-feather="@item.Icon"></i> 
+							<span class="align-middle">@item.Title</span>
+						</div>
+						@if (!string.IsNullOrEmpty(item.BadgeId))
+						{
+							<span id="@item.BadgeId" class="badge bg-danger rounded-pill d-none animate__animated animate__pulse animate__infinite" style="font-size: 0.65rem; font-weight: 800; padding: 4px 8px; box-shadow: 0 4px 10px rgba(216, 50, 54, 0.3);">0</span>
+						}
 					</a>
 				</li>
 			}

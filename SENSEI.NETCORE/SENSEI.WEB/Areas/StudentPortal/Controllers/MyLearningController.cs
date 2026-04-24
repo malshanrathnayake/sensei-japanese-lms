@@ -34,31 +34,39 @@ namespace SENSEI.WEB.Areas.StudentPortal.Controllers
             var userId = Convert.ToInt64(HttpContext.Session.GetString("UserId"));
             var student = await _studentService.GetStudentProfile(userId);
             
-            var batchId = student.StudentBatches.FirstOrDefault()?.BatchId ?? 0;
-            var (lessons, count) = await _studentService.SearchStudentBatchLessons(studentId, batchId, 0, -1, "");
+            if (student == null || student.StudentBatches == null || !student.StudentBatches.Any())
+            {
+                ViewBag.AverageProgress = 0;
+                ViewBag.CourseCount = 0;
+                return View();
+            }
+
+            var allLessons = new List<BatchLesson>();
+            foreach (var sb in student.StudentBatches)
+            {
+                var (batchLessons, _) = await _studentService.SearchStudentBatchLessons(studentId, sb.BatchId, 0, -1, "");
+                if (batchLessons != null) allLessons.AddRange(batchLessons);
+            }
             
             double averageProgress = 0;
-            if (lessons != null && lessons.Any())
+            if (allLessons.Any())
             {
-                var groupedLessons = lessons.GroupBy(e => e.LessonId);
-                List<double> totalProgress = new List<double>();
+                var groupedLessons = allLessons.GroupBy(e => e.LessonId);
+                List<double> progressList = new List<double>();
+                
                 foreach (var group in groupedLessons)
                 {
                     var totalUnits = group.Count();
                     var completedUnits = group.SelectMany(e => e.StudentBatchLessonViews).Count(v => v.StudentId == studentId && v.IsCompleted);
-                    var groupedLessonsProgress = totalUnits > 0 ? (completedUnits / (double)totalUnits) * 100 : 0;
+                    var progress = totalUnits > 0 ? (completedUnits / (double)totalUnits) * 100 : 0;
 
-                    if(groupedLessonsProgress != 0)
-                    {
-                        totalProgress.Add(groupedLessonsProgress);
-                    }
-                    
+                    if (progress > 0) progressList.Add(progress);
                 }
-                averageProgress = totalProgress.Any() ? totalProgress.Average() : 0;
+                averageProgress = progressList.Any() ? progressList.Average() : 0;
             }
 
             ViewBag.AverageProgress = Math.Round(averageProgress);
-            ViewBag.CourseCount = lessons?.GroupBy(e => e.Lesson.CourseId).Count() ?? 0;
+            ViewBag.CourseCount = allLessons.GroupBy(e => e.Lesson.CourseId).Count();
 
             return View();
         }
@@ -69,14 +77,23 @@ namespace SENSEI.WEB.Areas.StudentPortal.Controllers
             var studentId = Convert.ToInt64(HttpContext.Session.GetString("StudentId"));
             var userId = Convert.ToInt64(HttpContext.Session.GetString("UserId"));
             var student = await _studentService.GetStudentProfile(userId);
-            var (lessons, count) = await _studentService.SearchStudentBatchLessons(studentId, student.StudentBatches.FirstOrDefault().BatchId, start, length, searchValue);
             
-            var lessonsList = lessons.ToList();
-            var resultList = lessonsList;
+            var allLessons = new List<BatchLesson>();
+            if (student?.StudentBatches != null)
+            {
+                foreach (var sb in student.StudentBatches)
+                {
+                    // Fetch lessons for each batch. We pass search value to handle filtering at DB level where possible.
+                    var (batchLessons, _) = await _studentService.SearchStudentBatchLessons(studentId, sb.BatchId, 0, -1, searchValue);
+                    if (batchLessons != null) allLessons.AddRange(batchLessons);
+                }
+            }
+
+            var resultList = allLessons;
 
             if (filter != "all")
             {
-                var grouped = lessonsList.GroupBy(e => e.LessonId);
+                var grouped = allLessons.GroupBy(e => e.LessonId);
                 var validLessonIds = new List<long>();
 
                 foreach (var group in grouped)
@@ -89,12 +106,18 @@ namespace SENSEI.WEB.Areas.StudentPortal.Controllers
                     {
                         validLessonIds.Add(group.Key);
                     }
-                    else if (filter == "inprogress" && progress < 100) // "In Progress" includes everything not finished
+                    else if (filter == "inprogress" && progress < 100) 
                     {
                         validLessonIds.Add(group.Key);
                     }
                 }
-                resultList = lessonsList.Where(e => validLessonIds.Contains(e.LessonId)).ToList();
+                resultList = allLessons.Where(e => validLessonIds.Contains(e.LessonId)).ToList();
+            }
+
+            // Apply pagination if length is specified
+            if (length > 0)
+            {
+                resultList = resultList.Skip(start).Take(length).ToList();
             }
 
             resultList.ForEach(e =>
@@ -121,8 +144,19 @@ namespace SENSEI.WEB.Areas.StudentPortal.Controllers
             var lessonId = Convert.ToInt64(_protector.Unprotect(lessonEncryptedKey));
 
             var student = await _studentService.GetStudentProfile(userId);
-            var (lessons, count) = await _studentService.SearchStudentBatchLessons(studentId, student.StudentBatches.FirstOrDefault().BatchId, start, length, searchValue);
-            var filteredLessons = lessons.Where(e => e.LessonId == lessonId).ToList();
+            
+            var allLessons = new List<BatchLesson>();
+            if (student?.StudentBatches != null)
+            {
+                foreach (var sb in student.StudentBatches)
+                {
+                    var (batchLessons, _) = await _studentService.SearchStudentBatchLessons(studentId, sb.BatchId, 0, -1, searchValue);
+                    if (batchLessons != null) allLessons.AddRange(batchLessons);
+                }
+            }
+
+            var filteredLessons = allLessons.Where(e => e.LessonId == lessonId).ToList();
+            
             filteredLessons.ForEach(e => e.EncryptedKey = _protector.Protect(e.BatchLessonId.ToString()));
             filteredLessons.ForEach(e => e.BatchStudentLessonAccesses.ToList().ForEach(a => a.EncryptedKey = _protector.Protect(a.BatchStudentLessonAccessId.ToString())));
 
@@ -234,6 +268,29 @@ namespace SENSEI.WEB.Areas.StudentPortal.Controllers
             {
                 return Json(new { success = status, message = "Lesson Access Request Failed" });
             }
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetPaymentStatus()
+        {
+            var studentIdStr = HttpContext.Session.GetString("StudentId");
+            if (string.IsNullOrEmpty(studentIdStr)) return Json(new { hasAlert = false });
+
+            long studentId = Convert.ToInt64(studentIdStr);
+            var summary = await _studentService.GetStudentPaymentSummary(studentId);
+
+            // If a student is in a batch but has 0 total approved payments, show an alert
+            var pendingBatches = summary.Where(e => e.TotalApproved <= 0).ToList();
+
+            if (pendingBatches.Any())
+            {
+                return Json(new { 
+                    hasAlert = true, 
+                    message = "Your payment for the first month is still pending for: " + string.Join(", ", pendingBatches.Select(b => b.BatchName)),
+                    type = "payment_pending"
+                });
+            }
+
+            return Json(new { hasAlert = false });
         }
     }
 }

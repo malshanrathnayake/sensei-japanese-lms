@@ -328,31 +328,38 @@
                     {
                         data: null,
                         orderable: false,
+                        className: 'text-center',
                         render: function (data, type, row) {
-
                             var approveUrl = `/AdminPortal/StudentRegistration/Approve/?q=${row.encryptedKey}`;
                             var rejectUrl = `/AdminPortal/StudentRegistration/Reject/?q=${row.encryptedKey}`;
+                            var detailsUrl = `/AdminPortal/StudentRegistration/Details/?q=${row.encryptedKey}`;
                             var isFinalized = row.isApproved; 
                             var isRejected = row.isRejected;
 
-                            var approveActionText = isRejected ? "Review & Re-Approve" : "Approve Admission";
-                            var approveAction = `<li><a class="dropdown-item d-flex align-items-center gap-2 text-success ${isFinalized ? 'disabled opacity-50' : 'approve-registration'}" href="javascript:void(0)" data-action-url="${approveUrl}"> <i data-feather="${isRejected ? 'refresh-cw' : 'check-circle'}" style="width: 14px; height: 14px;"></i><span>${approveActionText}</span></a></li>`;
-                            var rejectAction = `<li><a class="dropdown-item d-flex align-items-center gap-2 text-danger ${isFinalized ? 'disabled opacity-50' : 'reject-registration'}" href="javascript:void(0)" data-action-url="${rejectUrl}" data-action-parameter="${row.studentRegistrationPopulatedName}"><i data-feather="x-circle" style="width: 14px; height: 14px;"></i><span>Reject admission</span></a></li>`;
-                            var detailsUrl = `/AdminPortal/StudentRegistration/Details/?q=${row.encryptedKey}`;
+                            var approveBtn = `<button class="btn btn-sm btn-soft-success p-1 px-2 rounded-pill approve-registration" data-action-url="${approveUrl}" title="Approve Admission">
+                                                <i data-feather="check-circle" style="width: 14px; height: 14px;"></i>
+                                              </button>`;
+                            
+                            var viewBtn = `<button class="btn btn-sm btn-soft-info p-1 px-2 rounded-pill view-registration-details" data-action-url="${detailsUrl}" title="View Details">
+                                                <i data-feather="eye" style="width: 14px; height: 14px;"></i>
+                                           </button>`;
 
-                            return `
-                                <div class="dropdown">
+                            var moreBtn = `
+                                <div class="dropdown d-inline-block ms-1">
                                     <button class="btn btn-sm btn-light border-0 p-1 rounded-circle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="width: 32px; height: 32px;">
                                         <i data-feather="more-vertical" style="width: 16px; height: 16px;"></i>
                                     </button>
                                     <ul class="dropdown-menu dropdown-menu-end shadow border-0 p-2" style="border-radius: 0.75rem; min-width: 180px;">
-                                        <li><h6 class="dropdown-header smaller text-muted fw-bold">ADMISSION ACTIONS</h6></li>
-                                        ${approveAction}
-                                        ${rejectAction}
-                                        <div class="dropdown-divider"></div>
-                                        <li><a class="dropdown-item d-flex align-items-center gap-2 view-registration-details" href="javascript:void(0)" data-action-url="${detailsUrl}"><i data-feather="eye" style="width: 14px; height: 14px;"></i>View Details</a></li>
+                                        <li><h6 class="dropdown-header smaller text-muted fw-bold">MORE ACTIONS</h6></li>
+                                        <li><a class="dropdown-item d-flex align-items-center gap-2 text-danger ${isFinalized ? 'disabled opacity-50' : 'reject-registration'}" href="javascript:void(0)" data-action-url="${rejectUrl}" data-action-parameter="${row.studentRegistrationPopulatedName}"><i data-feather="x-circle" style="width: 14px; height: 14px;"></i><span>Reject admission</span></a></li>
                                     </ul>
                                 </div>`;
+
+                            return `<div class="d-flex justify-content-center align-items-center gap-1">
+                                        ${viewBtn}
+                                        ${(!isFinalized && !isRejected) ? approveBtn : ''}
+                                        ${moreBtn}
+                                    </div>`;
                         }
                     },
                     { 

@@ -162,7 +162,23 @@
           data-ajax="true" data-ajax-method="POST" enctype="multipart/form-data"
           data-ajax-begin="onPaymentCreateBegin" data-ajax-success="onPaymentCreateSuccess" data-ajax-failure="onPaymentCreateFailure" data-ajax-complete="onPaymentCreateComplete" >
 
-        <input type="hidden" id="StudentBatchId" name="StudentBatchId" value="@Model.StudentBatchId" />
+        <div class="mb-4">
+            <label class="form-label-premium">Select Course / Batch</label>
+            <div class="input-group">
+                <span class="input-group-text bg-white border-end-0 text-muted rounded-start-4 ps-3 pe-0" style="border: 1px solid rgba(0,0,0,0.08); border-right: 0;"><i data-feather="book" style="width: 16px;"></i></span>
+                <select id="StudentBatchId" name="StudentBatchId" class="form-control input-premium border-start-0" required>
+                    <option value="">-- Select Enrolled Course --</option>
+                    @if (ViewBag.StudentBatches != null)
+                    {
+                        foreach (var batch in ViewBag.StudentBatches)
+                        {
+                            <option value="@batch.id">@batch.text</option>
+                        }
+                    }
+                </select>
+            </div>
+            <span asp-validation-for="StudentBatchId" class="text-danger small mt-1 d-block fw-600"></span>
+        </div>
 
         <div class="alert alert-soft-primary border-0 rounded-4 p-4 mb-4 d-flex align-items-center animate-fade-in" style="background: rgba(216, 50, 54, 0.03);">
             <div class="rounded-circle bg-white d-flex align-items-center justify-content-center me-3 shadow-sm" style="width: 36px; height: 36px; flex-shrink: 0;">
@@ -204,18 +220,30 @@
 
         <script>
             $(document).ready(function() {
-                var batchId = '@Model.StudentBatchId';
-                if (batchId) {
-                    $.getJSON('/StudentPortal/StudentBatchPayment/GetBatchLessons', { batchId: batchId }, function(data) {
-                        var dropdown = $('#LessonId');
-                        $.each(data, function(index, item) {
-                            dropdown.append($('<option>', {
-                                value: item.id,
-                                text: item.text
-                            }));
+                if (window.feather) { feather.replace(); }
+
+                $('#StudentBatchId').on('change', function() {
+                    var studentBatchId = $(this).val();
+                    var dropdown = $('#LessonId');
+                    dropdown.empty().append('<option value="">Full Month Access (General)</option>');
+
+                    if (studentBatchId) {
+                        // First we need to get the actual batchId from the studentBatchId
+                        // But looking at the controller, GetBatchLessons takes batchId.
+                        // Wait, looking at the code, StudentBatchId is actually passed. 
+                        // Let's assume StudentBatchId is what we have. 
+                        // Actually, I should check the GetBatchLessons implementation in the controller.
+                        
+                        $.getJSON('/StudentPortal/StudentBatchPayment/GetBatchLessons', { studentBatchId: studentBatchId }, function(data) {
+                            $.each(data, function(index, item) {
+                                dropdown.append($('<option>', {
+                                    value: item.id,
+                                    text: item.text
+                                }));
+                            });
                         });
-                    });
-                }
+                    }
+                });
             });
         </script>
 

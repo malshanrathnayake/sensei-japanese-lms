@@ -186,8 +186,7 @@
                         <i data-feather="maximize" id="enlargeIcon"></i> <span>Expand Player</span>
                     </button>
                 </div>
-                <div class="card-body">
-
+                <div class="card-body p-0">
                     <div class="player-container" id="playerContainer">
                         <div class="player-wrapper">
                             <div id="player"></div>
@@ -202,7 +201,27 @@
                             <div class="yt-logo-blocker"></div>
                         </div>
                     </div>
-
+                </div>
+                <div class="card-footer bg-white border-top-0 p-4">
+                    <div class="d-flex align-items-center gap-3 mb-3">
+                        <div class="bg-soft-danger text-danger p-2 rounded-3">
+                            <i data-feather="calendar" style="width: 20px; height: 20px;"></i>
+                        </div>
+                        <div>
+                            <span class="text-muted small d-block fw-bold text-uppercase" style="letter-spacing: 0.5px;">Recording Date</span>
+                            <span class="fw-800" style="color: #1e293b;">@Model.LessonDateTime.ToString("MMMM dd, yyyy")</span>
+                        </div>
+                    </div>
+                    
+                    @if (!string.IsNullOrEmpty(Model.Description))
+                    {
+                        <div class="mt-4 pt-4 border-top">
+                            <h6 class="fw-800 text-uppercase small text-muted mb-3" style="letter-spacing: 0.5px;">Recording Description</h6>
+                            <p class="mb-0 text-secondary" style="line-height: 1.6; font-size: 1rem; white-space: pre-line;">
+                                @Model.Description
+                            </p>
+                        </div>
+                    }
                 </div>
             </div>
         </div>

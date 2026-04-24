@@ -73,6 +73,7 @@
                                     <th></th>
                                     <th>Index Number</th>
                                     <th>Student Name</th>   
+                                    <th>Phone Number</th>
                                     <th>@Html.DisplayNameFor(m => m.StudentBatch.Batch.Course.CourseName)</th>
                                     <th>@Html.DisplayNameFor(m => m.StudentBatch.BatchId)</th>
                                     <th>@Html.DisplayNameFor(m => m.PaymentMonth)</th>
@@ -244,6 +245,13 @@
                     },
                     { data: 'studentBatch.student.indexNumber', name:'studentBatch.student.indexNumber' },
                     { data: 'studentBatch.student.studentPopulatedName', name:'studentBatch.student.studentPopulatedName' },
+                    { 
+                        data: 'studentBatch.student.phoneNo', 
+                        name: 'studentBatch.student.phoneNo',
+                        render: function(data) {
+                            return `<div class="fw-600 small"><i class="fas fa-phone me-1 text-muted smaller"></i> ${data || 'N/A'}</div>`;
+                        }
+                    },
                     { data: 'studentBatch.batch.course.courseName', name:'studentBatch.batch.course.courseName' },
                     { data: 'studentBatch.batch.batchName', name:'studentBatch.batch.batchName' },
                     { data: 'paymentMonth', name:'paymentMonth', render: function (data) { return renderDateOnly(data); } },
@@ -295,16 +303,39 @@
         }
 
         function renderSlipUrl(data) {
-
-            if (!data) return "";
+            if (!data) return '<span class="text-muted small italic">No Slip</span>';
 
             return `
-                <a href="${data}" target="_blank" rel="noopener noreferrer">
-                    View Slip
-                </a>
+                <button type="button" class="btn btn-sm btn-soft-primary px-3 rounded-pill fw-bold" onclick="previewSlip('${data}')">
+                    <i class="fas fa-eye me-1"></i> Preview
+                </button>
             `;
         }
 
+        function previewSlip(url) {
+            $('#slipPreviewImage').attr('src', url);
+            var myModal = new bootstrap.Modal(document.getElementById('slipPreviewModal'));
+            myModal.show();
+        }
+
     </script>
+
+    <!-- Slip Preview Modal -->
+    <div class="modal fade" id="slipPreviewModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg" style="border-radius: 20px;">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-900">Payment Slip Verification</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center p-4">
+                    <img id="slipPreviewImage" src="" class="img-fluid rounded-3 shadow-sm" style="max-height: 70vh; object-fit: contain;" />
+                </div>
+                <div class="modal-footer border-0 pt-0">
+                    <button type="button" class="btn btn-light rounded-pill px-4 fw-bold" data-bs-dismiss="modal">Close Preview</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 }

@@ -180,10 +180,15 @@
         <div class="row align-items-center">
             <div class="col-12">
                 <div class="hero-label">STUDENT DASHBOARD</div>
-                <h2>Konnichiwa! (こんにちは)</h2>
-                <p class="opacity-90 mb-0 fw-600">You're making great progress in your Japanese journey. You currently have <span class="fw-900 text-white">@totalCourses</span> active courses.</p>
+                <h2>Konnichiwa, @(Context.Session.GetString("StudentName") ?? "Student")-san! (こんにちは)</h2>
+                <p class="opacity-90 mb-0 fw-600">Welcome back to your Japanese learning portal. You're doing great!</p>
             </div>
         </div>
+    </div>
+
+    <!-- Alert Section: Payment Status -->
+    <div id="paymentAlertContainer">
+        <!-- Will be populated by JS to check status -->
     </div>
 
     <!-- Stat Cards Row -->
@@ -311,6 +316,30 @@
 @section Scripts {
     <script>
         document.addEventListener("DOMContentLoaded", function() {
+            // Check Payment Status
+            fetch('/StudentPortal/MyLearning/GetPaymentStatus')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.hasAlert) {
+                        const alertHtml = `
+                            <div class="alert alert-soft-danger border-0 shadow-sm d-flex align-items-center p-3 mb-4 animate-fade-in" style="border-radius: 18px; background: #fff5f5; border-left: 5px solid #D83236 !important;">
+                                <div class="bg-danger text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px; flex-shrink: 0;">
+                                    <i data-feather="alert-triangle" style="width: 20px; height: 20px;"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h6 class="alert-heading fw-800 mb-1 text-danger">Pending Payment Action Required</h6>
+                                    <p class="mb-0 small fw-600 text-secondary">${data.message}</p>
+                                </div>
+                                <div class="ms-3">
+                                    <a href="/StudentPortal/StudentBatchPayment/Index" class="btn btn-danger btn-sm rounded-pill px-3 fw-800 shadow-sm">Settle Now</a>
+                                </div>
+                            </div>
+                        `;
+                        document.getElementById('paymentAlertContainer').innerHTML = alertHtml;
+                        if(window.feather) feather.replace();
+                    }
+                });
+
             var calendarEl = document.getElementById('calendar-dashboard');
             var calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',

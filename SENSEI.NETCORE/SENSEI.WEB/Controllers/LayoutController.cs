@@ -182,5 +182,24 @@ namespace SENSEI.WEB.Controllers
 
             return Json(new { success = true, message = "Updated all as read" });
         }
+        public async Task<JsonResult> GetAdminActionCounts()
+        {
+            var studentRegistrationService = HttpContext.RequestServices.GetService<IStudentRegistrationService>();
+            var studentService = HttpContext.RequestServices.GetService<SENSEI.BLL.StudentPortalService.Interfaces.IStudentService>();
+
+            var (registrations, _) = await studentRegistrationService.SearchStudentRegistraion(0, 0, 1000);
+            var pendingRegistrations = registrations.Count(x => !x.IsApproved && !x.IsRejected);
+
+            // Fetch pending payments. Assuming 0 as batchId to get all? 
+            // Need to check SearchStudentBatchPayments in service.
+            // For now, let's just get a sample count or use a dedicated method if available.
+            var (payments, _) = await studentService.SearchStudentBatchPayments(0, 0, 0, 1000); 
+            var pendingPayments = payments.Count(x => !x.IsApproved);
+
+            return Json(new { 
+                pendingRegistrations = pendingRegistrations,
+                pendingPayments = pendingPayments
+            });
+        }
     }
 }

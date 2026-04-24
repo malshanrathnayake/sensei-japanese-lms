@@ -37,11 +37,13 @@
   {
     "Title": "Student Registration",
     "Icon": "user-check",
-    "Url": "/AdminPortal/StudentRegistration/Index"
+    "Url": "/AdminPortal/StudentRegistration/Index",
+    "BadgeId": "badge-pending-registration"
   },
   {
     "Title": "Student Payments",
     "Icon": "credit-card",
-    "Url": "/AdminPortal/StudentPayments/Index"
+    "Url": "/AdminPortal/StudentPayments/Index",
+    "BadgeId": "badge-pending-payment"
   }
 ]

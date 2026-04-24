@@ -222,6 +222,8 @@
 	<script>
 
 		$(document).ready(function () {
+			updateAdminBadges();
+			setInterval(updateAdminBadges, 60000); // Refresh every minute
 
 			const notificationConnection = new signalR.HubConnectionBuilder()
 				.withUrl("/hubs/notifications")
@@ -281,6 +283,21 @@
 		function formatDate(dateStr) {
 			const d = new Date(dateStr);
 			return d.toLocaleDateString("en-GB") + " " + d.toLocaleTimeString("en-GB", { hour: '2-digit', minute: '2-digit' });
+		}
+		function updateAdminBadges() {
+			$.getJSON('/Layout/GetAdminActionCounts', function(data) {
+				if (data.pendingRegistrations > 0) {
+					$('#badge-pending-registration').text(data.pendingRegistrations).removeClass('d-none');
+				} else {
+					$('#badge-pending-registration').addClass('d-none');
+				}
+
+				if (data.pendingPayments > 0) {
+					$('#badge-pending-payment').text(data.pendingPayments).removeClass('d-none');
+				} else {
+					$('#badge-pending-payment').addClass('d-none');
+				}
+			});
 		}
 
 	</script>

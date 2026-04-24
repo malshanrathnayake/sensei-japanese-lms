@@ -85,90 +85,112 @@
     </div>
 
     <!-- Quick Stats Grid -->
-    <div class="row mb-4">
-        <div class="col-sm-6 col-xl-3">
+    <div class="row mb-4 row-cols-1 row-cols-md-3 row-cols-xl-5 g-3">
+        <div class="col">
             <a href="@Url.Action("Index", "Student", new { Area = "AdminPortal" })" class="text-decoration-none">
                 <div class="card stat-card border-top border-4 border-primary h-100">
-                    <div class="card-body">
-                        <div class="row">
+                    <div class="card-body p-3">
+                        <div class="row align-items-center">
                             <div class="col mt-0">
-                                <h5 class="card-title text-muted fw-bold small text-uppercase">Total Students</h5>
+                                <h5 class="card-title text-muted fw-bold smaller text-uppercase mb-0" style="font-size: 0.6rem;">Total Students</h5>
                             </div>
                             <div class="col-auto">
-                                <div class="stat-icon bg-soft-primary text-primary">
-                                    <i data-feather="users"></i>
+                                <div class="stat-icon bg-soft-primary text-primary" style="width: 32px; height: 32px; font-size: 0.8rem;">
+                                    <i data-feather="users" style="width: 14px; height: 14px;"></i>
                                 </div>
                             </div>
                         </div>
-                        <h1 class="mt-1 mb-3 fw-900 text-dark">@Model.TotalStudents</h1>
+                        <h2 class="mt-2 mb-2 fw-900 text-dark">@Model.TotalStudents</h2>
                         <div class="mb-0">
-                            <span class="text-primary small fw-800">View Students &rarr;</span>
+                            <span class="text-primary smaller fw-800" style="font-size: 0.65rem;">View All &rarr;</span>
                         </div>
                     </div>
                 </div>
             </a>
         </div>
-        <div class="col-sm-6 col-xl-3">
+        <div class="col">
             <a href="@Url.Action("Index", "StudentRegistration", new { Area = "AdminPortal", status = 1 })" class="text-decoration-none">
                 <div class="card stat-card border-top border-4 border-info h-100">
-                    <div class="card-body">
-                        <div class="row">
+                    <div class="card-body p-3">
+                        <div class="row align-items-center">
                             <div class="col mt-0">
-                                <h5 class="card-title text-muted fw-bold small text-uppercase">Pending Regs</h5>
+                                <h5 class="card-title text-muted fw-bold smaller text-uppercase mb-0" style="font-size: 0.6rem;">Pending Regs</h5>
                             </div>
                             <div class="col-auto">
-                                <div class="stat-icon bg-soft-info text-info">
-                                    <i data-feather="user-plus"></i>
+                                <div class="stat-icon bg-soft-info text-info" style="width: 32px; height: 32px; font-size: 0.8rem;">
+                                    <i data-feather="user-plus" style="width: 14px; height: 14px;"></i>
                                 </div>
                             </div>
                         </div>
-                        <h1 class="mt-1 mb-3 fw-900 text-info">@Model.PendingRegistrations</h1>
+                        <h2 class="mt-2 mb-2 fw-900 text-info">@Model.PendingRegistrations</h2>
                         <div class="mb-0">
-                            <span class="text-info small fw-800">Review Requests &rarr;</span>
+                            <span class="text-info smaller fw-800" style="font-size: 0.65rem;">Review &rarr;</span>
                         </div>
                     </div>
                 </div>
             </a>
         </div>
-        <div class="col-sm-6 col-xl-3">
+        <div class="col">
+            <a href="@Url.Action("Index", "StudentPayments", new { Area = "AdminPortal" })" class="text-decoration-none">
+                <div class="card stat-card border-top border-4 border-danger h-100">
+                    <div class="card-body p-3">
+                        <div class="row align-items-center">
+                            <div class="col mt-0">
+                                <h5 class="card-title text-muted fw-bold smaller text-uppercase mb-0" style="font-size: 0.6rem;">Pending Payments</h5>
+                            </div>
+                            <div class="col-auto">
+                                <div class="stat-icon bg-soft-danger text-danger" style="width: 32px; height: 32px; font-size: 0.8rem;">
+                                    <i data-feather="credit-card" style="width: 14px; height: 14px;"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <h2 class="mt-2 mb-2 fw-900 text-danger">@Model.PendingPayments</h2>
+                        <div class="mb-0">
+                            <span class="text-danger smaller fw-800" style="font-size: 0.65rem;">Verify &rarr;</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col">
             <a href="@Url.Action("Index", "Batch", new { Area = "AdminPortal" })" class="text-decoration-none">
                 <div class="card stat-card border-top border-4 border-success h-100">
-                    <div class="card-body">
-                        <div class="row">
+                    <div class="card-body p-3">
+                        <div class="row align-items-center">
                             <div class="col mt-0">
-                                <h5 class="card-title text-muted fw-bold small text-uppercase">Batches</h5>
+                                <h5 class="card-title text-muted fw-bold smaller text-uppercase mb-0" style="font-size: 0.6rem;">Batches</h5>
                             </div>
                             <div class="col-auto">
-                                <div class="stat-icon bg-soft-success text-success">
-                                    <i data-feather="layers"></i>
+                                <div class="stat-icon bg-soft-success text-success" style="width: 32px; height: 32px; font-size: 0.8rem;">
+                                    <i data-feather="layers" style="width: 14px; height: 14px;"></i>
                                 </div>
                             </div>
                         </div>
-                        <h1 class="mt-1 mb-3 fw-900 text-dark">@Model.TotalBatches</h1>
+                        <h2 class="mt-2 mb-2 fw-900 text-dark">@Model.TotalBatches</h2>
                         <div class="mb-0">
-                            <span class="text-success small fw-800">Manage Batches &rarr;</span>
+                            <span class="text-success smaller fw-800" style="font-size: 0.65rem;">Manage &rarr;</span>
                         </div>
                     </div>
                 </div>
             </a>
         </div>
-        <div class="col-sm-6 col-xl-3">
+        <div class="col">
             <a href="@Url.Action("Index", "Course", new { Area = "AdminPortal" })" class="text-decoration-none">
                 <div class="card stat-card border-top border-4 border-warning h-100">
-                    <div class="card-body">
-                        <div class="row">
+                    <div class="card-body p-3">
+                        <div class="row align-items-center">
                             <div class="col mt-0">
-                                <h5 class="card-title text-muted fw-bold small text-uppercase">Courses</h5>
+                                <h5 class="card-title text-muted fw-bold smaller text-uppercase mb-0" style="font-size: 0.6rem;">Courses</h5>
                             </div>
                             <div class="col-auto">
-                                <div class="stat-icon bg-soft-warning text-warning">
-                                    <i data-feather="book"></i>
+                                <div class="stat-icon bg-soft-warning text-warning" style="width: 32px; height: 32px; font-size: 0.8rem;">
+                                    <i data-feather="book" style="width: 14px; height: 14px;"></i>
                                 </div>
                             </div>
                         </div>
-                        <h1 class="mt-1 mb-3 fw-900 text-dark">@Model.TotalCourses</h1>
+                        <h2 class="mt-2 mb-2 fw-900 text-dark">@Model.TotalCourses</h2>
                         <div class="mb-0">
-                            <span class="text-warning small fw-800">View Programs &rarr;</span>
+                            <span class="text-warning smaller fw-800" style="font-size: 0.65rem;">Programs &rarr;</span>
                         </div>
                     </div>
                 </div>

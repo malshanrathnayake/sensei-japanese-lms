@@ -4,8 +4,7 @@ CREATE PROCEDURE [dbo].[SearchStudentRegistrations]
 	@length INT = 10,
 	@searchValue NVARCHAR(MAX),
 	@sortColumn NVARCHAR(MAX),
-	@sortDirection NVARCHAR(MAX),
-	@count INT OUT
+	@sortDirection NVARCHAR(MAX)
 AS
 BEGIN
 
@@ -33,7 +32,7 @@ BEGIN
 	FETCH NEXT (CASE WHEN @length = -1 THEN 2147483647 ELSE @length END) ROWS ONLY
 	FOR JSON PATH;
 
-	SELECT @count = COUNT(*)
+	SELECT COUNT(*)
 	FROM StudentRegistration STREG
 	INNER JOIN Course C ON C.CourseId = STREG.CourseId
 	INNER JOIN StudentLearningMode SLM ON SLM.StudentLearningModeId = STREG.StudentLearningModeId

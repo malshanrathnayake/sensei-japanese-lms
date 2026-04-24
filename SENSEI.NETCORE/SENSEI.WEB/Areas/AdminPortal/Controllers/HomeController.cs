@@ -16,6 +16,7 @@ namespace SENSEI.WEB.Areas.AdminPortal.Controllers
         private readonly IBatchService _batchService;
         private readonly ICourseService _courseService;
         private readonly IStudentRegistrationService _registrationService;
+        private readonly IStudentPaymentService _paymentService;
         private readonly IDataProtector _protector;
 
         public HomeController(
@@ -23,12 +24,14 @@ namespace SENSEI.WEB.Areas.AdminPortal.Controllers
             IBatchService batchService,
             ICourseService courseService,
             IStudentRegistrationService registrationService,
+            IStudentPaymentService paymentService,
             IDataProtectionProvider provider)
         {
             _studentService = studentService;
             _batchService = batchService;
             _courseService = courseService;
             _registrationService = registrationService;
+            _paymentService = paymentService;
             _protector = provider.CreateProtector("CourseProtector");
         }
 
@@ -38,12 +41,20 @@ namespace SENSEI.WEB.Areas.AdminPortal.Controllers
             var courses = await _courseService.GetCourses();
             var batches = await _batchService.GetBatches();
             
-            // Explicitly sort by CreatedDateTime DESC to get the actual "Recent" registrations
-            var (recentRegs, pendingRegs) = await _registrationService.SearchStudentRegistraion(
+            // Fetch recent registrations
+            var (recentRegs, _) = await _registrationService.SearchStudentRegistraion(
                 length: 5, 
                 sortColumn: "createdDateTime", 
                 sortDirection: "DESC"
             );
+
+            // Fetch all for accurate dashboard stats
+            var (allRegs, _) = await _registrationService.SearchStudentRegistraion(0, 0, 10000);
+            var pendingRegsCount = allRegs.Count(x => !x.IsApproved && !x.IsRejected);
+
+            // Fetch pending payments
+            var (payments, _) = await _paymentService.SearchStudentBatchPayment(0, 0, "", 0, 1000);
+            var pendingPayments = payments.Count(x => !x.IsApproved && !x.IsRejected);
 
             foreach (var reg in recentRegs)
             {
@@ -55,7 +66,8 @@ namespace SENSEI.WEB.Areas.AdminPortal.Controllers
                 TotalStudents = totalStudents,
                 TotalCourses = courses.Count(),
                 TotalBatches = batches.Count(),
-                PendingRegistrations = pendingRegs,
+                PendingRegistrations = pendingRegsCount,
+                PendingPayments = pendingPayments,
                 RecentRegistrations = recentRegs,
                 CourseSummary = courses.Take(5)
             };

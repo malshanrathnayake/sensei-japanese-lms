@@ -32,11 +32,16 @@ BEGIN
 		WHERE [StudentBatchPaymentId] = @studentBatchPaymentId;
 
 		INSERT INTO BatchStudentLessonAccess([BatchLessonId], [StudentId], [HasAccess])
-		SELECT BatchLessonId , @studentId, 1
+		SELECT BL.BatchLessonId, @studentId, 1
 		FROM BatchLesson BL
+		LEFT JOIN BatchStudentLessonAccess BSLA ON BL.BatchLessonId = BSLA.BatchLessonId AND BSLA.StudentId = @studentId
 		WHERE BL.BatchId = @batchId 
-			AND (@lessonId IS NULL OR BL.LessonId = @lessonId)
-			AND (@lessonId IS NOT NULL OR (MONTH(BL.LessonDateTime) = MONTH(@paymentMonth) AND YEAR(BL.LessonDateTime) = YEAR(@paymentMonth)))
+			AND BSLA.BatchStudentLessonAccessId IS NULL -- Only insert if access doesn't exist
+			AND (
+				(@lessonId IS NOT NULL AND BL.LessonId = @lessonId) -- Grant by Category
+				OR 
+				(@lessonId IS NULL AND MONTH(BL.LessonDateTime) = MONTH(@paymentMonth) AND YEAR(BL.LessonDateTime) = YEAR(@paymentMonth)) -- Grant by Calendar Month
+			);
 
 		COMMIT TRANSACTION;
 		SET @executionStatus = 1;

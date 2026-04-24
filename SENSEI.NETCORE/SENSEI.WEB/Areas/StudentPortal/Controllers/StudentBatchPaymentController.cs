@@ -65,8 +65,9 @@ namespace SENSEI.WEB.Areas.StudentPortal.Controllers
             var student = await _studentService.GetStudentProfile(userId);
 
             StudentBatchPayment studentBatchPayment = new StudentBatchPayment();
-            studentBatchPayment.StudentBatchId = student.StudentBatches.FirstOrDefault()?.StudentBatchId ?? 0;
             studentBatchPayment.PaymentMonth = DateTime.Today;
+
+            ViewBag.StudentBatches = student.StudentBatches.Select(e => new { id = e.StudentBatchId, text = e.Batch.BatchName + " (" + e.Batch.Course.CourseName + ")" }).ToList();
 
             return View(studentBatchPayment);
         }
@@ -206,8 +207,11 @@ namespace SENSEI.WEB.Areas.StudentPortal.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetBatchLessons(long batchId)
+        public async Task<IActionResult> GetBatchLessons(long studentBatchId)
         {
+            var studentBatches = await _studentService.GetStudentBatchById(studentBatchId);
+            var batchId = studentBatches.FirstOrDefault()?.BatchId ?? 0;
+            
             var batchLessons = await _studentService.GetBatchLessons(batchId);
             var result = batchLessons
                 .Where(e => !e.IsDeleted)

@@ -70,14 +70,14 @@ namespace SENSEI.WEB.Areas.AdminPortal.Controllers
         [HttpGet]
         public async Task<IActionResult> GetRegistrationStats()
         {
-            var (list, count) = await _studentRegistrationService.SearchStudentRegistraion(0, 0, 10000);
+            var (list, _) = await _studentRegistrationService.SearchStudentRegistraion(0, 0, 10000);
             
             var approved = list.Count(x => x.IsApproved);
             var rejected = list.Count(x => x.IsRejected);
             var pending = list.Count(x => !x.IsApproved && !x.IsRejected);
 
             return Json(new { 
-                total = count, 
+                total = list.Count(), 
                 approved = approved, 
                 rejected = rejected, 
                 pending = pending 

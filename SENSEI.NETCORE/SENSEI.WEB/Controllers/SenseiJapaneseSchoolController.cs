@@ -177,34 +177,30 @@ namespace SENSEI.WEB.Controllers
 
             HttpContext.Session.SetString("UserId", user.UserId.ToString());
             HttpContext.Session.SetString("UserName", user.userName);
-            HttpContext.Session.SetString("DisplayName", user.Staff != null ? user.Staff.StaffPopulatedName : user.Student.StudentPopulatedName);
-            HttpContext.Session.SetString("UserType", user.UserTypeEnum.ToString());
-            HttpContext.Session.SetString("ProfileImage", "/theme/v1/img/avatars/placeholder_1.jpeg");
 
-            if (user.UserTypeEnum == UserTypeEnum.Admin)
+            string displayName = "User";
+            if (user.Staff != null) displayName = user.Staff.StaffPopulatedName;
+            else if (user.Student != null) displayName = user.Student.StudentPopulatedName;
+            else displayName = user.userName;
+
+            HttpContext.Session.SetString("DisplayName", displayName);
+            HttpContext.Session.SetString("ProfileImage", "/theme/v1/img/avatars/placeholder_1.jpeg");
+            HttpContext.Session.SetString("UserType", user.UserTypeEnum.ToString());
+
+            if (user.Staff != null)
             {
                 HttpContext.Session.SetString("EmployeeId", user.Staff.EmployeeId.ToString());
-            
             }
-            else if (user.UserTypeEnum == UserTypeEnum.Manager)
-            {
-                HttpContext.Session.SetString("EmployeeId", user.Staff.EmployeeId.ToString());
-            }
-            else if (user.UserTypeEnum == UserTypeEnum.Student)
+            if (user.Student != null)
             {
                 HttpContext.Session.SetString("StudentId", user.Student.StudentId.ToString());
             }
-            else
-            {
-
-            }
-
 
             var appClaims = new List<Claim>
             {
                 new Claim("UserId", user.UserId.ToString()),
                 new Claim(ClaimTypes.Email, user.userName),
-                new Claim(ClaimTypes.Name, user.Staff != null ? user.Staff.StaffPopulatedName : user.Student.StudentPopulatedName),
+                new Claim(ClaimTypes.Name, displayName),
                 new Claim(ClaimTypes.Role, user.UserTypeEnum.ToString())
             };
 
@@ -222,30 +218,16 @@ namespace SENSEI.WEB.Controllers
             TempData.AddNotification(new NotificationMessage
             {
                 Type = "info",
-                Message = $"Welcome {user?.Staff?.StaffPopulatedName ?? user?.Student?.StudentPopulatedName ?? "User"}"
+                Message = $"Welcome {displayName}"
             });
 
-            if (user.UserTypeEnum == UserTypeEnum.Admin)
-            {
-                return RedirectToAction("Index", "Home", new { Area = "AdminPortal" });
-
-            }
-            else if (user.UserTypeEnum == UserTypeEnum.Manager)
-            {
-                return RedirectToAction("Index", "Home", new { Area = "AdminPortal" });
-            }
-            else if (user.UserTypeEnum == UserTypeEnum.Student)
+            if (user.UserTypeEnum == UserTypeEnum.Student)
             {
                 return RedirectToAction("Index", "Home", new { Area = "StudentPortal" });
             }
             else
             {
-                TempData.AddNotification(new NotificationMessage
-                {
-                    Type = "error",
-                    Message = "Your account did not match any type"
-                });
-                return RedirectToAction("Login");
+                return RedirectToAction("Index", "Home", new { Area = "AdminPortal" });
             }
             
         }
@@ -278,6 +260,17 @@ namespace SENSEI.WEB.Controllers
                 {
                     Type = "Error",
                     Message = "This email is already registered.!"
+                });
+                return View(studentRegistration);
+            }
+
+            var isPhoneUnique = await _userService.GetUserByPhone(studentRegistration.PhoneNo);
+            if (isPhoneUnique != null)
+            {
+                TempData.AddNotification(new NotificationMessage
+                {
+                    Type = "Error",
+                    Message = "This phone number is already registered.!"
                 });
                 return View(studentRegistration);
             }
