@@ -22,7 +22,7 @@
     <!-- Stats Overview -->
     <div class="row mb-4 g-3">
         <div class="col-6 col-md-3">
-            <div class="card border-0 shadow-sm p-3 h-100" style="border-radius: 1rem; border-left: 4px solid var(--sensei-red) !important;">
+            <div class="card border-0 shadow-sm p-3 h-100 stats-card-premium active" id="card-total-lessons" style="border-radius: 1rem; border-left: 4px solid var(--sensei-red) !important; cursor: pointer; transition: all 0.3s ease;">
                 <div class="d-flex align-items-center">
                     <div class="stat-icon bg-soft-primary text-primary rounded-circle p-2 me-3">
                         <i data-feather="calendar" style="width: 20px; height: 20px;"></i>
@@ -35,7 +35,7 @@
             </div>
         </div>
         <div class="col-6 col-md-3">
-            <div class="card border-0 shadow-sm p-3 h-100" style="border-radius: 1rem; border-left: 4px solid #00c292 !important;">
+            <div class="card border-0 shadow-sm p-3 h-100 stats-card-premium" id="card-recordings" style="border-radius: 1rem; border-left: 4px solid #00c292 !important; cursor: pointer; transition: all 0.3s ease;">
                 <div class="d-flex align-items-center">
                     <div class="stat-icon bg-soft-success text-success rounded-circle p-2 me-3">
                         <i data-feather="video" style="width: 20px; height: 20px;"></i>
@@ -48,7 +48,7 @@
             </div>
         </div>
         <div class="col-6 col-md-3">
-            <div class="card border-0 shadow-sm p-3 h-100" style="border-radius: 1rem; border-left: 4px solid #03a9f3 !important;">
+            <div class="card border-0 shadow-sm p-3 h-100 stats-card-premium" id="card-upcoming" style="border-radius: 1rem; border-left: 4px solid #03a9f3 !important; cursor: pointer; transition: all 0.3s ease;">
                 <div class="d-flex align-items-center">
                     <div class="stat-icon bg-soft-info text-info rounded-circle p-2 me-3">
                         <i data-feather="clock" style="width: 20px; height: 20px;"></i>
@@ -136,7 +136,30 @@
 
     <script type="text/javascript">
 
+        var currentTypeFilter = 'all';
+
         $(document).ready(function () {
+
+            $('#card-total-lessons').click(function() {
+                $('.stats-card-premium').removeClass('active');
+                $(this).addClass('active');
+                currentTypeFilter = 'all';
+                loadBatchLessons();
+            });
+
+            $('#card-recordings').click(function() {
+                $('.stats-card-premium').removeClass('active');
+                $(this).addClass('active');
+                currentTypeFilter = 'recordings';
+                loadBatchLessons();
+            });
+
+            $('#card-upcoming').click(function() {
+                $('.stats-card-premium').removeClass('active');
+                $(this).addClass('active');
+                currentTypeFilter = 'upcoming';
+                loadBatchLessons();
+            });
 
             $('#SearchBatchId').change(function () {
                 updateUrlParameter('page', 1);
@@ -182,6 +205,7 @@
                 lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
                 pageLength: pageLength,
                 displayStart: startPage,
+                order: [[4, "desc"]], // Latest Lessons First
                 columnDefs: [
                     { targets: 0, className: 'noVis ps-3' },
                     { width: 40, targets: 0, orderable: false },
@@ -195,6 +219,7 @@
                     type: 'POST',
                     data: function (d) {
                         d.batchId = $('#SearchBatchId').val() || 0;
+                        d.typeFilter = currentTypeFilter; // Client should handle this if SP doesn't
                     }
                 },
                 columns: [

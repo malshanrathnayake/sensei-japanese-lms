@@ -5,7 +5,7 @@
 @{
     ViewData["Title"] = $"Lesson {Model?.Lesson?.LessonName}";
     
-    // Improved Video ID Extraction for youtu.be and youtube.com/watch?v=
+    // Improved Video ID Extraction
     string videoId = "";
     if (!string.IsNullOrEmpty(Model.RecordingUrl))
     {
@@ -19,9 +19,24 @@
         }
     }
     var studentId = Convert.ToInt64(Context.Session.GetString("StudentId") ?? "0");
+
+    // Check for temporary access
+    var myAccess = Model.BatchStudentLessonAccesses?.FirstOrDefault(e => e.StudentId == studentId);
+    var latestApprovedRequest = myAccess?.BatchStudentLessonAccessRequests?
+        .Where(r => r.ApproveStatusEnum == ApproveStatusEnum.Approved && r.RequestEndDate > DateTime.Now)
+                .OrderByDescending(r => r.RequestEndDate)
+                .FirstOrDefault();
+    var hasTemporaryAccess = latestApprovedRequest != null;
 }
 
 <style>
+    body {
+        user-select: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+    }
+
     .player-container {
         position: relative;
         width: 100%;
@@ -44,6 +59,7 @@
         width: 100%;
         height: 100%;
         border: none;
+        filter: none !important; /* Ensure no ash color/filter effect */
     }
 
     /* Blockers to prevent interaction with specific YT UI elements */
@@ -52,29 +68,36 @@
         top: 0;
         left: 0;
         width: 100%;
-        height: 80px; /* Increased to cover 'Watch Later' and 'Share' */
+        height: 25%; /* Covers top 25% of the player */
         z-index: 110;
-        background: transparent;
+        background: rgba(0,0,0,0.01); /* Hit-test layer */
+        pointer-events: all; /* Catch all clicks */
+        cursor: default;
     }
 
     .yt-logo-blocker {
         position: absolute;
         bottom: 0;
         right: 0;
-        width: 120px;
-        height: 60px;
-        z-index: 10;
-        background: transparent;
+        width: 40%; /* Expanded coverage for YouTube logo */
+        height: 80px; /* Taller to cover bar icons */
+        z-index: 110;
+        background: rgba(0,0,0,0.01); /* Hit-test layer */
+        pointer-events: all;
+        cursor: default;
     }
 
-    .yt-logo-blocker {
+    /* New comprehensive bottom bar blocker */
+    .yt-bottom-blocker {
         position: absolute;
         bottom: 0;
-        right: 0;
-        width: 120px;
-        height: 48px;
+        left: 0;
+        width: 100%;
+        height: 50px; /* Covers the bottom control bar specifically */
         z-index: 110;
-        background: transparent;
+        background: rgba(0,0,0,0.01); /* Invisible hit-test layer */
+        pointer-events: all;
+        cursor: default;
     }
 
     /* Cinema Mode */
@@ -128,32 +151,8 @@
         justify-content: center;
     }
 
-    .pause-blocker {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: calc(100% - 40px); /* Leave bottom bar visible */
-        background: rgba(0,0,0,0.7);
-        z-index: 105;
-        display: none;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        cursor: pointer;
-        backdrop-filter: blur(4px);
-    }
-
-    .pause-blocker h4 {
-        font-family: 'Noto Serif JP', serif;
-        margin-top: 15px;
-        font-weight: 700;
-        letter-spacing: 1px;
-    }
-
-    .player-container.is-paused .pause-blocker {
-        display: flex;
+    .player-container.is-paused #player {
+        filter: none;
     }
 </style>
 
@@ -190,15 +189,12 @@
                     <div class="player-container" id="playerContainer">
                         <div class="player-wrapper">
                             <div id="player"></div>
-                            <!-- Pause blocker to hide YouTube suggestions -->
-                            <div class="pause-blocker" id="pauseBlocker">
-                                <i data-feather="play-circle" style="width: 64px; height: 64px; color: #D83236;"></i>
-                                <h4>RESUME LESSON</h4>
-                            </div>
                             <!-- Title blocker (hides share and other top bar items) -->
-                            <div class="yt-title-blocker"></div>
+                            <div class="yt-title-blocker" oncontextmenu="return false;"></div>
                             <!-- Logo blocker (hides bottom right Watch on YT link) -->
-                            <div class="yt-logo-blocker"></div>
+                            <div class="yt-logo-blocker" oncontextmenu="return false;"></div>
+                            <!-- NEW: Bottom bar blocker (hides share, more videos etc) -->
+                            <div class="yt-bottom-blocker" oncontextmenu="return false;"></div>
                         </div>
                     </div>
                 </div>
@@ -207,9 +203,27 @@
                         <div class="bg-soft-danger text-danger p-2 rounded-3">
                             <i data-feather="calendar" style="width: 20px; height: 20px;"></i>
                         </div>
-                        <div>
-                            <span class="text-muted small d-block fw-bold text-uppercase" style="letter-spacing: 0.5px;">Recording Date</span>
+                        <div class="flex-fill">
+                            <span class="text-muted small d-block fw-bold text-uppercase" style="letter-spacing: 0.5px;">Added Date</span>
                             <span class="fw-800" style="color: #1e293b;">@Model.LessonDateTime.ToString("MMMM dd, yyyy")</span>
+                        </div>
+                        <div class="flex-fill">
+                            <span class="text-muted small d-block fw-bold text-uppercase" style="letter-spacing: 0.5px;">Expiry Date</span>
+                            <span class="fw-800 text-danger" style="color: #D83236;">@Model.RecordingExpireDate.ToString("MMMM dd, yyyy")</span>
+
+                            @if (hasTemporaryAccess)
+                            {
+                                var timeLeft = latestApprovedRequest.RequestEndDate - DateTime.Now;
+                                var timeText = timeLeft.TotalDays >= 1 
+                                    ? $"Ends in {Math.Ceiling(timeLeft.TotalDays)} Days" 
+                                    : $"Ends in {Math.Ceiling(timeLeft.TotalHours)} Hours";
+                                    
+                                <div class="mt-1">
+                                    <span class="badge bg-soft-warning text-dark rounded-pill fw-900" style="font-size: 0.65rem; letter-spacing: 0.05em; border: 1px solid #ffc107;">
+                                        <i class="align-middle me-1" data-feather="clock" style="width: 10px;"></i> @timeText.ToUpper()
+                                    </span>
+                                </div>
+                            }
                         </div>
                     </div>
                     
@@ -296,7 +310,10 @@
 @Html.RenderAction("MyLearningOffCanvas", "MyLearning", new { area = "StudentPortal" })
 
 @section Scripts {
-
+    <script>
+        // Global Right Click Block for Lesson Page
+        document.addEventListener('contextmenu', event => event.preventDefault());
+    </script>
     <script src="~/js/student-portal/my-learning-functions.js"></script>
 
     <script>
@@ -318,11 +335,12 @@
                     'modestbranding': 1,      // Minimal YT logo
                     'rel': 0,                // No related videos from other channels
                     'showinfo': 0,           // Hide video title/info
-                    'fs': 1,                 // Allow native fullscreen
+                    'fs': 0,                 // Disable native fullscreen to force secure expansion
                     'iv_load_policy': 3,     // Hide annotations
                     'autohide': 1,           // Auto-hide controls
                     'disablekb': 1,          // Disable keyboard shortcuts to prevent 'G' or 'watch on YT'
-                    'cc_load_policy': 0      // Disable captions by default
+                    'cc_load_policy': 0,     // Disable captions by default
+                    'origin': window.location.origin
                 },
                 events: {
                     'onReady': onPlayerReady,
@@ -339,33 +357,32 @@
 
         function onPlayerStateChange(event) {
             var container = document.getElementById('playerContainer');
-            var blockerText = document.querySelector('#pauseBlocker h4');
             
-            if (event.data == YT.PlayerState.PAUSED) {
-                container.classList.add('is-paused');
-                blockerText.innerText = "RESUME LESSON";
-            } else if (event.data == YT.PlayerState.ENDED) {
-                container.classList.add('is-paused');
-                blockerText.innerText = "REPLAY LESSON";
+            if (event.data == YT.PlayerState.ENDED) {
+                // Instant Wipe: Hide player to block 'More Videos'
+                document.getElementById('player').style.display = 'none';
             } else {
-                container.classList.remove('is-paused');
+                document.getElementById('player').style.display = 'block';
             }
         }
 
-        // Resume or Replay on blocker click
-        document.getElementById('pauseBlocker').addEventListener('click', function() {
-            var state = player.getPlayerState();
-            if (state == YT.PlayerState.ENDED) {
-                player.seekTo(0);
-                player.playVideo();
-            } else {
-                player.playVideo();
+        // Block 'Tab' key to prevent keyboard navigation to hidden YT links
+        $('#playerContainer').on('keydown', function(e) {
+            if (e.keyCode === 9) { // Tab key
+                e.preventDefault();
+                return false;
             }
         });
 
-        // Block right click on regulators
-        $('.yt-title-blocker, .yt-logo-blocker, .pause-blocker').on('contextmenu', function(e) {
+        // Block right click on entire player container to prevent copying links
+        $('#playerContainer').on('contextmenu', function(e) {
             e.preventDefault();
+            return false;
+        });
+
+        // Prevent dragging of any player elements
+        $('#playerContainer').on('mousedown', function(e) {
+            if(e.button === 2) return false; // Right click
         });
 
         $(document).ready(function () {

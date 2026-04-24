@@ -169,14 +169,14 @@ namespace SENSEI.BLL.StudentPortalService
             return status;
         }
 
-        public async Task<bool> UpdateBatchLessonAccess(long batchLessonAccessId)
+        public async Task<bool> UpdateBatchLessonAccess(long batchLessonAccessId, DateTime? requestEndDate = null)
         {
 
             var batchStudentLessonAccessRequest = new BatchStudentLessonAccessRequest
             {
                 BatchStudentLessonAccessId = batchLessonAccessId,
                 RequestedDate = DateTime.UtcNow,
-                RequestEndDate = DateTime.UtcNow.AddDays(7), //access is for 7 days
+                RequestEndDate = requestEndDate ?? DateTime.UtcNow.AddDays(1), // Use provided date or default to 1 day
             };
 
             string jsonString = JsonConvert.SerializeObject(batchStudentLessonAccessRequest);

@@ -1,4 +1,4 @@
-﻿@using SENSEI.DOMAIN
+@using SENSEI.DOMAIN
 @model Batch
 
 @{
@@ -8,7 +8,7 @@
 
 
 <div class="offcanvas-header">
-    <h5 class="offcanvas-title">New Course</h5>
+    <h5 class="offcanvas-title">Edit Batch</h5>
     <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
 </div>
 
@@ -19,11 +19,11 @@
           data-ajax-begin="onBatchEditBegin" data-ajax-success="onBatchEditSuccess" data-ajax-failure="onBatchEditFailure" data-ajax-complete="onBatchEditComplete">
 
         <input type="hidden" id="BatchId" name="BatchId" value="@Model.BatchId" />
-        <input type="hidden" id="CourseId" name="CourseId" value="@Model.CourseId" />
+        <input type="hidden" id="hdnCourseId" value="@Model.CourseId" />
 
         <div class="mb-3">
             <label class="form-label">@Html.DisplayNameFor(m => m.CourseId)</label>
-            <select id="CourseId" class="form-control course-select" asp-for="CourseId"></select>
+            <select class="form-control course-select" asp-for="CourseId"></select>
             <span asp-validation-for="CourseId" class="text-danger"></span>
         </div>
 

@@ -6,89 +6,164 @@
     ViewData["Title"] = "Student Payments";
 }
 
+<style>
+    .stats-card-premium {
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border: none !important;
+        border-radius: 20px !important;
+        background: white;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.02) !important;
+    }
+    .stats-card-premium:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(0,0,0,0.05) !important;
+    }
+    .stats-card-premium.active {
+        border: 2px solid var(--sensei-red) !important;
+        background: #fffafa;
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(216, 50, 54, 0.1) !important;
+    }
+    .stats-icon-box {
+        width: 48px;
+        height: 48px;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+    }
+    #StudentPaymentDataTable thead th {
+        background-color: #f8f9fa;
+        color: #495057;
+        font-weight: 800;
+        text-transform: uppercase;
+        font-size: 0.65rem;
+        letter-spacing: 0.08em;
+        padding: 1rem;
+        border-bottom: 2px solid #f1f3f5;
+    }
+</style>
+
 <div class="container-fluid p-0">
 
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h1 class="h3 mb-0">Student Payments</h1>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-1 fw-bold">Student Payments</h1>
+            <p class="text-muted small mb-0">Verify and manage tuition payments for all batches.</p>
+        </div>
 
-        <button type="button" class="btn btn-primary" id="btnNewStudentPayment" data-action-url="/AdminPortal/StudentPayments/Create">
-            <i class="fas fa-plus"></i> New
+        <button type="button" class="btn btn-primary px-4 rounded-pill shadow-sm" id="btnNewStudentPayment" data-action-url="/AdminPortal/StudentPayments/Create">
+            <i class="fas fa-plus me-2"></i> New Payment
         </button>
-
     </div>
 
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">Search By</h5>
-                </div>
-                <div class="card-body">
-
-                    <div class="row">
-                        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xm-12">
-                            <div class="mb-3" id="search-course-wrapper">
-                                <label class="form-label">Course</label>
-                                <select id="SearchCourseId" class="form-control search-course-select" name="SearchCourseId"></select>
-                                @* <span asp-validation-for="CourseId" class="text-danger"></span> *@
-                            </div>
-                        </div>
-
-                        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xm-12">
-                            <div class="mb-3" id="search-course-wrapper">
-                                <label class="form-label">@Html.DisplayNameFor(m => m.StudentBatch.BatchId)</label>
-                                <select id="SearchBatchId" class="form-control search-batch-select" name="SearchBatchId"></select>
-                                @* <span asp-validation-for="CourseId" class="text-danger"></span> *@
-                            </div>
-                        </div>
-
-                        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xm-12">
-                            <div class="mb-3" id="search-course-wrapper">
-                                <label class="form-label">@Html.DisplayNameFor(m => m.StudentBatch.Student.IndexNumber)</label>
-                                <input type="text" id="SearchIndexNumber" class="form-control" name="SearchIndexNumber" />
-                                @* <span asp-validation-for="CourseId" class="text-danger"></span> *@
-                            </div>
-                        </div>
+    <!-- Statistics Row -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card stats-card-premium" id="card-pending">
+                <div class="card-body p-4 text-center">
+                    <div class="stats-icon-box bg-soft-warning text-warning mx-auto mb-3">
+                        <i class="fas fa-clock"></i>
                     </div>
-
+                    <h6 class="text-muted small fw-bold text-uppercase mb-1">Pending</h6>
+                    <h3 class="mb-0 fw-900" id="stat-pending">--</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stats-card-premium" id="card-approved">
+                <div class="card-body p-4 text-center">
+                    <div class="stats-icon-box bg-soft-success text-success mx-auto mb-3">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h6 class="text-muted small fw-bold text-uppercase mb-1">Approved</h6>
+                    <h3 class="mb-0 fw-900" id="stat-approved">--</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stats-card-premium" id="card-rejected">
+                <div class="card-body p-4 text-center">
+                    <div class="stats-icon-box bg-soft-danger text-danger mx-auto mb-3">
+                        <i class="fas fa-times-circle"></i>
+                    </div>
+                    <h6 class="text-muted small fw-bold text-uppercase mb-1">Rejected</h6>
+                    <h3 class="mb-0 fw-900" id="stat-rejected">--</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stats-card-premium active" id="card-total">
+                <div class="card-body p-4 text-center">
+                    <div class="stats-icon-box bg-soft-primary text-primary mx-auto mb-3">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </div>
+                    <h6 class="text-muted small fw-bold text-uppercase mb-1">Total Records</h6>
+                    <h3 class="mb-0 fw-900" id="stat-total">--</h3>
                 </div>
             </div>
         </div>
     </div>
 
+    <div class="row">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm mb-4" style="border-radius: 1.25rem;">
+                <div class="card-header bg-white py-3 border-0">
+                    <h5 class="card-title mb-0 fw-900 fs-6"><i class="fas fa-filter me-2 text-primary"></i> Filter Payments</h5>
+                </div>
+                <div class="card-body pt-0">
+                    <div class="row g-3">
+                        <div class="col-xl-4 col-lg-4 col-md-6">
+                            <label class="form-label text-muted small fw-bold text-uppercase">Course</label>
+                            <select id="SearchCourseId" class="form-control select2 search-course-select shadow-none border-light-subtle bg-light"></select>
+                        </div>
+                        <div class="col-xl-4 col-lg-4 col-md-6">
+                            <label class="form-label text-muted small fw-bold text-uppercase">Batch</label>
+                            <select id="SearchBatchId" class="form-control select2 search-batch-select shadow-none border-light-subtle bg-light"></select>
+                        </div>
+                        <div class="col-xl-4 col-lg-4 col-md-6">
+                            <label class="form-label text-muted small fw-bold text-uppercase">Student Index</label>
+                            <input type="text" id="SearchIndexNumber" class="form-control shadow-none border-light-subtle bg-light" placeholder="Search by Index..." />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div class="row">
         <div class="col-12">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">List of Student Payments</h5>
+            <div class="card border-0 shadow-sm" style="border-radius: 1rem;">
+                <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0 fw-800">Payment History</h5>
+                    <button class="btn btn-sm btn-outline-primary rounded-pill px-3" onclick="loadStudentPayments()">
+                        <i class="fas fa-sync-alt me-1"></i> Refresh
+                    </button>
                 </div>
-                <div class="card-body">
-
+                <div class="card-body p-0">
                     <div id="StudentPaymentTableContent" class="table-responsive">
-
                         <table id="StudentPaymentDataTable" class="table table-hover align-middle mb-0 w-100">
                             <thead>
                                 <tr>
                                     <th></th>
-                                    <th>Index Number</th>
+                                    <th>Index</th>
                                     <th>Student Name</th>   
-                                    <th>Phone Number</th>
-                                    <th>@Html.DisplayNameFor(m => m.StudentBatch.Batch.Course.CourseName)</th>
-                                    <th>@Html.DisplayNameFor(m => m.StudentBatch.BatchId)</th>
-                                    <th>@Html.DisplayNameFor(m => m.PaymentMonth)</th>
-                                    <th>@Html.DisplayNameFor(m => m.PaymentDate)</th>
-                                    <th>@Html.DisplayNameFor(m => m.Amount) [RS]</th>
-                                    <th>@Html.DisplayNameFor(m => m.SlipUrl)</th>
+                                    <th>Phone</th>
+                                    <th>Course</th>
+                                    <th>Batch</th>
+                                    <th>Month</th>
+                                    <th>Payment Date</th>
+                                    <th>Amount</th>
+                                    <th>Slip</th>
                                     <th>Status</th>
                                 </tr>
                             </thead>
                             <tbody>
                             </tbody>
                         </table>
-
                     </div>
-
                 </div>
             </div>
         </div>
@@ -99,81 +174,71 @@
 @Html.RenderAction("StudentPaymentOffCanvas", "StudentPayments", new { area = "AdminPortal" })
 
 @section Scripts {
-
     <script src="~/js/admin-portal/studentpayment-function.js"></script>
-
     <script type="text/javascript">
+        var currentStatusFilter = -1; // -1: All, 0: Pending (isApproved=false, isRejected=false), 1: Approved, 2: Rejected
 
         $(document).ready(function () {
+            // Stats Cards Click Handlers
+            $('#card-pending').click(function() {
+                $('.stats-card-premium').removeClass('active');
+                $(this).addClass('active');
+                currentStatusFilter = 0;
+                loadStudentPayments();
+            });
+            $('#card-approved').click(function() {
+                $('.stats-card-premium').removeClass('active');
+                $(this).addClass('active');
+                currentStatusFilter = 1;
+                loadStudentPayments();
+            });
+            $('#card-rejected').click(function() {
+                $('.stats-card-premium').removeClass('active');
+                $(this).addClass('active');
+                currentStatusFilter = 2;
+                loadStudentPayments();
+            });
+            $('#card-total').click(function() {
+                $('.stats-card-premium').removeClass('active');
+                $(this).addClass('active');
+                currentStatusFilter = -1;
+                loadStudentPayments();
+            });
 
             $('#SearchCourseId').change(function () {
-                var courseId = $(this).val();
-
-                console.log(courseId);
-
                 loadStudentPayments();
+                loadBatches();
             });
-
             $('#SearchBatchId').change(function () {
-                var batchId = $(this).val();
-
-                console.log(batchId);
-
                 loadStudentPayments();
             });
-
             $("#SearchIndexNumber").keyup(function () {
                 loadStudentPayments();
             });
 
             $.getJSON('/AdminPortal/StudentPayments/GetCourseListJsonResult', function (data) {
-
-                $('#SearchCourseId').empty();
-                $('#SearchCourseId').append('<option value="0">All Courses</option>')
-
-                loadSelectBox({
-                    data: data,
-                    className: 'search-course-select',
-                    title: 'Select Course'
-                });
-
-                var courseId = $('#SearchCourseId').val();
-
-                if (courseId) {
-                    $('#SearchCourseId').val(courseId).trigger('change');
-                }
-
+                $('#SearchCourseId').empty().append('<option value="0">All Courses</option>');
+                loadSelectBox({ data: data, className: 'search-course-select', title: 'Select Course' });
                 loadBatches();
             });
 
             function loadBatches(){
-                $.getJSON('/AdminPortal/StudentPayments/GetBatchListJsonResult', 
-                    {
-                        courseId: $('#SearchCourseId').val() || 0
-                    },
-                    function (data) {
-
-                        $('#SearchBatchId').empty();
-                        $('#SearchBatchId').append('<option value="0">All Batches</option>')
-
-                        loadSelectBox({
-                            data: data,
-                            className: 'search-batch-select',
-                            title: 'Select Batch'
-                        });
-
-                        var courseId = $('#SearchBatchId').val();
-
-                        if (courseId) {
-                            $('#SearchBatchId').val(courseId).trigger('change');
-                        }
-                    });
+                $.getJSON('/AdminPortal/StudentPayments/GetBatchListJsonResult', { courseId: $('#SearchCourseId').val() || 0 }, function (data) {
+                    $('#SearchBatchId').empty().append('<option value="0">All Batches</option>');
+                    loadSelectBox({ data: data, className: 'search-batch-select', title: 'Select Batch' });
+                });
             }
 
+            loadStudentPayments();
+            loadPaymentStats();
         });
 
-        function loadStudentPayments() {
+        function loadPaymentStats() {
+            // If there's an endpoint for stats, use it. Otherwise, we'll update from table draw.
+            // For now, I'll assume we can get them from the table metadata or a separate call.
+        }
 
+        function loadStudentPayments() {
             if ($.fn.DataTable.isDataTable('#StudentPaymentDataTable')) {
                 $('#StudentPaymentDataTable').DataTable().clear().destroy();
                 $('#StudentPaymentDataTable tbody').empty();
@@ -185,14 +250,7 @@
                 autoWidth: false,
                 lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
                 pageLength: 25,
-                columnDefs: [
-                    { targets: 0, className: 'noVis' },
-                    { width: 25, targets: 0, orderable: false },
-                ],
-                dom:
-                    "<'row mb-3'<'col-sm-6'l><'col-sm-6 text-end'f>>" +
-                    "<'row'<'col-sm-12'tr>>" +
-                    "<'row mt-3'<'col-sm-5'i><'col-sm-7'p>>",
+                order: [[7, "desc"]], // Payment Date - Latest First
                 ajax: {
                     url: '/AdminPortal/StudentPayments/ListOfStudentPayments',
                     type: 'POST',
@@ -200,116 +258,65 @@
                         d.courseId = $('#SearchCourseId').val() || 0;
                         d.batchId = $('#SearchBatchId').val() || 0;
                         d.indexNumber = $("#SearchIndexNumber").val();
+                        d.status = currentStatusFilter;
                     }
                 },
                 columns: [
                     {
                         data: null,
                         orderable: false,
-                        searchable: false,
-                        width: "25px",
-                        className: "text-end",
                         render: function (data, type, row) {
-
                             var approveUrl = `/AdminPortal/StudentPayments/Approve/?q=${row.encryptedKey}`;
                             var rejectUrl = `/AdminPortal/StudentPayments/Reject/?q=${row.encryptedKey}`;
-
                             var isFinalized = row.isApproved || row.isRejected;
-
-                            // Approve button
-                            var approveDisabled = isFinalized ? "disabled text-muted" : "";
-                            var approveClickClass = isFinalized ? "" : "approve-payment";
-
-                            // Reject button
-                            var rejectDisabled = isFinalized ? "disabled text-muted" : "";
-                            var rejectClickClass = isFinalized ? "" : "reject-payment";
-
-
-                            var approveBtn = `<li><a class="dropdown-item d-flex align-items-center gap-2 ${approveDisabled} ${approveClickClass}" href="javascript:void(0)" data-action-url="${approveUrl}"> <i data-feather="check-circle"></i><span>Approve</span></a></li>`;
-                            var rejectBtn = `<li><a class="dropdown-item d-flex align-items-center gap-2 ${rejectDisabled} ${rejectClickClass}" href="javascript:void(0)" data-action-url="${rejectUrl}" data-action-parameter="${row.studentRegistrationPopulatedName}"><i data-feather="x-circle"></i><span>Reject</span></a></li>`;
+                            
+                            var approveBtn = `<li><a class="dropdown-item d-flex align-items-center gap-2 ${isFinalized ? 'disabled opacity-50' : 'approve-payment'}" href="javascript:void(0)" data-action-url="${approveUrl}"><i data-feather="check-circle" style="width: 14px; height: 14px;"></i><span>Approve</span></a></li>`;
+                            var rejectBtn = `<li><a class="dropdown-item d-flex align-items-center gap-2 ${isFinalized ? 'disabled opacity-50' : 'reject-payment'}" href="javascript:void(0)" data-action-url="${rejectUrl}"><i data-feather="x-circle" style="width: 14px; height: 14px;"></i><span>Reject</span></a></li>`;
 
                             return `
                                 <div class="dropdown">
-                                    <button class="btn btn-sm btn-light p-1" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                        <i data-feather="more-vertical"></i>
+                                    <button class="btn btn-sm btn-light border-0 p-1 rounded-circle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="width: 32px; height: 32px;">
+                                        <i data-feather="more-vertical" style="width: 16px; height: 16px;"></i>
                                     </button>
-
-                                    <ul class="dropdown-menu dropdown-menu-end">
+                                    <ul class="dropdown-menu dropdown-menu-end shadow border-0 p-2" style="border-radius: 0.75rem;">
                                         ${approveBtn}
                                         ${rejectBtn}
                                     </ul>
-                                </div>
-
-                            `;
+                                </div>`;
                         }
                     },
-                    { data: 'studentBatch.student.indexNumber', name:'studentBatch.student.indexNumber' },
-                    { data: 'studentBatch.student.studentPopulatedName', name:'studentBatch.student.studentPopulatedName' },
-                    { 
-                        data: 'studentBatch.student.phoneNo', 
-                        name: 'studentBatch.student.phoneNo',
-                        render: function(data) {
-                            return `<div class="fw-600 small"><i class="fas fa-phone me-1 text-muted smaller"></i> ${data || 'N/A'}</div>`;
-                        }
-                    },
-                    { data: 'studentBatch.batch.course.courseName', name:'studentBatch.batch.course.courseName' },
-                    { data: 'studentBatch.batch.batchName', name:'studentBatch.batch.batchName' },
-                    { data: 'paymentMonth', name:'paymentMonth', render: function (data) { return renderDateOnly(data); } },
-                    { data: 'paymentDate', name:'paymentDate', render: function (data) { return renderDateTime(data); } },
-                    { data: 'amount', name:'amount' },
-                    { data: 'slipUrl', name:'slipUrl', render: function (data) { return renderSlipUrl(data); } },
-                    { data: null, name: 'status', orderable: false, searchable: false,
-                        render: function (data, type, row) {
-
-                            if (row.isApproved) {
-                                return `<span class="badge bg-success">Approved</span>`;
-                            }
-
-                            if (row.isRejected) {
-                                return `<span class="badge bg-danger">Rejected</span>`;
-                            }
-
-                            return `<span class="badge bg-warning text-dark">Pending</span>`;
+                    { data: 'studentBatch.student.indexNumber', name:'indexNumber' },
+                    { data: 'studentBatch.student.studentPopulatedName', name:'studentName' },
+                    { data: 'studentBatch.student.phoneNo', name:'phone', render: function(d) { return `<small>${d || '—'}</small>`; } },
+                    { data: 'studentBatch.batch.course.courseName', name:'course' },
+                    { data: 'studentBatch.batch.batchName', name:'batch' },
+                    { data: 'paymentMonth', name:'month', render: function (d) { return d ? d.split('T')[0] : ''; } },
+                    { data: 'paymentDate', name:'date', render: function (d) { return renderDateTime(d); } },
+                    { data: 'amount', name:'amount', render: function(d) { return `<span class="fw-bold text-dark">Rs. ${d}</span>`; } },
+                    { data: 'slipUrl', name:'slip', render: function (d) { return d ? `<button type="button" class="btn btn-sm btn-soft-primary px-3 rounded-pill fw-bold" onclick="previewSlip('${d}')"><i class="fas fa-eye me-1"></i> Preview</button>` : '<span class="text-muted small">No Slip</span>'; } },
+                    { data: null, name: 'status', orderable: false, render: function (data, type, row) {
+                            if (row.isApproved) return `<span class="badge bg-soft-success text-success px-3 py-2 rounded-pill fw-bold">APPROVED</span>`;
+                            if (row.isRejected) return `<span class="badge bg-soft-danger text-danger px-3 py-2 rounded-pill fw-bold">REJECTED</span>`;
+                            return `<span class="badge bg-soft-warning text-warning px-3 py-2 rounded-pill fw-bold">PENDING</span>`;
                         }
                     }
-
                 ],
-                drawCallback: function () {
-
-                    if (window.feather) {
-                        feather.replace();
-                    }
-
+                drawCallback: function (settings) {
+                    if (window.feather) { feather.replace(); }
                     approveButton();
                     rejectButton();
+                    if (settings.json) {
+                        $('#stat-total').text(settings.json.recordsTotal);
+                        // Update other stats if available in metadata
+                    }
                 }
             });
-
         }
 
         function renderDateTime(data) {
             if (!data) return '';
-
-            var date = data.split('T')[0];
-            var time = data.split('T')[1].split('.')[0];
-            return `<div class="fw-600">${date}</div><div class="small text-muted">${time}</div>`;
-        }
-
-        function renderDateOnly(data) {
-            if (!data) return '';
-
-            var date = data.split('T')[0];
-            return `<div class="fw-600">${date}</div>`;
-        }
-
-        function renderSlipUrl(data) {
-            if (!data) return '<span class="text-muted small italic">No Slip</span>';
-
-            return `
-                <button type="button" class="btn btn-sm btn-soft-primary px-3 rounded-pill fw-bold" onclick="previewSlip('${data}')">
-                    <i class="fas fa-eye me-1"></i> Preview
-                </button>
-            `;
+            var parts = data.split('T');
+            return `<div class="fw-600">${parts[0]}</div><div class="smaller text-muted">${parts[1].split('.')[0]}</div>`;
         }
 
         function previewSlip(url) {
@@ -317,7 +324,6 @@
             var myModal = new bootstrap.Modal(document.getElementById('slipPreviewModal'));
             myModal.show();
         }
-
     </script>
 
     <!-- Slip Preview Modal -->
@@ -332,10 +338,9 @@
                     <img id="slipPreviewImage" src="" class="img-fluid rounded-3 shadow-sm" style="max-height: 70vh; object-fit: contain;" />
                 </div>
                 <div class="modal-footer border-0 pt-0">
-                    <button type="button" class="btn btn-light rounded-pill px-4 fw-bold" data-bs-dismiss="modal">Close Preview</button>
+                    <button type="button" class="btn btn-light rounded-pill px-4 fw-bold" data-bs-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
     </div>
-
 }

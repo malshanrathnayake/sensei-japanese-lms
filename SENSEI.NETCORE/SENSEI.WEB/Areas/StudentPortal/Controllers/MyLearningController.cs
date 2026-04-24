@@ -167,8 +167,41 @@ namespace SENSEI.WEB.Areas.StudentPortal.Controllers
         public async Task<IActionResult> LessonDetail(string q)
         {
             long batchLessonId = Convert.ToInt64(_protector.Unprotect(q));
+            var studentId = Convert.ToInt64(HttpContext.Session.GetString("StudentId"));
 
-            var batchLesson = await _studentService.GetBatchLesson(batchLessonId);
+            // Use SearchStudentBatchLessons to ensure we get Access and Request data correctly populated
+            var (lessons, _) = await _studentService.SearchStudentBatchLessons(studentId);
+            var batchLesson = lessons.FirstOrDefault(e => e.BatchLessonId == batchLessonId);
+            
+            if (batchLesson == null) return RedirectToAction("Index");
+
+            // Check for individual temporary access extension
+            var myAccess = batchLesson.BatchStudentLessonAccesses?.FirstOrDefault(a => a.StudentId == studentId);
+            var latestApprovedRequest = myAccess?.BatchStudentLessonAccessRequests?
+                .Where(r => r.ApproveStatusEnum == ApproveStatusEnum.Approved && r.RequestEndDate > DateTime.Now)
+                .OrderByDescending(r => r.RequestEndDate)
+                .FirstOrDefault();
+
+            var hasTemporaryAccess = latestApprovedRequest != null;
+            var isGloballyExpired = batchLesson.RecordingExpireDate < DateTime.Now;
+
+            // Strict Expiry Enforcement (Allow if NOT globally expired OR has active temporary access)
+            if (isGloballyExpired && !hasTemporaryAccess)
+            {
+                TempData["ErrorMessage"] = "This lesson recording has expired and is no longer available.";
+                return RedirectToAction("Index");
+            }
+
+            // Also check access for safety
+            var hasPaidAccess = batchLesson.BatchStudentLessonAccesses?.Any(e => e.StudentId == studentId && e.BatchLessonId == batchLessonId && e.HasAccess) ?? false;
+            var isFirstWeekTrial = batchLesson.Batch != null && batchLesson.LessonDateTime <= batchLesson.Batch.BatchStartDate.AddDays(7);
+
+            if (!hasPaidAccess && !isFirstWeekTrial && !hasTemporaryAccess)
+            {
+                TempData["ErrorMessage"] = "You do not have access to this lesson.";
+                return RedirectToAction("Index");
+            }
+
             batchLesson.EncryptedKey = q;
             return View(batchLesson);
         }
@@ -239,20 +272,36 @@ namespace SENSEI.WEB.Areas.StudentPortal.Controllers
             return View();
         }
 
-        [HttpPost]
+        [HttpGet]
         public async Task<IActionResult> LessonRequestAccess(string q)
         {
             long batchLessonAccessId = Convert.ToInt64(_protector.Unprotect(q));
             var studentId = Convert.ToInt64(HttpContext.Session.GetString("StudentId"));
 
-            var status = await _studentService.UpdateBatchLessonAccess(batchLessonAccessId);
+            // We can pass the encrypted key to the view to use in the form
+            ViewBag.EncryptedKey = q;
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> LessonRequestAccess(string q, string duration = "1d")
+        {
+            long batchLessonAccessId = Convert.ToInt64(_protector.Unprotect(q));
+            var studentId = Convert.ToInt64(HttpContext.Session.GetString("StudentId"));
+
+            DateTime requestEndDate = DateTime.Now;
+            if (duration == "3d") requestEndDate = requestEndDate.AddDays(3);
+            else if (duration == "7d") requestEndDate = requestEndDate.AddDays(7);
+            else requestEndDate = requestEndDate.AddDays(1);
+
+            var status = await _studentService.UpdateBatchLessonAccess(batchLessonAccessId, requestEndDate);
 
             var userNotification = new UserNotification
             {
                 UserId = null,
                 UserTypeEnum = UserTypeEnum.Admin,
-                NotificationType = "Lesson Reuqsted",
-                Message = "New Lesson Request was initiated by a student",
+                NotificationType = "Lesson Requested",
+                Message = $"New Lesson Request ({duration}) was initiated by a student",
                 Icon = GlobalHelpers.GetEnumDisplayName(FeatherIconEnum.AlertCircle),
                 BatchId = null,
                 CourseId = null,
@@ -262,7 +311,7 @@ namespace SENSEI.WEB.Areas.StudentPortal.Controllers
 
             if (status)
             {
-                return Json(new { success = status, message = "Lesson Access Requested" });
+                return Json(new { success = status, message = "Lesson Access Requested Successfully" });
             }
             else
             {

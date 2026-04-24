@@ -36,19 +36,40 @@ namespace SENSEI.BLL.AdminPortalService
             return batchLesson.FirstOrDefault();
         }
 
-        public async Task<(IEnumerable<BatchLesson>, long)> SearchBatchLessons(long courseId = 0, long batchId = 0, int start = 0, int length = 10, string searchValue = "", string sortColumn = "", string sortDirection = "")
+        public async Task<(IEnumerable<BatchLesson>, long)> SearchBatchLessons(long courseId = 0, long batchId = 0, string typeFilter = "all", int start = 0, int length = 10, string searchValue = "", string sortColumn = "", string sortDirection = "")
         {
+            if (string.IsNullOrEmpty(sortColumn))
+            {
+                sortColumn = "lessonDateTime";
+                sortDirection = "DESC";
+            }
+
             DataTransactionManager dataTransactionManager = new DataTransactionManager(_databaseService.GetConnectionString());
-            var (batchLessons, count) = await dataTransactionManager.BatchLessonDataManager.RetrieveDataWithCount("SearchBatchLessons", new SqlParameter[] {
+            var (allLessons, totalCount) = await dataTransactionManager.BatchLessonDataManager.RetrieveDataWithCount("SearchBatchLessons", new SqlParameter[] {
                 new SqlParameter("@courseId", courseId),
                 new SqlParameter("@batchId", batchId),
-                new SqlParameter("@start", start),
-                new SqlParameter("@length", length),
+                new SqlParameter("@start", 0), 
+                new SqlParameter("@length", 10000), 
                 new SqlParameter("@searchValue", searchValue),
                 new SqlParameter("@sortColumn", sortColumn),
                 new SqlParameter("@sortDirection", sortDirection)
             });
-            return (batchLessons, count);
+
+            var filteredList = allLessons.AsQueryable();
+
+            if (typeFilter == "recordings")
+            {
+                filteredList = filteredList.Where(x => !string.IsNullOrEmpty(x.RecordingUrl));
+            }
+            else if (typeFilter == "upcoming")
+            {
+                filteredList = filteredList.Where(x => x.LessonDateTime > DateTime.Now);
+            }
+
+            var count = filteredList.Count();
+            var pagedList = filteredList.Skip(start).Take(length > 0 ? length : 10000).ToList();
+
+            return (pagedList, count);
         }
 
         public async Task<IEnumerable<BatchLesson>> GetBatchLessons(long batchId = 0)

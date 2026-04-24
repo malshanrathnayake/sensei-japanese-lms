@@ -32,21 +32,41 @@ namespace SENSEI.BLL.AdminPortalService
             return (status, primaryKey);
         }
 
-        public async Task<(IEnumerable<StudentBatchPayment>, long)> SearchStudentBatchPayment(long courseId = 0, long batchId = 0, string indexNumber = "", int start = 0, int length = 10, string searchValue = "", string sortColumn = "", string sortDirection = "")
+        public async Task<(IEnumerable<StudentBatchPayment>, long)> SearchStudentBatchPayment(long courseId = 0, long batchId = 0, string indexNumber = "", int status = -1, int start = 0, int length = 10, string searchValue = "", string sortColumn = "", string sortDirection = "")
         {
+            if (string.IsNullOrEmpty(sortColumn))
+            {
+                sortColumn = "paymentDate";
+                sortDirection = "DESC";
+            }
+
             DataTransactionManager dataTransactionManager = new DataTransactionManager(_databaseService.GetConnectionString());
-            var (registrations, count) = await dataTransactionManager.StudentBatchPaymentDataManager.RetrieveDataWithCount("SearchStudentPayments", new[]
+            var (allPayments, totalCount) = await dataTransactionManager.StudentBatchPaymentDataManager.RetrieveDataWithCount("SearchStudentPayments", new[]
             {
                 new SqlParameter("@courseId", courseId),
                 new SqlParameter("@batchId", batchId),
                 new SqlParameter("@indexNumber", indexNumber),
-                new SqlParameter("@start", start),
-                new SqlParameter("@length", length),
+                new SqlParameter("@start", 0), // Fetch all for in-memory filter if needed, or handle paging carefully
+                new SqlParameter("@length", 10000), 
                 new SqlParameter("@searchValue", searchValue),
                 new SqlParameter("@sortColumn", sortColumn),
                 new SqlParameter("@sortDirection", sortDirection),
             });
-            return (registrations, count);
+
+            var filteredList = allPayments.AsQueryable();
+            
+            // Apply status filter in-memory to avoid SP changes
+            if (status == 0) // Pending
+                filteredList = filteredList.Where(x => !x.IsApproved && !x.IsRejected);
+            else if (status == 1) // Approved
+                filteredList = filteredList.Where(x => x.IsApproved);
+            else if (status == 2) // Rejected
+                filteredList = filteredList.Where(x => x.IsRejected);
+
+            var count = filteredList.Count();
+            var pagedList = filteredList.Skip(start).Take(length > 0 ? length : 10000).ToList();
+
+            return (pagedList, count);
         }
 
         public async Task<StudentBatchPayment> GetStudentBatchPayment(long studentBatchPaymentId)

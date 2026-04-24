@@ -155,6 +155,7 @@
                             <th>Student</th>
                             <th>Reference</th>
                             <th>Requested On</th>
+                            <th>Requested Period</th>
                             <th>Status</th>
                         </tr>
                     </thead>
@@ -173,9 +174,48 @@
 
     <script src="~/js/admin-portal/BatchStudentLessonRequest-function.js"></script>
 
+    <style>
+        .stats-card-premium {
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .stats-card-premium.active {
+            border: 2px solid var(--sensei-red) !important;
+            background: #fffafa;
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(216, 50, 54, 0.1) !important;
+        }
+        .stats-card-premium.active .h3 {
+            color: var(--sensei-red);
+        }
+    </style>
+
     <script type="text/javascript">
+        var currentStatusFilter = -1; // -1: All, 0: Pending, 1: Approved
 
         $(document).ready(function () {
+
+            // Stats Cards Click Handlers
+            $('#stat-pending').closest('.stats-card-premium').click(function() {
+                $('.stats-card-premium').removeClass('active');
+                $(this).addClass('active');
+                currentStatusFilter = 0;
+                loadBatchStudentLessonRequests();
+            });
+
+            $('#stat-approved').closest('.stats-card-premium').click(function() {
+                $('.stats-card-premium').removeClass('active');
+                $(this).addClass('active');
+                currentStatusFilter = 1;
+                loadBatchStudentLessonRequests();
+            });
+
+            $('#stat-total').closest('.stats-card-premium').click(function() {
+                $('.stats-card-premium').removeClass('active');
+                $(this).addClass('active');
+                currentStatusFilter = -1;
+                loadBatchStudentLessonRequests();
+            });
 
             $('#SearchCourseId').change(function () {
                 loadBatchStudentLessonRequests();
@@ -240,6 +280,7 @@
                 autoWidth: false,
                 lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
                 pageLength: 25,
+                order: [[4, "desc"]], // Show New Data First
                 columnDefs: [
                     { targets: 0, className: 'noVis ps-3' },
                     { width: 40, targets: 0, orderable: false },
@@ -254,6 +295,7 @@
                     data: function (d) {
                         d.courseId = $('#SearchCourseId').val() || 0;
                         d.batchId = $('#SearchBatchId').val() || 0;
+                        d.status = currentStatusFilter;
                     }
                 },
                 columns: [
@@ -302,13 +344,37 @@
                                     <div class="avatar-circle">${initial}</div>
                                     <div>
                                         <div class="fw-bold text-dark">${d}</div>
-                                        <div class="text-muted smaller">Index: ${r.batchStudentLessonAccess.student.indexNumber}</div>
+                                        <div class="text-muted smaller d-flex align-items-center gap-1">
+                                            <i data-feather="hash" style="width: 10px; height: 10px;"></i> Index: ${r.batchStudentLessonAccess.student.indexNumber}
+                                        </div>
+                                        <div class="text-primary smaller fw-bold d-flex align-items-center gap-1 mt-1">
+                                            <i data-feather="phone" style="width: 10px; height: 10px;"></i> ${r.batchStudentLessonAccess.student.phoneNo || 'No Phone'}
+                                        </div>
                                     </div>
                                 </div>`;
                          }
                      },
                     { data: 'batchStudentLessonAccess.batchLesson.description', name:'description', render: function(d) { return `<small class="text-muted">${d||'—'}</small>`; } },
                     { data: 'requestedDate', name:'requestedDate', render: function (data) { return renderDateTime(data); } },
+                    { 
+                        data: 'requestEndDate', 
+                        name: 'requestEndDate', 
+                        orderable: false,
+                        render: function (d, t, r) {
+                            if (!d || !r.requestedDate) return '—';
+                            var start = new Date(r.requestedDate);
+                            var end = new Date(d);
+                            var diffTime = Math.abs(end - start);
+                            var diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                            
+                            var label = diffDays + " Day(s)";
+                            if (diffDays >= 6) label = "1 Week";
+                            else if (diffDays >= 2) label = "3 Days";
+                            else label = "1 Day";
+
+                            return `<span class="badge bg-soft-info text-info border-0 px-2 py-1 rounded-pill fw-bold" style="font-size: 0.65rem;">${label}</span>`;
+                        }
+                    },
                     { 
                         data: null, 
                         name: 'status', 

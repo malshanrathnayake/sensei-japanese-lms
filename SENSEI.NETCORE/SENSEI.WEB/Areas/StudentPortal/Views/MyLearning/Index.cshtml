@@ -265,6 +265,41 @@
         background-image: radial-gradient(#ffeef1 1px, transparent 1px);
         background-size: 40px 40px;
     }
+
+    @@media (max-width: 768px) {
+        .learning-hero {
+            padding: 1.5rem !important;
+            margin-bottom: 2rem;
+            border-radius: 20px;
+        }
+        .learning-hero::after {
+            font-size: 8rem;
+            top: -10px;
+            right: 0;
+        }
+        .learning-hero::before {
+            font-size: 2.5rem;
+            bottom: 5px;
+            left: 5px;
+        }
+        .hero-stat-box {
+            padding: 1rem;
+            min-width: 110px;
+        }
+        .hero-stat-box .h2 {
+            font-size: 1.5rem;
+        }
+    }
+
+    @@media (max-width: 576px) {
+        .filter-btn {
+            padding: 8px 16px;
+            font-size: 0.75rem;
+        }
+        .search-input-group {
+            margin-top: 1rem;
+        }
+    }
 </style>
 
 <div class="container-fluid p-0 sakura-bg">
@@ -355,7 +390,49 @@
             $(".search-btn").on("click", function() {
                 loadLessons(0, -1, $("#searchValue").val());
             });
+
+            // Delegated click handler for Request Access buttons
+            $(document).on('click', '.request-access', function(e) {
+                e.preventDefault();
+                var url = $(this).data('action-url');
+                
+                // Show loading state in OffCanvas
+                $("#studentCommonOffCanvas").html('<div class="d-flex justify-content-center align-items-center h-100"><div class="spinner-border text-primary" role="status"></div></div>');
+                var offcanvas = new bootstrap.Offcanvas(document.getElementById('studentCommonOffCanvas'));
+                offcanvas.show();
+
+                // Load the partial view
+                $.get(url, function(data) {
+                    $("#studentCommonOffCanvas").html(data);
+                    // Re-bind unobtrusive validation if needed
+                    $.validator.unobtrusive.parse("#LessonRequestAccessForm");
+                });
+            });
         });
+
+        // AJAX Callbacks for LessonRequestAccessForm
+        function onRequestAccessBegin() {
+            var btn = $("#LessonRequestAccessForm button[type='submit']");
+            btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm me-2"></span>Processing...');
+        }
+
+        function onRequestAccessSuccess(response) {
+            if (response.success) {
+                popUpNotification('success', response.message);
+                bootstrap.Offcanvas.getInstance(document.getElementById('studentCommonOffCanvas')).hide();
+                loadLessons(0, -1, $("#searchValue").val()); // Refresh the grid
+            } else {
+                popUpNotification('error', response.message);
+                var btn = $("#LessonRequestAccessForm button[type='submit']");
+                btn.prop('disabled', false).html('Submit Request <i class="fas fa-paper-plane ms-1"></i>');
+            }
+        }
+
+        function onRequestAccessFailure() {
+            popUpNotification('error', 'Something went wrong. Please try again.');
+            var btn = $("#LessonRequestAccessForm button[type='submit']");
+            btn.prop('disabled', false).html('Submit Request <i class="fas fa-paper-plane ms-1"></i>');
+        }
 
         function loadLessons(start = 0, length = -1, searchValue = "") {
             $("#lessonSummary").html('<div class="col-12 text-center py-5"><div class="spinner-border text-primary" role="status"></div><p class="mt-3 text-muted fw-600">Updating lessons...</p></div>');

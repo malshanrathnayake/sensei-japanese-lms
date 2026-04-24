@@ -56,6 +56,7 @@
                 <table id="CourseDataTable" class="table table-hover align-middle mb-0 w-100">
                     <thead class="bg-light">
                         <tr>
+                            <th style="display:none;">ID</th>
                             <th class="ps-4" style="width: 80px;"></th>
                             <th>Course Name</th>
                             <th>Course Code</th>
@@ -102,9 +103,11 @@
                 lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
                 pageLength: pageLength,
                 displayStart: startPage,
+                order: [[0, "desc"]], // New Courses First
                 columnDefs: [
-                    { targets: 0, className: 'noVis ps-3' },
-                    { width: 80, targets: 0, orderable: false },
+                    { targets: 0, visible: false }, // Hide ID
+                    { targets: 1, className: 'noVis ps-3' },
+                    { width: 80, targets: 1, orderable: false },
                 ],
                 dom:
                     "<'row p-3 mb-0'<'col-sm-6'l><'col-sm-6 text-end'f>>" +
@@ -115,6 +118,7 @@
                     type: 'POST'
                 },
                 columns: [
+                    { data: 'courseId', name: 'courseId' },
                     {
                         data: null,
                         orderable: false,

@@ -21,7 +21,7 @@ namespace SENSEI.BLL.StudentPortalService.Interfaces
         Task<IEnumerable<StudentBatch>> GetStudentBatchById(long studentBatchId);
         Task<BatchLesson> GetBatchLesson(long batchLessonId);
         Task<bool> UpdateStudentProgress(StudentBatchLessonView studentBatchLessonView);
-        Task<bool> UpdateBatchLessonAccess(long batchLessonAccessId);
+        Task<bool> UpdateBatchLessonAccess(long batchLessonAccessId, DateTime? requestEndDate = null);
         Task<IEnumerable<BatchLesson>> GetBatchLessons(long batchId);
     }
 }

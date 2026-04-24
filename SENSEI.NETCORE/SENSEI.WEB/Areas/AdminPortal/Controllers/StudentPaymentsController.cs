@@ -56,7 +56,7 @@ namespace SENSEI.WEB.Areas.AdminPortal.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> ListOfStudentPayments(long courseId = 0, long batchId = 0, string indexNumber = "")
+        public async Task<IActionResult> ListOfStudentPayments(long courseId = 0, long batchId = 0, string indexNumber = "", int status = -1)
         {
             int draw = int.Parse(Request.Form["draw"]);
             int start = int.Parse(Request.Form["start"]);
@@ -67,10 +67,8 @@ namespace SENSEI.WEB.Areas.AdminPortal.Controllers
             string sortColumn = Request.Form[$"columns[{sortColumnIndex}][name]"];
             string sortDirection = Request.Form["order[0][dir]"]; // asc | desc
 
-            IQueryable<StudentBatchPayment> studentBatchPayments = new List<StudentBatchPayment>().AsQueryable();
-
-            var (studentBatchPaymentList, count) = await _studentPaymentService.SearchStudentBatchPayment(courseId, batchId, indexNumber, start, length, searchValue, sortColumn, sortDirection);
-            studentBatchPayments = studentBatchPaymentList.AsQueryable();
+            var (studentBatchPaymentList, count) = await _studentPaymentService.SearchStudentBatchPayment(courseId, batchId, indexNumber, status, start, length, searchValue, sortColumn, sortDirection);
+            var studentBatchPayments = studentBatchPaymentList.AsQueryable();
 
             studentBatchPayments.ToList().ForEach(e =>
             {

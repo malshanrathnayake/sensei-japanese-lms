@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Mvc;
 using SENSEI.BLL.AdminPortalService.Interface;
@@ -43,7 +43,7 @@ namespace SENSEI.WEB.Areas.AdminPortal.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> ListOfBatchStudentLessonRequests(long courseId = 0, long batchId = 0, string indexNumber = "")
+        public async Task<IActionResult> ListOfBatchStudentLessonRequests(long courseId = 0, long batchId = 0, string indexNumber = "", int status = -1)
         {
             int draw = int.Parse(Request.Form["draw"]);
             int start = int.Parse(Request.Form["start"]);
@@ -56,7 +56,7 @@ namespace SENSEI.WEB.Areas.AdminPortal.Controllers
 
             IQueryable<BatchStudentLessonAccessRequest> batchStudentLessonAccessRequests = new List<BatchStudentLessonAccessRequest>().AsQueryable();
 
-            var (batchStudentLessonAccessRequestList, count) = await _batchStudentLessonService.SearchBatchStudentLesson(courseId, batchId, indexNumber, start, length, searchValue, sortColumn, sortDirection);
+            var (batchStudentLessonAccessRequestList, count) = await _batchStudentLessonService.SearchBatchStudentLesson(courseId, batchId, indexNumber, status, start, length, searchValue, sortColumn, sortDirection);
             batchStudentLessonAccessRequests = batchStudentLessonAccessRequestList.AsQueryable();
 
             batchStudentLessonAccessRequests.ToList().ForEach(e =>
@@ -79,11 +79,16 @@ namespace SENSEI.WEB.Areas.AdminPortal.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Approve(BatchStudentLessonAccessRequest batchStudentLessonAccessRequest)
+        public async Task<IActionResult> Approve(BatchStudentLessonAccessRequest batchStudentLessonAccessRequest, string duration = "1d")
         {
             var userId = Convert.ToInt64(HttpContext.Session.GetString("UserId"));
 
-            var result = await _batchStudentLessonService.ApproveBatchStudentLessonRequest(batchStudentLessonAccessRequest.BatchStudentLessonAccessRequestId, userId);
+            DateTime accessEndDate = DateTime.Now;
+            if (duration == "3d") accessEndDate = accessEndDate.AddDays(3);
+            else if (duration == "7d") accessEndDate = accessEndDate.AddDays(7);
+            else accessEndDate = accessEndDate.AddDays(1);
+
+            var result = await _batchStudentLessonService.ApproveBatchStudentLessonRequest(batchStudentLessonAccessRequest.BatchStudentLessonAccessRequestId, userId, accessEndDate);
 
             if (result)
             {
@@ -91,10 +96,9 @@ namespace SENSEI.WEB.Areas.AdminPortal.Controllers
                 var phone = batchStudentLessonRequest.BatchStudentLessonAccess.Student.PhoneNo?.Replace("+", "");
 
                 var message =
-                        $"Your request for {batchStudentLessonRequest.BatchStudentLessonAccess.BatchLesson.Lesson.LessonName} - {batchStudentLessonRequest.BatchStudentLessonAccess.BatchLesson.Description} was approved. " +
-                        $"approved Date date {batchStudentLessonRequest.ChangedDate?.ToString("yyyy-MM-dd")}. " +
-                        $"Login using your Google account ({batchStudentLessonRequest.BatchStudentLessonAccess.Student.Email}) " +
-                        $"or mobile number ({batchStudentLessonRequest.BatchStudentLessonAccess.Student.PhoneNo}).";
+                        $"Your request for {batchStudentLessonRequest.BatchStudentLessonAccess.BatchLesson.Lesson.LessonName} was approved. " +
+                        $"Access ends on {accessEndDate.ToString("yyyy-MM-dd HH:mm")}. " +
+                        $"Login to your dashboard to start learning.";
 
                 var messageStatus = await _smsService.SendSingleAsync(phone, message);
 
@@ -103,7 +107,7 @@ namespace SENSEI.WEB.Areas.AdminPortal.Controllers
                     UserId = batchStudentLessonRequest.BatchStudentLessonAccess.Student.UserId,
                     UserTypeEnum = UserTypeEnum.Student,
                     NotificationType = "Lesson Request Approved",
-                    Message = "Your request for" + batchStudentLessonRequest.BatchStudentLessonAccess.BatchLesson.Lesson.LessonName + "-" + batchStudentLessonRequest.BatchStudentLessonAccess.BatchLesson.Description + " was approved. ",
+                    Message = $"Your request for {batchStudentLessonRequest.BatchStudentLessonAccess.BatchLesson.Lesson.LessonName} was approved. Access expires on {accessEndDate.ToString("yyyy-MM-dd HH:mm")}.",
                     Icon = GlobalHelpers.GetEnumDisplayName(FeatherIconEnum.CheckCircle),
                     BatchId = null,
                     CourseId = null,

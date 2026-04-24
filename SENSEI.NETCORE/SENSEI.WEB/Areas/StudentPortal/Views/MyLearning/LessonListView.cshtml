@@ -6,6 +6,30 @@
     long studentId = Convert.ToInt64(studentIdStr);
 }
 
+<style>
+    @@keyframes pulse {
+        0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(216, 50, 54, 0.4); }
+        70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(216, 50, 54, 0); }
+        100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(216, 50, 54, 0); }
+    @@media (max-width: 576px) {
+        .lesson-content {
+            padding: 1.25rem !important;
+        }
+        .lesson-title {
+            font-size: 1.1rem !important;
+        }
+        .lesson-footer {
+            flex-direction: column;
+            gap: 15px;
+            align-items: flex-start !important;
+        }
+        .lesson-footer a {
+            width: 100%;
+            text-align: center;
+        }
+    }
+</style>
+
 @{
     if (Model != null && Model.Any())
     {
@@ -67,7 +91,28 @@
                     <div class="lesson-content" style="padding: 1.5rem 1.75rem; flex-grow: 1; display: flex; flex-direction: column;">
                         <div class="d-flex justify-content-between align-items-start mb-3">
                              <h3 class="lesson-title mb-0" style="font-size: 1.25rem; font-weight: 800; color: #1e293b; letter-spacing: -0.01em;">@lesson.First().Lesson.LessonName</h3>
-                             <span class="badge @(progressPercent == 100 ? "bg-success" : "bg-soft-primary text-primary") rounded-pill px-3 py-1" style="font-size: 0.65rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em;">@(progressPercent == 100 ? "Completed" : "Active Now")</span>
+                             <div class="d-flex flex-column align-items-end gap-1">
+                                 <span class="badge @(progressPercent == 100 ? "bg-success" : "bg-soft-primary text-primary") rounded-pill px-3 py-1" style="font-size: 0.65rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em;">@(progressPercent == 100 ? "Completed" : "Active Now")</span>
+                                 @{
+                                     var latestApprovedRequest = lesson.SelectMany(bl => bl.BatchStudentLessonAccesses)
+                                                            .Where(a => a.StudentId == studentId && a.HasAccess)
+                                                            .SelectMany(a => a.BatchStudentLessonAccessRequests)
+                                                            .Where(r => r.ApproveStatusEnum == ApproveStatusEnum.Approved && !r.IsDeleted)
+                                                            .OrderByDescending(r => r.RequestEndDate)
+                                                            .FirstOrDefault();
+
+                                     if (latestApprovedRequest != null)
+                                     {
+                                         var remainingTime = latestApprovedRequest.RequestEndDate - DateTime.UtcNow;
+                                         if (remainingTime.TotalDays > 0)
+                                         {
+                                             var days = Math.Ceiling(remainingTime.TotalDays);
+                                             var label = days == 1 ? "1 Day Left" : days + " Days Left";
+                                             <span class="badge bg-danger rounded-pill px-2 py-1 shadow-sm" style="font-size: 0.6rem; font-weight: 800; animation: pulse 2s infinite;"><i class="fas fa-hourglass-half me-1"></i> @label</span>
+                                         }
+                                     }
+                                 }
+                             </div>
                         </div>
                         
                         <div class="lesson-meta-premium d-flex gap-3 mb-4">
