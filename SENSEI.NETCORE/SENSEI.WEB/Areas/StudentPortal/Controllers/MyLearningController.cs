@@ -155,6 +155,9 @@ namespace SENSEI.WEB.Areas.StudentPortal.Controllers
                 }
             }
 
+            // Identify the very first lesson of the batch to allow free access
+            ViewBag.FirstBatchLessonId = allLessons.OrderBy(e => e.LessonDateTime).ThenBy(e => e.BatchLessonId).Select(e => e.BatchLessonId).FirstOrDefault();
+
             var filteredLessons = allLessons.Where(e => e.LessonId == lessonId).ToList();
             
             filteredLessons.ForEach(e => e.EncryptedKey = _protector.Protect(e.BatchLessonId.ToString()));
@@ -195,8 +198,12 @@ namespace SENSEI.WEB.Areas.StudentPortal.Controllers
             // Also check access for safety
             var hasPaidAccess = batchLesson.BatchStudentLessonAccesses?.Any(e => e.StudentId == studentId && e.BatchLessonId == batchLessonId && e.HasAccess) ?? false;
             var isFirstWeekTrial = batchLesson.Batch != null && batchLesson.LessonDateTime <= batchLesson.Batch.BatchStartDate.AddDays(7);
+            
+            // Check if it's the very first lesson of the batch
+            var firstBatchLessonId = lessons.Where(e => e.BatchId == batchLesson.BatchId).OrderBy(e => e.LessonDateTime).ThenBy(e => e.BatchLessonId).Select(e => e.BatchLessonId).FirstOrDefault();
+            var isFirstLesson = batchLessonId == firstBatchLessonId;
 
-            if (!hasPaidAccess && !isFirstWeekTrial && !hasTemporaryAccess)
+            if (!hasPaidAccess && !isFirstWeekTrial && !hasTemporaryAccess && !isFirstLesson)
             {
                 TempData["ErrorMessage"] = "You do not have access to this lesson.";
                 return RedirectToAction("Index");

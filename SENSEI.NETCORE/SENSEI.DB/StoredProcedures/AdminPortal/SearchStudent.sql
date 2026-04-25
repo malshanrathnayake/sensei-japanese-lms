@@ -39,7 +39,8 @@ BEGIN
 		CASE WHEN @sortColumn = 'indexNumber' AND @sortDirection = 'ASC' THEN ST.IndexNumber END ASC,CASE WHEN @sortColumn = 'indexNumber' AND @sortDirection = 'DESC' THEN ST.IndexNumber END DESC,
 		CASE WHEN @sortColumn = 'studentLearningMode.learningModeName' AND @sortDirection = 'ASC' THEN SLM.LearningModeName END ASC,CASE WHEN @sortColumn = 'studentLearningMode.learningModeName' AND @sortDirection = 'DESC' THEN SLM.LearningModeName END DESC,
 		CASE WHEN @sortColumn = 'email' AND @sortDirection = 'ASC' THEN ST.Email END ASC,CASE WHEN @sortColumn = 'email' AND @sortDirection = 'DESC' THEN ST.Email END DESC,
-		CASE WHEN @sortColumn = 'phoneNo' AND @sortDirection = 'ASC' THEN ST.PhoneNo END ASC,CASE WHEN @sortColumn = 'phoneNo' AND @sortDirection = 'DESC' THEN ST.PhoneNo END DESC
+		CASE WHEN @sortColumn = 'phoneNo' AND @sortDirection = 'ASC' THEN ST.PhoneNo END ASC,CASE WHEN @sortColumn = 'phoneNo' AND @sortDirection = 'DESC' THEN ST.PhoneNo END DESC,
+		CASE WHEN @sortColumn = 'studentId' AND @sortDirection = 'ASC' THEN ST.StudentId END ASC,CASE WHEN @sortColumn = 'studentId' AND @sortDirection = 'DESC' THEN ST.StudentId END DESC
 	OFFSET @start ROWS
 	FETCH NEXT (CASE WHEN @length = -1 THEN 2147483647 ELSE @length END) ROWS ONLY
 	FOR JSON PATH;

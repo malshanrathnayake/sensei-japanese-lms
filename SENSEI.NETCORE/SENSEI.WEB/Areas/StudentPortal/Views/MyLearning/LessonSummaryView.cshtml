@@ -39,6 +39,8 @@
 
             var hasPaidAccess = batchLesson.BatchStudentLessonAccesses.Any(e => e.StudentId == studentId && e.BatchLessonId == batchLesson.BatchLessonId && e.HasAccess);
             var isFirstWeekTrial = batchLesson.Batch != null && batchLesson.LessonDateTime <= batchLesson.Batch.BatchStartDate.AddDays(7);
+            var firstBatchLessonId = (long)(ViewBag.FirstBatchLessonId ?? 0L);
+            var isFirstLesson = batchLesson.BatchLessonId == firstBatchLessonId;
             var hasTemporaryAccess = latestApprovedRequest != null;
             var isExpired = batchLesson.RecordingExpireDate < DateTime.Now && !hasTemporaryAccess;
 
@@ -127,7 +129,7 @@
                     </div>
                 </div>
             }
-            else if (hasPaidAccess || isFirstWeekTrial || hasTemporaryAccess)
+            else if (hasPaidAccess || isFirstWeekTrial || hasTemporaryAccess || isFirstLesson)
             {
                 <div class="col-12 col-md-6 col-xl-4 mb-4">
                     <div class="card lesson-card h-100 shadow-sm border-0">

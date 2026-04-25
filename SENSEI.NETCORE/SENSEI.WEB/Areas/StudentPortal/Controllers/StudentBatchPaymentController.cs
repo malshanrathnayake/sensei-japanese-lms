@@ -142,7 +142,7 @@ namespace SENSEI.WEB.Areas.StudentPortal.Controllers
                 StudentBatchId = studentBatchPayment.StudentBatchId,
                 Amount = studentBatchPayment.Amount,
                 PaymentMonth = studentBatchPayment.PaymentMonth,
-                PaymentDate = DateTime.UtcNow,
+                PaymentDate = GlobalHelpers.GetSriLankaTime(),
                 SlipUrl = slipUrl,
                 IsApproved = false,
                 ApprovedById = null,

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using SENSEI.BLL.AdminPortalService.Interface;
 using SENSEI.BLL.SystemService.Interfaces;
 using SENSEI.DOMAIN;
+using SENSEI.WEB.Helpers;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace SENSEI.WEB.Areas.AdminPortal.Controllers
@@ -67,16 +68,25 @@ namespace SENSEI.WEB.Areas.AdminPortal.Controllers
             string sortColumn = Request.Form[$"columns[{sortColumnIndex}][name]"];
             string sortDirection = Request.Form["order[0][dir]"]; // asc | desc
 
-            var (studentBatchPaymentList, count) = await _studentPaymentService.SearchStudentBatchPayment(courseId, batchId, indexNumber, status, start, length, searchValue, sortColumn, sortDirection);
-            var studentBatchPayments = studentBatchPaymentList.AsQueryable();
+            var (studentBatchPaymentList, count) = await _studentPaymentService.SearchStudentBatchPayment(courseId, batchId, indexNumber, status, 0, 10000, searchValue, sortColumn, sortDirection);
+            
+            // Filter out test data
+            var filteredList = studentBatchPaymentList.Where(x => 
+                !x.StudentBatch.Student.Email.ToLower().Contains("test") && 
+                !(x.StudentBatch.Student.FirstName ?? "").ToLower().Contains("test") && 
+                !(x.StudentBatch.Student.LastName ?? "").ToLower().Contains("test")
+            ).ToList();
 
-            studentBatchPayments.ToList().ForEach(e =>
+            var filteredCount = filteredList.Count();
+            var pagedList = filteredList.Skip(start).Take(length).ToList();
+
+            pagedList.ForEach(e =>
             {
                 e.EncryptedKey = _protector.Protect(e.StudentBatchPaymentId.ToString());
             });
 
 
-            return Json(new { draw, recordsTotal = count, recordsFiltered = count, data = studentBatchPayments });
+            return Json(new { draw, recordsTotal = filteredCount, recordsFiltered = filteredCount, data = pagedList });
         }
 
         [HttpPost]
@@ -163,7 +173,7 @@ namespace SENSEI.WEB.Areas.AdminPortal.Controllers
         {
             var userId = Convert.ToInt64(HttpContext.Session.GetString("UserId") ?? "0");
 
-            studentBatchPayment.PaymentDate = DateTime.UtcNow;
+            studentBatchPayment.PaymentDate = GlobalHelpers.GetSriLankaTime();
             studentBatchPayment.IsApproved = true; // Admin created payments are auto-approved
             studentBatchPayment.ApprovedById = userId;
 

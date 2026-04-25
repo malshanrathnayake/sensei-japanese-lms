@@ -6,7 +6,9 @@ using SENSEI.BLL.SystemService.Interfaces;
 using SENSEI.DOMAIN;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace SENSEI.BLL.AdminPortalService
 {
@@ -32,6 +34,23 @@ namespace SENSEI.BLL.AdminPortalService
                 new SqlParameter("@sortDirection", sortDirection)
             });
             return (registrations, count);
+        }
+
+        public async Task<Student> GetStudent(long studentId)
+        {
+            DataTransactionManager dataTransactionManager = new DataTransactionManager(_databaseService.GetConnectionString());
+            var student = await dataTransactionManager.StudentDataManager.RetrieveData("GetStudentById", new SqlParameter[] {
+                new SqlParameter("@studentId", studentId)
+            });
+            return student.FirstOrDefault();
+        }
+
+        public async Task<bool> UpdateStudent(Student student)
+        {
+            string jsonString = JsonConvert.SerializeObject(student);
+            DataTransactionManager dataTransactionManager = new DataTransactionManager(_databaseService.GetConnectionString());
+            var (status, primaryKey) = await dataTransactionManager.StudentDataManager.UpdateDataReturnPrimaryKey("UpdateStudent", jsonString);
+            return status;
         }
     }
 }

@@ -16,7 +16,8 @@ BEGIN
 		AND (@searchValue = '' OR CourseName LIKE '%' + @searchValue + '%' OR CourseCode LIKE '%' + @searchValue + '%')
 	ORDER BY 
 		CASE WHEN @sortColumn = 'courseName' AND @sortDirection = 'ASC' THEN CourseName END ASC,CASE WHEN @sortColumn = 'courseName' AND @sortDirection = 'DESC' THEN CourseName END DESC,
-		CASE WHEN @sortColumn = 'courseCode' AND @sortDirection = 'ASC' THEN CourseCode END ASC,CASE WHEN @sortColumn = 'courseCode' AND @sortDirection = 'DESC' THEN CourseCode END DESC
+		CASE WHEN @sortColumn = 'courseCode' AND @sortDirection = 'ASC' THEN CourseCode END ASC,CASE WHEN @sortColumn = 'courseCode' AND @sortDirection = 'DESC' THEN CourseCode END DESC,
+		CASE WHEN @sortColumn = 'courseId' AND @sortDirection = 'ASC' THEN CourseId END ASC,CASE WHEN @sortColumn = 'courseId' AND @sortDirection = 'DESC' THEN CourseId END DESC
 	OFFSET @start ROWS
 	FETCH NEXT (CASE WHEN @length = -1 THEN 2147483647 ELSE @length END) ROWS ONLY
 	FOR JSON PATH;

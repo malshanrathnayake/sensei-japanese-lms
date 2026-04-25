@@ -55,6 +55,14 @@ namespace SENSEI.WEB.Areas.AdminPortal.Controllers
             var (allList, _) = await _studentRegistrationService.SearchStudentRegistraion(courseId, 0, 10000, searchValue, sortColumn, sortDirection);
             
             var filteredList = allList.AsQueryable();
+            
+            // Filter out test data as requested by user
+            filteredList = filteredList.Where(x => 
+                !x.Email.ToLower().Contains("test") && 
+                !(x.FirstName ?? "").ToLower().Contains("test") && 
+                !(x.LastName ?? "").ToLower().Contains("test")
+            );
+
             if (status == 1) filteredList = filteredList.Where(x => !x.IsApproved && !x.IsRejected);
             else if (status == 2) filteredList = filteredList.Where(x => x.IsApproved);
             else if (status == 3) filteredList = filteredList.Where(x => x.IsRejected);
@@ -71,13 +79,20 @@ namespace SENSEI.WEB.Areas.AdminPortal.Controllers
         public async Task<IActionResult> GetRegistrationStats()
         {
             var (list, _) = await _studentRegistrationService.SearchStudentRegistraion(0, 0, 10000);
+
+            // Filter out test data to keep stats consistent
+            var filteredList = list.Where(x => 
+                !x.Email.ToLower().Contains("test") && 
+                !(x.FirstName ?? "").ToLower().Contains("test") && 
+                !(x.LastName ?? "").ToLower().Contains("test")
+            ).ToList();
             
-            var approved = list.Count(x => x.IsApproved);
-            var rejected = list.Count(x => x.IsRejected);
-            var pending = list.Count(x => !x.IsApproved && !x.IsRejected);
+            var approved = filteredList.Count(x => x.IsApproved);
+            var rejected = filteredList.Count(x => x.IsRejected);
+            var pending = filteredList.Count(x => !x.IsApproved && !x.IsRejected);
 
             return Json(new { 
-                total = list.Count(), 
+                total = filteredList.Count(), 
                 approved = approved, 
                 rejected = rejected, 
                 pending = pending 

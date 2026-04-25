@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using SENSEI.BLL.AdminPortalService.Interface;
 using SENSEI.BLL.SystemService.Interfaces;
 using SENSEI.DOMAIN;
+using SENSEI.WEB.Helpers;
 
 namespace SENSEI.WEB.Areas.AdminPortal.Controllers
 {
@@ -53,29 +54,41 @@ namespace SENSEI.WEB.Areas.AdminPortal.Controllers
 
             IQueryable<Student> students = new List<Student>().AsQueryable();
 
-            var (studentRegistrationList, count) = await _studentService.SearchStudent(courseId, batchId, start, length, searchValue, sortColumn, sortDirection);
-            students = studentRegistrationList.AsQueryable();
+            var (studentRegistrationList, totalCount) = await _studentService.SearchStudent(courseId, batchId, 0, 10000, searchValue, sortColumn, sortDirection);
+            
+            // Filter out test data
+            var filteredList = studentRegistrationList.Where(x => 
+                !x.Email.ToLower().Contains("test") && 
+                !(x.FirstName ?? "").ToLower().Contains("test") && 
+                !(x.LastName ?? "").ToLower().Contains("test")
+            ).ToList();
 
-            students.ToList().ForEach(e =>
+            var filteredCount = filteredList.Count();
+            var pagedList = filteredList.Skip(start).Take(length).ToList();
+
+            pagedList.ForEach(e =>
             {
                 e.EncryptedKey = _protector.Protect(e.StudentId.ToString());
             });
 
-
-            return Json(new { draw, recordsTotal = count, recordsFiltered = count, data = students });
+            return Json(new { draw, recordsTotal = filteredCount, recordsFiltered = filteredCount, data = pagedList });
         }
 
         [HttpGet]
         public async Task<IActionResult> GetStudentStats()
         {
-            var (list, count) = await _studentService.SearchStudent(0, 0, 0, 10000);
+            var (list, _) = await _studentService.SearchStudent(0, 0, 0, 10000);
             
-            // For now let's show Total, and maybe filter by some criteria if available in the model
-            // If the model has IsActive, we can use that. Let's stick to Total and maybe 'New' if we have date.
+            // Filter out test data
+            var filteredList = list.Where(x => 
+                !x.Email.ToLower().Contains("test") && 
+                !(x.FirstName ?? "").ToLower().Contains("test") && 
+                !(x.LastName ?? "").ToLower().Contains("test")
+            ).ToList();
             
-            var total = count;
-            var active = list.Count(x => x.IsActive); 
-            var newThisMonth = 0; // The Student model doesn't have a creation date field.
+            var total = filteredList.Count;
+            var active = filteredList.Count(x => x.IsActive); 
+            var newThisMonth = 0; 
 
             return Json(new { 
                 total = total, 

@@ -37,12 +37,17 @@
         {
             // Filter: Only show category if student has access to at least one recording in it 
             // OR if it contains a first-week "trial" recording
+            // Get all lessons for this specific batch to find the first one
+            var batchId = lesson.First().BatchId;
+            var firstBatchLessonId = Model.Where(e => e.BatchId == batchId).OrderBy(e => e.LessonDateTime).ThenBy(e => e.BatchLessonId).Select(e => e.BatchLessonId).FirstOrDefault();
+            
             var hasAccessToCategory = lesson.Any(bl => 
                 bl.BatchStudentLessonAccesses.Any(a => a.StudentId == studentId && a.HasAccess) ||
-                (bl.Batch != null && bl.LessonDateTime <= bl.Batch.BatchStartDate.AddDays(7))
+                (bl.Batch != null && bl.LessonDateTime <= bl.Batch.BatchStartDate.AddDays(7)) ||
+                bl.BatchLessonId == firstBatchLessonId // Allow first video for free
             );
             
-            if (!hasAccessToCategory) continue;
+            // We no longer 'continue' (skip) the category. We show it as Locked instead.
 
             var completedBatchLessons = 0;
             foreach (var batchLesson in lesson)
@@ -92,7 +97,14 @@
                         <div class="d-flex justify-content-between align-items-start mb-3">
                              <h3 class="lesson-title mb-0" style="font-size: 1.25rem; font-weight: 800; color: #1e293b; letter-spacing: -0.01em;">@lesson.First().Lesson.LessonName</h3>
                              <div class="d-flex flex-column align-items-end gap-1">
-                                 <span class="badge @(progressPercent == 100 ? "bg-success" : "bg-soft-primary text-primary") rounded-pill px-3 py-1" style="font-size: 0.65rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em;">@(progressPercent == 100 ? "Completed" : "Active Now")</span>
+                                 @if (hasAccessToCategory)
+                                 {
+                                     <span class="badge @(progressPercent == 100 ? "bg-success" : "bg-soft-primary text-primary") rounded-pill px-3 py-1" style="font-size: 0.65rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em;">@(progressPercent == 100 ? "Completed" : "Active Now")</span>
+                                 }
+                                 else
+                                 {
+                                     <span class="badge bg-soft-secondary text-secondary rounded-pill px-3 py-1" style="font-size: 0.65rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em;"><i class="fas fa-lock me-1"></i> Locked</span>
+                                 }
                                  @{
                                      var latestApprovedRequest = lesson.SelectMany(bl => bl.BatchStudentLessonAccesses)
                                                             .Where(a => a.StudentId == studentId && a.HasAccess)
@@ -149,9 +161,18 @@
                                 <span class="d-block text-muted x-small text-uppercase fw-800" style="font-size: 0.6rem;">Next Up</span>
                                 <span class="text-dark fw-bold small text-truncate d-inline-block" style="max-width: 150px;">@(currentLessonName ?? "All Done!")</span>
                             </div>
-                            <a href="@Url.Action("IndexLesson", "MyLearning", new { q = lessonEncryptedKey })" class="btn btn-primary btn-sm rounded-pill px-4 py-2">
-                                Continue <i class="align-middle ms-1" data-feather="chevron-right"></i>
-                            </a>
+                            @if (hasAccessToCategory)
+                            {
+                                <a href="@Url.Action("IndexLesson", "MyLearning", new { q = lessonEncryptedKey })" class="btn btn-primary btn-sm rounded-pill px-4 py-2">
+                                    Continue <i class="align-middle ms-1" data-feather="chevron-right"></i>
+                                </a>
+                            }
+                            else
+                            {
+                                <a href="/StudentPortal/StudentBatchPayment/Index" class="btn btn-soft-danger btn-sm rounded-pill px-3 py-2" title="Payment Required">
+                                    Unlock Course <i class="align-middle ms-1" data-feather="lock"></i>
+                                </a>
+                            }
                         </div>
                     </div>
                 </div>

@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 using System.Security.Cryptography;
@@ -33,6 +33,21 @@ namespace SENSEI.WEB.Helpers
                 field.GetCustomAttribute<DisplayAttribute>();
 
             return attribute?.Name ?? value.ToString();
+        }
+
+        public static DateTime GetSriLankaTime()
+        {
+            DateTime utcTime = DateTime.UtcNow;
+            try
+            {
+                TimeZoneInfo slZone = TimeZoneInfo.FindSystemTimeZoneById("Sri Lanka Standard Time");
+                return TimeZoneInfo.ConvertTimeFromUtc(utcTime, slZone);
+            }
+            catch (TimeZoneNotFoundException)
+            {
+                // Fallback for non-Windows environments or if TZ not found
+                return utcTime.AddHours(5.5);
+            }
         }
     }
 }
